@@ -1,0 +1,2 @@
+// TODO: Recalcular capacidade.
+export {};

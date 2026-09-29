@@ -1,0 +1,2 @@
+// Criar ateliê demo.
+export {};

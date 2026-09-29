@@ -1,0 +1,8 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /ateliers/{atelierId}/{allPaths=**} {
+      allow read, write: if request.auth != null; // TODO: validar membership e path por pedido/cliente
+    }
+  }
+}

@@ -1,0 +1,491 @@
+COSMAKER OS — ESTRUTURA FIREBASE
+================================
+
+OBJETIVO
+--------
+Estrutura preparada para funcionar inicialmente com um único ateliê, mas já modelada como multi-tenant/SaaS.
+Cada ateliê é uma unidade isolada de negócio e concentra seus próprios clientes, pedidos, orçamentos, agenda, produção, financeiro e arquivos.
+
+STACK FIREBASE
+--------------
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+- Cloud Functions
+- Firebase Hosting (opcional, dependendo do deploy do frontend)
+- Firebase Cloud Messaging (opcional para notificações push)
+
+RAIZ DO FIRESTORE
+-----------------
+/users/{userId}
+/ateliers/{atelierId}
+/publicAteliers/{atelierId}
+/platformPlans/{planId}
+/subscriptions/{subscriptionId}
+/system/{configId}
+/auditLogs/{logId}
+
+USERS
+-----
+/users/{userId}
+Campos sugeridos:
+- id
+- name
+- email
+- phone
+- photoURL
+- accountType: client | atelier_member | platform_admin
+- active
+- createdAt
+- updatedAt
+
+ATELIERS
+--------
+/ateliers/{atelierId}
+Campos sugeridos:
+- id
+- name
+- slug
+- ownerId
+- description
+- email
+- phone
+- city
+- state
+- logoURL
+- bannerURL
+- plan
+- active
+- createdAt
+- updatedAt
+
+SUBCOLEÇÕES DO ATELIÊ
+---------------------
+/ateliers/{atelierId}/members/{userId}
+/ateliers/{atelierId}/clients/{clientId}
+/ateliers/{atelierId}/leads/{leadId}
+/ateliers/{atelierId}/quoteRequests/{requestId}
+/ateliers/{atelierId}/quotes/{quoteId}
+/ateliers/{atelierId}/orders/{orderId}
+/ateliers/{atelierId}/measurementProfiles/{profileId}
+/ateliers/{atelierId}/productionSlots/{slotId}
+/ateliers/{atelierId}/scheduleBlocks/{blockId}
+/ateliers/{atelierId}/services/{serviceId}
+/ateliers/{atelierId}/portfolio/{projectId}
+/ateliers/{atelierId}/events/{eventId}
+/ateliers/{atelierId}/materials/{materialId}
+/ateliers/{atelierId}/suppliers/{supplierId}
+/ateliers/{atelierId}/inventoryMovements/{movementId}
+/ateliers/{atelierId}/transactions/{transactionId}
+/ateliers/{atelierId}/expenses/{expenseId}
+/ateliers/{atelierId}/notifications/{notificationId}
+/ateliers/{atelierId}/conversations/{conversationId}
+/ateliers/{atelierId}/coupons/{couponId}
+/ateliers/{atelierId}/contracts/{contractId}
+/ateliers/{atelierId}/settings/{settingId}
+/ateliers/{atelierId}/reports/{reportId}
+
+MEMBERS
+-------
+/ateliers/{atelierId}/members/{userId}
+- userId
+- role: owner | admin | cosmaker | assistant | finance
+- permissions
+- active
+- createdAt
+
+CLIENTS
+-------
+/ateliers/{atelierId}/clients/{clientId}
+- userId opcional
+- name
+- email
+- phone
+- birthDate opcional
+- notes
+- ordersCount
+- totalSpent
+- createdAt
+- updatedAt
+
+QUOTE REQUESTS
+--------------
+/ateliers/{atelierId}/quoteRequests/{requestId}
+- clientId
+- character
+- franchise
+- category
+- description
+- eventId opcional
+- desiredDeliveryDate
+- budgetMin opcional
+- budgetMax opcional
+- urgency
+- status: new | under_review | quoted | adjustment_requested | approved | rejected | expired
+- createdAt
+- updatedAt
+
+Subcoleção:
+/quoteRequests/{requestId}/references/{referenceId}
+- type
+- storagePath
+- description
+- createdAt
+
+QUOTES
+------
+/ateliers/{atelierId}/quotes/{quoteId}
+- requestId
+- clientId
+- status: draft | sent | approved | rejected | expired | superseded
+- materialsCost
+- laborCost
+- urgencyFee
+- shipping
+- discount
+- total
+- depositPercentage
+- depositAmount
+- validUntil
+- estimatedStart
+- estimatedFinish
+- createdAt
+- updatedAt
+
+Subcoleção:
+/quotes/{quoteId}/items/{itemId}
+- description
+- quantity
+- unitPrice
+- total
+- category
+
+ORDERS
+------
+/ateliers/{atelierId}/orders/{orderId}
+- number
+- clientId
+- quoteId
+- character
+- franchise
+- status
+- productionProgress
+- startDate
+- expectedDeliveryDate
+- eventDate opcional
+- total
+- amountPaid
+- amountRemaining
+- priority: low | normal | high | urgent
+- assignedTo[]
+- createdAt
+- updatedAt
+
+STATUS PRINCIPAL DO PEDIDO
+--------------------------
+requested
+quoted
+waiting_deposit
+confirmed
+waiting_materials
+scheduled
+modeling
+in_production
+fitting
+adjustments
+finishing
+waiting_final_payment
+ready_to_ship
+shipped
+delivered
+completed
+paused
+cancelled
+refunded
+
+SUBCOLEÇÕES DO PEDIDO
+---------------------
+/orders/{orderId}/productionStages/{stageId}
+/orders/{orderId}/photos/{photoId}
+/orders/{orderId}/approvals/{approvalId}
+/orders/{orderId}/payments/{paymentId}
+/orders/{orderId}/materials/{materialId}
+/orders/{orderId}/tasks/{taskId}
+/orders/{orderId}/messages/{messageId}
+/orders/{orderId}/files/{fileId}
+/orders/{orderId}/statusHistory/{historyId}
+/orders/{orderId}/changeRequests/{changeRequestId}
+/orders/{orderId}/measurementSnapshot/{measurementId}
+
+PRODUCTION STAGES
+-----------------
+- name
+- order
+- status: pending | in_progress | waiting_approval | approved | completed | blocked
+- progressWeight
+- progress
+- requiresClientApproval
+- startedAt
+- completedAt
+
+APPROVALS
+---------
+- stageId
+- status: pending | approved | changes_requested
+- clientId
+- comment
+- requestedAt
+- respondedAt
+
+CHANGE REQUESTS
+---------------
+- requestedBy
+- description
+- status
+- affectsPrice
+- affectsDeadline
+- additionalCost
+- extraDays
+- createdAt
+
+PAYMENTS
+--------
+/orders/{orderId}/payments/{paymentId}
+- type: deposit | installment | final | refund
+- amount
+- method
+- status: pending | generated | paid | overdue | cancelled | refunded
+- gateway
+- gatewayPaymentId
+- dueDate
+- paidAt
+- createdAt
+
+MEASUREMENT PROFILES
+--------------------
+/ateliers/{atelierId}/measurementProfiles/{profileId}
+- clientId
+- name
+- height
+- weight
+- active
+- createdAt
+- updatedAt
+
+Subcoleção:
+/measurementProfiles/{profileId}/measurements/{measurementId}
+- type
+- label
+- value
+- unit
+- notes opcional
+
+IMPORTANTE:
+Ao criar/confirmar um pedido, copiar as medidas relevantes para:
+/orders/{orderId}/measurementSnapshot/
+Assim alterações futuras na ficha do cliente não mudam pedidos antigos.
+
+PRODUCTION SLOTS / CAPACIDADE
+-----------------------------
+/ateliers/{atelierId}/productionSlots/{slotId}
+- year
+- month
+- week opcional
+- capacityHours
+- usedHours
+- reservedHours
+- availableHours
+- status: open | almost_full | full | blocked
+
+Subcoleção:
+/productionSlots/{slotId}/allocations/{allocationId}
+- orderId
+- stageId opcional
+- assignedMemberId opcional
+- allocatedHours
+- startDate
+- endDate
+
+SCHEDULE BLOCKS
+---------------
+- start
+- end
+- type: vacation | event | maintenance | personal | blocked
+- reason
+- blocksProduction
+
+SERVICES
+--------
+- name
+- category
+- startingPrice
+- estimatedProductionDays
+- capacityWeight
+- active
+
+MATERIALS / INVENTORY
+---------------------
+/materials/{materialId}
+- name
+- category
+- unit
+- currentStock
+- minimumStock
+- averageCost
+- active
+
+/inventoryMovements/{movementId}
+- materialId
+- type: in | out | adjustment | return
+- quantity
+- orderId opcional
+- supplierId opcional
+- unitCost opcional
+- createdAt
+
+FINANCEIRO
+----------
+/transactions/{transactionId}
+- type: income | expense
+- category
+- orderId opcional
+- clientId opcional
+- supplierId opcional
+- amount
+- paymentMethod
+- status
+- date
+- description
+- createdAt
+
+CONVERSAS
+---------
+/conversations/{conversationId}
+- clientId
+- orderId opcional
+- lastMessage
+- lastMessageAt
+- unreadClient
+- unreadAtelier
+
+Subcoleção:
+/conversations/{conversationId}/messages/{messageId}
+- senderId
+- senderType
+- text
+- attachments[]
+- readAt opcional
+- createdAt
+
+NOTIFICAÇÕES
+------------
+/notifications/{notificationId}
+- userId
+- type
+- title
+- message
+- orderId opcional
+- quoteId opcional
+- read
+- createdAt
+
+PORTFÓLIO
+---------
+/portfolio/{projectId}
+- title
+- character
+- franchise
+- category
+- description
+- coverImage
+- public
+- featured
+- createdAt
+
+Subcoleção:
+/portfolio/{projectId}/images/{imageId}
+
+EVENTOS
+-------
+/events/{eventId}
+- name
+- date
+- city
+- state
+- notes opcional
+
+STORAGE
+-------
+ateliers/{atelierId}/branding/
+ateliers/{atelierId}/portfolio/{projectId}/
+ateliers/{atelierId}/clients/{clientId}/measurements/
+ateliers/{atelierId}/quoteRequests/{requestId}/references/
+ateliers/{atelierId}/orders/{orderId}/references/
+ateliers/{atelierId}/orders/{orderId}/production/
+ateliers/{atelierId}/orders/{orderId}/approvals/
+ateliers/{atelierId}/orders/{orderId}/documents/
+ateliers/{atelierId}/orders/{orderId}/shipping/
+ateliers/{atelierId}/contracts/
+ateliers/{atelierId}/invoices/
+
+CLOUD FUNCTIONS
+---------------
+functions/src/
+├── auth/
+│   ├── onUserCreated.ts
+│   └── setUserClaims.ts
+├── quotes/
+│   ├── onQuoteApproved.ts
+│   └── expireQuotes.ts
+├── orders/
+│   ├── createOrder.ts
+│   ├── updateProgress.ts
+│   ├── riskCalculation.ts
+│   └── finalizeOrder.ts
+├── payments/
+│   ├── createPayment.ts
+│   ├── paymentWebhook.ts
+│   └── refundPayment.ts
+├── notifications/
+│   ├── sendEmail.ts
+│   ├── sendWhatsApp.ts
+│   └── pushNotification.ts
+├── scheduling/
+│   ├── allocateCapacity.ts
+│   └── recalculateCapacity.ts
+├── inventory/
+│   └── applyMovement.ts
+└── maintenance/
+    ├── cleanupFiles.ts
+    └── archiveOldData.ts
+
+SEGURANÇA
+---------
+1. Cliente só acessa dados vinculados ao próprio UID/clientId.
+2. Membro do ateliê só acessa dados do atelierId ao qual pertence.
+3. Financeiro deve depender de permissão explícita.
+4. Alterações críticas de valor, status de pagamento, reembolso e conclusão não devem confiar no cliente web.
+5. Webhooks de pagamento devem validar assinatura/origem.
+6. Uploads precisam validar tamanho, MIME type e caminho permitido.
+7. Não permitir leitura pública de documentos internos.
+8. Portfólio público deve usar coleção/documentos próprios ou regras explícitas.
+9. Usar audit log para ações críticas.
+10. Exclusão de documento pai não remove subcoleções automaticamente; usar rotina backend para exclusões completas.
+
+ÍNDICES PROVÁVEIS
+-----------------
+- orders: status + expectedDeliveryDate
+- orders: clientId + createdAt
+- quoteRequests: status + createdAt
+- quotes: status + createdAt
+- transactions: type + date
+- notifications: userId + read + createdAt
+- productionSlots: year + month
+- portfolio: public + featured
+- conversations: clientId + lastMessageAt
+
+PRINCÍPIO
+---------
+O Firestore deve guardar estado e metadados; arquivos pesados ficam no Storage.
+Documentos principais devem permanecer pequenos.
+Históricos, mensagens, imagens e listas que crescem devem usar subcoleções.

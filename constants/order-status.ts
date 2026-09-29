@@ -1,0 +1,1 @@
+export const ORDER_STATUS = ['requested','quoted','waiting_deposit','confirmed','waiting_materials','scheduled','modeling','in_production','fitting','adjustments','finishing','waiting_final_payment','ready_to_ship','shipped','delivered','completed','paused','cancelled','refunded'] as const;

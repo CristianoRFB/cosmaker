@@ -1,0 +1,1 @@
+// Helpers genéricos de Firestore.
