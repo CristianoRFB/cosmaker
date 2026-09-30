@@ -11,5 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return <html lang="pt-BR"><body><AuthProvider><TenantProvider><ToastProvider>{children}</ToastProvider></TenantProvider></AuthProvider></body></html>;
+  const firebaseMode = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' ? 'emulator' : 'project';
+  return <html lang="pt-BR"><head><meta content={firebaseMode} name="cosmaker-firebase-mode" /></head><body><AuthProvider><TenantProvider><ToastProvider>{children}</ToastProvider></TenantProvider></AuthProvider></body></html>;
 }

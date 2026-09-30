@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase/firebase.client';
+import { hasAtelierPermission } from '@/lib/permissions/roles';
 import { useAuth } from './auth-provider';
 import type { AtelierRole } from '@/types/user';
 
@@ -39,7 +40,9 @@ export function TenantProvider({ children }: { children: ReactNode }) {
       .then((snapshot) => {
         if (!active) return;
         const member = snapshot.data();
-        if (!snapshot.exists() || member?.active !== true || member?.atelierId !== atelierId) {
+        // A membership document is already scoped by its /ateliers/{atelierId}/members/{uid} path.
+        // The documented member schema does not duplicate atelierId inside the document.
+        if (!snapshot.exists() || member?.active !== true) {
           setRole(null);
           setPermissions([]);
           setMembershipValid(false);
@@ -65,7 +68,7 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     permissions,
     loading,
     membershipValid,
-    hasPermission: (permission) => role === 'owner' || role === 'admin' || permissions.includes(permission),
+    hasPermission: (permission) => hasAtelierPermission(role, permissions, permission as Parameters<typeof hasAtelierPermission>[2]),
   }), [atelierId, role, permissions, loading, membershipValid]);
 
   return <TenantContext.Provider value={value}>{children}</TenantContext.Provider>;

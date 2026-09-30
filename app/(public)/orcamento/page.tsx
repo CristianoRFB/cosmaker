@@ -27,6 +27,11 @@ export default function QuoteRequestPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const configured = firebaseConfigured && Boolean(atelierId);
+  const setupMessage = !firebaseConfigured
+    ? 'O Firebase ainda não está configurado neste ambiente. Defina as variáveis NEXT_PUBLIC_FIREBASE_* para conectar o formulário.'
+    : !atelierId
+      ? 'O Firebase está configurado. Defina NEXT_PUBLIC_DEFAULT_ATELIER_ID para selecionar qual ateliê recebe estas solicitações.'
+      : '';
 
   function addFiles(list: FileList | null) {
     if (!list) return;
@@ -46,7 +51,7 @@ export default function QuoteRequestPage() {
     const form = event.currentTarget;
     setError(''); setSuccess(''); setFieldErrors({});
     if (!configured) {
-      setError('O envio ainda não está disponível neste ambiente. Configure Firebase e NEXT_PUBLIC_DEFAULT_ATELIER_ID.');
+      setError(setupMessage || 'O envio ainda não está disponível neste ambiente.');
       return;
     }
     const parsed = quoteRequestSchema.safeParse(Object.fromEntries(new FormData(form).entries()));
@@ -83,7 +88,7 @@ export default function QuoteRequestPage() {
       <div className="max-w-3xl"><p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.17em] text-violet-700"><Sparkles size={14} />Vamos conversar sobre seu projeto</p><h1 className="mt-3 text-4xl font-bold tracking-[-0.04em] text-slate-950 sm:text-5xl">Solicite um <span className="bg-gradient-to-r from-violet-700 to-pink-500 bg-clip-text text-transparent">orçamento</span></h1><p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">Compartilhe os detalhes do cosplay, as referências e o prazo que você tem em mente. O ateliê usará essas informações para analisar a solicitação.</p></div>
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_310px]">
         <Card className="p-5 sm:p-8">
-          {!configured ? <div className="mb-7 flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950"><Info className="mt-0.5 shrink-0" size={18} /><p>O formulário está em modo de configuração: adicione as variáveis do Firebase e o ID do ateliê padrão para receber solicitações reais.</p></div> : null}
+          {!configured ? <div className="mb-7 flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950"><Info className="mt-0.5 shrink-0" size={18} /><p>{setupMessage} O envio continuará protegido pelas regras do Firebase e só funcionará para um ateliê com captação pública habilitada.</p></div> : null}
           {success ? <div className="mb-7 flex gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-900" role="status"><CheckCircle2 className="mt-0.5 shrink-0" size={19} /><p>{success}</p></div> : null}
           {error ? <p className="mb-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">{error}</p> : null}
           <form className="grid gap-8" noValidate onSubmit={submit}>

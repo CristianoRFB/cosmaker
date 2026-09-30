@@ -31,7 +31,7 @@ export function AuthGuard({ audience, children }: { audience: Audience; children
     ? user.accountType === 'client'
     : audience === 'atelier'
       ? user.accountType === 'atelier_member' && Boolean(user.atelierId) && membershipValid
-      : user.accountType === 'platform_admin';
+      : user.accountType === 'platform_admin' && user.active;
 
   if (!allowed) return <Card className="mx-auto my-12 max-w-xl"><CardHeader><CardTitle>{audience === 'atelier' && user.accountType === 'atelier_member' ? 'Ateliê não vinculado' : 'Acesso não permitido'}</CardTitle></CardHeader><CardContent><p className="text-sm leading-6 text-slate-600">Sua conta não tem vínculo e permissões para esta área. A autorização dos dados também é aplicada pelas regras do Firebase.</p><Link className="mt-5 inline-flex font-semibold text-violet-700" href={user.accountType === 'client' ? '/cliente' : '/'}>Ir para minha área</Link></CardContent></Card>;
   return <>{children}</>;

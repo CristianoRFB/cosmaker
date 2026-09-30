@@ -17,6 +17,7 @@ export interface QuoteRequest {
   budgetMax?: number;
   urgency: QuoteRequestUrgency;
   observations?: string;
+  activeQuoteId?: string;
   status: QuoteRequestStatus;
   createdAt: unknown;
 }
@@ -28,4 +29,5 @@ export interface QuoteRequestReference {
   contentType: string;
   size: number;
   createdAt: unknown;
+  downloadUrl?: string | null;
 }

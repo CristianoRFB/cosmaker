@@ -6,19 +6,33 @@ service firebase.storage {
     }
 
     function isAtelierMember(atelierId) {
+      let atelierPath = /databases/(default)/documents/ateliers/$(atelierId);
       let memberPath = /databases/(default)/documents/ateliers/$(atelierId)/members/$(request.auth.uid);
       return signedIn()
+        && firestore.exists(atelierPath)
+        && firestore.get(atelierPath).data.active == true
         && firestore.exists(memberPath)
         && firestore.get(memberPath).data.active == true;
     }
 
     function mayWritePublicReference(atelierId, requestId) {
       let intakePath = /databases/(default)/documents/publicAteliers/$(atelierId);
+      let atelierPath = /databases/(default)/documents/ateliers/$(atelierId);
       let requestPath = /databases/(default)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId);
       return firestore.exists(intakePath)
         && firestore.get(intakePath).data.quoteRequestsEnabled == true
+        && firestore.exists(atelierPath)
+        && firestore.get(atelierPath).data.active == true
         && firestore.exists(requestPath)
         && firestore.get(requestPath).data.status == 'new';
+    }
+
+    function mayReadOwnPublicReference(atelierId, requestId) {
+      let requestPath = /databases/(default)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId);
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && firestore.exists(requestPath)
+        && firestore.get(requestPath).data.email == request.auth.token.email;
     }
 
     function isReferenceImage() {
@@ -53,7 +67,7 @@ service firebase.storage {
     }
 
     match /ateliers/{atelierId}/quoteRequests/{requestId}/references/{fileName} {
-      allow read: if isAtelierMember(atelierId);
+      allow read: if isAtelierMember(atelierId) || mayReadOwnPublicReference(atelierId, requestId);
       allow create: if isReferenceImage() && mayWritePublicReference(atelierId, requestId);
       allow update, delete: if isAtelierMember(atelierId) && isAtelierFile();
     }

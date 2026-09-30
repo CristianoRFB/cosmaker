@@ -5,12 +5,31 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isPlatformAdmin() {
+      let profilePath = /databases/$(database)/documents/users/$(request.auth.uid);
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && exists(profilePath)
+        && get(profilePath).data.active == true
+        && (request.auth.token.platformAdmin == true || get(profilePath).data.accountType == 'platform_admin');
+    }
+
+    function verifiedEmailMatches(email) {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email is string
+        && request.auth.token.email.lower() == email.lower();
+    }
+
     function memberPath(atelierId, userId) {
       return /databases/$(database)/documents/ateliers/$(atelierId)/members/$(userId);
     }
 
     function isAtelierMember(atelierId) {
+      let atelierPath = /databases/$(database)/documents/ateliers/$(atelierId);
       return signedIn()
+        && exists(atelierPath)
+        && get(atelierPath).data.active == true
         && exists(memberPath(atelierId, request.auth.uid))
         && get(memberPath(atelierId, request.auth.uid)).data.active == true;
     }
@@ -18,7 +37,9 @@ service cloud.firestore {
     function hasAtelierPermission(atelierId, permission) {
       return isAtelierMember(atelierId)
         && (get(memberPath(atelierId, request.auth.uid)).data.role in ['owner', 'admin']
-          || get(memberPath(atelierId, request.auth.uid)).data.permissions.hasAny([permission]));
+          || get(memberPath(atelierId, request.auth.uid)).data.permissions.hasAny([permission])
+          || (permission == 'quotes:read'
+            && get(memberPath(atelierId, request.auth.uid)).data.permissions.hasAny(['quotes:write'])));
     }
 
     function isOwnClient(atelierId, clientId) {
@@ -26,15 +47,34 @@ service cloud.firestore {
       return signedIn() && exists(clientPath) && get(clientPath).data.userId == request.auth.uid;
     }
 
+    function isOwnQuoteRequest(atelierId, requestId) {
+      let requestPath = /databases/$(database)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId);
+      return signedIn() && exists(requestPath)
+        && get(requestPath).data.email is string
+        && verifiedEmailMatches(get(requestPath).data.email);
+    }
+
+    function isOwnQuote(atelierId, quoteId) {
+      let quotePath = /databases/$(database)/documents/ateliers/$(atelierId)/quotes/$(quoteId);
+      return signedIn() && exists(quotePath)
+        && verifiedEmailMatches(get(quotePath).data.email)
+        && get(quotePath).data.status in ['sent', 'approved', 'rejected', 'expired'];
+    }
+
     function canReadOrder(atelierId, orderId) {
       let orderPath = /databases/$(database)/documents/ateliers/$(atelierId)/orders/$(orderId);
       return isAtelierMember(atelierId)
-        || (signedIn() && exists(orderPath) && isOwnClient(atelierId, get(orderPath).data.clientId));
+        || (signedIn() && exists(orderPath) && (
+          (get(orderPath).data.clientId is string && isOwnClient(atelierId, get(orderPath).data.clientId))
+          || verifiedEmailMatches(get(orderPath).data.email)
+        ));
     }
 
     function publicRequestIntakeEnabled(atelierId) {
       let publicAtelierPath = /databases/$(database)/documents/publicAteliers/$(atelierId);
-      return exists(publicAtelierPath) && get(publicAtelierPath).data.quoteRequestsEnabled == true;
+      let atelierPath = /databases/$(database)/documents/ateliers/$(atelierId);
+      return exists(publicAtelierPath) && get(publicAtelierPath).data.quoteRequestsEnabled == true
+        && exists(atelierPath) && get(atelierPath).data.active == true;
     }
 
     function validPublicQuoteRequest() {
@@ -56,15 +96,22 @@ service cloud.firestore {
         && data.category in ['full_cosplay', 'wig', 'armor', 'prop', 'accessory', 'other']
         && data.description is string && data.description.size() >= 20 && data.description.size() <= 2000
         && data.desiredDeliveryDate is string
+        && data.desiredDeliveryDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
         && data.urgency in ['normal', 'urgent']
         && data.status == 'new'
         && data.createdAt == request.time && data.updatedAt == request.time
         && (!('phone' in data) || (data.phone is string && data.phone.size() <= 30))
-        && (!('eventDate' in data) || data.eventDate is string)
+        && (!('eventDate' in data) || (data.eventDate is string && data.eventDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')))
         && (!('observations' in data) || (data.observations is string && data.observations.size() <= 1000))
         && (!('budgetMin' in data) || (data.budgetMin is number && data.budgetMin >= 0))
         && (!('budgetMax' in data) || (data.budgetMax is number && data.budgetMax >= 0))
         && (!('budgetMin' in data) || !('budgetMax' in data) || data.budgetMin <= data.budgetMax);
+    }
+
+    // Collection-group query used by a verified client to see quotes across ateliers.
+    match /{path=**}/quotes/{quoteId} {
+      allow get, list: if verifiedEmailMatches(resource.data.email)
+        && resource.data.status in ['sent', 'approved', 'rejected', 'expired'];
     }
 
     match /users/{userId} {
@@ -119,13 +166,14 @@ service cloud.firestore {
       }
 
       match /quoteRequests/{requestId} {
-        allow get, list: if hasAtelierPermission(atelierId, 'quotes:read');
+        allow get, list: if hasAtelierPermission(atelierId, 'quotes:read') || isOwnQuoteRequest(atelierId, requestId);
         allow create: if publicRequestIntakeEnabled(atelierId) && validPublicQuoteRequest();
-        allow update: if hasAtelierPermission(atelierId, 'quotes:write');
+        allow update: if hasAtelierPermission(atelierId, 'quotes:write')
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'activeQuoteId', 'assignedTo', 'notes']);
         allow delete: if false;
 
         match /references/{referenceId} {
-          allow get, list: if hasAtelierPermission(atelierId, 'quotes:read');
+          allow get, list: if hasAtelierPermission(atelierId, 'quotes:read') || isOwnQuoteRequest(atelierId, requestId);
           allow create: if publicRequestIntakeEnabled(atelierId)
             && exists(/databases/$(database)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId))
             && request.resource.data.keys().hasOnly(['storagePath', 'originalName', 'contentType', 'size', 'createdAt'])
@@ -142,13 +190,22 @@ service cloud.firestore {
 
       match /quotes/{quoteId} {
         allow get, list: if hasAtelierPermission(atelierId, 'quotes:read')
-          || (resource.data.clientId is string && isOwnClient(atelierId, resource.data.clientId));
-        allow create, update: if hasAtelierPermission(atelierId, 'quotes:write');
+          || (verifiedEmailMatches(resource.data.email) && resource.data.status in ['sent', 'approved', 'rejected', 'expired']);
+        allow create: if false;
+        allow update: if false;
         allow delete: if false;
         match /items/{itemId} {
           allow read: if hasAtelierPermission(atelierId, 'quotes:read')
-            || isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/quotes/$(quoteId)).data.clientId);
-          allow write: if hasAtelierPermission(atelierId, 'quotes:write');
+            || isOwnQuote(atelierId, quoteId);
+          allow write: if false;
+        }
+        match /approvedItems/{itemId} {
+          allow read: if hasAtelierPermission(atelierId, 'quotes:read') || isOwnQuote(atelierId, quoteId);
+          allow write: if false;
+        }
+        match /responses/{responseId} {
+          allow read: if hasAtelierPermission(atelierId, 'quotes:read') || isOwnQuote(atelierId, quoteId);
+          allow write: if false;
         }
       }
 
@@ -159,7 +216,7 @@ service cloud.firestore {
         match /{subcollection}/{documentId} {
           allow read: if canReadOrder(atelierId, orderId)
             && (isAtelierMember(atelierId)
-              || (subcollection in ['productionStages', 'photos', 'approvals', 'payments', 'messages', 'files', 'statusHistory']
+              || (subcollection in ['items', 'productionStages', 'photos', 'approvals', 'payments', 'messages', 'files', 'statusHistory']
                 && (subcollection != 'photos' || resource.data.visibleToClient == true)));
           allow create, update, delete: if hasAtelierPermission(atelierId, 'orders:manage');
         }
@@ -251,17 +308,17 @@ service cloud.firestore {
 
     match /platformPlans/{planId} {
       allow get, list: if resource.data.active == true;
-      allow write: if request.auth != null && request.auth.token.platformAdmin == true;
+      allow write: if isPlatformAdmin();
     }
     match /subscriptions/{subscriptionId} {
       allow read: if signedIn() && resource.data.ownerId == request.auth.uid;
       allow write: if false;
     }
     match /system/{configId} {
-      allow read, write: if request.auth != null && request.auth.token.platformAdmin == true;
+      allow read, write: if isPlatformAdmin();
     }
     match /auditLogs/{logId} {
-      allow read: if request.auth != null && request.auth.token.platformAdmin == true;
+      allow read: if isPlatformAdmin();
       allow write: if false;
     }
     match /{document=**} {
