@@ -1,1 +1,1 @@
-// Hook use-tenant.
+export { useTenant } from '@/providers/tenant-provider';

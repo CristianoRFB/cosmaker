@@ -1,8 +1,91 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /ateliers/{atelierId}/{allPaths=**} {
-      allow read, write: if request.auth != null; // TODO: validar membership e path por pedido/cliente
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAtelierMember(atelierId) {
+      let memberPath = /databases/(default)/documents/ateliers/$(atelierId)/members/$(request.auth.uid);
+      return signedIn()
+        && firestore.exists(memberPath)
+        && firestore.get(memberPath).data.active == true;
+    }
+
+    function mayWritePublicReference(atelierId, requestId) {
+      let intakePath = /databases/(default)/documents/publicAteliers/$(atelierId);
+      let requestPath = /databases/(default)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId);
+      return firestore.exists(intakePath)
+        && firestore.get(intakePath).data.quoteRequestsEnabled == true
+        && firestore.exists(requestPath)
+        && firestore.get(requestPath).data.status == 'new';
+    }
+
+    function isReferenceImage() {
+      return request.resource != null
+        && request.resource.size > 0
+        && request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+    }
+
+    function isAtelierFile() {
+      return request.resource != null
+        && request.resource.size > 0
+        && request.resource.size <= 20 * 1024 * 1024
+        && request.resource.contentType.matches('(image/(jpeg|png|webp)|application/pdf)');
+    }
+
+    match /ateliers/{atelierId}/branding/{fileName} {
+      allow read: if isAtelierMember(atelierId);
+      allow create, update: if isAtelierMember(atelierId)
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+      allow delete: if isAtelierMember(atelierId);
+    }
+
+    match /ateliers/{atelierId}/portfolio/{projectId}/{fileName} {
+      allow read: if isAtelierMember(atelierId)
+        || (firestore.exists(/databases/(default)/documents/publicAteliers/$(atelierId)/portfolio/$(projectId))
+          && firestore.get(/databases/(default)/documents/publicAteliers/$(atelierId)/portfolio/$(projectId)).data.public == true
+          && firestore.get(/databases/(default)/documents/publicAteliers/$(atelierId)).data.published == true);
+      allow create, update: if isAtelierMember(atelierId) && isReferenceImage();
+      allow delete: if isAtelierMember(atelierId);
+    }
+
+    match /ateliers/{atelierId}/quoteRequests/{requestId}/references/{fileName} {
+      allow read: if isAtelierMember(atelierId);
+      allow create: if isReferenceImage() && mayWritePublicReference(atelierId, requestId);
+      allow update, delete: if isAtelierMember(atelierId) && isAtelierFile();
+    }
+
+    match /ateliers/{atelierId}/clients/{clientId}/measurements/{fileName} {
+      allow read: if isAtelierMember(atelierId);
+      allow create, update: if isAtelierMember(atelierId) && isAtelierFile();
+      allow delete: if isAtelierMember(atelierId);
+    }
+
+    match /ateliers/{atelierId}/orders/{orderId}/{area}/{fileName} {
+      allow read: if isAtelierMember(atelierId);
+      allow create, update: if isAtelierMember(atelierId)
+        && area in ['references', 'production', 'approvals', 'documents', 'shipping']
+        && isAtelierFile();
+      allow delete: if isAtelierMember(atelierId)
+        && area in ['references', 'production', 'approvals', 'documents', 'shipping'];
+    }
+
+    match /ateliers/{atelierId}/{area}/{fileName} {
+      allow read: if isAtelierMember(atelierId);
+      allow create, update: if isAtelierMember(atelierId)
+        && area in ['contracts', 'invoices']
+        && request.resource != null
+        && request.resource.size > 0
+        && request.resource.size <= 20 * 1024 * 1024
+        && request.resource.contentType == 'application/pdf';
+      allow delete: if isAtelierMember(atelierId) && area in ['contracts', 'invoices'];
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }

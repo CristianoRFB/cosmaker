@@ -1,3 +1,2 @@
-import { NextResponse } from 'next/server';
-export async function POST() { return NextResponse.json({ ok: true, todo: true }); }
-export async function GET() { return NextResponse.json({ ok: true }); }
+import { integrationUnavailable } from '@/lib/errors/api';
+export async function POST() { return integrationUnavailable('frete'); }

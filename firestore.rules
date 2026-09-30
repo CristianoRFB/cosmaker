@@ -1,9 +1,271 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    match /users/{userId} { allow read, update: if signedIn() && request.auth.uid == userId; allow create: if signedIn(); }
-    match /ateliers/{atelierId} { allow read: if signedIn(); allow write: if false; /* TODO: implementar membership/roles */ }
-    match /{document=**} { allow read, write: if false; }
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function memberPath(atelierId, userId) {
+      return /databases/$(database)/documents/ateliers/$(atelierId)/members/$(userId);
+    }
+
+    function isAtelierMember(atelierId) {
+      return signedIn()
+        && exists(memberPath(atelierId, request.auth.uid))
+        && get(memberPath(atelierId, request.auth.uid)).data.active == true;
+    }
+
+    function hasAtelierPermission(atelierId, permission) {
+      return isAtelierMember(atelierId)
+        && (get(memberPath(atelierId, request.auth.uid)).data.role in ['owner', 'admin']
+          || get(memberPath(atelierId, request.auth.uid)).data.permissions.hasAny([permission]));
+    }
+
+    function isOwnClient(atelierId, clientId) {
+      let clientPath = /databases/$(database)/documents/ateliers/$(atelierId)/clients/$(clientId);
+      return signedIn() && exists(clientPath) && get(clientPath).data.userId == request.auth.uid;
+    }
+
+    function canReadOrder(atelierId, orderId) {
+      let orderPath = /databases/$(database)/documents/ateliers/$(atelierId)/orders/$(orderId);
+      return isAtelierMember(atelierId)
+        || (signedIn() && exists(orderPath) && isOwnClient(atelierId, get(orderPath).data.clientId));
+    }
+
+    function publicRequestIntakeEnabled(atelierId) {
+      let publicAtelierPath = /databases/$(database)/documents/publicAteliers/$(atelierId);
+      return exists(publicAtelierPath) && get(publicAtelierPath).data.quoteRequestsEnabled == true;
+    }
+
+    function validPublicQuoteRequest() {
+      let data = request.resource.data;
+      return data.keys().hasAll([
+          'clientId', 'name', 'email', 'character', 'franchise', 'category', 'description',
+          'desiredDeliveryDate', 'urgency', 'status', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'clientId', 'name', 'email', 'phone', 'character', 'franchise', 'category', 'description',
+          'eventDate', 'desiredDeliveryDate', 'budgetMin', 'budgetMax', 'urgency', 'observations',
+          'status', 'createdAt', 'updatedAt'
+        ])
+        && data.clientId == null
+        && data.name is string && data.name.size() >= 2 && data.name.size() <= 100
+        && data.email is string && data.email.size() >= 5 && data.email.size() <= 254
+        && data.character is string && data.character.size() >= 2 && data.character.size() <= 120
+        && data.franchise is string && data.franchise.size() >= 2 && data.franchise.size() <= 120
+        && data.category in ['full_cosplay', 'wig', 'armor', 'prop', 'accessory', 'other']
+        && data.description is string && data.description.size() >= 20 && data.description.size() <= 2000
+        && data.desiredDeliveryDate is string
+        && data.urgency in ['normal', 'urgent']
+        && data.status == 'new'
+        && data.createdAt == request.time && data.updatedAt == request.time
+        && (!('phone' in data) || (data.phone is string && data.phone.size() <= 30))
+        && (!('eventDate' in data) || data.eventDate is string)
+        && (!('observations' in data) || (data.observations is string && data.observations.size() <= 1000))
+        && (!('budgetMin' in data) || (data.budgetMin is number && data.budgetMin >= 0))
+        && (!('budgetMax' in data) || (data.budgetMax is number && data.budgetMax >= 0))
+        && (!('budgetMin' in data) || !('budgetMax' in data) || data.budgetMin <= data.budgetMax);
+    }
+
+    match /users/{userId} {
+      allow get: if signedIn() && request.auth.uid == userId;
+      allow list: if false;
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.accountType == 'client'
+        && request.resource.data.role == 'client'
+        && request.resource.data.permissions == []
+        && request.resource.data.active == true
+        && request.resource.data.email == request.auth.token.email;
+      allow update: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'email', 'phone', 'photoURL', 'updatedAt'])
+        && request.resource.data.accountType == resource.data.accountType
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.permissions == resource.data.permissions
+        && request.resource.data.get('atelierId', null) == resource.data.get('atelierId', null);
+      allow delete: if false;
+    }
+
+    match /publicAteliers/{atelierId} {
+      allow get: if resource.data.published == true || resource.data.quoteRequestsEnabled == true;
+      allow list: if false;
+      allow write: if false;
+      match /portfolio/{projectId} {
+        allow get, list: if get(/databases/$(database)/documents/publicAteliers/$(atelierId)).data.published == true
+          && resource.data.public == true;
+        allow write: if false;
+      }
+    }
+
+    match /ateliers/{atelierId} {
+      allow get: if isAtelierMember(atelierId);
+      allow list: if false;
+      allow create, delete: if false;
+      allow update: if hasAtelierPermission(atelierId, 'atelier:settings');
+
+      match /members/{memberId} {
+        allow get: if signedIn() && request.auth.uid == memberId || hasAtelierPermission(atelierId, 'team:read');
+        allow list: if hasAtelierPermission(atelierId, 'team:read');
+        allow create, update, delete: if hasAtelierPermission(atelierId, 'team:manage');
+      }
+
+      match /clients/{clientId} {
+        allow get: if isAtelierMember(atelierId) || (signedIn() && resource.data.userId == request.auth.uid);
+        allow list: if hasAtelierPermission(atelierId, 'clients:read');
+        allow create: if hasAtelierPermission(atelierId, 'clients:write');
+        allow update: if hasAtelierPermission(atelierId, 'clients:write');
+        allow delete: if hasAtelierPermission(atelierId, 'clients:delete');
+      }
+
+      match /quoteRequests/{requestId} {
+        allow get, list: if hasAtelierPermission(atelierId, 'quotes:read');
+        allow create: if publicRequestIntakeEnabled(atelierId) && validPublicQuoteRequest();
+        allow update: if hasAtelierPermission(atelierId, 'quotes:write');
+        allow delete: if false;
+
+        match /references/{referenceId} {
+          allow get, list: if hasAtelierPermission(atelierId, 'quotes:read');
+          allow create: if publicRequestIntakeEnabled(atelierId)
+            && exists(/databases/$(database)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId))
+            && request.resource.data.keys().hasOnly(['storagePath', 'originalName', 'contentType', 'size', 'createdAt'])
+            && request.resource.data.storagePath is string
+            && request.resource.data.originalName is string
+            && request.resource.data.contentType in ['image/jpeg', 'image/png', 'image/webp']
+            && request.resource.data.size is number
+            && request.resource.data.size > 0
+            && request.resource.data.size <= 10485760
+            && request.resource.data.createdAt == request.time;
+          allow update, delete: if false;
+        }
+      }
+
+      match /quotes/{quoteId} {
+        allow get, list: if hasAtelierPermission(atelierId, 'quotes:read')
+          || (resource.data.clientId is string && isOwnClient(atelierId, resource.data.clientId));
+        allow create, update: if hasAtelierPermission(atelierId, 'quotes:write');
+        allow delete: if false;
+        match /items/{itemId} {
+          allow read: if hasAtelierPermission(atelierId, 'quotes:read')
+            || isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/quotes/$(quoteId)).data.clientId);
+          allow write: if hasAtelierPermission(atelierId, 'quotes:write');
+        }
+      }
+
+      match /orders/{orderId} {
+        allow get, list: if canReadOrder(atelierId, orderId);
+        allow create, update: if hasAtelierPermission(atelierId, 'orders:manage');
+        allow delete: if false;
+        match /{subcollection}/{documentId} {
+          allow read: if canReadOrder(atelierId, orderId)
+            && (isAtelierMember(atelierId)
+              || (subcollection in ['productionStages', 'photos', 'approvals', 'payments', 'messages', 'files', 'statusHistory']
+                && (subcollection != 'photos' || resource.data.visibleToClient == true)));
+          allow create, update, delete: if hasAtelierPermission(atelierId, 'orders:manage');
+        }
+      }
+
+      match /measurementProfiles/{profileId} {
+        allow get, list: if hasAtelierPermission(atelierId, 'measurements:read')
+          || isOwnClient(atelierId, resource.data.clientId);
+        allow create, update: if hasAtelierPermission(atelierId, 'measurements:write');
+        allow delete: if false;
+        match /measurements/{measurementId} {
+          allow read: if hasAtelierPermission(atelierId, 'measurements:read')
+            || isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId)).data.clientId);
+          allow write: if hasAtelierPermission(atelierId, 'measurements:write');
+        }
+      }
+
+      match /portfolio/{projectId} {
+        allow get, list: if hasAtelierPermission(atelierId, 'portfolio:manage')
+          || (resource.data.public == true && get(/databases/$(database)/documents/publicAteliers/$(atelierId)).data.published == true);
+        allow create, update: if hasAtelierPermission(atelierId, 'portfolio:manage');
+        allow delete: if hasAtelierPermission(atelierId, 'portfolio:manage');
+      }
+
+      match /transactions/{transactionId} {
+        allow read: if hasAtelierPermission(atelierId, 'finance:read');
+        allow write: if hasAtelierPermission(atelierId, 'finance:write');
+      }
+      match /expenses/{expenseId} {
+        allow read: if hasAtelierPermission(atelierId, 'finance:read');
+        allow write: if hasAtelierPermission(atelierId, 'finance:write');
+      }
+      match /payments/{paymentId} {
+        allow read: if hasAtelierPermission(atelierId, 'finance:read');
+        allow write: if false;
+      }
+      match /materials/{materialId} {
+        allow read: if hasAtelierPermission(atelierId, 'inventory:read');
+        allow write: if hasAtelierPermission(atelierId, 'inventory:write');
+      }
+      match /suppliers/{supplierId} {
+        allow read: if hasAtelierPermission(atelierId, 'inventory:read');
+        allow write: if hasAtelierPermission(atelierId, 'inventory:write');
+      }
+      match /inventoryMovements/{movementId} {
+        allow read: if hasAtelierPermission(atelierId, 'inventory:read');
+        allow write: if hasAtelierPermission(atelierId, 'inventory:write');
+      }
+      match /productionSlots/{slotId} {
+        allow read: if hasAtelierPermission(atelierId, 'schedule:read');
+        allow write: if hasAtelierPermission(atelierId, 'schedule:write');
+        match /allocations/{allocationId} {
+          allow read: if hasAtelierPermission(atelierId, 'schedule:read');
+          allow write: if hasAtelierPermission(atelierId, 'schedule:write');
+        }
+      }
+      match /scheduleBlocks/{blockId} {
+        allow read: if hasAtelierPermission(atelierId, 'schedule:read');
+        allow write: if hasAtelierPermission(atelierId, 'schedule:write');
+      }
+      match /services/{serviceId} {
+        allow get, list: if hasAtelierPermission(atelierId, 'services:read');
+        allow write: if hasAtelierPermission(atelierId, 'services:write');
+      }
+      match /events/{eventId} {
+        allow read: if hasAtelierPermission(atelierId, 'events:read');
+        allow write: if hasAtelierPermission(atelierId, 'events:write');
+      }
+      match /notifications/{notificationId} {
+        allow read: if signedIn() && resource.data.userId == request.auth.uid;
+        allow update: if signedIn() && resource.data.userId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+        allow create, delete: if false;
+      }
+      match /conversations/{conversationId} {
+        allow read: if isAtelierMember(atelierId) || (signedIn() && resource.data.clientUserId == request.auth.uid);
+        allow create, update: if isAtelierMember(atelierId) || (signedIn() && request.resource.data.clientUserId == request.auth.uid);
+        allow delete: if false;
+        match /messages/{messageId} {
+          allow read: if isAtelierMember(atelierId)
+            || (signedIn() && get(/databases/$(database)/documents/ateliers/$(atelierId)/conversations/$(conversationId)).data.clientUserId == request.auth.uid);
+          allow create: if isAtelierMember(atelierId)
+            || (signedIn() && get(/databases/$(database)/documents/ateliers/$(atelierId)/conversations/$(conversationId)).data.clientUserId == request.auth.uid
+              && request.resource.data.senderId == request.auth.uid);
+          allow update, delete: if false;
+        }
+      }
+    }
+
+    match /platformPlans/{planId} {
+      allow get, list: if resource.data.active == true;
+      allow write: if request.auth != null && request.auth.token.platformAdmin == true;
+    }
+    match /subscriptions/{subscriptionId} {
+      allow read: if signedIn() && resource.data.ownerId == request.auth.uid;
+      allow write: if false;
+    }
+    match /system/{configId} {
+      allow read, write: if request.auth != null && request.auth.token.platformAdmin == true;
+    }
+    match /auditLogs/{logId} {
+      allow read: if request.auth != null && request.auth.token.platformAdmin == true;
+      allow write: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }

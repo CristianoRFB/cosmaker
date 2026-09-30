@@ -1,1 +1,1 @@
-// Hook use-auth.
+export { useAuth } from '@/providers/auth-provider';
