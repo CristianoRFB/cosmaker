@@ -18,6 +18,8 @@ export interface Order {
   status: OrderStatus;
   priority: 'low' | 'normal' | 'high' | 'urgent';
   progress: number;
+  amountPaid: number;
+  amountRemaining: number;
   expectedDeliveryDate: string;
   approvedQuoteSnapshot: {
     total: number;
@@ -63,4 +65,8 @@ export interface OrderRecord {
   files: OrderFile[];
   history: OrderHistoryEntry[];
   measurements: import('./measurement').Measurement[];
+  productionStages: import('./production').ProductionStage[];
+  productionPhotos: import('./production').ProductionPhoto[];
+  approvals: import('./production').ProductionApproval[];
+  payments: import('./payment').Payment[];
 }

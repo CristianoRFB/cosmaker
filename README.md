@@ -5,15 +5,17 @@ O Cosmaker OS é um sistema empresarial para gestão de cosmakers e ateliês de 
 ## Fluxos funcionais nesta versão
 
 - Site público com apresentação do produto e solicitação de orçamento estruturada.
-- Autenticação por e-mail e senha, cadastro de cliente, recuperação e verificação de e-mail. O login Google está disponível quando o provedor é habilitado no Firebase; a documentação do Firebase classifica os provedores sociais como opção sem custo de uso padrão ([preços e planos](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans), [configuração do Google](https://firebase.google.com/docs/auth/web/google-signin)).
+- Autenticação por e-mail e senha, cadastro de cliente, recuperação e verificação de e-mail. O login Google usa Firebase Authentication sem cobrança por login social padrão; o plano Spark tem limites de uso, e o botão só deve ser habilitado se a configuração do projeto permanecer sem cobrança ([preços e limites oficiais](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans), [configuração do Google](https://firebase.google.com/docs/auth/web/google-signin)).
 - Área do ateliê para analisar solicitações, compor propostas, disponibilizar orçamento e consultar respostas do cliente.
 - Área do cliente para consultar, aprovar, recusar ou pedir ajuste em uma proposta. A aprovação preserva os valores e itens e cria um pedido pelo backend.
 - Portal de pedidos para cliente e ateliê, com listagens e detalhes protegidos pelo tenant/cliente, status inicial, valores aprovados, itens, prazo, histórico e referências.
 - Fichas de medidas reutilizáveis do cliente com campos dinâmicos, unidades, observações e edição. Ao criar o pedido, o backend congela uma cópia das medidas; alterar a ficha atual não modifica pedidos anteriores.
+- Produção com seis etapas iniciais ponderadas, transições explícitas, bloqueios, progresso consolidado e quadro Kanban por etapa atual. O ateliê confirma o recebimento da entrada por operação protegida no backend; a aprovação do cliente preserva autor, comentário, data e resultado em eventos históricos.
+- Fotos de andamento são validadas pelo servidor e armazenadas no Firebase Storage. A equipe define se cada foto é interna ou visível ao cliente; etapas de prova podem exigir aprovação, e as próximas etapas ficam bloqueadas até a resposta.
 - Administração SaaS com indicadores calculados no Firestore, diretório e detalhe de ateliês, suspensão/reativação e auditoria. As operações administrativas são autorizadas por Cloud Functions e registradas na trilha de auditoria.
 - Regras Firestore e Storage com isolamento entre tenants, proteção de dados financeiros, verificação de e-mail para leitura de propostas e restrições de upload. A suspensão de um ateliê interrompe o acesso interno e o intake público.
 
-CRM completo, operação da produção, pagamentos, estoque, agenda de capacidade e outras áreas continuam no plano de implementação; telas estruturais não são contadas como funcionalidades prontas.
+CRM completo, editor de etapas e responsáveis, cálculo de risco, agenda de capacidade, pagamentos externos, livro financeiro, estoque e outras áreas continuam no plano de implementação; telas estruturais não são contadas como funcionalidades prontas. A confirmação operacional da entrada do pedido já funciona; ainda não há integração com gateway.
 
 ## Executar com o Firebase do projeto
 
@@ -55,11 +57,11 @@ npm run functions:build
 npm run build
 ```
 
-`npm run test:rules` requer os emuladores Firestore/Storage e Java 11+. Os testes E2E requerem o Emulator Suite, o seed local e o servidor iniciado por `npm run dev:local` em `127.0.0.1:3000`; forneça `E2E_ADMIN_EMAIL`, `E2E_ADMIN_PASSWORD`, `E2E_CLIENT_EMAIL`, `E2E_CLIENT_PASSWORD`, `FIRESTORE_EMULATOR_HOST=127.0.0.1:8080` e `FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099` no ambiente usando as credenciais locais impressas pelo seed. Os testes verificam o modo Emulator antes do login e bloqueiam a aprovação se o Admin SDK não estiver apontando para os emuladores locais.
+`npm run test:rules` requer os emuladores Firestore/Storage e Java 11+. Os testes E2E requerem o Emulator Suite, o seed local e o servidor iniciado por `npm run dev:local` em `127.0.0.1:3000` (ou `E2E_BASE_URL` definido para outro endereço local); forneça `E2E_ADMIN_EMAIL`, `E2E_ADMIN_PASSWORD`, `E2E_CLIENT_EMAIL`, `E2E_CLIENT_PASSWORD`, `FIRESTORE_EMULATOR_HOST=127.0.0.1:8080` e `FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099` no ambiente usando as credenciais locais impressas pelo seed. Os testes verificam o modo Emulator antes do login e bloqueiam a aprovação se o Admin SDK não estiver apontando para os emuladores locais.
 
 ## Capturas das telas entregues
 
-As capturas abaixo cobrem todas as telas públicas, de autenticação, solicitações/orçamentos e administração implementadas nesta etapa. As telas internas foram capturadas com contas e dados isolados dos emuladores Firebase.
+As capturas abaixo cobrem as telas funcionais implementadas, incluindo produção, aprovação do cliente, administração e os fluxos móveis prioritários. As telas internas foram capturadas com contas e dados isolados dos emuladores Firebase.
 
 ### Site público
 
@@ -107,11 +109,29 @@ As capturas abaixo cobrem todas as telas públicas, de autenticação, solicita�
 
 ![Detalhe do pedido no ateliê](docs/screenshots/atelier-order-detail.png)
 
+### Ateliê — produção
+
+![Visão geral da produção](docs/screenshots/atelier-production.png)
+
+![Quadro Kanban por etapa atual](docs/screenshots/atelier-production-kanban.png)
+
+![Detalhe de produção do pedido](docs/screenshots/atelier-order-production.png)
+
+![Visão geral da produção em tela móvel](docs/screenshots/atelier-production-mobile.png)
+
+![Quadro Kanban em tela móvel](docs/screenshots/atelier-production-kanban-mobile.png)
+
+![Detalhe de produção em tela móvel](docs/screenshots/atelier-order-production-mobile.png)
+
 ### Cliente — pedidos e medidas
 
 ![Pedidos do cliente](docs/screenshots/client-orders.png)
 
 ![Detalhe do pedido do cliente](docs/screenshots/client-order-detail.png)
+
+![Aprovação de etapa de produção pelo cliente](docs/screenshots/client-production-approval.png)
+
+![Aprovação de produção em tela móvel](docs/screenshots/client-production-approval-mobile.png)
 
 ![Pedidos do cliente em tela móvel](docs/screenshots/client-orders-mobile.png)
 

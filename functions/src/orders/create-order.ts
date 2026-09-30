@@ -1,6 +1,7 @@
 import { FieldValue } from 'firebase-admin/firestore';
 import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { adminDb } from '../admin';
+import { defaultProductionStages } from './production-template';
 
 export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelierId}/quotes/{quoteId}', async (event) => {
   const before = event.data?.before.data();
@@ -16,6 +17,8 @@ export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelier
   const referenceQuery = requestRef.collection('references');
   const auditRef = adminDb.collection('auditLogs').doc();
   const historyRef = orderRef.collection('statusHistory').doc();
+  const paymentRef = orderRef.collection('payments').doc('deposit');
+  const stageRefs = defaultProductionStages.map((stage) => orderRef.collection('productionStages').doc(stage.id));
 
   await adminDb.runTransaction(async (transaction) => {
     const existingOrder = await transaction.get(orderRef);
@@ -38,19 +41,25 @@ export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelier
       ? await transaction.get(measurementProfile.ref.collection('measurements'))
       : null;
     const now = FieldValue.serverTimestamp();
+    const depositAmount = Number(quote.approvedSnapshot?.depositAmount) || 0;
+    const total = Number(quote.approvedSnapshot?.total) || 0;
+    const initialStatus = depositAmount > 0 ? 'waiting_deposit' : 'confirmed';
     transaction.create(orderRef, {
       quoteId,
       requestId: quote.requestId,
       clientId: typeof quote.clientId === 'string' ? quote.clientId : null,
+      clientUserId: typeof quote.approvedBy === 'string' ? quote.approvedBy : null,
       clientName: typeof request.name === 'string' ? request.name : 'Cliente',
       email: String(quote.email).trim().toLowerCase(),
       character: request.character,
       franchise: request.franchise,
       category: request.category,
       description: request.description,
-      status: 'waiting_deposit',
+      status: initialStatus,
       priority: request.urgency === 'urgent' ? 'high' : 'normal',
       progress: 0,
+      amountPaid: 0,
+      amountRemaining: total,
       expectedDeliveryDate: request.desiredDeliveryDate,
       approvedQuoteSnapshot: quote.approvedSnapshot,
       createdAt: now,
@@ -67,8 +76,19 @@ export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelier
       profileName: measurementProfile!.data().name ?? null,
       capturedAt: now,
     }));
+    if (depositAmount > 0) {
+      transaction.create(paymentRef, {
+        type: 'deposit', amount: depositAmount, method: null, status: 'pending',
+        gateway: null, gatewayPaymentId: null, createdAt: now, updatedAt: now,
+      });
+    } else {
+      stageRefs.forEach((stageRef, index) => transaction.create(stageRef, {
+        ...defaultProductionStages[index], atelierId, orderId: quoteId,
+        status: 'pending', progress: 0, createdAt: now, updatedAt: now,
+      }));
+    }
     transaction.create(historyRef, {
-      status: 'waiting_deposit',
+      status: initialStatus,
       actorId: quote.approvedBy,
       source: 'quote_approved',
       createdAt: now,
@@ -80,7 +100,7 @@ export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelier
       entity: 'order',
       entityId: quoteId,
       before: null,
-      after: { quoteId, status: 'waiting_deposit', total: quote.approvedSnapshot?.total },
+      after: { quoteId, status: initialStatus, total, depositAmount },
       timestamp: now,
     });
   });

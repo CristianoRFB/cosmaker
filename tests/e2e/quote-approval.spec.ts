@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 
@@ -39,6 +40,7 @@ async function signInAsAtelier(page: Page) {
 }
 
 test('cliente aprova orçamento e o backend cria pedido com valores imutáveis', async ({ page }) => {
+  test.setTimeout(180_000);
   await signInAsClient(page);
   await page.goto(`/cliente/orcamentos/${encodeURIComponent(quoteId)}?atelierId=${encodeURIComponent(atelierId)}`);
   await expect(page.getByRole('heading', { name: 'Proposta de cosplay' })).toBeVisible();
@@ -88,5 +90,50 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   await page.getByRole('link', { name: 'Abrir pedido' }).click();
   await expect(page.getByRole('heading', { name: 'Mikasa Ackerman' })).toBeVisible();
   await expect(page.getByText('88 cm')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Registrar recebimento' }).click();
+  await page.getByRole('button', { name: 'Confirmar entrada' }).click();
+  await expect(page.getByText('Entrada registrada', { exact: false })).toBeVisible({ timeout: 10_000 });
+  await page.getByRole('link', { name: 'Gerenciar produção' }).click();
+  await expect(page.getByRole('heading', { name: 'Atualizar etapa' })).toBeVisible();
+
+  for (const stageName of ['A iniciar', 'Modelagem', 'Em produção']) {
+    await expect(page.locator('section').getByRole('heading', { name: stageName, exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Iniciar etapa' }).first().click();
+    await page.getByRole('button', { name: 'Concluir etapa' }).click();
+  }
+  await expect(page.locator('section').getByRole('heading', { name: 'Prova e ajustes' })).toBeVisible();
+  await page.getByRole('button', { name: 'Iniciar etapa' }).click();
+  await page.locator('#production-photo-stage-fitting').setInputFiles({
+    name: 'prova.png', mimeType: 'image/png',
+    buffer: await readFile(resolve(process.cwd(), 'tests/fixtures/production-progress.png')),
+  });
+  await page.getByLabel('Descrição para o histórico').fill('Prova do ajuste da manga');
+  await page.getByLabel('Visível ao cliente').check();
+  await page.getByRole('button', { name: 'Enviar foto' }).click();
+  await expect(page.getByText('Foto de progresso enviada.')).toBeVisible({ timeout: 15_000 });
+  await page.getByRole('button', { name: 'Solicitar aprovação do cliente' }).click();
+  await expect(page.getByText('Etapa enviada para aprovação do cliente.')).toBeVisible({ timeout: 10_000 });
+
+  await page.goto('/logout');
+  await expect(page).toHaveURL(/\/login$/);
+  await signInAsClient(page);
+  await page.goto(`/cliente/pedidos/${encodeURIComponent(quoteId)}?atelierId=${encodeURIComponent(atelierId)}`);
+  await expect(page.getByRole('heading', { name: 'Sua aprovação é necessária' })).toBeVisible();
+  await expect(page.locator('section').filter({ hasText: 'A equipe enviou esta etapa para sua revisão.' }).getByRole('img', { name: 'Prova do ajuste da manga' })).toBeVisible({ timeout: 15_000 });
+  await page.getByRole('button', { name: 'Aprovar etapa' }).click();
+  await expect(page.getByText('Etapa aprovada. A equipe já pode continuar.')).toBeVisible({ timeout: 10_000 });
+
+  order = await orderRef.get();
+  expect(order.data()?.status).toBe('fitting');
+  expect(order.data()?.progress).toBe(75);
+  expect(order.data()?.amountPaid).toBe(600);
+  const depositPayment = await orderRef.collection('payments').doc('deposit').get();
+  expect(depositPayment.data()?.status).toBe('paid');
+  const approvals = await orderRef.collection('approvals').get();
+  expect(approvals.size).toBe(1);
+  expect(approvals.docs[0].data().status).toBe('approved');
+  const approvalEvents = await approvals.docs[0].ref.collection('events').get();
+  expect(approvalEvents.size).toBe(2);
   await app.delete();
 });

@@ -15,6 +15,23 @@ service firebase.storage {
         && firestore.get(memberPath).data.active == true;
     }
 
+    function hasAtelierPermission(atelierId, permission) {
+      let memberPath = /databases/(default)/documents/ateliers/$(atelierId)/members/$(request.auth.uid);
+      return isAtelierMember(atelierId)
+        && (firestore.get(memberPath).data.role in ['owner', 'admin']
+          || firestore.get(memberPath).data.permissions.hasAny([permission])
+          || (permission == 'orders:read' && firestore.get(memberPath).data.permissions.hasAny(['orders:manage'])));
+    }
+
+    function ownVerifiedOrder(atelierId, orderId) {
+      let orderPath = /databases/(default)/documents/ateliers/$(atelierId)/orders/$(orderId);
+      return signedIn() && request.auth.token.email_verified == true
+        && firestore.exists(orderPath)
+        && ((firestore.get(orderPath).data.clientUserId is string && firestore.get(orderPath).data.clientUserId == request.auth.uid)
+          || (firestore.get(orderPath).data.email is string
+            && request.auth.token.email.lower() == firestore.get(orderPath).data.email.lower()));
+    }
+
     function mayWritePublicReference(atelierId, requestId) {
       let intakePath = /databases/(default)/documents/publicAteliers/$(atelierId);
       let atelierPath = /databases/(default)/documents/ateliers/$(atelierId);
@@ -78,13 +95,31 @@ service firebase.storage {
       allow delete: if isAtelierMember(atelierId);
     }
 
+    match /ateliers/{atelierId}/orders/{orderId}/production/{photoId} {
+      function photoPath() {
+        return /databases/(default)/documents/ateliers/$(atelierId)/orders/$(orderId)/photos/$(photoId);
+      }
+      allow read: if hasAtelierPermission(atelierId, 'orders:read')
+        || (ownVerifiedOrder(atelierId, orderId)
+          && firestore.exists(photoPath())
+          && firestore.get(photoPath()).data.uploadStatus == 'ready'
+          && firestore.get(photoPath()).data.visibleToClient == true);
+      allow create: if hasAtelierPermission(atelierId, 'orders:manage')
+        && firestore.exists(photoPath())
+        && firestore.get(photoPath()).data.uploadedBy == request.auth.uid
+        && firestore.get(photoPath()).data.uploadStatus == 'pending'
+        && request.resource.size <= 10 * 1024 * 1024
+        && isReferenceImage();
+      allow update, delete: if false;
+    }
+
     match /ateliers/{atelierId}/orders/{orderId}/{area}/{fileName} {
-      allow read: if isAtelierMember(atelierId);
+      allow read: if hasAtelierPermission(atelierId, 'orders:read');
       allow create, update: if isAtelierMember(atelierId)
-        && area in ['references', 'production', 'approvals', 'documents', 'shipping']
+        && area in ['references', 'approvals', 'documents', 'shipping']
         && isAtelierFile();
       allow delete: if isAtelierMember(atelierId)
-        && area in ['references', 'production', 'approvals', 'documents', 'shipping'];
+        && area in ['references', 'approvals', 'documents', 'shipping'];
     }
 
     match /ateliers/{atelierId}/{area}/{fileName} {

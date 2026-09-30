@@ -6,6 +6,7 @@ export type AtelierPermission =
   | 'clients:read' | 'clients:write' | 'clients:delete'
   | 'quotes:read' | 'quotes:write'
   | 'orders:read' | 'orders:manage'
+  | 'payments:write'
   | 'measurements:read' | 'measurements:write'
   | 'portfolio:manage'
   | 'finance:read' | 'finance:write'
@@ -18,5 +19,6 @@ export function hasAtelierPermission(role: AtelierRole | null | undefined, permi
   if (role === 'owner' || role === 'admin') return true;
   if (required === 'quotes:read' && permissions.includes('quotes:write')) return true;
   if (required === 'orders:read' && permissions.includes('orders:manage')) return true;
+  if (required === 'payments:write' && permissions.includes('finance:write')) return true;
   return permissions.includes(required);
 }

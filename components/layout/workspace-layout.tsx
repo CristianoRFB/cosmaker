@@ -44,7 +44,9 @@ export function WorkspaceLayout({ audience, title, children }: { audience: Audie
   const { hasPermission } = useTenant();
   const pathname = usePathname();
   const navigation = audience === 'client' ? clientNavigation : audience === 'atelier'
-    ? atelierNavigation.filter((item) => item.href !== '/atelier/pedidos' || hasPermission('orders:read'))
+    ? atelierNavigation.filter((item) =>
+      (item.href !== '/atelier/pedidos' || hasPermission('orders:read'))
+      && (item.href !== '/atelier/producao' || hasPermission('orders:read')))
     : adminNavigation;
   const pageTitle = audience === 'admin'
     ? pathname === '/admin' ? 'Visão geral' : pathname === '/admin/logs' ? 'Auditoria' : pathname === '/admin/ateliers' ? 'Ateliês' : 'Detalhes do ateliê'

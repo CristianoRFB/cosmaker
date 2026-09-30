@@ -27,34 +27,40 @@ Atualizado em 30/09/2026. A classificação indica comportamento verificado; a e
 - Cliente autenticado com e-mail verificado pode consultar propostas, aprovar, recusar ou solicitar ajustes. A aprovação salva snapshot comercial imutável; o trigger cria pedido com status `waiting_deposit`, itens, arquivos e histórico.
 - Pedidos: listagens e detalhes do cliente e do ateliê usam consultas escopadas pelas regras Firebase; mostram dados da proposta aprovada, estado, datas, itens, referências e histórico. Perfil de cliente só é associado à solicitação após resposta autenticada e verificada.
 - Medidas: cliente pode criar e editar fichas com campos dinâmicos, unidade e observação. Na criação do pedido, o backend copia as medidas para `measurementSnapshot`; alteração posterior da ficha não altera esse snapshot.
+- Produção: a confirmação protegida do sinal libera seis etapas iniciais ponderadas; início, conclusão e bloqueio são operações server-side auditadas, com progresso calculado pelas etapas concluídas. O Kanban organiza pedidos por etapa/status e não inventa risco de atraso.
+- Fotos e aprovação: uploads de JPEG/PNG/WebP são validados quanto a tamanho e assinatura pelo backend; permissões de Storage isolam equipe e cliente. Fotos podem ser internas ou visíveis, etapas podem exigir aprovação, e aprovar/solicitar ajuste cria eventos históricos sem apagar decisões anteriores.
+- Segurança da produção: confirmar a entrada requer permissão financeira e não pode ser feito pelo cliente. O avanço para envio é recusado enquanto houver saldo restante. As regras bloqueiam gravações diretas de estado de pedido, etapas, pagamentos e aprovações.
 - Painel SaaS para indicadores reais, lista paginada, detalhe de ateliê, suspensão/reativação com confirmação e trilha de auditoria. Dados administrativos são servidos por Cloud Functions autorizadas e não por leituras diretas da UI.
 - Provisionamento de plataforma por `scripts/provision-platform-admin.mjs`: custom claim e perfil `platform_admin`, com opção segura de criar a conta usando segredo fornecido por variável de ambiente. Nenhuma senha administrativa real está no repositório.
 - Suspender ateliê atualiza o estado em transação e registra auditoria. As regras Firestore e Storage verificam o estado ativo, interrompendo acesso interno e novas solicitações/upload público.
 - Primitivos UI reutilizáveis e Empty States; o menu administrativo mostra apenas módulos com fluxo implementado.
-- Capturas em `docs/screenshots/` cobrem todas as telas públicas, autenticação, solicitações/orçamentos, pedidos e fichas de medidas desenvolvidas, área administrativa e layouts móveis relevantes.
-- Verificações executadas: 24 testes unitários, 8 testes Firestore/Storage Rules no Emulator, 3 fluxos Playwright (incluindo aprovação que gera pedido e validação do snapshot imutável de medidas), ESLint, TypeScript, build das Cloud Functions e build otimizado Next.js.
+- Capturas em `docs/screenshots/` cobrem as telas públicas, autenticação, solicitações/orçamentos, pedidos, produção, aprovação do cliente, medidas, administração e layouts móveis desenvolvidos.
+- Verificações executadas neste marco: 28 testes unitários, 10 testes Firestore/Storage Rules no Emulator, 3 testes Playwright no build de produção apontado somente aos emuladores (inclui proposta aprovada, criação de pedido, snapshot de medidas, sinal, etapas, upload de foto e aprovação do cliente), ESLint, TypeScript, build das Cloud Functions e build otimizado Next.js.
 
 ## EM DESENVOLVIMENTO
 
 - Administração SaaS: visão geral, diretório/detalhe de ateliês, controle ativo/suspenso e auditoria funcionam no Emulator. Usuários, planos, assinaturas, métricas avançadas e configurações ainda são estruturas sem fluxo e não aparecem no menu.
 - Firebase em execução: cliente e funções estão verificados nos emuladores locais. As funções, regras e índices ainda precisam ser publicados e validados no projeto real.
 - Site e captação: landing e solicitação estão implementados; o upload e a gravação dependem de `NEXT_PUBLIC_DEFAULT_ATELIER_ID` e de `publicAteliers/{atelierId}.quoteRequestsEnabled` ativo.
-- Pedidos e medidas: fluxo inicial de consulta e detalhes com snapshot imutável de medidas foi verificado ponta a ponta. Edição operacional do pedido, perfil CRM completo, pagamentos, materiais e acompanhamento da produção ainda estão pendentes.
-- Login Google: integração do Firebase Auth está prevista no fluxo. O provedor precisa estar habilitado na configuração do projeto. O login social padrão está na faixa sem custo do Firebase Authentication; telefone/SMS não está incluído nesta decisão ([planos oficiais](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans)).
+- Pedidos e medidas: o fluxo da proposta aprovada até criação do pedido, snapshot imutável e produção com foto/aprovação foi verificado ponta a ponta no Emulator. CRM completo, editor de etapas/responsáveis e gestão operacional de materiais/arquivos continuam pendentes.
+- Produção: etapas padrão, quadro Kanban, progresso ponderado, upload de fotos e aprovação do cliente estão funcionais. Edição de etapas, atribuição de responsáveis/prazos, pedidos formais de alteração e cálculo de risco com base em capacidade ainda não foram implementados.
+- Pagamentos: registro administrativo protegido da entrada recebida está funcional. Gateway, cobranças automáticas, parcelas, reembolso e livro financeiro seguem pendentes.
+- Login Google: a chamada Firebase Auth e o botão estão implementados; o provedor precisa estar habilitado nas configurações do projeto. O login social padrão está na faixa sem custo do Firebase Authentication no limite do Spark (3.000 DAUs para a maioria dos provedores); telefone/SMS fica fora desta decisão ([preços e limites oficiais](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans), [limites do Auth](https://firebase.google.com/docs/auth/limits)).
 
 ## PENDENTE
 
 - CRM completo de clientes (histórico consolidado de pedidos, orçamentos, medidas e pagamentos); gestão de equipe/membros e onboarding de ateliê.
 - Operação administrativa detalhada do pedido, incluindo edição de estado, anexos, materiais, pagamentos, entrega e ações operacionais.
 - Medidas ainda precisam de controles de acesso/consentimento e experiência administrativa do ateliê para coleta e revisão.
-- Kanban, etapas, fotos, aprovações de produção, pedidos de alteração, calendário por carga/capacidade e cálculo consistente de risco.
-- Pagamentos e livro financeiro; adapter de gateway com confirmação protegida por backend/webhook.
+- Editor de etapas configuráveis, responsáveis e prazos de produção; pedido formal de alteração com impacto comercial e aprovação prévia.
+- Agenda por carga/capacidade, alocações, bloqueios, férias e cálculo de risco de atraso com dados operacionais reais.
+- Gateway de pagamento, cobranças/parcelas, reembolsos e livro financeiro; confirmação de pagamento externo por backend/webhook.
 - Estoque, fornecedores, transações de inventário, portfólio publicável e notificações internas.
 - Módulos SaaS de usuários, planos, assinaturas, relatórios e configurações.
-- E2E de cadastro, solicitação pública com upload, produção e aprovação do cliente em todas as etapas.
+- E2E de criação de conta, envio público de solicitação e upload de referências, pedido de alteração comercial e integração de pagamento.
 - Proteção adicional para intake público: App Check, limite de abuso, alertas e monitoramento operacional.
 - Auditoria operacional abrangente das ações críticas de todos os módulos.
-- Cobertura E2E ainda não inclui cadastro, upload de referências, etapas de produção nem aprovação de fotos de produção.
+- Cobertura E2E ainda não inclui criação de conta, solicitação pública com upload de referências nem pedidos de alteração comercial.
 
 ## BLOQUEADO
 
@@ -70,7 +76,7 @@ Atualizado em 30/09/2026. A classificação indica comportamento verificado; a e
 - Identidade administrativa usa custom claim `platformAdmin` e `users/{uid}` ativo. O script nunca grava senha em arquivo ou imprime seu valor.
 - Suspensão altera `ateliers/{atelierId}.active`; Firestore e Storage negam novos acessos internos e intake público.
 - Indicadores da plataforma vêm de consultas/counts reais. Um ambiente sem auditoria mostra Empty State; nenhum dado de teste é apresentado como métrica de produção.
-- `demo-cosmaker` é apenas o identificador técnico do projeto usado pela Firebase Emulator Suite; contas e registros de teste só existem no ambiente local isolado e não representam dados do produto.
+- `demo-cosmaker` é apenas o identificador técnico do projeto usado pela Firebase Emulator Suite; contas e registros de teste só existem no ambiente local isolado. O Cosmaker OS é o sistema empresarial real em desenvolvimento; o Emulator é a fronteira local de integração e testes.
 
 ## INTEGRAÇÕES QUE EXIGEM CREDENCIAIS
 

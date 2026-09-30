@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" fill="none">
+  <defs>
+    <linearGradient id="wall" x1="48" y1="18" x2="574" y2="355" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF8"/><stop offset="1" stop-color="#F1EAF8"/>
+    </linearGradient>
+    <linearGradient id="fabric" x1="210" y1="111" x2="471" y2="350" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A78BFA"/><stop offset=".52" stop-color="#7545C4"/><stop offset="1" stop-color="#4C2A83"/>
+    </linearGradient>
+    <linearGradient id="table" x1="0" y1="350" x2="640" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E8CBA9"/><stop offset="1" stop-color="#C99870"/>
+    </linearGradient>
+    <filter id="shadow" x="140" y="78" width="377" height="311" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+  <path fill="url(#wall)" d="M0 0h640v480H0z"/>
+  <path fill="#E8DFF1" d="M42 50h142v159H42z" opacity=".5"/>
+  <path stroke="#D8CCE6" stroke-width="5" d="M58 66h110M58 91h110M58 116h110M58 141h110M58 166h110M81 53v152M112 53v152M143 53v152" opacity=".75"/>
+  <rect x="450" y="44" width="139" height="183" rx="12" fill="#fff" stroke="#E8DEF0" stroke-width="4"/>
+  <path d="M468 195c28-36 58-57 103-107" stroke="#E9C8DC" stroke-width="9" stroke-linecap="round"/>
+  <path d="M470 192c31-24 62-39 103-45" stroke="#A78BFA" stroke-width="6" stroke-linecap="round"/>
+  <path d="M477 77h88" stroke="#D9CEE5" stroke-width="6" stroke-linecap="round"/>
+  <path d="M0 343h640v137H0z" fill="url(#table)"/>
+  <path d="M0 361c128-21 253-13 374 3 93 13 185 11 266-3" stroke="#B9835D" stroke-width="4" opacity=".35"/>
+  <ellipse cx="339" cy="354" rx="176" ry="22" fill="#463258" opacity=".2" filter="url(#shadow)"/>
+  <path d="M314 76h37v51h-37z" fill="#C99F85"/>
+  <path d="M278 123c-28 10-47 35-52 69l-25 117c-6 25 10 47 36 47h166c26 0 42-22 36-47l-26-117c-6-34-25-59-52-69l-28-8h-28l-27 8Z" fill="#DCC7B6" stroke="#B89B8C" stroke-width="5"/>
+  <path d="m280 125 35 44 18 28 18-28 36-44-29-10h-49l-29 10Z" fill="#F8EDE2"/>
+  <path d="M251 165c25 7 49 19 69 38 18 17 37 38 64 54 19 12 37 21 59 32l28 41c8 12 0 27-14 27H237c-16 0-26-14-21-29l25-125c2-14 5-26 10-38Z" fill="url(#fabric)" stroke="#57358C" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M260 177c26 9 48 20 66 37 24 23 47 48 75 66 18 12 34 19 51 27" stroke="#E7D9FF" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 11"/>
+  <path d="M236 315c73 12 128 9 202-9" stroke="#F4A8D1" stroke-width="12" stroke-linecap="round"/>
+  <path d="M242 312c72 11 126 8 190-9" stroke="#FFF0FA" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9"/>
+  <path d="m189 320 48 10 17 21-11 17-73-20 19-28Z" fill="#F4D2A7" stroke="#B88E68" stroke-width="4"/>
+  <path d="M198 329c11 5 23 9 37 11M194 338c12 5 24 9 37 12" stroke="#A77958" stroke-width="3" stroke-linecap="round"/>
+  <path d="M503 326c15-21 34-19 44-5 8 11 4 22-6 31l-23 20-24-18 9-28Z" fill="#F6CFE0" stroke="#BF7DA2" stroke-width="4"/>
+  <path d="M521 331c12 7 20 14 25 24" stroke="#A55384" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="487" cy="389" r="13" fill="#F5E5F1" stroke="#B68CA9" stroke-width="4"/>
+  <circle cx="487" cy="389" r="4" fill="#A5789A"/>
+  <path d="M54 399h168" stroke="#FFF3E7" stroke-width="5" stroke-linecap="round" opacity=".65"/>
+</svg>

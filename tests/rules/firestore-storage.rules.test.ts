@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { assertFails, assertSucceeds, initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import { collectionGroup, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getBytes, ref, uploadBytes } from 'firebase/storage';
 
 let environment: RulesTestEnvironment;
 
@@ -43,13 +43,35 @@ beforeEach(async () => {
       setDoc(doc(db, 'ateliers/atelier-a/measurementProfiles/profile-a'), { clientId: 'client-a', name: 'Ficha do cliente', active: true, updatedAt: serverTimestamp() }),
       setDoc(doc(db, 'ateliers/atelier-a/measurementProfiles/profile-b'), { clientId: 'client-b', name: 'Outra ficha', active: true, updatedAt: serverTimestamp() }),
       setDoc(doc(db, 'ateliers/atelier-a/measurementProfiles/profile-a/measurements/chest'), { type: 'circumference', label: 'Tórax', value: 88, unit: 'cm' }),
-      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a'), { clientId: 'client-a', email: 'client@example.com', status: 'confirmed', createdAt: serverTimestamp() }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a'), { clientId: 'client-a', email: 'client@example.com', status: 'confirmed', amountPaid: 600, amountRemaining: 1400, createdAt: serverTimestamp() }),
       setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/measurementSnapshot/chest'), { label: 'Tórax', value: 88, unit: 'cm' }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/payments/deposit'), { type: 'deposit', amount: 600, status: 'paid' }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/productionStages/stage-fitting'), { name: 'Prova e ajustes', order: 3, status: 'waiting_approval', progress: 100, progressWeight: 20, requiresClientApproval: true }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/approvals/approval-a'), { stageId: 'stage-fitting', status: 'pending', stageName: 'Prova e ajustes' }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/photos/photo-visible'), {
+        atelierId: 'atelier-a', orderId: 'order-a', stageId: 'stage-fitting', storagePath: 'ateliers/atelier-a/orders/order-a/production/photo-visible',
+        visibleToClient: true, uploadStatus: 'ready', uploadedBy: 'member-a', size: 9, contentType: 'image/png',
+      }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/photos/photo-internal'), {
+        atelierId: 'atelier-a', orderId: 'order-a', stageId: 'stage-fitting', storagePath: 'ateliers/atelier-a/orders/order-a/production/photo-internal',
+        visibleToClient: false, uploadStatus: 'ready', uploadedBy: 'member-a', size: 9, contentType: 'image/png',
+      }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/photos/photo-upload'), {
+        atelierId: 'atelier-a', orderId: 'order-a', stageId: 'stage-fitting', storagePath: 'ateliers/atelier-a/orders/order-a/production/photo-upload',
+        visibleToClient: false, uploadStatus: 'pending', uploadedBy: 'member-a', contentType: 'image/png',
+      }),
       setDoc(doc(db, 'ateliers/atelier-suspended/members/suspended-member'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-suspended/quoteRequests/request-suspended'), { email: 'client@example.com', status: 'new' }),
       setDoc(doc(db, 'users/platform-admin'), { accountType: 'platform_admin', active: true }),
       setDoc(doc(db, 'users/disabled-admin'), { accountType: 'platform_admin', active: false }),
       setDoc(doc(db, 'auditLogs/log-a'), { actorId: 'platform-admin', action: 'platform.atelier_suspended' }),
+    ]);
+  });
+  await environment.withSecurityRulesDisabled(async (context) => {
+    const storage = context.storage();
+    await Promise.all([
+      uploadBytes(ref(storage, 'ateliers/atelier-a/orders/order-a/production/photo-visible'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }),
+      uploadBytes(ref(storage, 'ateliers/atelier-a/orders/order-a/production/photo-internal'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }),
     ]);
   });
 });
@@ -129,11 +151,40 @@ describe('Firestore and Storage tenant rules', () => {
     }));
   });
 
+  it('makes order state server-managed and exposes only client-approved production photos', async () => {
+    const member = environment.authenticatedContext('member-a').firestore();
+    const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
+    const order = doc(member, 'ateliers/atelier-a/orders/order-a');
+    await assertFails(updateDoc(order, { status: 'completed' }));
+    await assertFails(updateDoc(doc(member, 'ateliers/atelier-a/orders/order-a/payments/deposit'), { status: 'paid' }));
+    await assertFails(updateDoc(doc(member, 'ateliers/atelier-a/orders/order-a/productionStages/stage-fitting'), { status: 'completed' }));
+    await assertFails(updateDoc(doc(client, 'ateliers/atelier-a/orders/order-a/approvals/approval-a'), { status: 'approved' }));
+    await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/orders/order-a/photos/photo-visible')));
+    await assertFails(getDoc(doc(client, 'ateliers/atelier-a/orders/order-a/photos/photo-internal')));
+    await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/orders/order-a/productionStages/stage-fitting')));
+  });
+
   it('limits public reference uploads to image types and enabled public intake', async () => {
     const guest = environment.unauthenticatedContext().storage();
     await assertSucceeds(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref.png'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref.html'), new Uint8Array([1, 2, 3]), { contentType: 'text/html' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-closed/quoteRequests/request-closed/references/ref.png'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-suspended/quoteRequests/request-suspended/references/ref.png'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
+  });
+
+  it('restricts production image uploads to assigned staff and serves only visible photos to clients', async () => {
+    const member = environment.authenticatedContext('member-a').storage();
+    const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).storage();
+    const visiblePath = 'ateliers/atelier-a/orders/order-a/production/photo-visible';
+    const privatePath = 'ateliers/atelier-a/orders/order-a/production/photo-internal';
+    const pendingPath = 'ateliers/atelier-a/orders/order-a/production/photo-upload';
+    await assertSucceeds(uploadBytes(ref(member, pendingPath), new Uint8Array([1, 2, 3]), {
+      contentType: 'image/png', customMetadata: { photoId: 'photo-upload', orderId: 'order-a' },
+    }));
+    await assertSucceeds(getBytes(ref(client, visiblePath)));
+    await assertFails(getBytes(ref(client, privatePath)));
+    await assertFails(uploadBytes(ref(client, 'ateliers/atelier-a/orders/order-a/production/unauthorized'), new Uint8Array([1]), {
+      contentType: 'image/png', customMetadata: { photoId: 'unauthorized', orderId: 'order-a' },
+    }));
   });
 });

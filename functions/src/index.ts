@@ -9,3 +9,8 @@ export { respondToQuote } from './quotes/respond-to-quote';
 export { expireQuotes } from './quotes/expire-quotes';
 export { createOrderFromApprovedQuote } from './orders/create-order';
 export { listClientMeasurementProfiles } from './orders/list-client-measurement-profiles';
+export { confirmOrderDeposit } from './orders/confirm-order-deposit';
+export { updateProductionStage } from './orders/update-production-stage';
+export { respondToProductionApproval } from './orders/respond-to-production-approval';
+export { createProductionPhotoUpload, completeProductionPhotoUpload } from './orders/production-photos';
+export { listProductionBoard } from './orders/list-production-board';

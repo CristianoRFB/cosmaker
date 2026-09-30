@@ -35,6 +35,9 @@ const quoteId = 'quote-2026-001';
 const now = Timestamp.now();
 const eventAt = Timestamp.fromDate(new Date('2026-09-30T12:00:00.000Z'));
 
+// Keep the quote-to-order production journey repeatable without touching a real Firebase project.
+await db.recursiveDelete(db.doc(`ateliers/${atelierId}/orders/${quoteId}`));
+
 const batch = db.batch();
 batch.set(db.doc(`users/${atelierUser.uid}`), {
   id: atelierUser.uid, name: atelierUser.displayName, email: atelierUser.email,
