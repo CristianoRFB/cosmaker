@@ -54,6 +54,19 @@ batch.set(db.doc(`ateliers/${atelierId}`), {
 batch.set(db.doc(`ateliers/${atelierId}/members/${atelierUser.uid}`), {
   userId: atelierUser.uid, role: 'owner', permissions: [], active: true, createdAt: now,
 });
+batch.set(db.doc(`ateliers/${atelierId}/clients/${clientUser.uid}`), {
+  id: clientUser.uid, userId: clientUser.uid, name: clientUser.displayName, email: clientUser.email,
+  totalSpent: 0, orderCount: 0, createdAt: now, updatedAt: now,
+});
+batch.set(db.doc(`ateliers/${atelierId}/measurementProfiles/profile-marina`), {
+  clientId: clientUser.uid, name: 'Ficha principal', active: true, createdAt: now, updatedAt: now,
+});
+batch.set(db.doc(`ateliers/${atelierId}/measurementProfiles/profile-marina/measurements/chest`), {
+  type: 'circumference', label: 'Tórax', value: 88, unit: 'cm', notes: 'Medida de referência', createdAt: now, updatedAt: now,
+});
+batch.set(db.doc(`ateliers/${atelierId}/measurementProfiles/profile-marina/measurements/waist`), {
+  type: 'circumference', label: 'Cintura', value: 68, unit: 'cm', notes: '', createdAt: now, updatedAt: now,
+});
 batch.set(db.doc(`publicAteliers/${atelierId}`), {
   name: 'Ateliê Aurora Cosplay', published: true, quoteRequestsEnabled: true,
 });

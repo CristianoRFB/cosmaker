@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { assertFails, assertSucceeds, initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { collectionGroup, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 
 let environment: RulesTestEnvironment;
@@ -32,11 +32,19 @@ beforeEach(async () => {
       setDoc(doc(db, 'ateliers/atelier-a/members/member-a'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-b/members/member-b'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
       setDoc(doc(db, 'ateliers/atelier-a/members/finance-reader'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
+      setDoc(doc(db, 'ateliers/atelier-a/members/no-order-access'), { active: true, role: 'assistant', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-a/quoteRequests/request-a'), { email: 'client@example.com', status: 'new' }),
       setDoc(doc(db, 'ateliers/atelier-b/quoteRequests/request-b'), { email: 'other@example.com', status: 'new' }),
       setDoc(doc(db, 'ateliers/atelier-closed/quoteRequests/request-closed'), { email: 'client@example.com', status: 'new' }),
       setDoc(doc(db, 'ateliers/atelier-a/quotes/quote-a'), { email: 'client@example.com', status: 'sent', total: 1200 }),
       setDoc(doc(db, 'ateliers/atelier-a/transactions/transaction-a'), { amount: 1200 }),
+      setDoc(doc(db, 'ateliers/atelier-a/clients/client-a'), { userId: 'client-a', email: 'client@example.com' }),
+      setDoc(doc(db, 'ateliers/atelier-a/clients/client-b'), { userId: 'client-b', email: 'other@example.com' }),
+      setDoc(doc(db, 'ateliers/atelier-a/measurementProfiles/profile-a'), { clientId: 'client-a', name: 'Ficha do cliente', active: true, updatedAt: serverTimestamp() }),
+      setDoc(doc(db, 'ateliers/atelier-a/measurementProfiles/profile-b'), { clientId: 'client-b', name: 'Outra ficha', active: true, updatedAt: serverTimestamp() }),
+      setDoc(doc(db, 'ateliers/atelier-a/measurementProfiles/profile-a/measurements/chest'), { type: 'circumference', label: 'Tórax', value: 88, unit: 'cm' }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a'), { clientId: 'client-a', email: 'client@example.com', status: 'confirmed', createdAt: serverTimestamp() }),
+      setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/measurementSnapshot/chest'), { label: 'Tórax', value: 88, unit: 'cm' }),
       setDoc(doc(db, 'ateliers/atelier-suspended/members/suspended-member'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-suspended/quoteRequests/request-suspended'), { email: 'client@example.com', status: 'new' }),
       setDoc(doc(db, 'users/platform-admin'), { accountType: 'platform_admin', active: true }),
@@ -102,6 +110,23 @@ describe('Firestore and Storage tenant rules', () => {
   it('keeps finance records unavailable to a quote-only member', async () => {
     const reader = environment.authenticatedContext('finance-reader').firestore();
     await assertFails(getDoc(doc(reader, 'ateliers/atelier-a/transactions/transaction-a')));
+  });
+
+  it('limits order and measurement access to the assigned team and the verified client', async () => {
+    const memberWithoutOrderAccess = environment.authenticatedContext('no-order-access').firestore();
+    await assertFails(getDoc(doc(memberWithoutOrderAccess, 'ateliers/atelier-a/orders/order-a')));
+    const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
+    await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/orders/order-a/measurementSnapshot/chest')));
+    const orders = await getDocs(query(collectionGroup(client, 'orders'), where('email', '==', 'client@example.com'), orderBy('createdAt', 'desc')));
+    expect(orders.size).toBe(1);
+    await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-a')));
+    await assertFails(getDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-b')));
+    await assertSucceeds(setDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-a/measurements/height'), {
+      type: 'length', label: 'Altura', value: 165, unit: 'cm', notes: '', createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+    }));
+    await assertFails(setDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-b/measurements/height'), {
+      type: 'length', label: 'Altura', value: 165, unit: 'cm',
+    }));
   });
 
   it('limits public reference uploads to image types and enabled public intake', async () => {

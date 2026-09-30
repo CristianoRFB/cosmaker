@@ -38,9 +38,18 @@ export const respondToQuote = onCall(async (call) => {
     const requestRef = atelier.collection('quoteRequests').doc(String(quote.requestId));
     const requestSnapshot = await transaction.get(requestRef);
     if (!requestSnapshot.exists) throw new HttpsError('failed-precondition', 'A solicitação original não foi encontrada.');
+    const request = requestSnapshot.data()!;
+    const normalizedEmail = call.auth!.token.email!.trim().toLowerCase();
+    const matchingClients = await transaction.get(atelier.collection('clients').where('email', '==', normalizedEmail).limit(1));
+    const matchingClient = matchingClients.docs[0];
+    if (matchingClient && typeof matchingClient.data().userId === 'string' && matchingClient.data().userId !== call.auth!.uid) {
+      throw new HttpsError('permission-denied', 'Este cadastro de cliente já está vinculado a outra conta.');
+    }
+    const clientRef = matchingClient?.ref ?? atelier.collection('clients').doc(call.auth!.uid);
+    const clientId = clientRef.id;
 
-    const now = Timestamp.now();
     const reply = decision as Decision;
+    const now = Timestamp.now();
     const items = reply === 'approved' ? await transaction.get(quoteRef.collection('items')) : null;
     const newStatus = reply === 'request_changes' ? quote.status : reply;
     transaction.create(responseRef, {
@@ -50,14 +59,25 @@ export const respondToQuote = onCall(async (call) => {
       email: call.auth!.token.email,
       createdAt: FieldValue.serverTimestamp(),
     });
+    transaction.set(clientRef, {
+      ...(matchingClient?.data() ?? {}),
+      id: clientId,
+      userId: call.auth!.uid,
+      name: typeof request.name === 'string' ? request.name : '',
+      email: normalizedEmail,
+      ...(typeof request.phone === 'string' && request.phone ? { phone: request.phone } : {}),
+      updatedAt: FieldValue.serverTimestamp(),
+      ...(!matchingClient ? { createdAt: FieldValue.serverTimestamp(), totalSpent: 0, orderCount: 0 } : {}),
+    }, { merge: true });
 
     if (reply === 'request_changes') {
-      transaction.update(requestRef, { status: 'adjustment_requested', updatedAt: now });
-      transaction.update(quoteRef, { lastClientResponseAt: now, updatedAt: now });
+      transaction.update(requestRef, { clientId, status: 'adjustment_requested', updatedAt: now });
+      transaction.update(quoteRef, { clientId, lastClientResponseAt: now, updatedAt: now });
     } else if (reply === 'approved') {
       const approvedItemsRef = quoteRef.collection('approvedItems');
       items!.docs.forEach((item) => transaction.set(approvedItemsRef.doc(item.id), { ...item.data(), snapshotAt: now }));
       transaction.update(quoteRef, {
+        clientId,
         status: 'approved',
         approvedAt: now,
         approvedBy: call.auth!.uid,
@@ -81,10 +101,10 @@ export const respondToQuote = onCall(async (call) => {
         },
         updatedAt: now,
       });
-      transaction.update(requestRef, { status: 'approved', updatedAt: now });
+      transaction.update(requestRef, { clientId, status: 'approved', updatedAt: now });
     } else {
-      transaction.update(quoteRef, { status: 'rejected', rejectedAt: now, rejectedBy: call.auth!.uid, clientComment: normalizedComment, updatedAt: now });
-      transaction.update(requestRef, { status: 'rejected', updatedAt: now });
+      transaction.update(quoteRef, { clientId, status: 'rejected', rejectedAt: now, rejectedBy: call.auth!.uid, clientComment: normalizedComment, updatedAt: now });
+      transaction.update(requestRef, { clientId, status: 'rejected', updatedAt: now });
     }
     transaction.set(auditRef, {
       actorId: call.auth!.uid,

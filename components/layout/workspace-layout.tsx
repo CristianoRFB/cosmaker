@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/ui/avatar';
 import { AuthGuard, type Audience } from './auth-guard';
 import { useAuth } from '@/providers/auth-provider';
+import { useTenant } from '@/providers/tenant-provider';
 
 const clientNavigation = [
   { href: '/cliente', label: 'Início', icon: Home },
@@ -40,8 +41,11 @@ const adminNavigation = [
 
 export function WorkspaceLayout({ audience, title, children }: { audience: Audience; title: string; children: ReactNode }) {
   const { user } = useAuth();
+  const { hasPermission } = useTenant();
   const pathname = usePathname();
-  const navigation = audience === 'client' ? clientNavigation : audience === 'atelier' ? atelierNavigation : adminNavigation;
+  const navigation = audience === 'client' ? clientNavigation : audience === 'atelier'
+    ? atelierNavigation.filter((item) => item.href !== '/atelier/pedidos' || hasPermission('orders:read'))
+    : adminNavigation;
   const pageTitle = audience === 'admin'
     ? pathname === '/admin' ? 'Visão geral' : pathname === '/admin/logs' ? 'Auditoria' : pathname === '/admin/ateliers' ? 'Ateliês' : 'Detalhes do ateliê'
     : title;

@@ -25,25 +25,28 @@ Atualizado em 30/09/2026. A classificação indica comportamento verificado; a e
 - Contexto de autenticação e tenant. Guardas client-side controlam navegação, enquanto Firestore, Storage e funções callable validam permissões no backend.
 - Site público, intake de orçamento com Zod, upload de referências por MIME/tamanho, consulta de solicitações pelo ateliê, editor de rascunho e publicação de propostas.
 - Cliente autenticado com e-mail verificado pode consultar propostas, aprovar, recusar ou solicitar ajustes. A aprovação salva snapshot comercial imutável; o trigger cria pedido com status `waiting_deposit`, itens, arquivos e histórico.
+- Pedidos: listagens e detalhes do cliente e do ateliê usam consultas escopadas pelas regras Firebase; mostram dados da proposta aprovada, estado, datas, itens, referências e histórico. Perfil de cliente só é associado à solicitação após resposta autenticada e verificada.
+- Medidas: cliente pode criar e editar fichas com campos dinâmicos, unidade e observação. Na criação do pedido, o backend copia as medidas para `measurementSnapshot`; alteração posterior da ficha não altera esse snapshot.
 - Painel SaaS para indicadores reais, lista paginada, detalhe de ateliê, suspensão/reativação com confirmação e trilha de auditoria. Dados administrativos são servidos por Cloud Functions autorizadas e não por leituras diretas da UI.
 - Provisionamento de plataforma por `scripts/provision-platform-admin.mjs`: custom claim e perfil `platform_admin`, com opção segura de criar a conta usando segredo fornecido por variável de ambiente. Nenhuma senha administrativa real está no repositório.
 - Suspender ateliê atualiza o estado em transação e registra auditoria. As regras Firestore e Storage verificam o estado ativo, interrompendo acesso interno e novas solicitações/upload público.
 - Primitivos UI reutilizáveis e Empty States; o menu administrativo mostra apenas módulos com fluxo implementado.
-- Capturas em `docs/screenshots/` cobrem telas públicas, autenticação, solicitações/orçamentos do ateliê, portal de orçamentos do cliente e área administrativa, incluindo layouts móveis definidos nesta etapa.
-- Verificações executadas: 24 testes unitários, 7 testes Firestore/Storage Rules no Emulator, 3 fluxos Playwright (incluindo aprovação que gera pedido), ESLint, TypeScript, build das Cloud Functions e build otimizado Next.js.
+- Capturas em `docs/screenshots/` cobrem todas as telas públicas, autenticação, solicitações/orçamentos, pedidos e fichas de medidas desenvolvidas, área administrativa e layouts móveis relevantes.
+- Verificações executadas: 24 testes unitários, 8 testes Firestore/Storage Rules no Emulator, 3 fluxos Playwright (incluindo aprovação que gera pedido e validação do snapshot imutável de medidas), ESLint, TypeScript, build das Cloud Functions e build otimizado Next.js.
 
 ## EM DESENVOLVIMENTO
 
 - Administração SaaS: visão geral, diretório/detalhe de ateliês, controle ativo/suspenso e auditoria funcionam no Emulator. Usuários, planos, assinaturas, métricas avançadas e configurações ainda são estruturas sem fluxo e não aparecem no menu.
 - Firebase em execução: cliente e funções estão verificados nos emuladores locais. As funções, regras e índices ainda precisam ser publicados e validados no projeto real.
 - Site e captação: landing e solicitação estão implementados; o upload e a gravação dependem de `NEXT_PUBLIC_DEFAULT_ATELIER_ID` e de `publicAteliers/{atelierId}.quoteRequestsEnabled` ativo.
-- Orçamentos e pedidos: aprovação e criação automatizada do pedido foram verificadas; dashboards/detalhes de pedido, medidas, pagamentos, materiais e acompanhamento da produção ainda não foram concluídos.
+- Pedidos e medidas: fluxo inicial de consulta e detalhes com snapshot imutável de medidas foi verificado ponta a ponta. Edição operacional do pedido, perfil CRM completo, pagamentos, materiais e acompanhamento da produção ainda estão pendentes.
 - Login Google: integração do Firebase Auth está prevista no fluxo. O provedor precisa estar habilitado na configuração do projeto. O login social padrão está na faixa sem custo do Firebase Authentication; telefone/SMS não está incluído nesta decisão ([planos oficiais](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans)).
 
 ## PENDENTE
 
-- CRM de clientes, perfil e histórico; gestão de equipe/membros e onboarding de ateliê.
-- Portal de pedidos do cliente e operação administrativa detalhada do pedido; snapshot de medidas no momento de confirmação.
+- CRM completo de clientes (histórico consolidado de pedidos, orçamentos, medidas e pagamentos); gestão de equipe/membros e onboarding de ateliê.
+- Operação administrativa detalhada do pedido, incluindo edição de estado, anexos, materiais, pagamentos, entrega e ações operacionais.
+- Medidas ainda precisam de controles de acesso/consentimento e experiência administrativa do ateliê para coleta e revisão.
 - Kanban, etapas, fotos, aprovações de produção, pedidos de alteração, calendário por carga/capacidade e cálculo consistente de risco.
 - Pagamentos e livro financeiro; adapter de gateway com confirmação protegida por backend/webhook.
 - Estoque, fornecedores, transações de inventário, portfólio publicável e notificações internas.
@@ -67,7 +70,7 @@ Atualizado em 30/09/2026. A classificação indica comportamento verificado; a e
 - Identidade administrativa usa custom claim `platformAdmin` e `users/{uid}` ativo. O script nunca grava senha em arquivo ou imprime seu valor.
 - Suspensão altera `ateliers/{atelierId}.active`; Firestore e Storage negam novos acessos internos e intake público.
 - Indicadores da plataforma vêm de consultas/counts reais. Um ambiente sem auditoria mostra Empty State; nenhum dado de teste é apresentado como métrica de produção.
-- `demo-cosmaker` é o identificador técnico do projeto Firebase Emulator; suas contas e registros de exemplo só existem no ambiente local de teste.
+- `demo-cosmaker` é apenas o identificador técnico do projeto usado pela Firebase Emulator Suite; contas e registros de teste só existem no ambiente local isolado e não representam dados do produto.
 
 ## INTEGRAÇÕES QUE EXIGEM CREDENCIAIS
 

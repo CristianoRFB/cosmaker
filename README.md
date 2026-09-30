@@ -8,10 +8,12 @@ O Cosmaker OS é um sistema empresarial para gestão de cosmakers e ateliês de 
 - Autenticação por e-mail e senha, cadastro de cliente, recuperação e verificação de e-mail. O login Google está disponível quando o provedor é habilitado no Firebase; a documentação do Firebase classifica os provedores sociais como opção sem custo de uso padrão ([preços e planos](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans), [configuração do Google](https://firebase.google.com/docs/auth/web/google-signin)).
 - Área do ateliê para analisar solicitações, compor propostas, disponibilizar orçamento e consultar respostas do cliente.
 - Área do cliente para consultar, aprovar, recusar ou pedir ajuste em uma proposta. A aprovação preserva os valores e itens e cria um pedido pelo backend.
+- Portal de pedidos para cliente e ateliê, com listagens e detalhes protegidos pelo tenant/cliente, status inicial, valores aprovados, itens, prazo, histórico e referências.
+- Fichas de medidas reutilizáveis do cliente com campos dinâmicos, unidades, observações e edição. Ao criar o pedido, o backend congela uma cópia das medidas; alterar a ficha atual não modifica pedidos anteriores.
 - Administração SaaS com indicadores calculados no Firestore, diretório e detalhe de ateliês, suspensão/reativação e auditoria. As operações administrativas são autorizadas por Cloud Functions e registradas na trilha de auditoria.
 - Regras Firestore e Storage com isolamento entre tenants, proteção de dados financeiros, verificação de e-mail para leitura de propostas e restrições de upload. A suspensão de um ateliê interrompe o acesso interno e o intake público.
 
-CRM, produção, medidas, pagamentos, estoque, agenda de capacidade e outras áreas do produto continuam no plano de implementação; telas estruturais não são contadas como funcionalidades prontas.
+CRM completo, operação da produção, pagamentos, estoque, agenda de capacidade e outras áreas continuam no plano de implementação; telas estruturais não são contadas como funcionalidades prontas.
 
 ## Executar com o Firebase do projeto
 
@@ -98,6 +100,30 @@ As capturas abaixo cobrem todas as telas públicas, de autenticação, solicita�
 ![Lista de orçamentos em tela móvel](docs/screenshots/client-quotes-mobile.png)
 
 ![Detalhe do orçamento em tela móvel](docs/screenshots/client-quote-detail-mobile.png)
+
+### Ateliê — pedidos
+
+![Lista de pedidos do ateliê](docs/screenshots/atelier-orders.png)
+
+![Detalhe do pedido no ateliê](docs/screenshots/atelier-order-detail.png)
+
+### Cliente — pedidos e medidas
+
+![Pedidos do cliente](docs/screenshots/client-orders.png)
+
+![Detalhe do pedido do cliente](docs/screenshots/client-order-detail.png)
+
+![Pedidos do cliente em tela móvel](docs/screenshots/client-orders-mobile.png)
+
+![Detalhe do pedido em tela móvel](docs/screenshots/client-order-detail-mobile.png)
+
+![Fichas de medidas do cliente](docs/screenshots/client-measurement-profiles.png)
+
+![Edição da ficha de medidas](docs/screenshots/client-measurement-detail.png)
+
+![Fichas de medidas em tela móvel](docs/screenshots/client-measurement-profiles-mobile.png)
+
+![Edição de medidas em tela móvel](docs/screenshots/client-measurement-detail-mobile.png)
 
 ### Administração SaaS
 

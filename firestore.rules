@@ -39,7 +39,9 @@ service cloud.firestore {
         && (get(memberPath(atelierId, request.auth.uid)).data.role in ['owner', 'admin']
           || get(memberPath(atelierId, request.auth.uid)).data.permissions.hasAny([permission])
           || (permission == 'quotes:read'
-            && get(memberPath(atelierId, request.auth.uid)).data.permissions.hasAny(['quotes:write'])));
+            && get(memberPath(atelierId, request.auth.uid)).data.permissions.hasAny(['quotes:write']))
+          || (permission == 'orders:read'
+            && get(memberPath(atelierId, request.auth.uid)).data.permissions.hasAny(['orders:manage'])));
     }
 
     function isOwnClient(atelierId, clientId) {
@@ -63,7 +65,7 @@ service cloud.firestore {
 
     function canReadOrder(atelierId, orderId) {
       let orderPath = /databases/$(database)/documents/ateliers/$(atelierId)/orders/$(orderId);
-      return isAtelierMember(atelierId)
+      return hasAtelierPermission(atelierId, 'orders:read')
         || (signedIn() && exists(orderPath) && (
           (get(orderPath).data.clientId is string && isOwnClient(atelierId, get(orderPath).data.clientId))
           || verifiedEmailMatches(get(orderPath).data.email)
@@ -108,10 +110,34 @@ service cloud.firestore {
         && (!('budgetMin' in data) || !('budgetMax' in data) || data.budgetMin <= data.budgetMax);
     }
 
+    function validMeasurement() {
+      let data = request.resource.data;
+      return data.keys().hasOnly(['type', 'label', 'value', 'unit', 'notes', 'createdAt', 'updatedAt'])
+        && data.keys().hasAll(['type', 'label', 'value', 'unit'])
+        && data.type is string && data.type.size() >= 1 && data.type.size() <= 80
+        && data.label is string && data.label.size() >= 1 && data.label.size() <= 100
+        && data.value is number && data.value >= 0 && data.value <= 100000
+        && data.unit is string && data.unit.size() >= 1 && data.unit.size() <= 20
+        && (!('notes' in data) || (data.notes is string && data.notes.size() <= 500));
+    }
+
+    function validMeasurementProfile() {
+      let data = request.resource.data;
+      return data.keys().hasOnly(['clientId', 'name', 'active', 'createdAt', 'updatedAt'])
+        && data.keys().hasAll(['clientId', 'name', 'active'])
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 100
+        && data.active is bool;
+    }
+
     // Collection-group query used by a verified client to see quotes across ateliers.
     match /{path=**}/quotes/{quoteId} {
       allow get, list: if verifiedEmailMatches(resource.data.email)
         && resource.data.status in ['sent', 'approved', 'rejected', 'expired'];
+    }
+
+    // A client portal may list only orders indexed to its own verified email across tenants.
+    match /{path=**}/orders/{orderId} {
+      allow get, list: if verifiedEmailMatches(resource.data.email);
     }
 
     match /users/{userId} {
@@ -216,7 +242,7 @@ service cloud.firestore {
         match /{subcollection}/{documentId} {
           allow read: if canReadOrder(atelierId, orderId)
             && (isAtelierMember(atelierId)
-              || (subcollection in ['items', 'productionStages', 'photos', 'approvals', 'payments', 'messages', 'files', 'statusHistory']
+              || (subcollection in ['items', 'productionStages', 'photos', 'approvals', 'payments', 'messages', 'files', 'statusHistory', 'measurementSnapshot']
                 && (subcollection != 'photos' || resource.data.visibleToClient == true)));
           allow create, update, delete: if hasAtelierPermission(atelierId, 'orders:manage');
         }
@@ -225,12 +251,26 @@ service cloud.firestore {
       match /measurementProfiles/{profileId} {
         allow get, list: if hasAtelierPermission(atelierId, 'measurements:read')
           || isOwnClient(atelierId, resource.data.clientId);
-        allow create, update: if hasAtelierPermission(atelierId, 'measurements:write');
+        allow create: if hasAtelierPermission(atelierId, 'measurements:write')
+          || (validMeasurementProfile() && request.resource.data.clientId is string
+            && request.resource.data.active == true
+            && isOwnClient(atelierId, request.resource.data.clientId));
+        allow update: if hasAtelierPermission(atelierId, 'measurements:write')
+          || (resource.data.clientId is string && isOwnClient(atelierId, resource.data.clientId)
+            && validMeasurementProfile()
+            && request.resource.data.clientId == resource.data.clientId);
         allow delete: if false;
         match /measurements/{measurementId} {
           allow read: if hasAtelierPermission(atelierId, 'measurements:read')
             || isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId)).data.clientId);
-          allow write: if hasAtelierPermission(atelierId, 'measurements:write');
+          allow create: if hasAtelierPermission(atelierId, 'measurements:write')
+            || (isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId)).data.clientId)
+              && validMeasurement());
+          allow update: if hasAtelierPermission(atelierId, 'measurements:write')
+            || (isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId)).data.clientId)
+              && validMeasurement()
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['value', 'unit', 'notes', 'updatedAt']));
+          allow delete: if hasAtelierPermission(atelierId, 'measurements:write');
         }
       }
 

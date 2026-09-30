@@ -103,6 +103,8 @@ try {
           { name: 'atelier-quotes', route: '/atelier/orcamentos', ready: 'R$ 2.000,00' },
           { name: 'atelier-quote-editor', route: '/atelier/orcamentos/novo?solicitacaoId=request-2026-001', ready: 'Itens do orçamento' },
           { name: 'atelier-quote-detail', route: '/atelier/orcamentos/quote-2026-001', ready: 'Materiais e aviamentos' },
+          { name: 'atelier-orders', route: '/atelier/pedidos', ready: 'Mikasa Ackerman' },
+          { name: 'atelier-order-detail', route: '/atelier/pedidos/quote-2026-001', ready: 'Itens aprovados' },
         ],
       },
       {
@@ -111,10 +113,18 @@ try {
         screens: [
           { name: 'client-quotes', route: '/cliente/orcamentos', ready: 'R$ 2.000,00' },
           { name: 'client-quote-detail', route: '/cliente/orcamentos/quote-2026-001?atelierId=atelier-aurora', ready: 'Itens e serviços' },
+          { name: 'client-orders', route: '/cliente/pedidos', ready: 'Mikasa Ackerman' },
+          { name: 'client-order-detail', route: '/cliente/pedidos/quote-2026-001?atelierId=atelier-aurora', ready: 'Itens aprovados' },
+          { name: 'client-measurement-profiles', route: '/cliente/medidas', ready: 'Ficha principal' },
+          { name: 'client-measurement-detail', route: '/cliente/medidas/profile-marina?atelierId=atelier-aurora', ready: 'Medidas cadastradas' },
         ],
         mobileScreens: [
           { name: 'client-quotes-mobile', route: '/cliente/orcamentos', ready: 'R$ 2.000,00' },
           { name: 'client-quote-detail-mobile', route: '/cliente/orcamentos/quote-2026-001?atelierId=atelier-aurora', ready: 'Itens e serviços' },
+          { name: 'client-orders-mobile', route: '/cliente/pedidos', ready: 'Mikasa Ackerman' },
+          { name: 'client-order-detail-mobile', route: '/cliente/pedidos/quote-2026-001?atelierId=atelier-aurora', ready: 'Itens aprovados' },
+          { name: 'client-measurement-profiles-mobile', route: '/cliente/medidas', ready: 'Ficha principal' },
+          { name: 'client-measurement-detail-mobile', route: '/cliente/medidas/profile-marina?atelierId=atelier-aurora', ready: 'Medidas cadastradas' },
         ],
       },
     ];

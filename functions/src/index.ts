@@ -8,3 +8,4 @@ export { publishQuote } from './quotes/publish-quote';
 export { respondToQuote } from './quotes/respond-to-quote';
 export { expireQuotes } from './quotes/expire-quotes';
 export { createOrderFromApprovedQuote } from './orders/create-order';
+export { listClientMeasurementProfiles } from './orders/list-client-measurement-profiles';

@@ -19,17 +19,30 @@ export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelier
 
   await adminDb.runTransaction(async (transaction) => {
     const existingOrder = await transaction.get(orderRef);
-    const [requestSnapshot, itemSnapshots, referenceSnapshots] = await Promise.all([
+    if (existingOrder.exists) return;
+    const [requestSnapshot, itemSnapshots, referenceSnapshots, profileSnapshots] = await Promise.all([
       transaction.get(requestRef), transaction.get(itemQuery), transaction.get(referenceQuery),
+      typeof quote.clientId === 'string'
+        ? transaction.get(atelier.collection('measurementProfiles')
+          .where('clientId', '==', quote.clientId)
+          .where('active', '==', true)
+          .orderBy('updatedAt', 'desc')
+          .limit(1))
+        : Promise.resolve(null),
     ]);
-    if (existingOrder.exists || !requestSnapshot.exists) return;
+    if (!requestSnapshot.exists) return;
 
     const request = requestSnapshot.data()!;
+    const measurementProfile = profileSnapshots?.docs[0] ?? null;
+    const measurementSnapshots = measurementProfile
+      ? await transaction.get(measurementProfile.ref.collection('measurements'))
+      : null;
     const now = FieldValue.serverTimestamp();
     transaction.create(orderRef, {
       quoteId,
       requestId: quote.requestId,
       clientId: typeof quote.clientId === 'string' ? quote.clientId : null,
+      clientName: typeof request.name === 'string' ? request.name : 'Cliente',
       email: String(quote.email).trim().toLowerCase(),
       character: request.character,
       franchise: request.franchise,
@@ -46,6 +59,13 @@ export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelier
     itemSnapshots.docs.forEach((item) => transaction.set(orderRef.collection('items').doc(item.id), { ...item.data(), sourceQuoteItemId: item.id }));
     referenceSnapshots.docs.forEach((reference) => transaction.set(orderRef.collection('files').doc(reference.id), {
       ...reference.data(), source: 'quote_request', createdAt: now,
+    }));
+    measurementSnapshots?.docs.forEach((measurement) => transaction.create(orderRef.collection('measurementSnapshot').doc(measurement.id), {
+      ...measurement.data(),
+      sourceProfileId: measurementProfile!.id,
+      sourceMeasurementId: measurement.id,
+      profileName: measurementProfile!.data().name ?? null,
+      capturedAt: now,
     }));
     transaction.create(historyRef, {
       status: 'waiting_deposit',
