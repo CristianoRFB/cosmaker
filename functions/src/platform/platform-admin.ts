@@ -28,6 +28,7 @@ export function publicAtelierSnapshot(id: string, data: DocumentData) {
     ownerId: typeof data.ownerId === 'string' ? data.ownerId : null,
     plan: typeof data.plan === 'string' ? data.plan : null,
     active: data.active === true,
+    demoWorkspace: data.demoWorkspace === true,
     createdAt: isoDate(data.createdAt),
     updatedAt: isoDate(data.updatedAt),
     city: typeof data.city === 'string' ? data.city : null,

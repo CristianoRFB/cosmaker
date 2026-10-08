@@ -10,4 +10,6 @@ Aurora/Luna são tenants fictícios usados exclusivamente no Emulator. Menções
 
 - Visão da versão: `docs/versions/v0.1.0/LEADS_OVERVIEW.md`.
 - Pasta da versão: `docs/versions/v0.1.0/leads/README.md`.
+- Visão comercial v0.2.0 em preparação: [LEADS_OVERVIEW](versions/v0.2.0/LEADS_OVERVIEW.md).
+- Pasta comercial v0.2.0 preserva a ausência de registros confirmados: [leads/README](versions/v0.2.0/leads/README.md).
 - Manifests futuros devem informar versão, status, origem/referências e caminhos existentes, sem duplicar dados pessoais desnecessários.

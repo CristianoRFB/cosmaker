@@ -1,0 +1,27 @@
+flowchart TD
+  KEY[Chave registrada permitida]
+  IMPLEMENTED[Feature realmente implementada]
+  STATE[Estado comercial válido atribuído]
+  STATUS[Status e prazo por relógio servidor]
+  OVERRIDE[Override explícito true ou false]
+  PLAN[Sem override usar plano base]
+  ENTITLEMENT[Resolver direito comercial]
+  CONFIG[FeatureConfig true obrigatório]
+  AVAILABLE[Disponibilidade efetiva]
+  DENIED[Ausente desconhecido ou restrito nega]
+  LIMIT[Limite override ou plano explícito]
+  LIMITSTATE[Zero positivo null ou não configurado]
+  KEY --> IMPLEMENTED
+  IMPLEMENTED --> STATE
+  STATE --> STATUS
+  STATUS --> OVERRIDE
+  STATUS --> PLAN
+  OVERRIDE --> ENTITLEMENT
+  PLAN --> ENTITLEMENT
+  ENTITLEMENT --> CONFIG
+  CONFIG --> AVAILABLE
+  KEY --> DENIED
+  STATE --> DENIED
+  STATUS --> DENIED
+  AVAILABLE --> LIMIT
+  LIMIT --> LIMITSTATE

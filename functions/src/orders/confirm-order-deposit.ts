@@ -3,6 +3,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
 import { requireOrderManager, requireVerifiedIdentity } from './access';
 import { defaultProductionStages } from './production-template';
+import { requireNonDemoWorkspace } from '../commercial/access';
 
 const paymentMethods = ['pix', 'bank_transfer', 'cash', 'other'] as const;
 
@@ -18,6 +19,7 @@ export const confirmOrderDeposit = onCall(async (call) => {
   const reference = typeof data.reference === 'string' ? data.reference.trim() : '';
   if (reference.length > 120) throw new HttpsError('invalid-argument', 'A referência pode ter até 120 caracteres.');
   await requireOrderManager(data.atelierId, call.auth!.uid, 'payments:write');
+  await requireNonDemoWorkspace(data.atelierId);
 
   const atelier = adminDb.doc(`ateliers/${data.atelierId}`);
   const orderRef = atelier.collection('orders').doc(data.orderId);

@@ -1,6 +1,8 @@
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
 import { publicAtelierSnapshot, requirePlatformAdmin } from './platform-admin';
+import { resolveCommercialState } from '../commercial/entitlements';
+import { commercialStateRef } from '../commercial/data';
 
 export const listPlatformAteliers = onCall(async (call) => {
   if (!call.auth) throw new HttpsError('unauthenticated', 'Entre na sua conta para continuar.');
@@ -21,11 +23,22 @@ export const listPlatformAteliers = onCall(async (call) => {
   const ateliers = await Promise.all(page.map(async (snapshot) => {
     const data = snapshot.data();
     const ownerId = typeof data.ownerId === 'string' ? data.ownerId : null;
-    const ownerSnapshot = ownerId ? await adminDb.doc(`users/${ownerId}`).get() : null;
+    const [ownerSnapshot, commercialSnapshot] = await Promise.all([
+      ownerId ? adminDb.doc(`users/${ownerId}`).get() : Promise.resolve(null),
+      commercialStateRef(snapshot.id).get(),
+    ]);
     const ownerEmail = ownerSnapshot?.data()?.email;
+    const commercialResolution = resolveCommercialState({ commercialState: commercialSnapshot?.exists ? commercialSnapshot.data() : undefined });
     return {
       ...publicAtelierSnapshot(snapshot.id, data),
       email: typeof data.email === 'string' ? data.email : typeof ownerEmail === 'string' ? ownerEmail : null,
+      commercial: {
+        assignment: commercialResolution.assignment,
+        planId: commercialResolution.assignment === 'assigned' ? commercialResolution.state.planId : null,
+        subscriptionStatus: commercialResolution.assignment === 'assigned' ? commercialResolution.state.subscriptionStatus : null,
+        trialUntil: commercialResolution.assignment === 'assigned' ? commercialResolution.state.trialUntil ?? null : null,
+        demoWorkspace: data.demoWorkspace === true,
+      },
     };
   }));
   return {

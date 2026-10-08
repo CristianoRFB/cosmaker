@@ -2,6 +2,7 @@ import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb, adminStorage } from '../admin';
 import { requireOrderManager, requireVerifiedIdentity } from './access';
+import { requireNonDemoWorkspace } from '../commercial/access';
 
 const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const maxPhotoBytes = 10 * 1024 * 1024;
@@ -26,6 +27,7 @@ export const createProductionPhotoUpload = onCall(async (call) => {
     throw new HttpsError('invalid-argument', 'Descrição ou visibilidade da foto inválida.');
   }
   await requireOrderManager(data.atelierId, call.auth!.uid, 'orders:manage');
+  await requireNonDemoWorkspace(data.atelierId);
 
   const orderRef = adminDb.doc(`ateliers/${data.atelierId}/orders/${data.orderId}`);
   const [order, stage] = await Promise.all([
@@ -57,6 +59,7 @@ export const completeProductionPhotoUpload = onCall(async (call) => {
     throw new HttpsError('invalid-argument', 'Ateliê, pedido e foto são obrigatórios.');
   }
   await requireOrderManager(data.atelierId, call.auth!.uid, 'orders:manage');
+  await requireNonDemoWorkspace(data.atelierId);
   const orderRef = adminDb.doc(`ateliers/${data.atelierId}/orders/${data.orderId}`);
   const photoRef = orderRef.collection('photos').doc(data.photoId);
   const photoSnapshot = await photoRef.get();

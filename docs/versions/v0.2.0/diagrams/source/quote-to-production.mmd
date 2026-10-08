@@ -1,0 +1,18 @@
+flowchart LR
+Request[Solicitação pública]
+Quote[Proposta do ateliê]
+Approval[Aprovação do cliente]
+Snapshot[Snapshot comercial e medidas]
+Order[Pedido]
+Deposit[Confirmação protegida de sinal]
+Stages[Etapas de produção]
+Photo[Foto e atualização]
+ClientApproval[Aprovação de prova pelo cliente]
+Request --> Quote
+Quote --> Approval
+Approval --> Snapshot
+Snapshot --> Order
+Order --> Deposit
+Deposit --> Stages
+Stages --> Photo
+Photo --> ClientApproval

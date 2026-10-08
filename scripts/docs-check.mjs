@@ -3,7 +3,10 @@ import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const version = 'v0.1.0';
+const currentPath = 'docs/CURRENT.md';
+const currentContents = await readFile(resolve(root, currentPath), 'utf8').catch(() => '');
+const currentVersion = currentContents.match(/versions\/(v\d+\.\d+\.\d+)\//)?.[1];
+const version = currentVersion ?? 'v0.1.0';
 const versionDirectory = `docs/versions/${version}`;
 const requiredDocuments = [
   'README.md', 'STATUS.md', 'ARCHITECTURE.md', 'DATA_MODEL.md', 'SECURITY.md',
@@ -26,11 +29,9 @@ async function collectMarkdown(directory) {
   return result;
 }
 
-if (!(await exists('docs/CURRENT.md'))) failures.push('docs/CURRENT.md está ausente.');
-else {
-  const current = await readFile(resolve(root, 'docs/CURRENT.md'), 'utf8');
-  if (!current.includes(versionDirectory)) failures.push(`docs/CURRENT.md deve apontar para ${versionDirectory}.`);
-}
+if (!(await exists(currentPath))) failures.push(`${currentPath} está ausente.`);
+else if (!currentVersion) failures.push(`${currentPath} não declara uma versão documental válida.`);
+else if (!currentContents.includes(versionDirectory)) failures.push(`${currentPath} deve apontar para ${versionDirectory}.`);
 for (const document of requiredDocuments) {
   if (!(await exists(`${versionDirectory}/${document}`))) failures.push(`Documento obrigatório ausente: ${versionDirectory}/${document}.`);
 }
@@ -54,7 +55,8 @@ for (const markdownPath of markdownFiles) {
 }
 
 const diagramManifest = await readFile(resolve(root, 'docs/DIAGRAMS_MANIFEST.md'), 'utf8').catch(() => '');
-const diagramPaths = [...diagramManifest.matchAll(/`(diagrams\/(?:source|rendered)\/[^`]+)`/g)].map((match) => match[1]);
+const currentDiagramRows = diagramManifest.split(/\r?\n/).filter((line) => line.includes(`| ${version} |`));
+const diagramPaths = [...currentDiagramRows.join('\n').matchAll(/`(diagrams\/(?:source|rendered)\/[^`]+)`/g)].map((match) => match[1]);
 if (!diagramPaths.some((path) => path.startsWith('diagrams/source/'))) failures.push('DIAGRAMS_MANIFEST.md não referencia fontes Mermaid.');
 if (!diagramPaths.some((path) => path.startsWith('diagrams/rendered/'))) failures.push('DIAGRAMS_MANIFEST.md não referencia renders SVG.');
 for (const path of diagramPaths) if (!(await exists(`${versionDirectory}/${path}`))) failures.push(`Diagrama referenciado ausente: ${versionDirectory}/${path}.`);

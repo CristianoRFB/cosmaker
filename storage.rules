@@ -36,6 +36,13 @@ service firebase.storage {
       return /databases/(default)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId)/references/$(referenceId);
     }
 
+    function isDemoWorkspace(atelierId) {
+      let atelierPath = /databases/(default)/documents/ateliers/$(atelierId);
+      return firestore.exists(atelierPath)
+        && ('demoWorkspace' in firestore.get(atelierPath).data)
+        && firestore.get(atelierPath).data.demoWorkspace == true;
+    }
+
     function mayWritePublicReference(atelierId, requestId, referenceId) {
       let intakePath = /databases/(default)/documents/publicAteliers/$(atelierId);
       let atelierPath = /databases/(default)/documents/ateliers/$(atelierId);
@@ -86,10 +93,10 @@ service firebase.storage {
 
     match /ateliers/{atelierId}/branding/{fileName} {
       allow read: if isAtelierMember(atelierId);
-      allow create, update: if isAtelierMember(atelierId)
+      allow create, update: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId)
         && request.resource.size <= 5 * 1024 * 1024
         && request.resource.contentType.matches('image/(jpeg|png|webp)');
-      allow delete: if isAtelierMember(atelierId);
+      allow delete: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId);
     }
 
     match /ateliers/{atelierId}/portfolio/{projectId}/{fileName} {
@@ -97,21 +104,21 @@ service firebase.storage {
         || (firestore.exists(/databases/(default)/documents/publicAteliers/$(atelierId)/portfolio/$(projectId))
           && firestore.get(/databases/(default)/documents/publicAteliers/$(atelierId)/portfolio/$(projectId)).data.public == true
           && firestore.get(/databases/(default)/documents/publicAteliers/$(atelierId)).data.published == true);
-      allow create, update: if isAtelierMember(atelierId) && isReferenceImage();
-      allow delete: if isAtelierMember(atelierId);
+      allow create, update: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId) && isReferenceImage();
+      allow delete: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId);
     }
 
     match /ateliers/{atelierId}/quoteRequests/{requestId}/references/{referenceId} {
       allow read: if referenceIsReady(atelierId, requestId, referenceId)
         && (isAtelierMember(atelierId) || mayReadOwnPublicReference(atelierId, requestId));
-      allow create: if isReferenceImage() && mayWritePublicReference(atelierId, requestId, referenceId);
+      allow create: if isReferenceImage() && !isDemoWorkspace(atelierId) && mayWritePublicReference(atelierId, requestId, referenceId);
       allow update, delete: if false;
     }
 
     match /ateliers/{atelierId}/clients/{clientId}/measurements/{fileName} {
       allow read: if isAtelierMember(atelierId);
-      allow create, update: if isAtelierMember(atelierId) && isAtelierFile();
-      allow delete: if isAtelierMember(atelierId);
+      allow create, update: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId) && isAtelierFile();
+      allow delete: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId);
     }
 
     match /ateliers/{atelierId}/orders/{orderId}/production/{photoId} {
@@ -124,6 +131,7 @@ service firebase.storage {
           && firestore.get(photoPath()).data.uploadStatus == 'ready'
           && firestore.get(photoPath()).data.visibleToClient == true);
       allow create: if hasAtelierPermission(atelierId, 'orders:manage')
+        && !isDemoWorkspace(atelierId)
         && firestore.exists(photoPath())
         && firestore.get(photoPath()).data.uploadedBy == request.auth.uid
         && firestore.get(photoPath()).data.uploadStatus == 'pending'
@@ -135,21 +143,24 @@ service firebase.storage {
     match /ateliers/{atelierId}/orders/{orderId}/{area}/{fileName} {
       allow read: if hasAtelierPermission(atelierId, 'orders:read');
       allow create, update: if isAtelierMember(atelierId)
+        && !isDemoWorkspace(atelierId)
         && area in ['references', 'approvals', 'documents', 'shipping']
         && isAtelierFile();
       allow delete: if isAtelierMember(atelierId)
+        && !isDemoWorkspace(atelierId)
         && area in ['references', 'approvals', 'documents', 'shipping'];
     }
 
     match /ateliers/{atelierId}/{area}/{fileName} {
       allow read: if isAtelierMember(atelierId);
       allow create, update: if isAtelierMember(atelierId)
+        && !isDemoWorkspace(atelierId)
         && area in ['contracts', 'invoices']
         && request.resource != null
         && request.resource.size > 0
         && request.resource.size <= 20 * 1024 * 1024
         && request.resource.contentType == 'application/pdf';
-      allow delete: if isAtelierMember(atelierId) && area in ['contracts', 'invoices'];
+      allow delete: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId) && area in ['contracts', 'invoices'];
     }
 
     match /{allPaths=**} {

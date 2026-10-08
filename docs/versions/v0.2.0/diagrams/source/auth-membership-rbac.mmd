@@ -1,0 +1,19 @@
+flowchart LR
+Identity[Firebase Auth]
+Profile[users uid]
+Context[TenantProvider atelierId]
+Member[ateliers atelierId members uid]
+Role[role e permissions]
+Active[Atelier e membership ativos]
+Rules[Firestore e Storage Rules]
+Backend[Cloud Functions]
+Data[Dados privados do tenant]
+Identity --> Profile
+Identity --> Context
+Context --> Member
+Member --> Role
+Role --> Active
+Active --> Rules
+Active --> Backend
+Rules --> Data
+Backend --> Data

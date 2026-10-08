@@ -146,7 +146,21 @@ service cloud.firestore {
       allow get: if isAtelierMember(atelierId);
       allow list: if false;
       allow create, delete: if false;
-      allow update: if hasAtelierPermission(atelierId, 'atelier:settings');
+      allow update: if hasAtelierPermission(atelierId, 'atelier:settings')
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'demoWorkspace', 'plan', 'planId', 'subscriptionStatus', 'trialUntil', 'entitlementOverrides', 'limitOverrides',
+        ]);
+
+      // Commercial state and usage counters are server-managed, even for atelier owners.
+      match /commercial/{documentId} {
+        allow read, write: if false;
+      }
+      match /commercialUsage/{documentId} {
+        allow read, write: if false;
+      }
+      match /commercialOperations/{operationId} {
+        allow read, write: if false;
+      }
 
       match /members/{memberId} {
         allow get: if signedIn() && request.auth.uid == memberId || hasAtelierPermission(atelierId, 'team:read');

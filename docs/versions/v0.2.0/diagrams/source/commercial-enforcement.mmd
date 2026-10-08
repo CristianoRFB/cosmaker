@@ -1,0 +1,23 @@
+flowchart TD
+  UI[UI FeatureGating consulta servidor]
+  IDENTITY[Callable deriva tenant de Auth perfil]
+  RBAC[Membership RBAC e ateliê ativo]
+  POLICY[Estado entitlement implementação config]
+  TX[Transação relê política e uso por tenant]
+  LIMIT[Verificar limite explícito e contagem]
+  CONSUME[Registro sintético mais contador atômico]
+  RESPONSE[Resposta permitida ou negada na UI]
+  DIRECT[Browser tenta escrita direta]
+  RULES[Firestore Rules negam comercial e uso]
+  DEMO[Demo restringe efeitos sensíveis]
+  STORAGE[Storage Rules negam uploads demo]
+  UI --> IDENTITY
+  IDENTITY --> RBAC
+  RBAC --> POLICY
+  POLICY --> TX
+  TX --> LIMIT
+  LIMIT --> CONSUME
+  CONSUME --> RESPONSE
+  POLICY --> RESPONSE
+  DIRECT --> RULES
+  DEMO --> STORAGE

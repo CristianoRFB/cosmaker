@@ -1,0 +1,22 @@
+flowchart TD
+Route[URL com tenantSlug]
+Callable[resolvePublicTenant]
+SlugMap[publicAtelierSlugs slug]
+Atelier[ateliers atelierId active]
+Public[publicAteliers configuração]
+Status[Estado disponível ou erro]
+Landing[Landing e formulário do tenant]
+Intake[createPublicQuoteRequest]
+Request[Solicitação sob atelierId resolvido]
+Pending[Referência pendente e path Storage]
+Upload[Upload validado pelo backend]
+Route --> Callable
+Callable --> SlugMap
+SlugMap --> Atelier
+Atelier --> Public
+Public --> Status
+Status --> Landing
+Landing --> Intake
+Intake --> Request
+Request --> Pending
+Pending --> Upload

@@ -1,0 +1,24 @@
+flowchart TD
+  UI[Painel Platform Owner]
+  AUTH[Claim global perfil ativo email verificado]
+  VALIDATE[Validar motivo campos e política]
+  READ[Ler tenant e estado anterior]
+  PLAN[Atribuir plano ou status permitido]
+  TRIAL[Trial Premium 14 dias UTC uma vez]
+  OVERRIDE[Override de chave conhecida]
+  TRANSACTION[Transação compara estado anterior]
+  STATE[Gravar commercial state]
+  AUDIT[Gravar auditoria antes e depois]
+  PRESERVE[Preservar dados e active operacional]
+  UI --> AUTH
+  AUTH --> VALIDATE
+  VALIDATE --> READ
+  READ --> PLAN
+  READ --> TRIAL
+  READ --> OVERRIDE
+  PLAN --> TRANSACTION
+  TRIAL --> TRANSACTION
+  OVERRIDE --> TRANSACTION
+  TRANSACTION --> STATE
+  TRANSACTION --> AUDIT
+  STATE --> PRESERVE

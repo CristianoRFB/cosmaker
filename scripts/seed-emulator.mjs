@@ -30,6 +30,15 @@ const atelierUserB = await ensureLocalUser('atelie-luna@cosmaker.test', 'Ateliê
 const clientUser = await ensureLocalUser('cliente@cosmaker.test', 'Marina Almeida');
 const platformAdminUser = await ensureLocalUser('plataforma@cosmaker.test', 'Administração Cosmaker OS');
 await auth.setCustomUserClaims(platformAdminUser.uid, { platformAdmin: true });
+const commercialFixtures = [
+  { atelierId: 'atelier-premium', userEmail: 'premium@cosmaker.test', name: 'Tenant Premium de teste', planId: 'premium', subscriptionStatus: 'active', featureEnabled: false, limit: null },
+  { atelierId: 'atelier-trial', userEmail: 'trial@cosmaker.test', name: 'Tenant Trial de teste', planId: 'premium', subscriptionStatus: 'trial', featureEnabled: true, limit: 4 },
+  { atelierId: 'atelier-demo', userEmail: 'demo@cosmaker.test', name: 'Tenant Demo de teste', planId: 'premium', subscriptionStatus: 'demo', featureEnabled: true, limit: null, demoWorkspace: true },
+  { atelierId: 'atelier-past-due', userEmail: 'past-due@cosmaker.test', name: 'Tenant Pendente de teste', planId: 'pro', subscriptionStatus: 'past_due', featureEnabled: true, limit: 2 },
+  { atelierId: 'atelier-commercial-suspended', userEmail: 'comercial-suspenso@cosmaker.test', name: 'Tenant Suspenso comercial de teste', planId: 'essencial', subscriptionStatus: 'suspended', featureEnabled: true, limit: 2 },
+  { atelierId: 'atelier-cancelled', userEmail: 'cancelled@cosmaker.test', name: 'Tenant Cancelado de teste', planId: 'pro', subscriptionStatus: 'cancelled', featureEnabled: true, limit: 2 },
+];
+for (const fixture of commercialFixtures) fixture.owner = await ensureLocalUser(fixture.userEmail, fixture.name);
 const atelierId = 'atelier-aurora';
 const suspendedAtelierId = 'atelier-suspended-demo';
 const unpublishedAtelierId = 'atelier-unpublished-demo';
@@ -64,6 +73,42 @@ batch.set(db.doc(`ateliers/${atelierId}`), {
 batch.set(db.doc('ateliers/atelier-luna'), {
   id: 'atelier-luna', name: 'Ateliê Luna Cosplay', ownerId: atelierUserB.uid, active: true, plan: 'essencial', createdAt: now, updatedAt: now,
 });
+const probeFeature = 'test_only.operation_probe';
+const probeLimit = 'test_only.operation_count';
+for (const [atelierIdForCommercial, , planId, limit] of [
+  ['atelier-aurora', atelierUser, 'essencial', 2],
+  ['atelier-luna', atelierUserB, 'pro', 1],
+]) {
+  batch.set(db.doc(`ateliers/${atelierIdForCommercial}/commercial/state`), {
+    planId, subscriptionStatus: 'active', trialUntil: null,
+    entitlementOverrides: { [probeFeature]: true }, limitOverrides: { [probeLimit]: limit },
+  });
+  batch.set(db.doc(`ateliers/${atelierIdForCommercial}/commercial/config`), { featureConfig: { [probeFeature]: true }, updatedAt: now });
+}
+for (const fixture of commercialFixtures) {
+  const owner = fixture.owner;
+  const trialUntil = fixture.subscriptionStatus === 'trial' ? new Date(now.toMillis() + 14 * 24 * 60 * 60 * 1000).toISOString() : null;
+  batch.set(db.doc(`users/${owner.uid}`), {
+    id: owner.uid, name: owner.displayName, email: owner.email,
+    accountType: 'atelier_member', atelierId: fixture.atelierId, role: 'owner', permissions: [], active: true,
+    demoAccount: fixture.demoWorkspace === true, createdAt: now, updatedAt: now,
+  });
+  batch.set(db.doc(`ateliers/${fixture.atelierId}`), {
+    id: fixture.atelierId, name: fixture.name, ownerId: owner.uid, active: true, plan: fixture.planId,
+    ...(fixture.demoWorkspace ? { demoWorkspace: true } : {}), createdAt: now, updatedAt: now,
+  });
+  batch.set(db.doc(`ateliers/${fixture.atelierId}/members/${owner.uid}`), {
+    userId: owner.uid, role: 'owner', permissions: [], active: true, createdAt: now,
+  });
+  batch.set(db.doc(`ateliers/${fixture.atelierId}/commercial/state`), {
+    planId: fixture.planId, subscriptionStatus: fixture.subscriptionStatus, trialUntil,
+    entitlementOverrides: { [probeFeature]: fixture.featureEnabled },
+    limitOverrides: { [probeLimit]: fixture.limit },
+  });
+  batch.set(db.doc(`ateliers/${fixture.atelierId}/commercial/config`), {
+    featureConfig: { [probeFeature]: true }, updatedAt: now,
+  });
+}
 batch.set(db.doc(`ateliers/${suspendedAtelierId}`), {
   id: suspendedAtelierId, name: 'Ateliê de teste suspenso', active: false, status: 'suspended', createdAt: now, updatedAt: now,
 });

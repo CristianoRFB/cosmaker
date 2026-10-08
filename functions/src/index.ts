@@ -3,6 +3,8 @@ export { listPlatformAteliers } from './platform/list-platform-ateliers';
 export { getPlatformAtelier } from './platform/get-platform-atelier';
 export { setPlatformAtelierStatus } from './platform/set-platform-atelier-status';
 export { listPlatformAuditLogs } from './platform/list-platform-audit-logs';
+export { updatePlatformTenantCommercialState, createPlatformDemoTenant, endPlatformDemoTenant } from './commercial/platform-management';
+export { getTenantCommercialContext, getTenantFeatureAccess, runTestOnlyCommercialOperation } from './commercial/tenant-context';
 export { createQuoteDraft } from './quotes/create-quote-draft';
 export { publishQuote } from './quotes/publish-quote';
 export { respondToQuote } from './quotes/respond-to-quote';

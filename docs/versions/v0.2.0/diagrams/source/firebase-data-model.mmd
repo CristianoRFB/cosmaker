@@ -1,0 +1,18 @@
+flowchart TD
+Slug[publicAtelierSlugs slug]
+Public[publicAteliers atelierId]
+Atelier[ateliers atelierId]
+Member[members uid]
+Requests[quoteRequests requestId]
+References[references referenceId]
+Orders[orders orderId]
+Snapshot[measurementSnapshot e production]
+Audit[auditLogs]
+Slug --> Atelier
+Public --> Atelier
+Atelier --> Member
+Atelier --> Requests
+Requests --> References
+Atelier --> Orders
+Orders --> Snapshot
+Atelier --> Audit

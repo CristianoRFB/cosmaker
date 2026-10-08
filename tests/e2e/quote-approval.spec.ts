@@ -19,9 +19,7 @@ async function signInAsClient(page: Page) {
   }
   await page.goto('/login');
   await expect(page.locator('meta[name="cosmaker-firebase-mode"]')).toHaveAttribute('content', 'emulator');
-  await page.addInitScript(() => document.addEventListener('submit', (event) => event.preventDefault(), true));
-  await page.goto('/login?next=%2Fcliente%2Forcamentos', { waitUntil: 'networkidle' });
-  await page.waitForTimeout(500);
+  await page.goto('/login?next=%2Fcliente%2Forcamentos', { waitUntil: 'domcontentloaded' });
   await page.locator('#email').fill(email);
   await page.locator('#password').fill(password);
   await page.getByRole('button', { name: 'Entrar' }).click();
@@ -29,10 +27,8 @@ async function signInAsClient(page: Page) {
 }
 
 async function signInAsAtelier(page: Page) {
-  await page.goto('/login?next=%2Fatelier%2Fpedidos', { waitUntil: 'networkidle' });
+  await page.goto('/login?next=%2Fatelier%2Fpedidos', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('meta[name="cosmaker-firebase-mode"]')).toHaveAttribute('content', 'emulator');
-  await page.addInitScript(() => document.addEventListener('submit', (event) => event.preventDefault(), true));
-  await page.waitForTimeout(400);
   await page.locator('#email').fill('atelie@cosmaker.test');
   await page.locator('#password').fill(password!);
   await page.getByRole('button', { name: 'Entrar' }).click();

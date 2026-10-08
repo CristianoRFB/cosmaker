@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Eye, EyeOff, LockKeyhole, Mail, Sparkles } from 'lucide-react';
@@ -17,11 +17,14 @@ type Mode = 'login' | 'register' | 'reset';
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
   const { refreshUser } = useAuth();
+  const [ready, setReady] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => setReady(true), []);
 
   const title = mode === 'login' ? 'Entre na sua conta' : mode === 'register' ? 'Crie sua conta' : 'Recupere sua senha';
   const description = mode === 'login'
@@ -90,16 +93,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
     <CardHeader className="pb-3 pt-7 sm:px-7"><div className="mb-3 grid size-11 place-items-center rounded-2xl bg-violet-100 text-violet-700"><Sparkles size={20} /></div><CardTitle className="text-2xl">{title}</CardTitle><CardDescription>{description}</CardDescription></CardHeader>
     <CardContent className="sm:px-7">
       {!firebaseConfigured ? <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-5 text-amber-900">O Firebase ainda não está conectado neste ambiente. As credenciais precisam ser configuradas antes de entrar.</div> : null}
-      <form className="grid gap-4" noValidate onSubmit={submit}>
+      <form className="grid gap-4" method="post" noValidate onSubmit={submit}>
         {mode === 'register' ? <Field label="Seu nome" name="name" error={fieldErrors.name} autoComplete="name" placeholder="Como podemos chamar você?" /> : null}
         <Field label="E-mail" name="email" error={fieldErrors.email} autoComplete="email" type="email" placeholder="voce@exemplo.com" icon={<Mail size={16} />} />
         {mode !== 'reset' ? <div><label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor="password">Senha</label><div className="relative"><Input autoComplete={mode === 'register' ? 'new-password' : 'current-password'} className="pr-12" id="password" minLength={mode === 'register' ? 8 : undefined} name="password" placeholder={mode === 'register' ? 'Pelo menos 8 caracteres' : 'Sua senha'} type={showPassword ? 'text' : 'password'} /> <button aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 hover:text-slate-700" onClick={() => setShowPassword(!showPassword)} type="button">{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>{fieldErrors.password ? <p className="mt-1 text-xs text-rose-700">{fieldErrors.password}</p> : null}</div> : null}
         {mode === 'register' ? <Field label="Confirme sua senha" name="confirmPassword" error={fieldErrors.confirmPassword} autoComplete="new-password" type="password" placeholder="Digite a senha novamente" /> : null}
         {error ? <p className="rounded-lg bg-rose-50 px-3.5 py-3 text-sm text-rose-800" role="alert">{error}</p> : null}
         {success ? <p className="rounded-lg bg-emerald-50 px-3.5 py-3 text-sm text-emerald-800" role="status">{success}</p> : null}
-        <Button className="mt-1 w-full" disabled={pending || !firebaseConfigured} type="submit">{pending ? 'Aguarde…' : mode === 'login' ? 'Entrar' : mode === 'register' ? 'Criar conta' : 'Enviar link de recuperação'}{!pending ? <ArrowRight aria-hidden="true" size={16} /> : null}</Button>
+        <Button className="mt-1 w-full" disabled={!ready || pending || !firebaseConfigured} type="submit">{pending ? 'Aguarde…' : mode === 'login' ? 'Entrar' : mode === 'register' ? 'Criar conta' : 'Enviar link de recuperação'}{!pending ? <ArrowRight aria-hidden="true" size={16} /> : null}</Button>
       </form>
-      {mode === 'login' ? <><div className="my-5 flex items-center gap-3 text-xs text-slate-400"><span className="h-px flex-1 bg-slate-200" />ou continue com<span className="h-px flex-1 bg-slate-200" /></div><Button className="w-full" disabled={pending || !firebaseConfigured} onClick={googleLogin} variant="secondary"><GoogleMark />Google</Button></> : null}
+      {mode === 'login' ? <><div className="my-5 flex items-center gap-3 text-xs text-slate-400"><span className="h-px flex-1 bg-slate-200" />ou continue com<span className="h-px flex-1 bg-slate-200" /></div><Button className="w-full" disabled={!ready || pending || !firebaseConfigured} onClick={googleLogin} variant="secondary"><GoogleMark />Google</Button></> : null}
       <div className="mt-6 grid gap-3 text-center text-sm text-slate-600">
         {mode === 'login' ? <><Link className="font-semibold text-violet-700 hover:text-violet-900" href="/recuperar-senha">Esqueci minha senha</Link><p>Ainda não tem conta? <Link className="font-semibold text-violet-700" href="/cadastro">Criar conta</Link></p></> : mode === 'register' ? <p>Já tem conta? <Link className="font-semibold text-violet-700" href="/login">Entrar</Link></p> : <Link className="inline-flex items-center justify-center gap-2 font-semibold text-violet-700" href="/login"><ArrowLeft size={15} />Voltar para entrar</Link>}
       </div>

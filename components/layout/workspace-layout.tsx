@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { ArrowUpRight, Bell, CalendarDays, ChartNoAxesCombined, CircleUserRound, ClipboardList, CreditCard, FileText, Home, Layers3, LogOut, MessageCircle, Package, Ruler, Scissors, Settings, Sparkles, Users } from 'lucide-react';
+import { ArrowUpRight, Bell, CalendarDays, ChartNoAxesCombined, CircleUserRound, ClipboardList, CreditCard, FileText, Home, Layers3, LogOut, MessageCircle, Package, Ruler, Scissors, Settings, Sparkles, Users, Tags, ReceiptText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/ui/avatar';
 import { AuthGuard, type Audience } from './auth-guard';
 import { useAuth } from '@/providers/auth-provider';
 import { useTenant } from '@/providers/tenant-provider';
+import { TenantCommercialBanner } from '@/components/commercial/tenant-commercial-banner';
 
 const clientNavigation = [
   { href: '/cliente', label: 'Início', icon: Home },
@@ -36,6 +37,8 @@ const atelierNavigation = [
 const adminNavigation = [
   { href: '/admin', label: 'Visão geral', icon: Home },
   { href: '/admin/ateliers', label: 'Ateliês', icon: Scissors },
+  { href: '/admin/planos', label: 'Planos', icon: Tags },
+  { href: '/admin/assinaturas', label: 'Assinaturas', icon: ReceiptText },
   { href: '/admin/logs', label: 'Auditoria', icon: FileText },
 ];
 
@@ -49,7 +52,7 @@ export function WorkspaceLayout({ audience, title, children }: { audience: Audie
       && (item.href !== '/atelier/producao' || hasPermission('orders:read')))
     : adminNavigation;
   const pageTitle = audience === 'admin'
-    ? pathname === '/admin' ? 'Visão geral' : pathname === '/admin/logs' ? 'Auditoria' : pathname === '/admin/ateliers' ? 'Ateliês' : 'Detalhes do ateliê'
+    ? pathname === '/admin' ? 'Visão geral' : pathname === '/admin/logs' ? 'Auditoria' : pathname === '/admin/ateliers' ? 'Ateliês' : pathname === '/admin/planos' ? 'Planos' : pathname === '/admin/assinaturas' ? 'Assinaturas' : pathname.startsWith('/admin/ateliers/') ? 'Detalhes do ateliê' : 'Administração'
     : title;
   return <AuthGuard audience={audience}><div className="min-h-screen bg-[#f8f7fc] lg:grid lg:content-start lg:grid-cols-[248px_minmax(0,1fr)]">
     {process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' ? <div className="border-b border-amber-300 bg-amber-100 px-4 py-2 text-center text-xs font-bold tracking-wide text-amber-950 lg:col-span-2">AMBIENTE LOCAL · dados isolados nos emuladores Firebase</div> : null}
@@ -60,7 +63,7 @@ export function WorkspaceLayout({ audience, title, children }: { audience: Audie
     </aside>
       <div className="min-w-0 lg:col-start-2 lg:pl-0"><header className="sticky top-0 z-30 flex h-[68px] items-center justify-between border-b border-violet-100 bg-white/90 px-4 backdrop-blur-lg sm:px-7"><div><p className="text-xs font-medium text-slate-500">{audience === 'client' ? 'Área do cliente' : audience === 'atelier' ? 'Painel do ateliê' : 'Administração SaaS'}</p><p className="text-sm font-semibold text-slate-900">{pageTitle}</p></div><div className="flex items-center gap-2"><Link aria-label={audience === 'admin' ? 'Abrir auditoria' : 'Abrir notificações'} className="grid size-10 place-items-center rounded-xl text-slate-500 hover:bg-violet-50" href={audience === 'client' ? '/cliente/notificacoes' : audience === 'atelier' ? '/atelier/configuracoes/notificacoes' : '/admin/logs'}><Bell size={18} /></Link><Link aria-label="Abrir minha área" href={audience === 'admin' ? '/admin' : audience === 'client' ? '/cliente/perfil' : '/atelier/configuracoes'}><Avatar className="size-9" name={user?.name ?? 'Cosmaker'} src={user?.photoURL} /></Link><span className="hidden max-w-36 truncate text-sm font-semibold text-slate-700 sm:inline">{user?.name}</span></div></header>
       <nav aria-label="Navegação rápida" className="flex gap-1 overflow-x-auto border-b border-violet-100 bg-white px-3 py-2 lg:hidden">{navigation.map(({ href, label, icon: Icon }) => <Link className={cn('flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium', pathname === href ? 'bg-violet-100 text-violet-900' : 'text-slate-600')} href={href} key={href}><Icon size={15} />{label}</Link>)}</nav>
-      <main className="mx-auto w-full max-w-[1500px] p-4 sm:p-7"><h1 className="mb-6 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{pageTitle}</h1>{children}</main>
+      <main className="mx-auto w-full max-w-[1500px] p-4 sm:p-7"><h1 className="mb-6 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{pageTitle}</h1>{audience === 'atelier' ? <TenantCommercialBanner /> : null}{children}</main>
     </div>
   </div></AuthGuard>;
 }

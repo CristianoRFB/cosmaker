@@ -11,7 +11,7 @@ export const getPlatformOverview = onCall(async (call) => {
     adminDb.collection('ateliers').where('active', '==', true).count().get(),
     adminDb.collection('ateliers').where('active', '==', false).count().get(),
     adminDb.collection('users').count().get(),
-    adminDb.collection('subscriptions').where('status', '==', 'active').count().get(),
+    adminDb.collectionGroup('commercial').where('subscriptionStatus', '==', 'active').count().get(),
     adminDb.collection('auditLogs').orderBy('timestamp', 'desc').limit(8).get(),
   ]);
 

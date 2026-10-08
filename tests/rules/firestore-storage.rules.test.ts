@@ -3,9 +3,21 @@ import { resolve } from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { assertFails, assertSucceeds, initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import { collectionGroup, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
-import { getBytes, ref, uploadBytes } from 'firebase/storage';
+import { deleteObject, getBytes, ref, uploadBytes } from 'firebase/storage';
 
 let environment: RulesTestEnvironment;
+
+const demoProtectedFiles = [
+  ['branding/logo.png', 'image/png'],
+  ['portfolio/demo-project/photo.png', 'image/png'],
+  ['clients/demo-client/measurements/photo.png', 'image/png'],
+  ['orders/demo-order/references/reference.png', 'image/png'],
+  ['orders/demo-order/approvals/approval.pdf', 'application/pdf'],
+  ['orders/demo-order/documents/document.pdf', 'application/pdf'],
+  ['orders/demo-order/shipping/label.pdf', 'application/pdf'],
+  ['contracts/contract.pdf', 'application/pdf'],
+  ['invoices/invoice.pdf', 'application/pdf'],
+] as const;
 
 beforeAll(async () => {
   environment = await initializeTestEnvironment({
@@ -25,6 +37,7 @@ beforeEach(async () => {
     await Promise.all([
       setDoc(doc(db, 'ateliers/atelier-a'), { name: 'Ateliê A', active: true }),
       setDoc(doc(db, 'ateliers/atelier-b'), { name: 'Ateliê B', active: true }),
+      setDoc(doc(db, 'ateliers/atelier-demo'), { name: 'Ateliê de demonstração', active: true, demoWorkspace: true }),
       setDoc(doc(db, 'ateliers/atelier-closed'), { name: 'Ateliê fechado', active: true }),
       setDoc(doc(db, 'ateliers/atelier-unpublished-intake'), { name: 'Ateliê não publicado', active: true }),
       setDoc(doc(db, 'ateliers/atelier-suspended'), { name: 'Ateliê suspenso', active: false }),
@@ -36,6 +49,7 @@ beforeEach(async () => {
       setDoc(doc(db, 'publicAtelierSlugs/atelier-b'), { slug: 'atelier-b', atelierId: 'atelier-b' }),
       setDoc(doc(db, 'ateliers/atelier-a/members/member-a'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-b/members/member-b'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
+      setDoc(doc(db, 'ateliers/atelier-demo/members/demo-owner'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-a/members/finance-reader'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
       setDoc(doc(db, 'ateliers/atelier-a/members/no-order-access'), { active: true, role: 'assistant', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-a/quoteRequests/request-a'), { email: 'client@example.com', status: 'new' }),
@@ -79,6 +93,11 @@ beforeEach(async () => {
         atelierId: 'atelier-a', orderId: 'order-a', stageId: 'stage-fitting', storagePath: 'ateliers/atelier-a/orders/order-a/production/photo-upload',
         visibleToClient: false, uploadStatus: 'pending', uploadedBy: 'member-a', contentType: 'image/png',
       }),
+      setDoc(doc(db, 'ateliers/atelier-demo/orders/demo-order'), { clientId: 'demo-client', email: 'demo@example.invalid', status: 'confirmed' }),
+      setDoc(doc(db, 'ateliers/atelier-demo/orders/demo-order/photos/demo-upload'), {
+        atelierId: 'atelier-demo', orderId: 'demo-order', stageId: 'stage-demo', storagePath: 'ateliers/atelier-demo/orders/demo-order/production/demo-upload',
+        visibleToClient: false, uploadStatus: 'pending', uploadedBy: 'demo-owner', contentType: 'image/png',
+      }),
       setDoc(doc(db, 'ateliers/atelier-suspended/members/suspended-member'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-suspended/quoteRequests/request-suspended'), { email: 'client@example.com', status: 'new' }),
       setDoc(doc(db, 'users/platform-admin'), { accountType: 'platform_admin', active: true }),
@@ -91,6 +110,7 @@ beforeEach(async () => {
     await Promise.all([
       uploadBytes(ref(storage, 'ateliers/atelier-a/orders/order-a/production/photo-visible'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }),
       uploadBytes(ref(storage, 'ateliers/atelier-a/orders/order-a/production/photo-internal'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }),
+      ...demoProtectedFiles.map(([path, contentType]) => uploadBytes(ref(storage, `ateliers/atelier-demo/${path}`), new Uint8Array([1, 2, 3]), { contentType })),
     ]);
   });
 });
@@ -200,6 +220,17 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-b/quoteRequests/request-a/references/ref-a'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
   });
 
+  it('keeps commercial records server-managed and protects the demo marker', async () => {
+    const owner = environment.authenticatedContext('member-a').firestore();
+    await assertFails(getDoc(doc(owner, 'ateliers/atelier-a/commercial/state')));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/commercial/state'), { planId: 'premium', subscriptionStatus: 'active' }));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/commercial/config'), { featureConfig: { 'test_only.operation_probe': true } }));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/commercialUsage/test-only-operation-probe'), { count: 999 }));
+    await assertFails(updateDoc(doc(owner, 'ateliers/atelier-a'), { demoWorkspace: true }));
+    await assertFails(updateDoc(doc(owner, 'ateliers/atelier-a'), { plan: 'premium', subscriptionStatus: 'active' }));
+    await assertSucceeds(updateDoc(doc(owner, 'ateliers/atelier-a'), { name: 'Nome editado pelo proprietário' }));
+  });
+
   it('restricts production image uploads to assigned staff and serves only visible photos to clients', async () => {
     const member = environment.authenticatedContext('member-a').storage();
     const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).storage();
@@ -214,5 +245,31 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(uploadBytes(ref(client, 'ateliers/atelier-a/orders/order-a/production/unauthorized'), new Uint8Array([1]), {
       contentType: 'image/png', customMetadata: { photoId: 'unauthorized', orderId: 'order-a' },
     }));
+    const demoOwner = environment.authenticatedContext('demo-owner').storage();
+    await assertFails(uploadBytes(ref(demoOwner, 'ateliers/atelier-demo/orders/demo-order/production/demo-upload'), new Uint8Array([1, 2, 3]), {
+      contentType: 'image/png', customMetadata: { photoId: 'demo-upload', orderId: 'demo-order' },
+    }));
+  });
+
+  it('preserves demo file reads while denying create, update and deletion of sensitive files', async () => {
+    const storage = environment.authenticatedContext('demo-owner').storage();
+    for (const [path, contentType] of demoProtectedFiles) {
+      const existing = ref(storage, `ateliers/atelier-demo/${path}`);
+      await assertSucceeds(getBytes(existing));
+      await assertFails(uploadBytes(existing, new Uint8Array([4, 5, 6]), { contentType }));
+      await assertFails(uploadBytes(ref(storage, `ateliers/atelier-demo/${path}-new`), new Uint8Array([4, 5, 6]), { contentType }));
+      await assertFails(deleteObject(existing));
+      await assertSucceeds(getBytes(existing));
+    }
+  });
+
+  it('keeps non-demo document and logistical writes available to the existing authorized tenant', async () => {
+    const storage = environment.authenticatedContext('member-a').storage();
+    for (const path of ['contracts/new.pdf', 'invoices/new.pdf', 'orders/order-a/shipping/new.pdf', 'orders/order-a/documents/new.pdf']) {
+      const ownFile = ref(storage, `ateliers/atelier-a/${path}`);
+      await assertSucceeds(uploadBytes(ownFile, new Uint8Array([1, 2, 3]), { contentType: 'application/pdf' }));
+      await assertSucceeds(deleteObject(ownFile));
+      await assertFails(uploadBytes(ref(storage, `ateliers/atelier-b/${path}`), new Uint8Array([1, 2, 3]), { contentType: 'application/pdf' }));
+    }
   });
 });
