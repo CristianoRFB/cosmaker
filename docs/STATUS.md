@@ -1,6 +1,6 @@
 # Status do produto
 
-Atualizado em 07/10/2026. O estado técnico detalhado e a evidência estão em [docs/versions/v0.1.0/STATUS.md](versions/v0.1.0/STATUS.md).
+Atualizado em 08/10/2026. O estado técnico detalhado e a evidência estão em [docs/versions/v0.1.0/STATUS.md](versions/v0.1.0/STATUS.md).
 
 ## Implementado e validado
 

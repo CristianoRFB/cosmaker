@@ -1,6 +1,6 @@
 # Status v0.1.0 — core multi-tenant público
 
-Atualizado em 07/10/2026. Classificação baseada em código e execução local no Firebase Emulator; não implica publicação no Firebase real.
+Atualizado em 08/10/2026. Classificação baseada em código e execução local no Firebase Emulator; não implica publicação no Firebase real.
 
 ## Entregue
 

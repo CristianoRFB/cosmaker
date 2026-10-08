@@ -35,10 +35,14 @@ export const functions: Functions | null = firebaseApp ? getFunctions(firebaseAp
 
 if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' && auth && db && storage && functions) {
   const host = process.env.NEXT_PUBLIC_FIREBASE_EMULATOR_HOST || '127.0.0.1';
-  connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
-  connectFirestoreEmulator(db, host, 8080);
-  connectStorageEmulator(storage, host, 9199);
-  connectFunctionsEmulator(functions, host, 5001);
+  const port = (configuredValue: string | undefined, fallback: number) => {
+    const configured = Number(configuredValue);
+    return Number.isInteger(configured) && configured > 0 && configured <= 65535 ? configured : fallback;
+  };
+  connectAuthEmulator(auth, `http://${host}:${port(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_PORT, 9099)}`, { disableWarnings: true });
+  connectFirestoreEmulator(db, host, port(process.env.NEXT_PUBLIC_FIREBASE_FIRESTORE_EMULATOR_PORT, 8080));
+  connectStorageEmulator(storage, host, port(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_PORT, 9199));
+  connectFunctionsEmulator(functions, host, port(process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_PORT, 5001));
 }
 
 export function requireFirebase() {
