@@ -1,6 +1,6 @@
 'use client';
 
-import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
 import { ref, uploadBytes } from 'firebase/storage';
 import { requireFirebase } from '@/services/firebase/firebase.client';
 import type { QuoteRequestFormData } from '@/schemas/quote-request.schema';
@@ -22,50 +22,64 @@ export function validateReferenceFiles(files: File[]) {
   return issues;
 }
 
-function safeFileName(name: string) {
-  return name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9._-]/g, '-').slice(-100) || 'referencia';
+export function hasValidImageSignature(contentType: string, bytes: Uint8Array) {
+  if (contentType === 'image/jpeg') return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (contentType === 'image/png') return bytes.length >= 8 && [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a].every((byte, index) => bytes[index] === byte);
+  if (contentType === 'image/webp') return bytes.length >= 12
+    && String.fromCharCode(...bytes.slice(0, 4)) === 'RIFF'
+    && String.fromCharCode(...bytes.slice(8, 12)) === 'WEBP';
+  return false;
 }
 
-export async function createPublicQuoteRequest(atelierId: string, input: QuoteRequestFormData, files: File[] = []) {
-  const { db, storage } = requireFirebase();
-  const requestData = {
-    clientId: null,
-    name: input.name.trim(),
-    email: input.email.trim().toLowerCase(),
-    ...(input.phone?.trim() ? { phone: input.phone.trim() } : {}),
-    character: input.character.trim(),
-    franchise: input.franchise.trim(),
-    category: input.category,
-    description: input.description.trim(),
-    ...(input.eventDate ? { eventDate: input.eventDate } : {}),
-    desiredDeliveryDate: input.desiredDeliveryDate,
-    ...(input.budgetMin ? { budgetMin: Number(input.budgetMin) } : {}),
-    ...(input.budgetMax ? { budgetMax: Number(input.budgetMax) } : {}),
-    urgency: input.urgency,
-    ...(input.observations?.trim() ? { observations: input.observations.trim() } : {}),
-    status: 'new',
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  };
-  const requestRef = await addDoc(collection(db, 'ateliers', atelierId, 'quoteRequests'), requestData);
+export async function validateReferenceFileSignatures(files: File[]) {
+  const issues: ReferenceUploadIssue[] = [];
+  await Promise.all(files.map(async (file) => {
+    const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+    if (!hasValidImageSignature(file.type, header)) {
+      issues.push({ fileName: file.name, message: 'O conteúdo não corresponde ao formato da imagem informado.' });
+    }
+  }));
+  return issues;
+}
 
-  const outcomes = await Promise.all(files.map(async (file) => {
+interface CreatePublicRequestResponse {
+  requestId: string;
+  references: Array<{ uploadId: string; storagePath: string }>;
+}
+
+export async function createPublicQuoteRequest(tenantSlug: string, input: QuoteRequestFormData, files: File[] = []) {
+  const { functions, storage } = requireFirebase();
+  const createRequest = httpsCallable<{
+    tenantSlug: string;
+    input: Record<string, unknown>;
+    references: Array<{ name: string; contentType: string; size: number }>;
+  }, CreatePublicRequestResponse>(functions, 'createPublicQuoteRequest');
+  const completeUpload = httpsCallable<{ tenantSlug: string; requestId: string; uploadId: string }, { uploadId: string; ready: boolean }>(functions, 'completePublicQuoteReferenceUpload');
+  const discardUpload = httpsCallable<{ tenantSlug: string; requestId: string; uploadId: string }, { discarded: boolean }>(functions, 'discardPublicQuoteReferenceUpload');
+
+  const requestInput = Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined && value !== ''));
+  const result = await createRequest({
+    tenantSlug,
+    input: requestInput,
+    references: files.map((file) => ({ name: file.name, contentType: file.type, size: file.size })),
+  });
+  const { requestId, references } = result.data;
+
+  const outcomes = await Promise.all(files.map(async (file, index) => {
+    const reference = references[index];
+    if (!reference) return file.name;
     try {
-      const referenceId = crypto.randomUUID();
-      const storagePath = `ateliers/${atelierId}/quoteRequests/${requestRef.id}/references/${referenceId}-${safeFileName(file.name)}`;
-      await uploadBytes(ref(storage, storagePath), file, { contentType: file.type, customMetadata: { requestId: requestRef.id } });
-      await setDoc(doc(db, 'ateliers', atelierId, 'quoteRequests', requestRef.id, 'references', referenceId), {
-        storagePath,
-        originalName: file.name,
+      await uploadBytes(ref(storage, reference.storagePath), file, {
         contentType: file.type,
-        size: file.size,
-        createdAt: serverTimestamp(),
+        customMetadata: { requestId, uploadId: reference.uploadId },
       });
+      await completeUpload({ tenantSlug, requestId, uploadId: reference.uploadId });
       return null;
     } catch {
+      await discardUpload({ tenantSlug, requestId, uploadId: reference.uploadId }).catch(() => undefined);
       return file.name;
     }
   }));
 
-  return { requestId: requestRef.id, failedFiles: outcomes.filter((name): name is string => name !== null) };
+  return { requestId, failedFiles: outcomes.filter((name): name is string => name !== null) };
 }

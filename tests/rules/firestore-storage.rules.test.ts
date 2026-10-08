@@ -26,16 +26,35 @@ beforeEach(async () => {
       setDoc(doc(db, 'ateliers/atelier-a'), { name: 'Ateliê A', active: true }),
       setDoc(doc(db, 'ateliers/atelier-b'), { name: 'Ateliê B', active: true }),
       setDoc(doc(db, 'ateliers/atelier-closed'), { name: 'Ateliê fechado', active: true }),
+      setDoc(doc(db, 'ateliers/atelier-unpublished-intake'), { name: 'Ateliê não publicado', active: true }),
       setDoc(doc(db, 'ateliers/atelier-suspended'), { name: 'Ateliê suspenso', active: false }),
-      setDoc(doc(db, 'publicAteliers/atelier-a'), { quoteRequestsEnabled: true, published: false }),
+      setDoc(doc(db, 'publicAteliers/atelier-a'), { slug: 'atelier-a', quoteRequestsEnabled: true, published: true }),
+      setDoc(doc(db, 'publicAteliers/atelier-b'), { slug: 'atelier-b', quoteRequestsEnabled: true, published: true }),
       setDoc(doc(db, 'publicAteliers/atelier-closed'), { quoteRequestsEnabled: false, published: false }),
+      setDoc(doc(db, 'publicAteliers/atelier-unpublished-intake'), { quoteRequestsEnabled: true, published: false }),
+      setDoc(doc(db, 'publicAtelierSlugs/atelier-a'), { slug: 'atelier-a', atelierId: 'atelier-a' }),
+      setDoc(doc(db, 'publicAtelierSlugs/atelier-b'), { slug: 'atelier-b', atelierId: 'atelier-b' }),
       setDoc(doc(db, 'ateliers/atelier-a/members/member-a'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-b/members/member-b'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
       setDoc(doc(db, 'ateliers/atelier-a/members/finance-reader'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
       setDoc(doc(db, 'ateliers/atelier-a/members/no-order-access'), { active: true, role: 'assistant', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-a/quoteRequests/request-a'), { email: 'client@example.com', status: 'new' }),
       setDoc(doc(db, 'ateliers/atelier-b/quoteRequests/request-b'), { email: 'other@example.com', status: 'new' }),
+      setDoc(doc(db, 'ateliers/atelier-b/orders/order-b'), { clientId: 'client-b', email: 'other@example.com', status: 'confirmed' }),
+      setDoc(doc(db, 'ateliers/atelier-a/quoteRequests/request-a/references/ref-a'), {
+        storagePath: 'ateliers/atelier-a/quoteRequests/request-a/references/ref-a', originalName: 'ref.png',
+        contentType: 'image/png', size: 3, uploadStatus: 'pending', createdAt: serverTimestamp(),
+      }),
+      setDoc(doc(db, 'ateliers/atelier-b/quoteRequests/request-b/references/ref-b'), {
+        storagePath: 'ateliers/atelier-b/quoteRequests/request-b/references/ref-b', originalName: 'ref.png',
+        contentType: 'image/png', size: 3, uploadStatus: 'ready', createdAt: serverTimestamp(),
+      }),
       setDoc(doc(db, 'ateliers/atelier-closed/quoteRequests/request-closed'), { email: 'client@example.com', status: 'new' }),
+      setDoc(doc(db, 'ateliers/atelier-unpublished-intake/quoteRequests/request-unpublished'), { email: 'client@example.com', status: 'new' }),
+      setDoc(doc(db, 'ateliers/atelier-unpublished-intake/quoteRequests/request-unpublished/references/ref-unpublished'), {
+        storagePath: 'ateliers/atelier-unpublished-intake/quoteRequests/request-unpublished/references/ref-unpublished',
+        originalName: 'ref.png', contentType: 'image/png', size: 3, uploadStatus: 'pending', createdAt: serverTimestamp(),
+      }),
       setDoc(doc(db, 'ateliers/atelier-a/quotes/quote-a'), { email: 'client@example.com', status: 'sent', total: 1200 }),
       setDoc(doc(db, 'ateliers/atelier-a/transactions/transaction-a'), { amount: 1200 }),
       setDoc(doc(db, 'ateliers/atelier-a/clients/client-a'), { userId: 'client-a', email: 'client@example.com' }),
@@ -77,7 +96,7 @@ beforeEach(async () => {
 });
 
 describe('Firestore and Storage tenant rules', () => {
-  it('allows only valid public intake for a published intake configuration', async () => {
+  it('keeps public slug mappings private and routes intake writes through the trusted backend', async () => {
     const guest = environment.unauthenticatedContext().firestore();
     const validRequest = {
       clientId: null, name: 'Cliente Cosmaker', email: 'client@example.com', character: 'Personagem', franchise: 'Franquia',
@@ -85,15 +104,21 @@ describe('Firestore and Storage tenant rules', () => {
       desiredDeliveryDate: '2027-07-14', urgency: 'normal', status: 'new',
       createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
     };
-    await assertSucceeds(setDoc(doc(guest, 'ateliers/atelier-a/quoteRequests/new-request'), validRequest));
+    await assertFails(getDoc(doc(guest, 'publicAtelierSlugs/atelier-a')));
+    await assertFails(getDoc(doc(guest, 'publicAteliers/atelier-a')));
+    await assertFails(setDoc(doc(guest, 'publicAtelierSlugs/forged'), { slug: 'forged', atelierId: 'atelier-b' }));
+    await assertFails(setDoc(doc(guest, 'ateliers/atelier-a/quoteRequests/new-request'), validRequest));
     await assertFails(setDoc(doc(guest, 'ateliers/atelier-closed/quoteRequests/new-request'), validRequest));
     await assertFails(setDoc(doc(guest, 'ateliers/atelier-a/quoteRequests/bad-request'), { ...validRequest, status: 'approved' }));
+    await assertFails(setDoc(doc(guest, 'ateliers/atelier-a/quoteRequests/tampered-request'), { ...validRequest, atelierId: 'atelier-b' }));
   });
 
   it('does not let a member of one tenant read another tenant requests', async () => {
     const member = environment.authenticatedContext('member-a').firestore();
     await assertSucceeds(getDoc(doc(member, 'ateliers/atelier-a/quoteRequests/request-a')));
     await assertFails(getDoc(doc(member, 'ateliers/atelier-b/quoteRequests/request-b')));
+    await assertFails(getDoc(doc(member, 'ateliers/atelier-b/quoteRequests/request-b/references/ref-b')));
+    await assertFails(getDoc(doc(member, 'ateliers/atelier-b/orders/order-b')));
   });
 
   it('blocks tenant access and public intake while an atelier is suspended', async () => {
@@ -127,6 +152,7 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(updateDoc(quoteRef, { status: 'approved', total: 1 }));
     const otherClient = environment.authenticatedContext('client-b', { email: 'other@example.com', email_verified: true }).firestore();
     await assertFails(getDoc(doc(otherClient, 'ateliers/atelier-a/quotes/quote-a')));
+    await assertFails(getDoc(doc(client, 'ateliers/atelier-b/orders/order-b')));
   });
 
   it('keeps finance records unavailable to a quote-only member', async () => {
@@ -166,10 +192,12 @@ describe('Firestore and Storage tenant rules', () => {
 
   it('limits public reference uploads to image types and enabled public intake', async () => {
     const guest = environment.unauthenticatedContext().storage();
-    await assertSucceeds(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref.png'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
+    await assertSucceeds(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref-a'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref.html'), new Uint8Array([1, 2, 3]), { contentType: 'text/html' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-closed/quoteRequests/request-closed/references/ref.png'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
+    await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-unpublished-intake/quoteRequests/request-unpublished/references/ref-unpublished'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-suspended/quoteRequests/request-suspended/references/ref.png'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
+    await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-b/quoteRequests/request-a/references/ref-a'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
   });
 
   it('restricts production image uploads to assigned staff and serves only visible photos to clients', async () => {

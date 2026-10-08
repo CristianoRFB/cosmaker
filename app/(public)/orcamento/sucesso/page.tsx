@@ -1,28 +1,12 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { ArrowRight, Check, ClipboardCopy, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function QuoteRequestSuccessPage() {
-  const router = useRouter();
-  const [protocol, setProtocol] = useState('');
-  const [copied, setCopied] = useState(false);
-  useEffect(() => {
-    const value = new URLSearchParams(window.location.search).get('protocolo');
-    if (value) setProtocol(value);
-  }, []);
-
-  async function copyProtocol() {
-    try { await navigator.clipboard.writeText(protocol); setCopied(true); }
-    catch { setCopied(false); }
-  }
-
-  return <main className="mx-auto flex min-h-[68vh] max-w-2xl items-center px-5 py-16 sm:px-8"><Card className="w-full overflow-hidden"><div className="h-1.5 bg-gradient-to-r from-violet-700 via-fuchsia-500 to-pink-400" /><CardHeader className="items-center pt-9 text-center"><span className="grid size-16 place-items-center rounded-3xl bg-emerald-100 text-emerald-700">{protocol ? <Check size={29} /> : <Sparkles size={27} />}</span><CardTitle className="mt-3 text-2xl sm:text-3xl">{protocol ? 'Solicitação registrada' : 'Confirmação indisponível'}</CardTitle></CardHeader><CardContent className="pb-8 text-center sm:px-8">
-    {protocol ? <><p className="mx-auto max-w-lg text-sm leading-6 text-slate-600">O ateliê recebeu os detalhes do seu projeto e poderá revisar a solicitação e falar com você pelo contato informado.</p><div className="mx-auto mt-6 flex max-w-sm items-center justify-between gap-3 rounded-xl border border-violet-100 bg-violet-50 px-4 py-3"><div className="text-left"><p className="text-[11px] font-bold uppercase tracking-wider text-violet-700">Protocolo</p><p className="mt-1 break-all font-mono text-sm font-semibold text-slate-900">{protocol}</p></div><button aria-label="Copiar protocolo" className="rounded-lg bg-white p-2.5 text-violet-700 shadow-sm" onClick={copyProtocol} type="button">{copied ? <Check size={17} /> : <ClipboardCopy size={17} />}</button></div>{copied ? <p className="mt-2 text-xs text-emerald-700" role="status">Protocolo copiado.</p> : null}<p className="mt-5 text-xs leading-5 text-slate-500">Guarde o protocolo para referência. O Cosmaker OS não envia mensagens automáticas neste ambiente.</p></> : <p className="mx-auto max-w-lg text-sm leading-6 text-slate-600">Não encontramos um protocolo nesta página. Envie o formulário para receber a confirmação do ateliê.</p>}
-    <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row"><Button onClick={() => router.push('/')} variant="secondary">Voltar ao início</Button>{protocol ? <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-violet-700 px-4 text-sm font-semibold text-white" href="/login">Acessar minha conta<ArrowRight size={16} /></Link> : <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-violet-700 px-4 text-sm font-semibold text-white" href="/orcamento">Ir para o formulário<ArrowRight size={16} /></Link>}</div>
-  </CardContent></Card></main>;
+export default function LegacyQuoteRequestSuccessRoute() {
+  return <main className="mx-auto flex min-h-[62vh] max-w-3xl items-center px-5 py-16 sm:px-8">
+    <section className="w-full rounded-3xl border border-violet-100 bg-white p-7 shadow-sm sm:p-10">
+      <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">Link atualizado</p>
+      <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">Abra a confirmação pelo link do ateliê</h1>
+      <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600">As confirmações agora permanecem no contexto do ateliê que recebeu a solicitação. Use o link público enviado pelo cosmaker para consultar o protocolo.</p>
+      <Link className="mt-7 inline-flex min-h-11 items-center rounded-xl bg-violet-700 px-4 text-sm font-semibold text-white" href="/">Voltar ao Cosmaker OS</Link>
+    </section>
+  </main>;
 }

@@ -32,16 +32,34 @@ service firebase.storage {
             && request.auth.token.email.lower() == firestore.get(orderPath).data.email.lower()));
     }
 
-    function mayWritePublicReference(atelierId, requestId) {
+    function referenceRecordPath(atelierId, requestId, referenceId) {
+      return /databases/(default)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId)/references/$(referenceId);
+    }
+
+    function mayWritePublicReference(atelierId, requestId, referenceId) {
       let intakePath = /databases/(default)/documents/publicAteliers/$(atelierId);
       let atelierPath = /databases/(default)/documents/ateliers/$(atelierId);
       let requestPath = /databases/(default)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId);
+      let referencePath = referenceRecordPath(atelierId, requestId, referenceId);
       return firestore.exists(intakePath)
+        && firestore.get(intakePath).data.published == true
         && firestore.get(intakePath).data.quoteRequestsEnabled == true
         && firestore.exists(atelierPath)
         && firestore.get(atelierPath).data.active == true
         && firestore.exists(requestPath)
-        && firestore.get(requestPath).data.status == 'new';
+        && firestore.get(requestPath).data.status == 'new'
+        && firestore.exists(referencePath)
+        && firestore.get(referencePath).data.uploadStatus == 'pending'
+        && firestore.get(referencePath).data.storagePath == 'ateliers/' + atelierId + '/quoteRequests/' + requestId + '/references/' + referenceId
+        && firestore.get(referencePath).data.size == request.resource.size
+        && firestore.get(referencePath).data.contentType == request.resource.contentType;
+    }
+
+    function referenceIsReady(atelierId, requestId, referenceId) {
+      let referencePath = referenceRecordPath(atelierId, requestId, referenceId);
+      return firestore.exists(referencePath)
+        && (!('uploadStatus' in firestore.get(referencePath).data)
+          || firestore.get(referencePath).data.uploadStatus == 'ready');
     }
 
     function mayReadOwnPublicReference(atelierId, requestId) {
@@ -83,10 +101,11 @@ service firebase.storage {
       allow delete: if isAtelierMember(atelierId);
     }
 
-    match /ateliers/{atelierId}/quoteRequests/{requestId}/references/{fileName} {
-      allow read: if isAtelierMember(atelierId) || mayReadOwnPublicReference(atelierId, requestId);
-      allow create: if isReferenceImage() && mayWritePublicReference(atelierId, requestId);
-      allow update, delete: if isAtelierMember(atelierId) && isAtelierFile();
+    match /ateliers/{atelierId}/quoteRequests/{requestId}/references/{referenceId} {
+      allow read: if referenceIsReady(atelierId, requestId, referenceId)
+        && (isAtelierMember(atelierId) || mayReadOwnPublicReference(atelierId, requestId));
+      allow create: if isReferenceImage() && mayWritePublicReference(atelierId, requestId, referenceId);
+      allow update, delete: if false;
     }
 
     match /ateliers/{atelierId}/clients/{clientId}/measurements/{fileName} {

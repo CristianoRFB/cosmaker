@@ -26,10 +26,13 @@ async function ensureLocalUser(email, displayName) {
 }
 
 const atelierUser = await ensureLocalUser('atelie@cosmaker.test', 'Ateliê Aurora Cosplay');
+const atelierUserB = await ensureLocalUser('atelie-luna@cosmaker.test', 'Ateliê Luna Cosplay');
 const clientUser = await ensureLocalUser('cliente@cosmaker.test', 'Marina Almeida');
 const platformAdminUser = await ensureLocalUser('plataforma@cosmaker.test', 'Administração Cosmaker OS');
 await auth.setCustomUserClaims(platformAdminUser.uid, { platformAdmin: true });
 const atelierId = 'atelier-aurora';
+const suspendedAtelierId = 'atelier-suspended-demo';
+const unpublishedAtelierId = 'atelier-unpublished-demo';
 const requestId = 'request-2026-001';
 const quoteId = 'quote-2026-001';
 const now = Timestamp.now();
@@ -43,6 +46,10 @@ batch.set(db.doc(`users/${atelierUser.uid}`), {
   id: atelierUser.uid, name: atelierUser.displayName, email: atelierUser.email,
   accountType: 'atelier_member', atelierId, role: 'owner', permissions: [], active: true, createdAt: now, updatedAt: now,
 });
+batch.set(db.doc(`users/${atelierUserB.uid}`), {
+  id: atelierUserB.uid, name: atelierUserB.displayName, email: atelierUserB.email,
+  accountType: 'atelier_member', atelierId: 'atelier-luna', role: 'owner', permissions: [], active: true, createdAt: now, updatedAt: now,
+});
 batch.set(db.doc(`users/${clientUser.uid}`), {
   id: clientUser.uid, name: clientUser.displayName, email: clientUser.email,
   accountType: 'client', role: 'client', permissions: [], active: true, createdAt: now, updatedAt: now,
@@ -54,8 +61,20 @@ batch.set(db.doc(`users/${platformAdminUser.uid}`), {
 batch.set(db.doc(`ateliers/${atelierId}`), {
   id: atelierId, name: 'Ateliê Aurora Cosplay', ownerId: atelierUser.uid, active: true, plan: 'essencial', createdAt: now, updatedAt: now,
 });
+batch.set(db.doc('ateliers/atelier-luna'), {
+  id: 'atelier-luna', name: 'Ateliê Luna Cosplay', ownerId: atelierUserB.uid, active: true, plan: 'essencial', createdAt: now, updatedAt: now,
+});
+batch.set(db.doc(`ateliers/${suspendedAtelierId}`), {
+  id: suspendedAtelierId, name: 'Ateliê de teste suspenso', active: false, status: 'suspended', createdAt: now, updatedAt: now,
+});
+batch.set(db.doc(`ateliers/${unpublishedAtelierId}`), {
+  id: unpublishedAtelierId, name: 'Ateliê de teste não publicado', active: true, status: 'active', createdAt: now, updatedAt: now,
+});
 batch.set(db.doc(`ateliers/${atelierId}/members/${atelierUser.uid}`), {
   userId: atelierUser.uid, role: 'owner', permissions: [], active: true, createdAt: now,
+});
+batch.set(db.doc(`ateliers/atelier-luna/members/${atelierUserB.uid}`), {
+  userId: atelierUserB.uid, role: 'owner', permissions: [], active: true, createdAt: now,
 });
 batch.set(db.doc(`ateliers/${atelierId}/clients/${clientUser.uid}`), {
   id: clientUser.uid, userId: clientUser.uid, name: clientUser.displayName, email: clientUser.email,
@@ -71,7 +90,28 @@ batch.set(db.doc(`ateliers/${atelierId}/measurementProfiles/profile-marina/measu
   type: 'circumference', label: 'Cintura', value: 68, unit: 'cm', notes: '', createdAt: now, updatedAt: now,
 });
 batch.set(db.doc(`publicAteliers/${atelierId}`), {
-  name: 'Ateliê Aurora Cosplay', published: true, quoteRequestsEnabled: true,
+  name: 'Ateliê Aurora Cosplay', slug: 'aurora-cosplay', tagline: 'Projetos artesanais com atenção a cada detalhe.', brandColor: '#6d28d9', published: true, quoteRequestsEnabled: true,
+});
+batch.set(db.doc('publicAteliers/atelier-luna'), {
+  name: 'Ateliê Luna Cosplay', slug: 'luna-cosplay', tagline: 'Sua ideia ganha forma com cuidado e criatividade.', brandColor: '#be185d', published: true, quoteRequestsEnabled: true,
+});
+batch.set(db.doc(`publicAteliers/${suspendedAtelierId}`), {
+  name: 'Ateliê de teste suspenso', slug: 'atelier-suspenso-teste', published: true, quoteRequestsEnabled: true,
+});
+batch.set(db.doc(`publicAteliers/${unpublishedAtelierId}`), {
+  name: 'Ateliê de teste não publicado', slug: 'atelier-nao-publicado-teste', published: false, quoteRequestsEnabled: true,
+});
+batch.set(db.doc('publicAtelierSlugs/aurora-cosplay'), {
+  slug: 'aurora-cosplay', atelierId, createdAt: now, updatedAt: now,
+});
+batch.set(db.doc('publicAtelierSlugs/luna-cosplay'), {
+  slug: 'luna-cosplay', atelierId: 'atelier-luna', createdAt: now, updatedAt: now,
+});
+batch.set(db.doc(`publicAtelierSlugs/atelier-suspenso-teste`), {
+  slug: 'atelier-suspenso-teste', atelierId: suspendedAtelierId, createdAt: now, updatedAt: now,
+});
+batch.set(db.doc(`publicAtelierSlugs/atelier-nao-publicado-teste`), {
+  slug: 'atelier-nao-publicado-teste', atelierId: unpublishedAtelierId, createdAt: now, updatedAt: now,
 });
 batch.set(db.doc(`ateliers/${atelierId}/quoteRequests/${requestId}`), {
   clientId: null, name: clientUser.displayName, email: clientUser.email,
@@ -101,6 +141,7 @@ batch.set(db.doc(`ateliers/${atelierId}/quotes/${quoteId}/items/other-demo`), {
 await batch.commit();
 console.log('Dados de teste gravados somente nos emuladores locais (project demo-cosmaker).');
 console.log(`Conta do ateliê: ${atelierUser.email}`);
+console.log(`Conta do segundo ateliê: ${atelierUserB.email}`);
 console.log(`Conta do cliente: ${clientUser.email}`);
 console.log(`Conta administrativa local: ${platformAdminUser.email}`);
 console.log(`Senha local das três contas: ${fixturePassword}`);

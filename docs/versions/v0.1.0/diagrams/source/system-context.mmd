@@ -1,0 +1,16 @@
+flowchart LR
+Maker[Cosmaker / equipe]
+Client[Cliente]
+Browser[Navegador]
+Next[Aplicação Next.js]
+Firebase[Firebase]
+Functions[Cloud Functions]
+Firestore[Firestore]
+Storage[Cloud Storage]
+Maker --> Browser
+Client --> Browser
+Browser --> Next
+Next --> Firebase
+Firebase --> Functions
+Functions --> Firestore
+Functions --> Storage

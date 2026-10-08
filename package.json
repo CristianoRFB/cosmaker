@@ -13,9 +13,13 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "screenshots": "node scripts/capture-screenshots.mjs",
+    "screenshots:tenants": "node scripts/capture-public-tenant-screenshots.mjs",
+    "docs:diagrams": "node scripts/docs-diagrams.mjs",
+    "docs:check": "node scripts/docs-check.mjs",
     "firebase:emulators": "firebase emulators:start",
     "firebase:emulators:local": "npm run functions:build && firebase emulators:start --project demo-cosmaker --only auth,firestore,storage,functions,pubsub",
     "seed:emulator": "node scripts/seed-emulator.mjs",
+    "tenant:slug": "node scripts/migrate-public-tenant-slug.mjs",
     "admin:provision": "node scripts/provision-platform-admin.mjs",
     "functions:build": "npm --prefix functions run build"
   },

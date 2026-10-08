@@ -1,0 +1,18 @@
+flowchart LR
+Source[Repositório compartilhado]
+Web[Next.js build e runtime]
+Browser[Navegador do usuário]
+Auth[Firebase Auth]
+Callable[Cloud Functions]
+Db[Firestore com Rules]
+Bucket[Storage com Rules]
+Emulator[Firebase Emulator local]
+Source --> Web
+Browser --> Web
+Web --> Auth
+Web --> Callable
+Callable --> Db
+Callable --> Bucket
+Emulator --> Auth
+Emulator --> Db
+Emulator --> Bucket

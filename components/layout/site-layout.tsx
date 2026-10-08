@@ -19,7 +19,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           <Link className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 sm:inline-flex" href="/login">Entrar</Link>
-          <Link className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-violet-700 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800" href="/orcamento">Solicitar orçamento<ArrowRight aria-hidden="true" size={16} /></Link>
+          <Link className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-violet-700 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800" href="/login">Acessar o sistema<ArrowRight aria-hidden="true" size={16} /></Link>
         </div>
       </div>
     </header>
