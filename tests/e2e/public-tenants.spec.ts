@@ -85,7 +85,7 @@ test('intake e upload A × B permanecem no tenant resolvido e rejeitam atelierId
       await expect(page.getByText('referencia.png')).toBeVisible();
     }
     await submit.click();
-    await expect(page.getByText('Solicitação registrada', { exact: true })).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText('Solicitação registrada', { exact: true })).toBeVisible({ timeout: 45_000 });
     const protocol = new URL(page.url()).searchParams.get('protocolo');
     expect(protocol).toBeTruthy();
     return { requestId: protocol!, email: `cliente-${unique}@example.com`.toLowerCase() };

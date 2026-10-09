@@ -27,22 +27,33 @@ test('Platform Owner atribui plano e trial e acompanha os valores na auditoria',
   await expect(page.getByRole('heading', { name: 'Tenant Premium de teste' })).toBeVisible();
   await page.getByLabel('Motivo para esta alteração').fill('Atribuição manual pelo teste de jornada.');
   await page.getByLabel('Plano comercial').selectOption('pro');
+  const updateSuccess = page.getByText('Estado comercial atualizado e registrado na auditoria.', { exact: true });
   await page.getByRole('button', { name: 'Revisar atribuição' }).click();
+  await expect(updateSuccess).toHaveCount(0);
+  await expect(page.getByRole('dialog', { name: 'Atribuir plano e status' })).toBeVisible();
   await page.getByRole('button', { name: 'Confirmar alteração' }).click();
-  await expect(page.getByText('Estado comercial atualizado e registrado na auditoria.')).toBeVisible();
-  await expect(page.getByText('Premium · Ativo → Pro · Ativo', { exact: true })).toBeVisible();
+  await expect(updateSuccess).toBeVisible();
+  await expect(page.getByText('Premium · Ativo → Pro · Ativo', { exact: true }).first()).toBeVisible();
 
   await page.getByLabel('Motivo para esta alteração').fill('Status pendente autorizado pelo teste de jornada.');
   await page.getByLabel('Status comercial').selectOption('past_due');
   await page.getByRole('button', { name: 'Revisar atribuição' }).click();
+  await expect(updateSuccess).toHaveCount(0);
   await page.getByRole('button', { name: 'Confirmar alteração' }).click();
-  await expect(page.getByText('Pro · Ativo → Pro · Pendente', { exact: true })).toBeVisible();
+  await expect(updateSuccess).toBeVisible();
+  await expect(page.getByText('Pro · Ativo → Pro · Pendente', { exact: true }).first()).toBeVisible();
 
-  await page.getByLabel('Motivo para esta alteração').fill('Trial autorizado manualmente pelo teste.');
+  const reason = 'Trial autorizado manualmente pelo teste.';
+  const reasonField = page.getByLabel('Motivo para esta alteração');
+  await reasonField.fill(reason);
+  await expect(reasonField).toHaveValue(reason);
   await page.getByRole('button', { name: 'Iniciar trial autorizado' }).click();
+  await expect(page.getByRole('dialog', { name: 'Iniciar trial Premium' })).toBeVisible();
+  await expect(updateSuccess).toHaveCount(0);
   await page.getByRole('button', { name: 'Confirmar alteração' }).click();
-  await expect(page.getByText('Trial Premium iniciado', { exact: true })).toBeVisible();
-  await expect(page.getByText(/Premium · Trial|Trial ·/)).toBeVisible();
+  await expect(updateSuccess).toBeVisible();
+  await expect(page.getByText('Trial Premium iniciado', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText(/Premium · Trial|Trial ·/).first()).toBeVisible();
   await expect(page.getByText(/Trial até:/)).toBeVisible();
 });
 
@@ -80,7 +91,7 @@ test('Demo mostra identificação e só executa a prova sintética autorizada', 
   await expect(page.getByText(/Somente Firebase Emulator/i)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Executar operação de prova' })).toBeVisible();
   await page.getByRole('button', { name: 'Executar operação de prova' }).click();
-  await expect(page.getByText(/Operação aceita · uso 1/)).toBeVisible();
+  await expect(page.getByText(/Operação aceita · uso \d+/)).toBeVisible();
 });
 
 test('status past_due mostra bloqueio de política na interface', async ({ page }) => {

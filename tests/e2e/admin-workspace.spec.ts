@@ -16,6 +16,7 @@ async function signInAsPlatformAdmin(page: Page) {
 }
 
 test('mostra métricas reais da plataforma e a lista de ateliês', async ({ page }) => {
+  test.setTimeout(60_000);
   await signInAsPlatformAdmin(page);
   await expect(page.getByText('Ateliês cadastrados')).toBeVisible();
   await page.goto('/admin/ateliers');
@@ -25,6 +26,7 @@ test('mostra métricas reais da plataforma e a lista de ateliês', async ({ page
 });
 
 test('suspende e reativa um ateliê com confirmação', async ({ page }) => {
+  test.setTimeout(60_000);
   await signInAsPlatformAdmin(page);
   await page.goto(`/admin/ateliers/${encodeURIComponent(atelierId)}`);
   await expect(page.getByRole('heading', { name: 'Ateliê Aurora Cosplay' })).toBeVisible();

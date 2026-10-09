@@ -1,6 +1,6 @@
 # Status v0.2.0 — Global Standard v01
 
-Atualizado em 08/10/2026. Evidências de código e validação local no Firebase Emulator; nenhum resultado implica publicação no Firebase real. **Documentação em preparação:** E2E final, novas capturas, renders e docs:check aguardam registro de execução pelo agente principal.
+Atualizado em 09/10/2026. Implementação e evidências locais no Firebase Emulator; os resultados não implicam publicação no Firebase real.
 
 ## Implementação e políticas
 
@@ -19,24 +19,25 @@ Não existem limites numéricos ou distribuição comercial feature-a-feature ap
 
 | Comando | Resultado real recebido | Estado |
 | --- | --- | --- |
-| `npm test` | 39 testes unitários aprovados | PASS |
-| `npm run test:rules` | 11 testes Firestore/Storage aprovados em execução isolada | PASS |
-| `npm run test:commercial` | 6 cenários de integração aprovados, incluindo migração dry-run/idempotência | PASS |
-| `npm run test:e2e` | Execução final completa ainda pendente | PENDING |
+| `npm test` | 79 testes unitários em 12 arquivos aprovados | PASS |
+| `npm run test:rules` | 13 testes Firestore/Storage aprovados no Emulator | PASS |
+| `npm run test:commercial` | 10 cenários de integração aprovados no Firebase Emulator | PASS |
+| `npm run test:e2e` | 10 cenários aprovados no Firebase Emulator | PASS |
 | `npm run lint` | Aprovado | PASS |
 | `npx tsc --noEmit` | Aprovado | PASS |
 | `npm run functions:build` | Aprovado | PASS |
-| `npm run build` | Build padrão e build configurado para Emulator aprovados | PASS |
-| `npm run docs:diagrams` | Fontes adicionadas; render da versão final ainda pendente | PENDING |
-| `npm run docs:check` | Aguarda capturas/renders e apontamento final de CURRENT | PENDING |
+| `npm run build` | Build Next.js de produção aprovado; 81 páginas estáticas geradas | PASS |
+| `npm run screenshots:commercial` | Seis capturas reais geradas e inspecionadas | PASS |
+| `npm run docs:diagrams` | Nove diagramas renderizados para a versão vigente | PASS |
+| `npm run docs:check` | Aprovado após atualizar CURRENT e este registro final | PASS |
 
-As contagens acima correspondem às execuções confirmadas pelo agente principal antes desta redação. Alterações posteriores que afetem contratos/segurança exigem nova evidência antes do aceite. Não há alegação de PASS para comandos pendentes.
+As evidências listadas correspondem às execuções observadas pelo agente principal. Nenhum PASS implica execução contra produção. O fechamento documental foi verificado com `docs:check` após este registro.
 
 ## Evidência de comportamento
 
-Os unitários exercitam preços em centavos/anual, herança, seis estados, fronteira de trial, overrides, feature/config e semântica de limites. A integração exercita Platform Owner versus tenant_owner/staff/customer, tampering de payload, auditoria, A × B, consumo concorrente, políticas zero/positivo/null/ausente, expiração e demo. Rules impedem escrita direta de estado comercial/contagem e mantêm isolamento de domínio/Storage. A validação no browser será registrada após a execução final, incluindo regressões públicas/orçamento/aprovação.
+Os unitários exercitam preços em centavos/anual, herança, seis estados, fronteira de trial, overrides, feature/config e semântica de limites. A integração exercita Platform Owner versus tenant_owner/staff/customer, tampering de payload, auditoria, A × B, consumo concorrente, políticas zero/positivo/null/ausente, expiração e demo. Rules impedem escrita direta de estado comercial/contagem e mantêm isolamento de domínio/Storage. O E2E cobre administração, trial/demo, negação de acesso, resolver multi-tenant, intake/upload público e aprovação de orçamento.
 
-Os seis diagramas do core e as oito capturas reais da v0.1.0 foram copiados e suas fontes históricas preservadas. Três fontes novas descrevem atribuição manual, entitlement e UI/Functions/Rules. Três imagens ImageGen foram copiadas e registradas como CONCEITUAIS/IDEALIZADAS em [GENERATED_VISUALS](GENERATED_VISUALS.md). Os seis novos screenshots comerciais ainda são caminhos esperados em [SCREENS](SCREENS.md), não evidência concluída.
+Os seis diagramas do core e as oito capturas reais da v0.1.0 foram copiados e suas fontes históricas preservadas. Três fontes novas descrevem atribuição manual, entitlement e UI/Functions/Rules. Três imagens ImageGen foram copiadas e registradas como CONCEITUAIS/IDEALIZADAS em [GENERATED_VISUALS](GENERATED_VISUALS.md). As seis capturas comerciais estão em [SCREENS](SCREENS.md).
 
 ## Produção, histórico e pendências
 
@@ -44,4 +45,4 @@ Os seis diagramas do core e as oito capturas reais da v0.1.0 foram copiados e su
 
 Nenhum dado real, preço aprovado ou tenant original foi convertido em fixture/demo/lead. Aurora/Luna e os demais tenants semeados são fictícios e locais. Nenhum lead confirmado foi inventado. Nenhum checkout, gateway, webhook, renovação, dunning, cobrança, marketplace ou serviço pago foi ativado.
 
-Antes de concluir a versão: registrar E2E final e checks após ajustes de segurança, capturar/inspecionar as seis telas reais, renderizar as três fontes novas, executar docs:check e atualizar CURRENT somente com evidência completa. Decisão futura de matriz comercial e cotas não bloqueia a conclusão da mecânica; permanece necessária antes de restringir/vender novas diferenças em produção. O rollout Firebase real exige operação separada e não faz parte deste goal.
+Decisão futura de matriz comercial e cotas não bloqueia a conclusão da mecânica; permanece necessária antes de restringir/vender novas diferenças em produção. O rollout Firebase real exige operação separada e não faz parte deste goal.

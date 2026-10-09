@@ -7,10 +7,10 @@
     "rules": "storage.rules"
   },
   "emulators": {
-    "firestore": { "host": "127.0.0.1", "port": 18081, "websocketPort": 9151 },
-    "storage": { "host": "127.0.0.1", "port": 19200 },
-    "hub": { "host": "127.0.0.1", "port": 4401 },
-    "logging": { "host": "127.0.0.1", "port": 4501 },
+    "firestore": { "host": "127.0.0.1", "port": 18181, "websocketPort": 19153 },
+    "storage": { "host": "127.0.0.1", "port": 19201 },
+    "hub": { "host": "127.0.0.1", "port": 14403 },
+    "logging": { "host": "127.0.0.1", "port": 14404 },
     "ui": { "enabled": false }
   }
 }

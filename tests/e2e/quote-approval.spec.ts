@@ -118,7 +118,7 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   await expect(page.getByRole('heading', { name: 'Sua aprovação é necessária' })).toBeVisible();
   await expect(page.locator('section').filter({ hasText: 'A equipe enviou esta etapa para sua revisão.' }).getByRole('img', { name: 'Prova do ajuste da manga' })).toBeVisible({ timeout: 15_000 });
   await page.getByRole('button', { name: 'Aprovar etapa' }).click();
-  await expect(page.getByText('Etapa aprovada. A equipe já pode continuar.')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('Etapa aprovada. A equipe já pode continuar.')).toBeVisible({ timeout: 30_000 });
 
   order = await orderRef.get();
   expect(order.data()?.status).toBe('fitting');

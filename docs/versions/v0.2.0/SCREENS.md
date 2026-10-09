@@ -1,17 +1,17 @@
 # Screenshots reais v0.2.0
 
-As capturas históricas mostram o app real contra Firebase Emulator com Aurora e Luna fictícias. São evidência de UI renderizada pelo código. As novas capturas comerciais estão **PENDENTES DE CAPTURA E INSPEÇÃO** nesta redação; os paths abaixo são o contrato de saída de `scripts/capture-commercial-screenshots.mjs`, não prova de comportamento até os arquivos serem produzidos.
+As capturas históricas mostram o app real contra Firebase Emulator com Aurora e Luna fictícias. As seis novas capturas abaixo foram geradas pelo app real contra o Emulator em 09/10/2026 e inspecionadas visualmente. São evidência da interface e do estado sintético mostrado; autorização e enforcement são comprovados pelas suítes E2E, Functions e Rules, não apenas por imagens.
 
 ## Capturas comerciais esperadas
 
-| Tela / estado | Rota / fixture | Formato | Arquivo esperado | Estado |
+| Tela / estado | Rota / fixture | Formato | Arquivo | Estado |
 | --- | --- | --- | --- | --- |
-| Catálogo/preços e gestão manual | `/admin/planos`, Platform Owner | Desktop 1440 × 1000 | `screenshots/commercial-plans-desktop.png` | PENDING |
-| Catálogo/preços responsivo | `/admin/planos`, Platform Owner | Mobile 390 × 844 | `screenshots/commercial-plans-mobile.png` | PENDING |
-| Edição de estado comercial e auditoria | `/admin/ateliers/atelier-premium` | Desktop 1440 × 1000 | `screenshots/commercial-state-assignment.png` | PENDING |
-| Aviso de trial Premium com fim explícito | `/atelier`, Trial | Desktop 1440 × 1000 | `screenshots/commercial-trial-banner.png` | PENDING |
-| Aviso demo Premium e probe local | `/atelier`, Demo | Desktop 1440 × 1000 | `screenshots/commercial-demo-banner-and-probe.png` | PENDING |
-| Acesso negado pela política sintética de status | `/atelier`, past_due | Mobile 390 × 844 | `screenshots/commercial-policy-denied.png` | PENDING |
+| Catálogo/preços e gestão manual | `/admin/planos`, Platform Owner | Desktop 1440 × 1000 | [commercial-plans-desktop.png](screenshots/commercial-plans-desktop.png) | PASS · inspecionada |
+| Catálogo/preços responsivo | `/admin/planos`, Platform Owner | Mobile 390 × 844 | [commercial-plans-mobile.png](screenshots/commercial-plans-mobile.png) | PASS · inspecionada |
+| Edição de estado comercial e auditoria | `/admin/ateliers/atelier-premium` | Desktop 1440 × 1000 | [commercial-state-assignment.png](screenshots/commercial-state-assignment.png) | PASS · inspecionada |
+| Aviso de trial Premium com fim explícito | `/atelier`, Trial | Desktop 1440 × 1000 | [commercial-trial-banner.png](screenshots/commercial-trial-banner.png) | PASS · inspecionada |
+| Aviso demo Premium e probe local | `/atelier`, Demo | Desktop 1440 × 1000 | [commercial-demo-banner-and-probe.png](screenshots/commercial-demo-banner-and-probe.png) | PASS · inspecionada |
+| Acesso negado pela política sintética de status | `/atelier`, past_due | Mobile 390 × 844 | [commercial-policy-denied.png](screenshots/commercial-policy-denied.png) | PASS · inspecionada |
 
 O script verifica o marcador de modo Emulator antes de autenticar, espera o conteúdo da tela e captura página completa. Use app/emuladores locais sem dados reais e seeds sintéticos. A edição visual do estado não substitui os testes de autorização/auditoria do servidor. Uma captura de probe `TEST_ONLY` não anuncia diferença de plano nem cota comercial.
 

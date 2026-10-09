@@ -26,6 +26,6 @@ Trial exige `now < trialUntil` no servidor; exatamente na data final o direito t
 
 ## Evidências e fronteira do teste
 
-Unitários cobrem preços/contratos, status, relógio de trial, overrides, desconhecido/ausente/zero/null/positivo e disponibilidade. Rules cobrem tampering direto, permissões, namespaces A × B e uploads. A integração executa callables reais com fixtures isoladas, auditoria, limites/concorrência, expiração, demo e migração idempotente. A suite E2E e as capturas desta versão ainda precisam de registro final em [STATUS](STATUS.md) antes de aprovação documental.
+Unitários cobrem preços/contratos, status, relógio de trial, overrides, desconhecido/ausente/zero/null/positivo e disponibilidade. Rules cobrem tampering direto, permissões, namespaces A × B e uploads. A integração executa callables reais com fixtures isoladas, auditoria, limites/concorrência, expiração, demo e migração idempotente. A suíte E2E passou pelos painéis administrativos/comerciais, autorização, trial/demo, rotas públicas por slug, uploads A × B e aprovação do orçamento; as seis telas foram capturadas e inspecionadas. Os comandos e limites da evidência estão em [STATUS](STATUS.md) e [SCREENS](SCREENS.md).
 
 As chaves `TEST_ONLY` são rejeitadas fora do Functions Emulator e não são anunciadas como política comercial. App Check, rate limiting/anti-abuso e monitoramento avançado do intake permanecem trabalhos futuros já registrados pelo core. `PRODUCTION_MIGRATION=NOT_RUN`, `PRODUCTION_DEPLOY=NOT_RUN`, `BILLING=DEFERRED`.

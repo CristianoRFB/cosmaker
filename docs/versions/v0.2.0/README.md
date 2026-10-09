@@ -1,6 +1,6 @@
 # Cosmaker OS — documentação v0.2.0
 
-Este marco implementa o Global Standard v01 comercial dentro do Cosmaker, sobre o core multi-tenant público do baseline `1dc8133`. O catálogo é local, a atribuição de plano/status é manual pelo Platform Owner e a autorização comercial lê documentos confiáveis no servidor. Esta versão está em preparação até as capturas e os gates documentais finais serem concluídos; `docs/CURRENT.md` só deve apontar para ela após essa conclusão.
+Este marco implementa o Global Standard v01 comercial dentro do Cosmaker, sobre o core multi-tenant público do baseline `1dc8133`. O catálogo é local, a atribuição de plano/status é manual pelo Platform Owner e a autorização comercial lê documentos confiáveis no servidor. A versão foi validada localmente com Firebase Emulator, capturas reais, diagramas renderizados e `docs:check`; isso não representa migração ou deploy em produção.
 
 ## Decisões comerciais e disponibilidade
 

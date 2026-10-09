@@ -39,6 +39,16 @@ const commercialFixtures = [
   { atelierId: 'atelier-cancelled', userEmail: 'cancelled@cosmaker.test', name: 'Tenant Cancelado de teste', planId: 'pro', subscriptionStatus: 'cancelled', featureEnabled: true, limit: 2 },
 ];
 for (const fixture of commercialFixtures) fixture.owner = await ensureLocalUser(fixture.userEmail, fixture.name);
+const commercialTenantIds = ['atelier-aurora', 'atelier-luna', ...commercialFixtures.map(({ atelierId }) => atelierId)];
+const staleCommercialAudit = await db.collection('auditLogs').where('atelierId', 'in', commercialTenantIds).get();
+await Promise.all(staleCommercialAudit.docs
+  .filter((entry) => typeof entry.data().action === 'string' && entry.data().action.startsWith('platform.commercial.'))
+  .map((entry) => entry.ref.delete()));
+for (const commercialTenantId of commercialTenantIds) {
+  const operations = await db.collection(`ateliers/${commercialTenantId}/commercialOperations`).get();
+  const usage = db.doc(`ateliers/${commercialTenantId}/commercialUsage/test-only-operation-probe`);
+  await Promise.all([usage.delete(), ...operations.docs.map((operation) => operation.ref.delete())]);
+}
 const atelierId = 'atelier-aurora';
 const suspendedAtelierId = 'atelier-suspended-demo';
 const unpublishedAtelierId = 'atelier-unpublished-demo';

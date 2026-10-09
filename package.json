@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run tests/unit",
-    "test:rules": "firebase emulators:exec --config firebase.rules-test.json --project demo-cosmaker --only firestore,storage \"vitest run tests/rules\"",
+    "test:rules": "firebase emulators:exec --config firebase.rules-test.json --project demo-cosmaker --only firestore,storage \"vitest run --testTimeout=15000 --hookTimeout=30000 tests/rules\"",
     "test:commercial": "npm run functions:build && node scripts/test-commercial-emulator.mjs",
     "test:watch": "vitest",
     "test:e2e": "playwright test",

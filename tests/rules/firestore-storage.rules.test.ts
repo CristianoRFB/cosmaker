@@ -27,7 +27,7 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => { await environment.cleanup(); });
+afterAll(async () => { if (environment) await environment.cleanup(); });
 
 beforeEach(async () => {
   await environment.clearFirestore();
