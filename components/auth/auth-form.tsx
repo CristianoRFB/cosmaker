@@ -8,6 +8,7 @@ import { loginSchema, passwordResetSchema, registrationSchema } from '@/schemas/
 import { loginWithEmail, loginWithGoogle, registerWithEmail, requestPasswordReset } from '@/services/firebase/auth.service';
 import { useAuth } from '@/providers/auth-provider';
 import { firebaseConfigured } from '@/services/firebase/firebase.client';
+import { safeNextPath } from '@/lib/auth/safe-next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,8 +24,12 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [returnPath, setReturnPath] = useState('/cliente');
 
-  useEffect(() => setReady(true), []);
+  useEffect(() => {
+    setReturnPath(safeNextPath(new URLSearchParams(window.location.search).get('next')));
+    setReady(true);
+  }, []);
 
   const title = mode === 'login' ? 'Entre na sua conta' : mode === 'register' ? 'Crie sua conta' : 'Recupere sua senha';
   const description = mode === 'login'
@@ -54,14 +59,12 @@ export function AuthForm({ mode }: { mode: Mode }) {
         const data = parsed.data as { name: string; email: string; password: string };
         await registerWithEmail(data.name, data.email, data.password);
         setSuccess('Conta criada. Confira sua caixa de entrada para verificar seu e-mail.');
-        router.push('/verificar-email');
+        router.push(`/verificar-email?next=${encodeURIComponent(returnPath)}`);
       } else if (mode === 'login') {
         const data = parsed.data as { email: string; password: string };
         await loginWithEmail(data.email, data.password);
         await refreshUser();
-        const requestedPath = new URLSearchParams(window.location.search).get('next');
-        const safePath = requestedPath?.startsWith('/') && !requestedPath.startsWith('//') && !requestedPath.includes('\\') ? requestedPath : '/cliente';
-        router.push(safePath);
+        router.push(returnPath);
       } else {
         const data = parsed.data as { email: string };
         await requestPasswordReset(data.email);
@@ -80,7 +83,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     try {
       await loginWithGoogle();
       await refreshUser();
-      router.push('/cliente');
+      router.push(returnPath);
     } catch (googleError) {
       setError(googleError instanceof Error ? googleError.message : 'Não foi possível entrar com o Google.');
     } finally {
@@ -104,7 +107,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       </form>
       {mode === 'login' ? <><div className="my-5 flex items-center gap-3 text-xs text-slate-400"><span className="h-px flex-1 bg-slate-200" />ou continue com<span className="h-px flex-1 bg-slate-200" /></div><Button className="w-full" disabled={!ready || pending || !firebaseConfigured} onClick={googleLogin} variant="secondary"><GoogleMark />Google</Button></> : null}
       <div className="mt-6 grid gap-3 text-center text-sm text-slate-600">
-        {mode === 'login' ? <><Link className="font-semibold text-violet-700 hover:text-violet-900" href="/recuperar-senha">Esqueci minha senha</Link><p>Ainda não tem conta? <Link className="font-semibold text-violet-700" href="/cadastro">Criar conta</Link></p></> : mode === 'register' ? <p>Já tem conta? <Link className="font-semibold text-violet-700" href="/login">Entrar</Link></p> : <Link className="inline-flex items-center justify-center gap-2 font-semibold text-violet-700" href="/login"><ArrowLeft size={15} />Voltar para entrar</Link>}
+        {mode === 'login' ? <><Link className="font-semibold text-violet-700 hover:text-violet-900" href="/recuperar-senha">Esqueci minha senha</Link><p>Ainda não tem conta? <Link className="font-semibold text-violet-700" href={`/cadastro?next=${encodeURIComponent(returnPath)}`}>Criar conta</Link></p></> : mode === 'register' ? <p>Já tem conta? <Link className="font-semibold text-violet-700" href={`/login?next=${encodeURIComponent(returnPath)}`}>Entrar</Link></p> : <Link className="inline-flex items-center justify-center gap-2 font-semibold text-violet-700" href="/login"><ArrowLeft size={15} />Voltar para entrar</Link>}
       </div>
       <p className="mt-6 flex items-center justify-center gap-2 text-center text-xs leading-5 text-slate-400"><LockKeyhole size={13} /> Seus dados de acesso são protegidos pelo Firebase Authentication.</p>
     </CardContent>

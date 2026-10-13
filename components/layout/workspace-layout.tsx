@@ -29,6 +29,7 @@ const atelierNavigation = [
   { href: '/atelier/producao', label: 'Produção', icon: Scissors },
   { href: '/atelier/agenda', label: 'Agenda e capacidade', icon: CalendarDays },
   { href: '/atelier/clientes', label: 'Clientes', icon: Users },
+  { href: '/atelier/equipe', label: 'Equipe', icon: Users },
   { href: '/atelier/financeiro', label: 'Financeiro', icon: CreditCard },
   { href: '/atelier/estoque', label: 'Estoque', icon: Layers3 },
   { href: '/atelier/relatorios', label: 'Relatórios', icon: ChartNoAxesCombined },

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/providers/auth-provider';
 import { checkEmailVerification, resendVerificationEmail } from '@/services/firebase/auth.service';
+import { safeNextPath } from '@/lib/auth/safe-next';
 
 export default function VerifyEmailPage() {
   const { firebaseUser, firebaseEnabled } = useAuth();
@@ -19,7 +20,10 @@ export default function VerifyEmailPage() {
   async function checkStatus() {
     setPending(true); setMessage(''); setError('');
     try {
-      if (await checkEmailVerification()) { setMessage('E-mail confirmado. Você já pode acessar sua conta.'); router.push('/cliente'); }
+      if (await checkEmailVerification()) {
+        setMessage('E-mail confirmado. Você já pode acessar sua conta.');
+        router.push(safeNextPath(new URLSearchParams(window.location.search).get('next')));
+      }
       else setMessage('Ainda não encontramos a confirmação. Abra o link que enviamos e tente novamente.');
     } catch (verifyError) { setError(verifyError instanceof Error ? verifyError.message : 'Não foi possível conferir agora.'); }
     finally { setPending(false); }

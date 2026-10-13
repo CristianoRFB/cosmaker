@@ -148,6 +148,7 @@ service cloud.firestore {
       allow create, delete: if false;
       allow update: if hasAtelierPermission(atelierId, 'atelier:settings')
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'id', 'ownerId', 'active', 'status', 'createdAt',
           'demoWorkspace', 'plan', 'planId', 'subscriptionStatus', 'trialUntil', 'entitlementOverrides', 'limitOverrides',
         ]);
 
@@ -165,7 +166,16 @@ service cloud.firestore {
       match /members/{memberId} {
         allow get: if signedIn() && request.auth.uid == memberId || hasAtelierPermission(atelierId, 'team:read');
         allow list: if hasAtelierPermission(atelierId, 'team:read');
-        allow create, update, delete: if hasAtelierPermission(atelierId, 'team:manage');
+        // Team mutations must pass server-side grant, ownership, and audit checks.
+        allow create, update, delete: if false;
+      }
+
+      match /teamInvitations/{invitationId} {
+        allow read, write: if false;
+      }
+
+      match /teamInvitationEmailIndex/{emailHash} {
+        allow read, write: if false;
       }
 
       match /clients/{clientId} {

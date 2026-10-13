@@ -28,7 +28,7 @@ export function AuthGuard({ audience, children }: { audience: Audience; children
   if (!user) return null;
 
   const allowed = audience === 'client'
-    ? user.accountType === 'client'
+    ? user.active && (user.accountType === 'client' || user.accountType === 'atelier_member')
     : audience === 'atelier'
       ? user.accountType === 'atelier_member' && Boolean(user.atelierId) && membershipValid
       : user.accountType === 'platform_admin' && user.active;

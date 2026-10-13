@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/services/firebase/firebase.client';
 import { hasAtelierPermission } from '@/lib/permissions/roles';
 import { useAuth } from './auth-provider';
@@ -36,8 +36,8 @@ export function TenantProvider({ children }: { children: ReactNode }) {
       return;
     }
     setLoading(true);
-    getDoc(doc(db, 'ateliers', atelierId, 'members', firebaseUser.uid))
-      .then((snapshot) => {
+    const unsubscribe = onSnapshot(doc(db, 'ateliers', atelierId, 'members', firebaseUser.uid),
+      (snapshot) => {
         if (!active) return;
         const member = snapshot.data();
         // A membership document is already scoped by its /ateliers/{atelierId}/members/{uid} path.
@@ -46,20 +46,22 @@ export function TenantProvider({ children }: { children: ReactNode }) {
           setRole(null);
           setPermissions([]);
           setMembershipValid(false);
+          setLoading(false);
           return;
         }
         setRole(typeof member.role === 'string' ? member.role as AtelierRole : null);
         setPermissions(Array.isArray(member.permissions) ? member.permissions.filter((item): item is string => typeof item === 'string') : []);
         setMembershipValid(true);
-      })
-      .catch(() => {
+        setLoading(false);
+      },
+      () => {
         if (!active) return;
         setRole(null);
         setPermissions([]);
         setMembershipValid(false);
-      })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
+        setLoading(false);
+      });
+    return () => { active = false; unsubscribe(); };
   }, [atelierId, firebaseUser]);
 
   const value = useMemo<TenantContextValue>(() => ({

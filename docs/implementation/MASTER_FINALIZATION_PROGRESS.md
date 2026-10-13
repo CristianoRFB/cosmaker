@@ -1,6 +1,6 @@
 # Cosmaker Master Finalization — Progress
 
-Última atualização: 2026-10-13 — F1.1 concluído e validado no Emulator; demais fases continuam pendentes.
+Última atualização: 2026-10-13 — F1.1 validado; F1.2 em implementação.
 
 ## Identidade e baseline
 
@@ -25,7 +25,7 @@
 | --- | --- | --- |
 | Baseline e instruções do repositório | PASS (baseline; falhas E2E registradas) | Checkout correto; `main`/`origin/main` no SHA-base aprovado e branch de trabalho criada. Working tree inicial limpo, `AGENTS.md` ausente; README/CURRENT/STATUS/v0.2 lidos. Padrões genéricos localizados em `Manicures/docs/ecosystem/`; documentos de aprovação encontrados são de outras verticais e não decidem o Cosmaker. README/`docs/STATUS.md` ainda contradizem v0.2 e serão corrigidos na fase documental. Commit de checkpoint inicial `b08f6cc`. Ambiente Emulator isolado iniciado em portas 19099/18080/15001/19199; fixture `demo-cosmaker` semeada e `dev:local` confirmado em `127.0.0.1:3000` com resposta HTTP 200. |
 | F1.1 CRM e clientes | PASS | Listagem por prefixo/paginação, cadastro/edição transacional com unicidade por tenant, vínculo por e-mail verificado, histórico de solicitações/propostas/pedidos/pagamentos internos/medidas/interações com mascaramento por permissão e anotações idempotentes via Functions. Regras bloqueiam leitura/listagem/escrita bruta por equipe; cliente autenticado lê somente o próprio perfil. Integração Functions 11/11, Rules 14/14, jornada Playwright CRM 1/1 e jornada integrada de orçamento/pedido/depósito/foto/aprovação/CRM 1/1 verdes. Backfill Emulator-only exercitado com legado sintético, dry-run/apply e repetição sem novas alterações. Uma falha inicial de upload de foto e uma asserção ambígua não se reproduziram após reseed/correção; a última jornada completa passou. |
-| F1.2 Equipe, onboarding e permissões | TODO | Convites, expiração/revogação, escalada e proteção do último owner. |
+| F1.2 Equipe, onboarding e permissões | IN_PROGRESS | As quatro rotas de equipe/convite/permissões ainda eram estruturais. A regra atual permite escrita direta em `members` por `team:manage`, sem validação de escalada ou último owner. Implementar callables transacionais, convite de uso único/expiração/revogação, gestão de membro e UI; depois provar A×B, papéis e reuso no Emulator. |
 | F1.3 Agenda, capacidade, eventos e risco | TODO | Persistência, alocação transacional, prazos e risco baseado em dados reais. |
 | F1.4 Estoque, materiais e fornecedores | TODO | Movimentações imutáveis, saldo confiável, concorrência/idempotência e pedidos. |
 | F1.5 Pedidos, produção e change requests | TODO | Arquivos/ACL, etapas configuráveis, alterações versionadas e aprovação/snapshot do cliente. |
