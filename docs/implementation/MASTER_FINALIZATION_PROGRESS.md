@@ -1,6 +1,6 @@
 # Cosmaker Master Finalization — Progress
 
-Última atualização: 2026-10-09T16:46:13-03:00
+Última atualização: 2026-10-13T13:51:39-03:00
 
 ## Identidade e baseline
 
@@ -23,7 +23,7 @@
 
 | Fase / módulo | Estado | Evidência/pendência atual |
 | --- | --- | --- |
-| Baseline e instruções do repositório | IN_PROGRESS | Checkout correto; `main`/`origin/main` no SHA-base aprovado e branch de trabalho criada. Working tree inicial limpo, `AGENTS.md` ausente; README/CURRENT/STATUS/v0.2 lidos. Padrões genéricos localizados em `Manicures/docs/ecosystem/`; documentos de aprovação encontrados são de outras verticais e não decidem o Cosmaker. README/`docs/STATUS.md` ainda contradizem v0.2 e serão corrigidos na fase documental. |
+| Baseline e instruções do repositório | PASS (baseline; falhas E2E registradas) | Checkout correto; `main`/`origin/main` no SHA-base aprovado e branch de trabalho criada. Working tree inicial limpo, `AGENTS.md` ausente; README/CURRENT/STATUS/v0.2 lidos. Padrões genéricos localizados em `Manicures/docs/ecosystem/`; documentos de aprovação encontrados são de outras verticais e não decidem o Cosmaker. README/`docs/STATUS.md` ainda contradizem v0.2 e serão corrigidos na fase documental. Commit de checkpoint inicial `b08f6cc`. Ambiente Emulator isolado iniciado em portas 19099/18080/15001/19199; fixture `demo-cosmaker` semeada e `dev:local` confirmado em `127.0.0.1:3000` com resposta HTTP 200. |
 | F1.1 CRM e clientes | TODO | Inspecionar rotas, repositories, domínio e testes; fluxo persistido + negação A×B/role. |
 | F1.2 Equipe, onboarding e permissões | TODO | Convites, expiração/revogação, escalada e proteção do último owner. |
 | F1.3 Agenda, capacidade, eventos e risco | TODO | Persistência, alocação transacional, prazos e risco baseado em dados reais. |
@@ -47,11 +47,21 @@
 | Comando/evidência | Resultado | Ambiente |
 | --- | --- | --- |
 | Inspeção do checkout/branch/HEAD/status | PASS; `main`, SHA `dca70565f378298443ff7f7ca0b6e17e735d7908`, árvore inicial limpa | Local |
-| `npm ci` | FAILED na primeira tentativa: npm 11.6.4, Node 24.11.1 relata que o lockfile não registra `@emnapi/runtime@1.11.3` e `@emnapi/core@1.11.3`; investigar/fixar antes de considerar instalação reproduzível. `node_modules` preexistente permanece instalado. | Local |
-| Baseline unit/Rules/commercial/E2E/lint/typecheck/build/docs | TODO; nenhum teste de baseline foi executado ainda | Local/Emulator |
-| Unit, Rules, commercial, E2E, lint, typecheck, Functions build, Next build | TODO para novo baseline; não reutilizar PASS histórico como prova desta revisão | Local/Emulator |
+| `npm ci` | PASS após corrigir o lockfile: 1.017 pacotes instalados; exit 0. npm audit reportou 24 vulnerabilidades (6 moderate, 16 high, 2 critical), pendentes de triagem F6. | Local, Node 24.11.1/npm 11.6.4 |
+| `npm test` | PASS, 79/79 em 12 arquivos; exit 0 | Local, antes de alterações funcionais |
+| `npm run test:rules` | PASS, 13/13; exit 0 | Firebase Emulator isolado |
+| `npm run test:commercial` | PASS, 10/10; exit 0 (inclui build Functions) | Firebase Emulator isolado |
+| `npm run test:e2e` — tentativa inicial | FAILED, 0/10; exit 1. A porta 3000 servia `next start -p 3000` sem meta de Emulator; foi encerrado após confirmar que pertencia ao checkout Cosmaker. | Runtime local anterior mal configurado; Emulator demo-cosmaker |
+| Harness Emulator local | PASS; `npm ci` seguido de `functions:build`, Emulator iniciou nos ports 19099/18080/15001/19199/8085, seed de fixture saiu apenas para `demo-cosmaker`; `dev:local` respondeu HTTP 200. Alterações locais em `firebase.local-emulator.json`, script `firebase:emulators:local` e defaults de ports em `scripts/dev-local.mjs`. | Local/Emulator, Node 24.11.1 |
+| `npm run test:e2e` — baseline em `dev:local` | FAILED, 6/10; exit 1. Falharam: métricas da visão geral Platform Owner não renderizam; navegação para `/admin/logs` excede 60s após suspensão/reativação; botão de prova `TEST_ONLY` fica em “Executando…” sem resultado; aviso de aprovação do orçamento não aparece no prazo embora a fixture termine aprovada e o snapshot do contexto mostre “Aprovação registrada”. Demais 6 cenários passaram, incluindo A×B/slug, intake/upload e regras comerciais. Dados continuam somente no Emulator; reseed antes da regressão. | Local, dev server + `demo-cosmaker`; Playwright Chromium, 1 worker |
+| `npm run lint` | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
+| `npx tsc --noEmit` | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run build` | PASS; exit 0; Next 15.5.27 compiled and generated 81 static pages. Several module routes are still 297 B/structural and remain implementation work. | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run docs:diagrams` | PASS; exit 0; regenerated nine v0.2.0 SVGs from committed Mermaid sources. | Local |
+| `npm run docs:check` | PASS; exit 0 for current v0.2.0; does not yet enforce future v0.3.0 package. | Local |
+| `npm test`, `test:rules`, `test:commercial`, `functions:build` | PASS baseline já registrado acima; pendente repetir na regressão final após implementações. | Local/Emulator |
+| Vulnerability triage | TODO; nenhum `npm audit fix` aplicado; registrar plano mitigatório em F6 após avaliar caminhos transitivos e impacto. | Local |
 | Segurança/isolamento A×B e jornadas F1/F2 | TODO | Firebase Emulator, fixtures fictícias |
-| `npm run docs:diagrams` / `npm run docs:check` | TODO para versão final posterior | Local |
 | Capturas reais desktop/mobile | TODO; somente Emulator, sem PII | Local/Playwright |
 
 ## Bloqueios externos e riscos
@@ -69,13 +79,13 @@ Nenhuma migração, deploy, envio externo, cobrança ou mutação de dados reais
 
 ## Commits e arquivos
 
-- SHAs de commits deste goal: nenhum ainda.
-- Arquivos tocados neste checkpoint: `docs/implementation/MASTER_FINALIZATION_PROGRESS.md`.
-- Nenhuma alteração de implementação foi feita antes do baseline local. `npm ci` falhou antes de instalar/remover dependências, e o tree da aplicação permanece inalterado.
-- Processo local confirmado no caminho Cosmaker: Next.js na porta 3000 e Emulator Suite nas portas Auth 19099, Functions 15001, Firestore 18080/9151, Storage 19199; nenhum processo foi encerrado.
+- SHAs de commits deste goal: `b08f6cc` (checkpoint de progresso).
+- Arquivos tocados após o checkpoint: `package-lock.json` (adições mínimas de `@emnapi/core` e `@emnapi/runtime` 1.11.3 para `npm ci`), `package.json`, `scripts/dev-local.mjs`, `firebase.local-emulator.json` e este registro.
+- Nenhuma alteração funcional foi feita antes do baseline local.
+- O antigo `next start -p 3000` foi encerrado após confirmar seu caminho e erro. Para o baseline correto, `dev:local` está ativo na porta 3000 e os Emulators na configuração isolada; a porta 8080 segue ocupada por outro projeto e não foi tocada.
 
 ## Próximos passos seguros
 
-1. Localizar normas canônicas disponíveis e mapear rotas/repositories/Functions/testes diretamente ligados às fases.
-2. Instalar dependências reprodutivelmente (`npm ci`) e executar/registrar a suíte baseline no Emulator.
-3. Implementar cada submódulo incrementalmente, testar o fluxo e a fronteira A×B/role, atualizar este checkpoint e fazer commits pequenos enquanto o working tree permanecer exclusivo deste goal.
+1. Corrigir e cobrir as quatro falhas E2E do baseline, preservando os seis cenários aprovados.
+2. Salvar checkpoint do harness e da evidência baseline; em seguida iniciar F1 pelo CRM, corrigindo lacunas estruturais com persistência e autorização.
+3. Inspecionar somente as rotas/repositories/Functions dos módulos F1 e implementar cada lacuna por submódulo com persistência, autorização, prova A×B/role, testes e commits pequenos.
