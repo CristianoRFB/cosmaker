@@ -97,12 +97,12 @@ Nenhuma migração, deploy, envio externo, cobrança ou mutação de dados reais
 
 ## Commits e arquivos
 
-- SHAs de commits deste goal: `b08f6cc` (checkpoint de progresso); checkpoint F1.1 pendente neste momento.
+- SHAs de commits deste goal: `b08f6cc` (checkpoint de progresso), `9ebfb67` (F1.1 CRM validado).
 - Arquivos tocados após o checkpoint: harness local e lockfile; F1.1 adicionou `functions/src/clients/`, rotas `/atelier/clientes`, repository/schema/types, índice Firestore, regras, integração ao vínculo de resposta de orçamento, seed, testes unitários/integrados/E2E e backfill Emulator-only. Também corrigiu a resposta visual após aprovação de orçamento e ampliou a jornada E2E para confirmar o CRM consolidado.
 - O antigo `next start -p 3000` foi encerrado após confirmar seu caminho e erro. Para o baseline correto, `dev:local` está ativo na porta 3000 e os Emulators na configuração isolada; a porta 8080 segue ocupada por outro projeto e não foi tocada.
 
 ## Próximos passos seguros
 
-1. Completar build/typecheck sem concorrência com o servidor Next e salvar checkpoint pequeno do F1.1 na branch de trabalho.
-2. Avançar em F1.2 (equipe, onboarding e permissões), mapeando somente as lacunas das rotas estruturais existentes.
-3. Preservar prova A×B/role e executar os gates de testes a cada módulo antes de seguir para o próximo.
+1. Iniciar F1.2 (equipe, onboarding e permissões), mapeando somente as lacunas das rotas estruturais existentes.
+2. Preservar prova A×B/role e executar os gates de testes a cada módulo antes de seguir para o próximo.
+3. Manter staging, produção, migração real e billing desativados até autorização separada.
