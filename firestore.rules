@@ -169,11 +169,10 @@ service cloud.firestore {
       }
 
       match /clients/{clientId} {
-        allow get: if isAtelierMember(atelierId) || (signedIn() && resource.data.userId == request.auth.uid);
-        allow list: if hasAtelierPermission(atelierId, 'clients:read');
-        allow create: if hasAtelierPermission(atelierId, 'clients:write');
-        allow update: if hasAtelierPermission(atelierId, 'clients:write');
-        allow delete: if hasAtelierPermission(atelierId, 'clients:delete');
+        // Staff use tenant-scoped callables so indexes, uniqueness, and audit are kept consistent.
+        // A customer can read only their own linked profile.
+        allow get: if isOwnClient(atelierId, clientId);
+        allow list, create, update, delete: if false;
       }
 
       match /quoteRequests/{requestId} {

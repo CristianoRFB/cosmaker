@@ -22,6 +22,7 @@
     "firebase:emulators:local": "npm run functions:build && firebase emulators:start --config firebase.local-emulator.json --project demo-cosmaker --only auth,firestore,storage,functions,pubsub",
     "seed:emulator": "node scripts/seed-emulator.mjs",
     "commercial:migrate": "node scripts/migrate-commercial-state.mjs",
+    "clients:search-backfill:emulator": "npm run functions:build && node scripts/backfill-client-search-emulator.mjs",
     "tenant:slug": "node scripts/migrate-public-tenant-slug.mjs",
     "admin:provision": "node scripts/provision-platform-admin.mjs",
     "functions:build": "npm --prefix functions run build"

@@ -1,6 +1,6 @@
 # Cosmaker Master Finalization — Progress
 
-Última atualização: 2026-10-13T13:51:39-03:00
+Última atualização: 2026-10-13 — F1.1 concluído e validado no Emulator; demais fases continuam pendentes.
 
 ## Identidade e baseline
 
@@ -24,7 +24,7 @@
 | Fase / módulo | Estado | Evidência/pendência atual |
 | --- | --- | --- |
 | Baseline e instruções do repositório | PASS (baseline; falhas E2E registradas) | Checkout correto; `main`/`origin/main` no SHA-base aprovado e branch de trabalho criada. Working tree inicial limpo, `AGENTS.md` ausente; README/CURRENT/STATUS/v0.2 lidos. Padrões genéricos localizados em `Manicures/docs/ecosystem/`; documentos de aprovação encontrados são de outras verticais e não decidem o Cosmaker. README/`docs/STATUS.md` ainda contradizem v0.2 e serão corrigidos na fase documental. Commit de checkpoint inicial `b08f6cc`. Ambiente Emulator isolado iniciado em portas 19099/18080/15001/19199; fixture `demo-cosmaker` semeada e `dev:local` confirmado em `127.0.0.1:3000` com resposta HTTP 200. |
-| F1.1 CRM e clientes | TODO | Inspecionar rotas, repositories, domínio e testes; fluxo persistido + negação A×B/role. |
+| F1.1 CRM e clientes | PASS | Listagem por prefixo/paginação, cadastro/edição transacional com unicidade por tenant, vínculo por e-mail verificado, histórico de solicitações/propostas/pedidos/pagamentos internos/medidas/interações com mascaramento por permissão e anotações idempotentes via Functions. Regras bloqueiam leitura/listagem/escrita bruta por equipe; cliente autenticado lê somente o próprio perfil. Integração Functions 11/11, Rules 14/14, jornada Playwright CRM 1/1 e jornada integrada de orçamento/pedido/depósito/foto/aprovação/CRM 1/1 verdes. Backfill Emulator-only exercitado com legado sintético, dry-run/apply e repetição sem novas alterações. Uma falha inicial de upload de foto e uma asserção ambígua não se reproduziram após reseed/correção; a última jornada completa passou. |
 | F1.2 Equipe, onboarding e permissões | TODO | Convites, expiração/revogação, escalada e proteção do último owner. |
 | F1.3 Agenda, capacidade, eventos e risco | TODO | Persistência, alocação transacional, prazos e risco baseado em dados reais. |
 | F1.4 Estoque, materiais e fornecedores | TODO | Movimentações imutáveis, saldo confiável, concorrência/idempotência e pedidos. |
@@ -51,6 +51,24 @@
 | `npm test` | PASS, 79/79 em 12 arquivos; exit 0 | Local, antes de alterações funcionais |
 | `npm run test:rules` | PASS, 13/13; exit 0 | Firebase Emulator isolado |
 | `npm run test:commercial` | PASS, 10/10; exit 0 (inclui build Functions) | Firebase Emulator isolado |
+| `npm run test:commercial` — repetição com cobertura CRM e minimização de IDs | PASS, 11/11; exit 0. Cobre A×B, papéis, e-mail duplicado sob concorrência, conta vinculada, histórico financeiro/medidas por permissão, interação idempotente e ausência de UIDs na resposta. | Firebase Emulator isolado, `demo-cosmaker` |
+| `npm test` — após helpers de busca do CRM | PASS, 82/82 em 13 arquivos; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run test:rules` — após fechamento de acesso bruto aos clientes | PASS, 14/14; exit 0. Inclui negação de leitura/listagem/escrita direta por equipe e leitura restrita ao cliente dono. | Firebase Emulator isolado |
+| `npm run lint` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
+| `npx tsc --noEmit` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run functions:build` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
+| `npx playwright test tests/e2e/client-crm.spec.ts` | PASS, 1/1; abre ficha vinculada, confirma medidas, registra interação, cadastra e busca novo cliente. A primeira execução fria excedeu 90s durante inicialização; a escrita foi confirmada no Emulator e a execução estável passou após aumentar o limite de jornada. | `dev:local` e Firebase Emulator, dados fictícios |
+| `npm run test:e2e -- tests/e2e/quote-approval.spec.ts` | PASS, 1/1 na execução final (1,7 min). Percorre aprovação do orçamento, criação do pedido com snapshot imutável, edição de medidas, depósito manual, foto de produção, aprovação do cliente e ficha CRM com solicitação, proposta, pedido, pagamento e medidas. Uma execução anterior falhou temporariamente no upload de Storage; após reseed, o fluxo passou. | `dev:local` e Firebase Emulator, `demo-cosmaker` |
+| `npm test` — repetição antes do checkpoint F1.1 | PASS, 82/82 em 13 arquivos; exit 0. | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run lint` — repetição antes do checkpoint F1.1 | PASS; exit 0. | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run functions:build` — repetição antes do checkpoint F1.1 | PASS; exit 0. | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run test:rules` — repetição antes do checkpoint F1.1 | PASS, 14/14; exit 0. A primeira tentativa não iniciou por disputa do hub do Emulator local; a suíte foi repetida após encerrar somente a sessão local iniciada para E2E. | Firebase Emulator isolado, `demo-cosmaker` |
+| `npm run test:commercial` — repetição antes do checkpoint F1.1 | PASS, 11/11; exit 0. | Firebase Emulator isolado, projeto demo e portas dinâmicas |
+| `npm run build` — repetição antes do checkpoint F1.1 | PASS; Next 15.5.27 compilou e gerou 81 páginas estáticas; exit 0. As rotas ainda estruturais permanecem registradas para F1/F3. | Local, sem dev server concorrente |
+| `npx tsc --noEmit` — após build F1.1 | PASS; exit 0. | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run build` — após F1.1 | PASS; Next 15.5.27 compilou e gerou 81 páginas estáticas. A tabela de rotas ainda exibe outras áreas estruturais, registradas como trabalho F1/F3. | Local, Node 24.11.1/npm 11.6.4 |
+| `npm run docs:check` | PASS; exit 0 para o pacote v0.2.0 vigente. | Local |
+| Backfill de busca de clientes | PASS somente no Emulator: dry-run identificou 1 legado e 1 atual; apply local migrou os candidatos; repetição dry-run/apply terminou com 2 atuais, 0 novas migrações e 0 conflitos. Saída não contém PII. | `demo-cosmaker`, Emulator local; nenhum dado real |
 | `npm run test:e2e` — tentativa inicial | FAILED, 0/10; exit 1. A porta 3000 servia `next start -p 3000` sem meta de Emulator; foi encerrado após confirmar que pertencia ao checkout Cosmaker. | Runtime local anterior mal configurado; Emulator demo-cosmaker |
 | Harness Emulator local | PASS; `npm ci` seguido de `functions:build`, Emulator iniciou nos ports 19099/18080/15001/19199/8085, seed de fixture saiu apenas para `demo-cosmaker`; `dev:local` respondeu HTTP 200. Alterações locais em `firebase.local-emulator.json`, script `firebase:emulators:local` e defaults de ports em `scripts/dev-local.mjs`. | Local/Emulator, Node 24.11.1 |
 | `npm run test:e2e` — baseline em `dev:local` | FAILED, 6/10; exit 1. Falharam: métricas da visão geral Platform Owner não renderizam; navegação para `/admin/logs` excede 60s após suspensão/reativação; botão de prova `TEST_ONLY` fica em “Executando…” sem resultado; aviso de aprovação do orçamento não aparece no prazo embora a fixture termine aprovada e o snapshot do contexto mostre “Aprovação registrada”. Demais 6 cenários passaram, incluindo A×B/slug, intake/upload e regras comerciais. Dados continuam somente no Emulator; reseed antes da regressão. | Local, dev server + `demo-cosmaker`; Playwright Chromium, 1 worker |
@@ -79,13 +97,12 @@ Nenhuma migração, deploy, envio externo, cobrança ou mutação de dados reais
 
 ## Commits e arquivos
 
-- SHAs de commits deste goal: `b08f6cc` (checkpoint de progresso).
-- Arquivos tocados após o checkpoint: `package-lock.json` (adições mínimas de `@emnapi/core` e `@emnapi/runtime` 1.11.3 para `npm ci`), `package.json`, `scripts/dev-local.mjs`, `firebase.local-emulator.json` e este registro.
-- Nenhuma alteração funcional foi feita antes do baseline local.
+- SHAs de commits deste goal: `b08f6cc` (checkpoint de progresso); checkpoint F1.1 pendente neste momento.
+- Arquivos tocados após o checkpoint: harness local e lockfile; F1.1 adicionou `functions/src/clients/`, rotas `/atelier/clientes`, repository/schema/types, índice Firestore, regras, integração ao vínculo de resposta de orçamento, seed, testes unitários/integrados/E2E e backfill Emulator-only. Também corrigiu a resposta visual após aprovação de orçamento e ampliou a jornada E2E para confirmar o CRM consolidado.
 - O antigo `next start -p 3000` foi encerrado após confirmar seu caminho e erro. Para o baseline correto, `dev:local` está ativo na porta 3000 e os Emulators na configuração isolada; a porta 8080 segue ocupada por outro projeto e não foi tocada.
 
 ## Próximos passos seguros
 
-1. Corrigir e cobrir as quatro falhas E2E do baseline, preservando os seis cenários aprovados.
-2. Salvar checkpoint do harness e da evidência baseline; em seguida iniciar F1 pelo CRM, corrigindo lacunas estruturais com persistência e autorização.
-3. Inspecionar somente as rotas/repositories/Functions dos módulos F1 e implementar cada lacuna por submódulo com persistência, autorização, prova A×B/role, testes e commits pequenos.
+1. Completar build/typecheck sem concorrência com o servidor Next e salvar checkpoint pequeno do F1.1 na branch de trabalho.
+2. Avançar em F1.2 (equipe, onboarding e permissões), mapeando somente as lacunas das rotas estruturais existentes.
+3. Preservar prova A×B/role e executar os gates de testes a cada módulo antes de seguir para o próximo.

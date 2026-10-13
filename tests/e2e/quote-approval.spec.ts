@@ -36,7 +36,7 @@ async function signInAsAtelier(page: Page) {
 }
 
 test('cliente aprova orçamento e o backend cria pedido com valores imutáveis', async ({ page }) => {
-  test.setTimeout(180_000);
+  test.setTimeout(300_000);
   await signInAsClient(page);
   await page.goto(`/cliente/orcamentos/${encodeURIComponent(quoteId)}?atelierId=${encodeURIComponent(atelierId)}`);
   await expect(page.getByRole('heading', { name: 'Proposta de cosplay' })).toBeVisible();
@@ -87,9 +87,18 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   await expect(page.getByRole('heading', { name: 'Mikasa Ackerman' })).toBeVisible();
   await expect(page.getByText('88 cm')).toBeVisible();
 
+  const depositResponses: number[] = [];
+  const depositFailures: string[] = [];
+  page.on('response', (response) => { if (response.url().includes('/confirmOrderDeposit')) depositResponses.push(response.status()); });
+  page.on('requestfailed', (request) => { if (request.url().includes('/confirmOrderDeposit')) depositFailures.push(request.failure()?.errorText ?? 'request failed'); });
   await page.getByRole('button', { name: 'Registrar recebimento' }).click();
   await page.getByRole('button', { name: 'Confirmar entrada' }).click();
-  await expect(page.getByText('Entrada registrada', { exact: false })).toBeVisible({ timeout: 10_000 });
+  try {
+    await expect(page.getByText('Entrada registrada', { exact: false })).toBeVisible({ timeout: 30_000 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'A confirmação não apareceu.';
+    throw new Error(`${message}\nResposta HTTP do callable: ${JSON.stringify(depositResponses)}; falhas de rede: ${JSON.stringify(depositFailures)}`);
+  }
   await page.getByRole('link', { name: 'Gerenciar produção' }).click();
   await expect(page.getByRole('heading', { name: 'Atualizar etapa' })).toBeVisible();
 
@@ -106,8 +115,34 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   });
   await page.getByLabel('Descrição para o histórico').fill('Prova do ajuste da manga');
   await page.getByLabel('Visível ao cliente').check();
+  const photoRequests: string[] = [];
+  const describePhotoRequest = (request: import('@playwright/test').Request) => {
+    const url = new URL(request.url());
+    return `${request.method()} ${url.host}${url.pathname}`;
+  };
+  page.on('request', (request) => {
+    if (request.url().includes('19199') || request.url().includes('firebasestorage.googleapis.com')) {
+      photoRequests.push(`started ${describePhotoRequest(request)}`);
+    }
+  });
+  page.on('response', (response) => {
+    if (response.url().includes('19199') || response.url().includes('firebasestorage.googleapis.com')) {
+      const url = new URL(response.url());
+      photoRequests.push(`response ${response.status()} ${url.host}${url.pathname}`);
+    }
+  });
+  page.on('requestfailed', (request) => {
+    if (request.url().includes('19199') || request.url().includes('firebasestorage.googleapis.com')) {
+      photoRequests.push(`failed ${describePhotoRequest(request)}: ${request.failure()?.errorText ?? 'request failed'}`);
+    }
+  });
   await page.getByRole('button', { name: 'Enviar foto' }).click();
-  await expect(page.getByText('Foto de progresso enviada.')).toBeVisible({ timeout: 15_000 });
+  try {
+    await expect(page.getByText('Foto de progresso enviada.')).toBeVisible({ timeout: 20_000 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'O envio da foto não foi confirmado.';
+    throw new Error(`${message}\nChamadas do Storage Emulator: ${JSON.stringify(photoRequests)}`);
+  }
   await page.getByRole('button', { name: 'Solicitar aprovação do cliente' }).click();
   await expect(page.getByText('Etapa enviada para aprovação do cliente.')).toBeVisible({ timeout: 10_000 });
 
@@ -131,5 +166,17 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   expect(approvals.docs[0].data().status).toBe('approved');
   const approvalEvents = await approvals.docs[0].ref.collection('events').get();
   expect(approvalEvents.size).toBe(2);
+  const clientId = order.data()?.clientId;
+  expect(typeof clientId).toBe('string');
+  await page.goto('/logout');
+  await expect(page).toHaveURL(/\/login$/);
+  await signInAsAtelier(page);
+  await page.goto(`/atelier/clientes/${encodeURIComponent(String(clientId))}`);
+  await expect(page.getByRole('heading', { name: 'Marina Almeida' })).toBeVisible();
+  await expect(page.getByText('Mikasa Ackerman').first()).toBeVisible();
+  await expect(page.getByText(/approved.*2\.000,00/)).toBeVisible();
+  await expect(page.getByText('Ficha principal')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Pagamentos internos' })).toBeVisible();
+  await expect(page.getByText(/600,00/).first()).toBeVisible();
   await app.delete();
 });

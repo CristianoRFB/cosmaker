@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { assertFails, assertSucceeds, initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
-import { collectionGroup, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+import { collection, collectionGroup, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { deleteObject, getBytes, ref, uploadBytes } from 'firebase/storage';
 
 let environment: RulesTestEnvironment;
@@ -178,6 +178,20 @@ describe('Firestore and Storage tenant rules', () => {
   it('keeps finance records unavailable to a quote-only member', async () => {
     const reader = environment.authenticatedContext('finance-reader').firestore();
     await assertFails(getDoc(doc(reader, 'ateliers/atelier-a/transactions/transaction-a')));
+  });
+
+  it('routes staff client access through callables and allows a customer to read only their own profile', async () => {
+    const member = environment.authenticatedContext('member-a').firestore();
+    const ownClient = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
+    const otherClient = environment.authenticatedContext('client-b', { email: 'other@example.com', email_verified: true }).firestore();
+    const clientPath = 'ateliers/atelier-a/clients/client-a';
+    await assertFails(getDoc(doc(member, clientPath)));
+    await assertFails(getDocs(collection(member, 'ateliers/atelier-a/clients')));
+    await assertFails(setDoc(doc(member, 'ateliers/atelier-a/clients/new-client'), { name: 'Ignora auditoria' }));
+    await assertFails(updateDoc(doc(member, clientPath), { email: 'changed@example.com' }));
+    await assertSucceeds(getDoc(doc(ownClient, clientPath)));
+    await assertFails(getDoc(doc(otherClient, clientPath)));
+    await assertFails(getDoc(doc(ownClient, 'ateliers/atelier-b/clients/client-a')));
   });
 
   it('limits order and measurement access to the assigned team and the verified client', async () => {

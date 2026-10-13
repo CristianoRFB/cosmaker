@@ -23,6 +23,7 @@ export default function ClientQuoteDetailPage() {
   const [atelierId, setAtelierId] = useState('');
   const [comment, setComment] = useState('');
   const [decision, setDecision] = useState<'approved' | 'rejected' | null>(null);
+  const [responseStatus, setResponseStatus] = useState<'approved' | 'rejected' | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -41,8 +42,8 @@ export default function ClientQuoteDetailPage() {
         setComment('');
         router.refresh();
       } else {
+        setResponseStatus(choice);
         setSuccess(choice === 'approved' ? 'Orçamento aprovado. O pedido está sendo criado.' : 'Orçamento recusado. Sua resposta foi registrada.');
-        window.setTimeout(() => window.location.reload(), 500);
       }
     } catch (replyError) {
       setError(replyError instanceof Error ? replyError.message : 'Não foi possível registrar sua resposta.');
@@ -59,10 +60,11 @@ export default function ClientQuoteDetailPage() {
   if (loadError || !record) return <EmptyState description={loadError || (atelierId ? 'Este orçamento não existe, não está disponível para este e-mail ou você não tem acesso.' : 'O link desta proposta não informa qual ateliê a criou. Volte à lista e abra novamente.')} title="Orçamento não encontrado" action={<Link className="font-semibold text-violet-700" href="/cliente/orcamentos"><ArrowLeft className="mr-1 inline" size={15} />Voltar aos orçamentos</Link>} />;
 
   const { quote, items, responses } = record;
-  const canRespond = quote.status === 'sent' && firebaseUser?.emailVerified === true;
+  const currentStatus = responseStatus ?? quote.status;
+  const canRespond = currentStatus === 'sent' && firebaseUser?.emailVerified === true;
   return <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
     <div className="grid content-start gap-5">
-      <div className="flex flex-wrap items-center gap-3"><Link className="inline-flex items-center gap-1.5 text-sm font-semibold text-violet-700" href="/cliente/orcamentos"><ArrowLeft size={16} />Meus orçamentos</Link><Badge tone={quote.status === 'approved' ? 'green' : quote.status === 'rejected' ? 'red' : quote.status === 'sent' ? 'amber' : 'violet'}>{quoteStatusLabel[quote.status]}</Badge></div>
+      <div className="flex flex-wrap items-center gap-3"><Link className="inline-flex items-center gap-1.5 text-sm font-semibold text-violet-700" href="/cliente/orcamentos"><ArrowLeft size={16} />Meus orçamentos</Link><Badge tone={currentStatus === 'approved' ? 'green' : currentStatus === 'rejected' ? 'red' : currentStatus === 'sent' ? 'amber' : 'violet'}>{quoteStatusLabel[currentStatus]}</Badge></div>
       {!firebaseUser?.emailVerified ? <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">Confirme o e-mail da sua conta para consultar e responder a esta proposta. <Link className="font-semibold underline" href="/verificar-email">Verificar e-mail</Link></div> : null}
       <Card className="p-5 sm:p-7"><p className="text-xs font-bold uppercase tracking-[.16em] text-violet-700">Orçamento do ateliê</p><h2 className="mt-2 text-2xl font-bold">Proposta de cosplay</h2><p className="mt-1 break-all text-sm text-slate-600">{quote.email}</p><div className="mt-6 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-3"><Info icon={<Clock3 size={15} />} label="Válido até" value={formatDate(quote.validUntil)} /><Info icon={<CalendarDays size={15} />} label="Previsão de início" value={formatDate(quote.expectedStartDate)} /><Info label="Previsão de conclusão" value={formatDate(quote.expectedCompletionDate)} /></div></Card>
       <Card className="p-5 sm:p-7"><h2 className="text-lg font-semibold">Itens e serviços</h2><div className="mt-4 divide-y divide-slate-100">{items.map((item) => <div className="grid gap-1 py-3 sm:grid-cols-[1fr_auto] sm:items-center" key={item.id}><div><p className="font-medium text-slate-900">{item.description}</p><p className="text-xs text-slate-500">{itemCategoryLabel[item.category]} · {item.quantity} × {formatMoney(item.unitPrice)}</p></div><p className="text-sm font-semibold text-slate-800">{formatMoney(item.total)}</p></div>)}</div>{!items.length ? <p className="mt-3 text-sm text-slate-500">O ateliê não adicionou itens detalhados a esta proposta.</p> : null}</Card>
@@ -71,11 +73,11 @@ export default function ClientQuoteDetailPage() {
 
     <aside className="grid content-start gap-4">
       <Card className="p-5"><h2 className="text-sm font-semibold text-slate-700">Investimento</h2><dl className="mt-4 grid gap-3 text-sm"><Row label="Materiais" value={formatMoney(quote.materialsCost)} /><Row label="Mão de obra" value={formatMoney(quote.laborCost)} />{quote.otherCost ? <Row label="Outros itens" value={formatMoney(quote.otherCost)} /> : null}<Row label="Urgência" value={formatMoney(quote.urgencyFee)} /><Row label="Frete" value={formatMoney(quote.shipping)} /><Row label="Desconto" value={`− ${formatMoney(quote.discount)}`} /><div className="border-t border-slate-100 pt-3"><Row bold label="Total" value={formatMoney(quote.total)} /></div><Row label={`Entrada (${quote.depositPercentage}%)`} value={formatMoney(quote.depositAmount)} /></dl></Card>
-      {quote.status === 'approved' ? <Card className="bg-emerald-50 p-5"><h2 className="font-semibold text-emerald-950">Aprovação registrada</h2><p className="mt-2 text-sm leading-6 text-emerald-900">O ateliê está preparando o pedido usando os valores e itens preservados na aprovação.</p></Card> : null}
+      {currentStatus === 'approved' ? <Card className="bg-emerald-50 p-5"><h2 className="font-semibold text-emerald-950">Aprovação registrada</h2><p className="mt-2 text-sm leading-6 text-emerald-900">O ateliê está preparando o pedido usando os valores e itens preservados na aprovação.</p></Card> : null}
       {canRespond ? <Card className="p-5"><h2 className="font-semibold">O que você acha da proposta?</h2><p className="mt-2 text-sm leading-6 text-slate-600">Sua resposta ficará registrada no histórico. Se quiser mudar valores ou detalhes, peça um ajuste antes de aprovar.</p><div className="mt-4 grid gap-2"><Button onClick={() => setDecision('approved')}><Check size={16} />Aprovar proposta</Button><Button onClick={() => setDecision('rejected')} variant="secondary"><X size={16} />Recusar proposta</Button></div><form className="mt-5 grid gap-3 border-t border-slate-100 pt-4" onSubmit={requestChanges}><label className="grid gap-1.5 text-sm font-semibold text-slate-700" htmlFor="clientComment">Pedir um ajuste<Textarea id="clientComment" maxLength={1000} onChange={(event) => setComment(event.target.value)} placeholder="Conte o que gostaria de ajustar…" value={comment} /></label><Button disabled={pending || comment.trim().length < 5} type="submit" variant="secondary"><MessageSquareText size={16} />Enviar pedido de ajuste</Button></form></Card> : null}
       {error ? <p className="rounded-xl bg-rose-50 p-3 text-sm text-rose-800" role="alert">{error}</p> : null}
       {success ? <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800" role="status">{success}</p> : null}
-      <ConfirmDialog confirmLabel={pending ? 'Registrando…' : decision === 'approved' ? 'Aprovar orçamento' : 'Recusar orçamento'} description={decision === 'approved' ? `Ao aprovar, você confirma o valor total de ${formatMoney(quote.total)} e o ateliê iniciará a preparação do pedido.` : 'A recusa será registrada no histórico e não poderá ser desfeita nesta versão do orçamento.'} onClose={() => setDecision(null)} onConfirm={() => decision && void respond(decision)} open={decision !== null} title={decision === 'approved' ? 'Confirmar aprovação?' : 'Confirmar recusa?'} />
+      <ConfirmDialog confirmDisabled={pending} confirmLabel={pending ? 'Registrando…' : decision === 'approved' ? 'Aprovar orçamento' : 'Recusar orçamento'} description={decision === 'approved' ? `Ao aprovar, você confirma o valor total de ${formatMoney(quote.total)} e o ateliê iniciará a preparação do pedido.` : 'A recusa será registrada no histórico e não poderá ser desfeita nesta versão do orçamento.'} onClose={() => { if (!pending) setDecision(null); }} onConfirm={() => decision && void respond(decision)} open={decision !== null} title={decision === 'approved' ? 'Confirmar aprovação?' : 'Confirmar recusa?'} />
     </aside>
   </section>;
 }

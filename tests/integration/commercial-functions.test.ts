@@ -103,6 +103,78 @@ afterAll(async () => {
 });
 
 describe('Commercial Functions em Firebase Emulator', () => {
+  it('mantém o CRM restrito ao tenant, aplica permissões e registra ações de forma idempotente', async () => {
+    const first = await createTenant({ label: 'client-crm-a' });
+    const second = await createTenant({ label: 'client-crm-b' });
+    const readOnly = await createIdentity('client-read-only');
+    await Promise.all([
+      adminDb.doc(`users/${readOnly.uid}`).set({ id: readOnly.uid, email: readOnly.email, accountType: 'atelier_member', atelierId: first.atelierId, role: 'assistant', permissions: ['clients:read'], active: true }),
+      adminDb.doc(`ateliers/${first.atelierId}/members/${readOnly.uid}`).set({ userId: readOnly.uid, role: 'assistant', permissions: ['clients:read'], active: true }),
+    ]);
+
+    await signIn(first.owner);
+    const created = await call<{ clientId: string }>('saveAtelierClient', {
+      name: 'Marina Costa', email: `marina-${nonce}@example.test`, phone: '+55 (11) 99999-0000',
+    });
+    expect(created.clientId).toBeTruthy();
+    const listed = await call<{ clients: Array<Record<string, unknown>>; nextCursor: string | null }>('listAtelierClients', { search: 'mar', limit: 1 });
+    expect(listed.clients).toHaveLength(1);
+    expect(listed.clients[0]).toMatchObject({ id: created.clientId, name: 'Marina Costa', hasLinkedAccount: false });
+    expect(listed.nextCursor).toBeNull();
+
+    const duplicateAttempts = await Promise.allSettled([
+      call('saveAtelierClient', { name: 'Duplicada Um', email: `duplicada-${nonce}@example.test` }),
+      call('saveAtelierClient', { name: 'Duplicada Dois', email: `duplicada-${nonce}@example.test` }),
+    ]);
+    expect(duplicateAttempts.filter((item) => item.status === 'fulfilled')).toHaveLength(1);
+    expect(duplicateAttempts.filter((item) => item.status === 'rejected')).toHaveLength(1);
+    const duplicateFailure = duplicateAttempts.find((item) => item.status === 'rejected') as PromiseRejectedResult;
+    expect(duplicateFailure.reason).toMatchObject({ code: 'functions/already-exists' });
+
+    const linkedId = `linked-${nonce}`;
+    await adminDb.doc(`ateliers/${first.atelierId}/clients/${linkedId}`).set({ id: linkedId, name: 'Cliente vinculada', email: `vinculada-${nonce}@example.test`, userId: readOnly.uid, phone: '' });
+    await signIn(first.owner);
+    await expect(call('saveAtelierClient', { clientId: linkedId, name: 'Cliente vinculada', email: `novo-${nonce}@example.test` }))
+      .rejects.toMatchObject({ code: 'functions/failed-precondition' });
+
+    const requestId = `interaction-${nonce}`;
+    await call('addAtelierClientInteraction', { clientId: created.clientId, requestId, note: 'Contato inicial registrado.' });
+    await call('addAtelierClientInteraction', { clientId: created.clientId, requestId, note: 'Contato inicial registrado.' });
+    expect((await adminDb.collection(`ateliers/${first.atelierId}/clients/${created.clientId}/interactions`).get()).size).toBe(1);
+
+    await Promise.all([
+      adminDb.doc(`ateliers/${first.atelierId}/quoteRequests/request-${nonce}`).set({ clientId: created.clientId, email: `marina-${nonce}@example.test`, character: 'Personagem teste', status: 'new' }),
+      adminDb.doc(`ateliers/${first.atelierId}/quotes/quote-${nonce}`).set({ clientId: created.clientId, email: `marina-${nonce}@example.test`, status: 'sent', total: 12500 }),
+      adminDb.doc(`ateliers/${first.atelierId}/orders/order-${nonce}`).set({ clientId: created.clientId, email: `marina-${nonce}@example.test`, status: 'in_progress', amountPaid: 2500, amountRemaining: 10000 }),
+      adminDb.doc(`ateliers/${first.atelierId}/orders/order-${nonce}/payments/payment-${nonce}`).set({ type: 'deposit', amount: 2500, status: 'confirmed', method: 'pix' }),
+      adminDb.doc(`ateliers/${first.atelierId}/measurementProfiles/measure-${nonce}`).set({ clientId: created.clientId, name: 'Medidas principais', active: true }),
+    ]);
+
+    const detail = await call<{ client: Record<string, unknown>; history: { requests: unknown[]; quotes: unknown[]; orders: Array<Record<string, unknown>>; payments: unknown[]; measurements: unknown[]; interactions: unknown[]; access: Record<string, boolean> } }>('getAtelierClient', { clientId: created.clientId });
+    expect(detail.history).toMatchObject({ access: { quotes: true, orders: true, finance: true, measurements: true } });
+    expect(detail.history.requests).toHaveLength(1);
+    expect(detail.history.quotes).toHaveLength(1);
+    expect(detail.history.orders[0]).toMatchObject({ amountPaid: 2500, amountRemaining: 10000 });
+    expect(detail.history.payments).toHaveLength(1);
+    expect(detail.history.measurements).toHaveLength(1);
+    expect(detail.history.interactions).toHaveLength(1);
+    expect(JSON.stringify(detail)).not.toContain(readOnly.uid);
+    expect(JSON.stringify(detail)).not.toContain(first.owner.uid);
+
+    await signIn(readOnly);
+    const readOnlyDetail = await call<{ history: { requests: unknown[]; quotes: unknown[]; orders: unknown[]; payments: unknown[]; measurements: unknown[]; access: Record<string, boolean> } }>('getAtelierClient', { clientId: created.clientId });
+    expect(readOnlyDetail.history).toMatchObject({
+      requests: [], quotes: [], orders: [], payments: [], measurements: [],
+      access: { quotes: false, orders: false, finance: false, measurements: false },
+    });
+    await expect(call('saveAtelierClient', { name: 'Sem permissão', email: `sem-permissao-${nonce}@example.test` }))
+      .rejects.toMatchObject({ code: 'functions/permission-denied' });
+
+    await signIn(second.owner);
+    expect((await call<{ clients: unknown[] }>('listAtelierClients', { search: 'marina' })).clients).toHaveLength(0);
+    await expect(call('getAtelierClient', { clientId: created.clientId })).rejects.toMatchObject({ code: 'functions/not-found' });
+  }, 90000);
+
   it('autoriza somente Platform Owner, grava auditoria e rejeita tenantId enviado pelo browser', async () => {
     const tenantA = `it-${nonce}-tenant-a`;
     const before = (await adminDb.doc(`ateliers/${tenantA}/commercial/state`).get()).data();

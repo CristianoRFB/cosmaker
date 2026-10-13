@@ -1,6 +1,7 @@
-import { FieldValue, Timestamp } from 'firebase-admin/firestore';
+import { FieldValue, Timestamp, type DocumentSnapshot } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
+import { buildClientSearchPrefixes, clientEmailIndexId, normalizeClientSearch } from '../clients/client-data';
 
 type Decision = 'approved' | 'rejected' | 'request_changes';
 
@@ -40,12 +41,36 @@ export const respondToQuote = onCall(async (call) => {
     if (!requestSnapshot.exists) throw new HttpsError('failed-precondition', 'A solicitação original não foi encontrada.');
     const request = requestSnapshot.data()!;
     const normalizedEmail = call.auth!.token.email!.trim().toLowerCase();
-    const matchingClients = await transaction.get(atelier.collection('clients').where('email', '==', normalizedEmail).limit(1));
-    const matchingClient = matchingClients.docs[0];
-    if (matchingClient && typeof matchingClient.data().userId === 'string' && matchingClient.data().userId !== call.auth!.uid) {
+    const clientCollection = atelier.collection('clients');
+    const clientEmailIndexRef = atelier.collection('clientEmailIndex').doc(clientEmailIndexId(normalizedEmail));
+    const [clientEmailIndex, matchingClients] = await Promise.all([
+      transaction.get(clientEmailIndexRef),
+      transaction.get(clientCollection.where('email', '==', normalizedEmail).limit(2)),
+    ]);
+    const indexedClientId = clientEmailIndex.data()?.clientId;
+    let matchingClient: DocumentSnapshot | undefined = matchingClients.docs[0];
+    if (clientEmailIndex.exists) {
+      if (typeof indexedClientId !== 'string' || !indexedClientId || indexedClientId.includes('/')) {
+        throw new HttpsError('failed-precondition', 'O vínculo de e-mail do cadastro precisa ser revisado.');
+      }
+      const indexedClient = await transaction.get(clientCollection.doc(indexedClientId));
+      if (!indexedClient.exists) throw new HttpsError('failed-precondition', 'O índice de e-mail aponta para um cadastro ausente.');
+      if (matchingClients.docs.some((client) => client.id !== indexedClientId)) {
+        throw new HttpsError('already-exists', 'Há cadastros duplicados para este e-mail e o vínculo precisa ser revisado.');
+      }
+      matchingClient = indexedClient;
+    } else if (matchingClients.docs.length > 1) {
+      throw new HttpsError('already-exists', 'Há cadastros duplicados para este e-mail e o vínculo precisa ser revisado.');
+    }
+    const matchingClientData = matchingClient?.data() ?? {};
+    if (typeof matchingClientData.userId === 'string' && matchingClientData.userId !== call.auth!.uid) {
       throw new HttpsError('permission-denied', 'Este cadastro de cliente já está vinculado a outra conta.');
     }
-    const clientRef = matchingClient?.ref ?? atelier.collection('clients').doc(call.auth!.uid);
+    const clientRef = matchingClient?.ref ?? clientCollection.doc(call.auth!.uid);
+    const existingUserClient = matchingClient ? null : await transaction.get(clientRef);
+    if (existingUserClient?.exists && typeof existingUserClient.data()?.userId === 'string' && existingUserClient.data()?.userId !== call.auth!.uid) {
+      throw new HttpsError('permission-denied', 'Este cadastro de cliente já está vinculado a outra conta.');
+    }
     const clientId = clientRef.id;
 
     const reply = decision as Decision;
@@ -60,15 +85,19 @@ export const respondToQuote = onCall(async (call) => {
       createdAt: FieldValue.serverTimestamp(),
     });
     transaction.set(clientRef, {
-      ...(matchingClient?.data() ?? {}),
+      ...(matchingClient?.data() ?? existingUserClient?.data() ?? {}),
       id: clientId,
       userId: call.auth!.uid,
       name: typeof request.name === 'string' ? request.name : '',
+      nameSearch: normalizeClientSearch(typeof request.name === 'string' ? request.name : ''),
       email: normalizedEmail,
+      emailSearch: normalizeClientSearch(normalizedEmail),
+      searchPrefixes: buildClientSearchPrefixes(typeof request.name === 'string' ? request.name : '', normalizedEmail),
       ...(typeof request.phone === 'string' && request.phone ? { phone: request.phone } : {}),
       updatedAt: FieldValue.serverTimestamp(),
-      ...(!matchingClient ? { createdAt: FieldValue.serverTimestamp(), totalSpent: 0, orderCount: 0 } : {}),
+      ...(!matchingClient && !existingUserClient?.exists ? { createdAt: FieldValue.serverTimestamp(), totalSpent: 0, orderCount: 0 } : {}),
     }, { merge: true });
+    transaction.set(clientEmailIndexRef, { clientId, updatedAt: FieldValue.serverTimestamp() });
 
     if (reply === 'request_changes') {
       transaction.update(requestRef, { clientId, status: 'adjustment_requested', updatedAt: now });

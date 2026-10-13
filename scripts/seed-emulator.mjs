@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module';
+import { createHash } from 'node:crypto';
 
 const requireFromFunctions = createRequire(new URL('../functions/package.json', import.meta.url));
 const { initializeApp } = requireFromFunctions('firebase-admin/app');
@@ -14,6 +15,22 @@ if (!process.env.FIRESTORE_EMULATOR_HOST || !process.env.FIREBASE_AUTH_EMULATOR_
 const app = initializeApp({ projectId }, `cosmaker-demo-${Date.now()}`);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+function normalizeClientSearch(value) {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+}
+
+function clientSearchPrefixes(name, email) {
+  const prefixes = new Set();
+  for (const value of [name, email]) {
+    const normalized = normalizeClientSearch(value);
+    for (let length = 1; length <= Math.min(normalized.length, 64); length += 1) prefixes.add(normalized.slice(0, length));
+    for (const word of normalized.split(/\s+/).filter(Boolean)) {
+      for (let length = 1; length <= Math.min(word.length, 64); length += 1) prefixes.add(word.slice(0, length));
+    }
+  }
+  return [...prefixes];
+}
 
 async function ensureLocalUser(email, displayName) {
   try {
@@ -58,7 +75,10 @@ const now = Timestamp.now();
 const eventAt = Timestamp.fromDate(new Date('2026-09-30T12:00:00.000Z'));
 
 // Keep the quote-to-order production journey repeatable without touching a real Firebase project.
-await db.recursiveDelete(db.doc(`ateliers/${atelierId}/orders/${quoteId}`));
+await Promise.all([
+  db.recursiveDelete(db.doc(`ateliers/${atelierId}/orders/${quoteId}`)),
+  db.recursiveDelete(db.doc(`ateliers/${atelierId}/quotes/${quoteId}`)),
+]);
 
 const batch = db.batch();
 batch.set(db.doc(`users/${atelierUser.uid}`), {
@@ -133,7 +153,12 @@ batch.set(db.doc(`ateliers/atelier-luna/members/${atelierUserB.uid}`), {
 });
 batch.set(db.doc(`ateliers/${atelierId}/clients/${clientUser.uid}`), {
   id: clientUser.uid, userId: clientUser.uid, name: clientUser.displayName, email: clientUser.email,
+  nameSearch: normalizeClientSearch(clientUser.displayName), emailSearch: normalizeClientSearch(clientUser.email),
+  searchPrefixes: clientSearchPrefixes(clientUser.displayName, clientUser.email),
   totalSpent: 0, orderCount: 0, createdAt: now, updatedAt: now,
+});
+batch.set(db.doc(`ateliers/${atelierId}/clientEmailIndex/${createHash('sha256').update(clientUser.email.toLowerCase()).digest('hex')}`), {
+  clientId: clientUser.uid, updatedAt: now,
 });
 batch.set(db.doc(`ateliers/${atelierId}/measurementProfiles/profile-marina`), {
   clientId: clientUser.uid, name: 'Ficha principal', active: true, createdAt: now, updatedAt: now,
