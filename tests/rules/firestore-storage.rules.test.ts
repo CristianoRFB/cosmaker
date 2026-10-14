@@ -238,6 +238,35 @@ describe('Firestore and Storage tenant rules', () => {
     await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/orders/order-a/productionStages/stage-fitting')));
   });
 
+  it('keeps inventory balances, reservations, SKU indexes and movement ledger server-managed', async () => {
+    await environment.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await Promise.all([
+        setDoc(doc(db, 'ateliers/atelier-a/materials/material-a'), { name: 'Lona', onHandMilli: 5000, reservedMilli: 1000 }),
+        setDoc(doc(db, 'ateliers/atelier-a/suppliers/supplier-a'), { name: 'Fornecedor' }),
+        setDoc(doc(db, 'ateliers/atelier-a/inventoryMovements/movement-a'), { materialId: 'material-a', kind: 'receive' }),
+        setDoc(doc(db, 'ateliers/atelier-a/inventoryReservations/reservation-a'), { materialId: 'material-a', status: 'active' }),
+        setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/materialRequirements/material-a'), { plannedMilli: 5000 }),
+      ]);
+    });
+    const owner = environment.authenticatedContext('member-a').firestore();
+    const material = doc(owner, 'ateliers/atelier-a/materials/material-a');
+    const supplier = doc(owner, 'ateliers/atelier-a/suppliers/supplier-a');
+    const movement = doc(owner, 'ateliers/atelier-a/inventoryMovements/movement-a');
+    const reservation = doc(owner, 'ateliers/atelier-a/inventoryReservations/reservation-a');
+    const requirement = doc(owner, 'ateliers/atelier-a/orders/order-a/materialRequirements/material-a');
+    await assertSucceeds(getDoc(material));
+    await assertSucceeds(getDoc(movement));
+    await assertFails(updateDoc(material, { onHandMilli: 0 }));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/materials/forged'), { name: 'Saldo falso' }));
+    await assertFails(deleteDoc(supplier));
+    await assertFails(updateDoc(movement, { quantity: 9000 }));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/inventoryMovements/forged'), { kind: 'receive', quantity: 9000 }));
+    await assertFails(setDoc(reservation, { materialId: 'material-a', remainingMilli: 999999 }));
+    await assertFails(updateDoc(requirement, { plannedMilli: 999999 }));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/inventorySkuIndex/forged'), { materialId: 'forged' }));
+  });
+
   it('limits public reference uploads to image types and enabled public intake', async () => {
     const guest = environment.unauthenticatedContext().storage();
     await assertSucceeds(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref-a'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));

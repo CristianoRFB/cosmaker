@@ -10,6 +10,7 @@ const suites = {
   commercial: 'tests/integration/commercial-functions.test.ts',
   team: 'tests/integration/team-functions.test.ts',
   scheduling: 'tests/integration/scheduling-functions.test.ts',
+  inventory: 'tests/integration/inventory-functions.test.ts',
 };
 const suiteName = process.argv[2] || 'commercial';
 const testFile = suites[suiteName];

@@ -228,6 +228,10 @@ service cloud.firestore {
         // Order state, payment state, approvals and history are changed only by trusted functions.
         allow create, update: if false;
         allow delete: if false;
+        match /materialRequirements/{materialId} {
+          allow read: if hasAtelierPermission(atelierId, 'inventory:read') || hasAtelierPermission(atelierId, 'inventory:write');
+          allow write: if false;
+        }
         match /{subcollection}/{documentId} {
           allow read: if canReadOrder(atelierId, orderId)
             && subcollection in ['items', 'productionStages', 'photos', 'approvals', 'payments', 'messages', 'files', 'statusHistory', 'measurementSnapshot']
@@ -292,16 +296,23 @@ service cloud.firestore {
         allow write: if false;
       }
       match /materials/{materialId} {
-        allow read: if hasAtelierPermission(atelierId, 'inventory:read');
-        allow write: if hasAtelierPermission(atelierId, 'inventory:write');
+        allow read: if hasAtelierPermission(atelierId, 'inventory:read') || hasAtelierPermission(atelierId, 'inventory:write');
+        allow write: if false;
       }
       match /suppliers/{supplierId} {
-        allow read: if hasAtelierPermission(atelierId, 'inventory:read');
-        allow write: if hasAtelierPermission(atelierId, 'inventory:write');
+        allow read: if hasAtelierPermission(atelierId, 'inventory:read') || hasAtelierPermission(atelierId, 'inventory:write');
+        allow write: if false;
       }
       match /inventoryMovements/{movementId} {
-        allow read: if hasAtelierPermission(atelierId, 'inventory:read');
-        allow write: if hasAtelierPermission(atelierId, 'inventory:write');
+        allow read: if hasAtelierPermission(atelierId, 'inventory:read') || hasAtelierPermission(atelierId, 'inventory:write');
+        allow write: if false;
+      }
+      match /inventoryReservations/{reservationId} {
+        allow read: if hasAtelierPermission(atelierId, 'inventory:read') || hasAtelierPermission(atelierId, 'inventory:write');
+        allow write: if false;
+      }
+      match /inventorySkuIndex/{sku} {
+        allow read, write: if false;
       }
       match /productionSlots/{slotId} {
         allow read: if hasAtelierPermission(atelierId, 'schedule:read');

@@ -10,6 +10,7 @@ export { listAtelierTeam, updateAtelierMember, transferAtelierOwnership } from '
 export { createAtelierInvitation, listAtelierInvitations, revokeAtelierInvitation, acceptAtelierInvitation } from './team/invitations';
 export { saveMemberScheduleCapacity, allocateProductionTime, cancelProductionSlot, createScheduleBlock, cancelScheduleBlock, listScheduleWorkspace } from './scheduling/planning';
 export { listAtelierEvents, createAtelierEvent, updateAtelierEvent, cancelAtelierEvent } from './scheduling/events';
+export { listInventoryWorkspace, listInventoryMovements, saveInventoryMaterial, saveInventorySupplier, applyInventoryMovement } from './inventory/inventory';
 export { createQuoteDraft } from './quotes/create-quote-draft';
 export { publishQuote } from './quotes/publish-quote';
 export { respondToQuote } from './quotes/respond-to-quote';

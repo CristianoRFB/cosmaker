@@ -13,6 +13,7 @@
     "test:commercial": "npm run functions:build && node scripts/test-commercial-emulator.mjs",
     "test:team": "npm run functions:build && node scripts/test-commercial-emulator.mjs team",
     "test:scheduling": "npm run functions:build && node scripts/test-commercial-emulator.mjs scheduling",
+    "test:inventory": "npm run functions:build && node scripts/test-commercial-emulator.mjs inventory",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "screenshots": "node scripts/capture-screenshots.mjs",
