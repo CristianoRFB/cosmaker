@@ -68,7 +68,7 @@ export default function TeamInvitationsPage() {
       const url = new URL('/convite', window.location.origin);
       url.searchParams.set('atelierId', created.atelierId);
       url.searchParams.set('invitationId', created.invitationId);
-      url.searchParams.set('token', created.token);
+      url.hash = new URLSearchParams({ token: created.token }).toString();
       setLatestLink(url.toString());
       setEmail('');
       setNotice('Convite criado. Copie o link agora; ele será mostrado somente nesta criação.');

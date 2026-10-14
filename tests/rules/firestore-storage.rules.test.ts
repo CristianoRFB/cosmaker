@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { assertFails, assertSucceeds, initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
-import { collection, collectionGroup, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+import { collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { deleteObject, getBytes, ref, uploadBytes } from 'firebase/storage';
 
 let environment: RulesTestEnvironment;
@@ -243,6 +243,25 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(updateDoc(doc(owner, 'ateliers/atelier-a'), { demoWorkspace: true }));
     await assertFails(updateDoc(doc(owner, 'ateliers/atelier-a'), { plan: 'premium', subscriptionStatus: 'active' }));
     await assertSucceeds(updateDoc(doc(owner, 'ateliers/atelier-a'), { name: 'Nome editado pelo proprietário' }));
+  });
+
+  it('keeps team membership, invitations, and ownership server-managed', async () => {
+    const owner = environment.authenticatedContext('member-a').firestore();
+    const member = environment.authenticatedContext('finance-reader').firestore();
+    const membership = doc(owner, 'ateliers/atelier-a/members/new-member');
+    const invitation = doc(owner, 'ateliers/atelier-a/teamInvitations/invitation-a');
+    const emailIndex = doc(owner, 'ateliers/atelier-a/teamInvitationEmailIndex/hash-a');
+
+    await assertFails(setDoc(membership, { userId: 'new-member', role: 'owner', active: true, permissions: [] }));
+    await assertFails(updateDoc(doc(owner, 'ateliers/atelier-a/members/member-a'), { role: 'assistant' }));
+    await assertFails(deleteDoc(doc(owner, 'ateliers/atelier-a/members/member-a')));
+    await assertFails(setDoc(invitation, { email: 'invite@example.test', tokenHash: 'secret' }));
+    await assertFails(getDoc(invitation));
+    await assertFails(setDoc(emailIndex, { invitationId: 'invitation-a' }));
+    await assertFails(getDoc(emailIndex));
+    await assertFails(updateDoc(doc(owner, 'ateliers/atelier-a'), { ownerId: 'finance-reader' }));
+    await assertFails(updateDoc(doc(owner, 'ateliers/atelier-a'), { active: false }));
+    await assertFails(updateDoc(doc(member, 'ateliers/atelier-a'), { ownerId: 'finance-reader' }));
   });
 
   it('restricts production image uploads to assigned staff and serves only visible photos to clients', async () => {

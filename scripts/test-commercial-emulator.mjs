@@ -6,6 +6,17 @@ import { resolve } from 'node:path';
 
 const requireFromRoot = createRequire(import.meta.url);
 const firebaseCli = requireFromRoot.resolve('firebase-tools/lib/bin/firebase.js');
+const suites = {
+  commercial: 'tests/integration/commercial-functions.test.ts',
+  team: 'tests/integration/team-functions.test.ts',
+};
+const suiteName = process.argv[2] || 'commercial';
+const testFile = suites[suiteName];
+if (!testFile) {
+  console.error(`Suíte inválida: ${suiteName}. Opções: ${Object.keys(suites).join(', ')}.`);
+  process.exit(2);
+}
+const testCommand = `vitest run ${testFile}`;
 
 function findAvailablePort() {
   return new Promise((resolvePort, reject) => {
@@ -39,7 +50,7 @@ try {
       '--config', configName,
       '--project', 'demo-cosmaker',
       '--only', 'auth,firestore,functions,pubsub',
-      'vitest run tests/integration/commercial-functions.test.ts',
+      testCommand,
     ], {
       stdio: 'inherit',
       env: {

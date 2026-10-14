@@ -1,3 +1,5 @@
+import type { DocumentData } from 'firebase-admin/firestore';
+
 export const teamRoles = ['admin', 'cosmaker', 'assistant', 'finance'] as const;
 export type TeamRole = typeof teamRoles[number];
 
@@ -36,7 +38,7 @@ export function parseTeamPermissions(value: unknown): string[] | null {
   return unique.length === value.length ? unique.sort() : null;
 }
 
-export function mayManageTeam(member: FirebaseFirestore.DocumentData, permission: 'team:read' | 'team:manage') {
+export function mayManageTeam(member: DocumentData, permission: 'team:read' | 'team:manage') {
   const permissions = Array.isArray(member.permissions) ? member.permissions : [];
   return member.role === 'owner' || member.role === 'admin'
     || permissions.includes(permission)
@@ -44,7 +46,7 @@ export function mayManageTeam(member: FirebaseFirestore.DocumentData, permission
 }
 
 export function mayGrantTeamRole(
-  actor: FirebaseFirestore.DocumentData,
+  actor: DocumentData,
   role: TeamRole,
   permissions: string[],
 ) {
@@ -54,7 +56,7 @@ export function mayGrantTeamRole(
   return role !== 'admin' && permissions.every((permission) => actorPermissions.includes(permission));
 }
 
-export function mayChangeTeamMember(actor: FirebaseFirestore.DocumentData, target: FirebaseFirestore.DocumentData) {
+export function mayChangeTeamMember(actor: DocumentData, target: DocumentData) {
   if (target.role === 'owner') return false;
   if (target.role === 'admin' && actor.role !== 'owner') return false;
   if (!mayManageTeam(actor, 'team:manage')) return false;
