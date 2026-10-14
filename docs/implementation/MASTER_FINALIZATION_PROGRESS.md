@@ -1,6 +1,6 @@
 # Cosmaker Master Finalization — Progress
 
-Última atualização: 2026-10-14 — F1.1, F1.2 e F1.3 validados; F1.4 pendente.
+Última atualização: 2026-10-14 — F1.1 a F1.4 validados; F1.5 é o próximo módulo.
 
 ## Identidade e baseline
 
@@ -27,7 +27,7 @@
 | F1.1 CRM e clientes | PASS | Listagem por prefixo/paginação, cadastro/edição transacional com unicidade por tenant, vínculo por e-mail verificado, histórico de solicitações/propostas/pedidos/pagamentos internos/medidas/interações com mascaramento por permissão e anotações idempotentes via Functions. Regras bloqueiam leitura/listagem/escrita bruta por equipe; cliente autenticado lê somente o próprio perfil. Integração Functions 11/11, Rules 14/14, jornada Playwright CRM 1/1 e jornada integrada de orçamento/pedido/depósito/foto/aprovação/CRM 1/1 verdes. Backfill Emulator-only exercitado com legado sintético, dry-run/apply e repetição sem novas alterações. Uma falha inicial de upload de foto e uma asserção ambígua não se reproduziram após reseed/correção; a última jornada completa passou. |
 | F1.2 Equipe, onboarding e permissões | PASS | Rotas de equipe, convites, aceite e permissões implementadas com callables transacionais. Token aleatório de uso único fica armazenado somente como hash; expiração/revogação, verificação de e-mail e bloqueio de reuso, perfil de cliente existente, isolamento A×B, escalada, desativação e transferência para exatamente um titular foram comprovados no Emulator. Regras bloqueiam escrita direta em `members`, convites, índice de e-mail, `ownerId` e `active` do ateliê. Link mantém o token no fragmento e, durante login/verificação, somente em `sessionStorage`; nenhum e-mail é enviado. Unit 84/84, Rules 15/15, integração Team 4/4, E2E Team 1/1, lint, TypeScript, Functions build e Next build passaram. |
 | F1.3 Agenda, capacidade, eventos e risco | PASS | Rotas de agenda/capacidade/bloqueios/eventos/cronograma conectadas a Functions; capacidade, slots e bloqueios persistidos com validação de fuso e transações/travas por dia; CRUD autenticado de eventos; risco categórico com dados persistidos de slots, capacidade, pausas, prazos e eventos. Rules negam mutação direta. Unit 91/91, Rules 16/16, Scheduling Functions 2/2, CRM regression 11/11, Team regression 4/4 e Playwright 1/1 passaram. Lint, TypeScript, Functions build e Next build passaram. |
-| F1.4 Estoque, materiais e fornecedores | TODO | Movimentações imutáveis, saldo confiável, concorrência/idempotência e pedidos. |
+| F1.4 Estoque, materiais e fornecedores | PASS | Cadastro/edição/arquivo de materiais e fornecedores; SKU único transacional; entrada, saída, reserva e liberação com ledger imutável, saldo inteiro em milésimos, trava contra negativo, idempotência e auditoria; BOM/reserva/consumo associados ao pedido; alertas de baixo estoque e UI responsiva. Rules negam mutação direta. Unit 95/95, Rules 17/17, Inventory Functions 3/3, Playwright 1/1, lint, TypeScript, Functions build, Next build e docs:check passaram. A paginação ampla das listas é parte do refinamento transversal F3; esta versão protege a listagem com teto operacional explícito de 500 itens por coleção. |
 | F1.5 Pedidos, produção e change requests | TODO | Arquivos/ACL, etapas configuráveis, alterações versionadas e aprovação/snapshot do cliente. |
 | F1.6 Financeiro operacional, custos e margens | TODO | Registros internos em centavos, compensações/auditoria, sem movimentar dinheiro real. |
 | F1.7 Serviços e portfólio | TODO | Conteúdo publicado tenant-aware, imagens autorizadas e privacidade. |
@@ -73,6 +73,12 @@
 | `node -e "JSON.parse(require('fs').readFileSync('firestore.indexes.json','utf8'))"` | PASS após remover fechamento duplicado no final do manifesto de índices. | Local, Node 24.11.1 |
 | `npm run docs:check` — checkpoint F1.3 | PASS; documentação vigente v0.2.0, links/manifests e estrutura Firebase verificados. | Local |
 | `components/agenda/README.md` | PASS; descreve jornadas, Functions, coleções, autorização, risco e validação do módulo F1.3. | Documentação do repositório |
+| `npm test -- --reporter=dot` — após F1.4 | PASS, 95/95 em 16 arquivos. | Local, Node 24.11.1 |
+| `npm run test:rules` — após F1.4 | PASS, 17/17; gravação direta em materiais, fornecedores, ledger, reservas, índice e BOM negada. | Firebase Emulator isolado |
+| `npm run test:inventory` | PASS, 3/3 na repetição final; cobre CRUD/arquivo, SKU, A×B/papel, saldo, reserva/BOM, auditoria, idempotência e concorrência. A primeira repetição após ampliar o teste falhou só na expectativa de caixa do SKU; asserção corrigida para a normalização em maiúsculas e 3/3 passaram. | Firebase Emulator isolado, `demo-cosmaker` |
+| `npx playwright test tests/e2e/inventory-workflow.spec.ts` | PASS, 1/1; criação de fornecedor e material, entrada, reserva e consumo pela UI com verificação de documentos persistidos. | `dev:local` e Firebase Emulator, dados sintéticos |
+| `npm run lint`, `npx tsc --noEmit`, `npm run functions:build`, `npm run build` — após F1.4 | PASS; Next 15.5.27 compilou 81 rotas e Functions compilaram. | Local, Node 24.11.1 |
+| `npm run docs:check`, `git diff --check`, JSON dos índices — após F1.4 | PASS; manifesto de índices válido e sem erro de whitespace no diff. | Local |
 | `npm run lint` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
 | `npx tsc --noEmit` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
 | `npm run functions:build` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
@@ -117,12 +123,12 @@ Nenhuma migração, deploy, envio externo, cobrança ou mutação de dados reais
 
 ## Commits e arquivos
 
-- SHAs de commits deste goal: `b08f6cc` (checkpoint inicial), `9ebfb67` e `7382873` (F1.1 CRM), `c19b887` (base F1.2), `5f8d584` (F1.2 equipe), `45681dd` (checkpoint documental F1.2) e `d5385e9` (F1.3 agenda, capacidade, eventos e risco).
+- SHAs de commits deste goal: `b08f6cc` (checkpoint inicial), `9ebfb67` e `7382873` (F1.1 CRM), `c19b887` (base F1.2), `5f8d584` (F1.2 equipe), `45681dd` (checkpoint documental F1.2), `d5385e9` e `59fb0ec` (F1.3 agenda e checkpoint), `257bfd9` (F1.4 estoque).
 - Arquivos tocados após o checkpoint: harness local e lockfile; F1.1 adicionou `functions/src/clients/`, rotas `/atelier/clientes`, repository/schema/types, índice Firestore, regras, integração ao vínculo de resposta de orçamento, seed, testes unitários/integrados/E2E e backfill Emulator-only. F1.2 implementou callables e política de equipe, rotas de equipe/convites/aceite/permissões, regras server-managed, retorno seguro do convite, e testes unitários, Functions, Rules e Playwright.
 - O antigo `next start -p 3000` foi encerrado após confirmar seu caminho e erro. As sessões `dev:local` e Emulator iniciadas para E2E foram encerradas após as provas; a porta 8080, ocupada por outro projeto, não foi tocada.
 
 ## Próximos passos seguros
 
-1. Iniciar F1.4 (estoque, materiais e fornecedores), confirmando contratos e regras já existentes antes de implementar movimentos imutáveis e saldo confiável.
+1. Iniciar F1.5 (pedidos, produção configurável e change requests), preservando seis etapas, proposta aprovada, bloqueios financeiros e ACL de arquivos.
 2. Preservar prova A×B/role e executar os gates de testes a cada módulo antes de seguir para o próximo.
 3. Manter staging, produção, migração real e billing desativados até autorização separada.
