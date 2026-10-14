@@ -12,6 +12,7 @@
     "test:rules": "firebase emulators:exec --config firebase.rules-test.json --project demo-cosmaker --only firestore,storage \"vitest run --testTimeout=15000 --hookTimeout=30000 tests/rules\"",
     "test:commercial": "npm run functions:build && node scripts/test-commercial-emulator.mjs",
     "test:team": "npm run functions:build && node scripts/test-commercial-emulator.mjs team",
+    "test:scheduling": "npm run functions:build && node scripts/test-commercial-emulator.mjs scheduling",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "screenshots": "node scripts/capture-screenshots.mjs",

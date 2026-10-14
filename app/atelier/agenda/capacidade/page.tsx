@@ -1,8 +1,3 @@
-export default function Capacidade() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Capacidade</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
-}
+import { SchedulingWorkspace } from '@/components/scheduling/scheduling-workspace';
+
+export default function Capacidade() { return <SchedulingWorkspace focus="capacity" />; }

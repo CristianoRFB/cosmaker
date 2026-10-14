@@ -21,6 +21,7 @@ export interface Order {
   amountPaid: number;
   amountRemaining: number;
   expectedDeliveryDate: string;
+  eventDate?: string | null;
   approvedQuoteSnapshot: {
     total: number;
     depositAmount: number;

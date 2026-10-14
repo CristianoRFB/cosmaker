@@ -180,6 +180,20 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(getDoc(doc(reader, 'ateliers/atelier-a/transactions/transaction-a')));
   });
 
+  it('requires Functions for schedule, capacity, block and event mutations', async () => {
+    const owner = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    const date = '2027-05-10';
+    const slot = { atelierId: 'atelier-a', date, status: 'scheduled', assignedTo: 'member-a', plannedHours: 2 };
+    const block = { atelierId: 'atelier-a', memberId: 'member-a', date, status: 'active', allDay: true };
+    const event = { atelierId: 'atelier-a', title: 'Evento fictício', type: 'convention', startDate: date, endDate: date, status: 'active' };
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/productionSlots/slot-direct'), slot));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/productionSlots/slot-direct/allocations/allocation-direct'), { plannedHours: 1 }));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/scheduleBlocks/block-direct'), block));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/teamCapacity/member-a'), { weeklyHoursByWeekday: { '1': 8 } }));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/scheduleDays/member-a_2027-05-10'), { allocatedHours: 1 }));
+    await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/events/event-direct'), event));
+  });
+
   it('routes staff client access through callables and allows a customer to read only their own profile', async () => {
     const member = environment.authenticatedContext('member-a').firestore();
     const ownClient = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();

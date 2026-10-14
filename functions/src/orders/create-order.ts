@@ -61,6 +61,7 @@ export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelier
       amountPaid: 0,
       amountRemaining: total,
       expectedDeliveryDate: request.desiredDeliveryDate,
+      ...(typeof request.eventDate === 'string' ? { eventDate: request.eventDate } : {}),
       approvedQuoteSnapshot: quote.approvedSnapshot,
       createdAt: now,
       updatedAt: now,

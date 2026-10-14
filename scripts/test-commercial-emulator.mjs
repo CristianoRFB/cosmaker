@@ -9,6 +9,7 @@ const firebaseCli = requireFromRoot.resolve('firebase-tools/lib/bin/firebase.js'
 const suites = {
   commercial: 'tests/integration/commercial-functions.test.ts',
   team: 'tests/integration/team-functions.test.ts',
+  scheduling: 'tests/integration/scheduling-functions.test.ts',
 };
 const suiteName = process.argv[2] || 'commercial';
 const testFile = suites[suiteName];

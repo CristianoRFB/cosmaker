@@ -1,6 +1,6 @@
 # Cosmaker Master Finalization — Progress
 
-Última atualização: 2026-10-14 — F1.1 e F1.2 validados; F1.3 pendente.
+Última atualização: 2026-10-14 — F1.1, F1.2 e F1.3 validados; F1.4 pendente.
 
 ## Identidade e baseline
 
@@ -26,7 +26,7 @@
 | Baseline e instruções do repositório | PASS (baseline; falhas E2E registradas) | Checkout correto; `main`/`origin/main` no SHA-base aprovado e branch de trabalho criada. Working tree inicial limpo, `AGENTS.md` ausente; README/CURRENT/STATUS/v0.2 lidos. Padrões genéricos localizados em `Manicures/docs/ecosystem/`; documentos de aprovação encontrados são de outras verticais e não decidem o Cosmaker. README/`docs/STATUS.md` ainda contradizem v0.2 e serão corrigidos na fase documental. Commit de checkpoint inicial `b08f6cc`. Ambiente Emulator isolado iniciado em portas 19099/18080/15001/19199; fixture `demo-cosmaker` semeada e `dev:local` confirmado em `127.0.0.1:3000` com resposta HTTP 200. |
 | F1.1 CRM e clientes | PASS | Listagem por prefixo/paginação, cadastro/edição transacional com unicidade por tenant, vínculo por e-mail verificado, histórico de solicitações/propostas/pedidos/pagamentos internos/medidas/interações com mascaramento por permissão e anotações idempotentes via Functions. Regras bloqueiam leitura/listagem/escrita bruta por equipe; cliente autenticado lê somente o próprio perfil. Integração Functions 11/11, Rules 14/14, jornada Playwright CRM 1/1 e jornada integrada de orçamento/pedido/depósito/foto/aprovação/CRM 1/1 verdes. Backfill Emulator-only exercitado com legado sintético, dry-run/apply e repetição sem novas alterações. Uma falha inicial de upload de foto e uma asserção ambígua não se reproduziram após reseed/correção; a última jornada completa passou. |
 | F1.2 Equipe, onboarding e permissões | PASS | Rotas de equipe, convites, aceite e permissões implementadas com callables transacionais. Token aleatório de uso único fica armazenado somente como hash; expiração/revogação, verificação de e-mail e bloqueio de reuso, perfil de cliente existente, isolamento A×B, escalada, desativação e transferência para exatamente um titular foram comprovados no Emulator. Regras bloqueiam escrita direta em `members`, convites, índice de e-mail, `ownerId` e `active` do ateliê. Link mantém o token no fragmento e, durante login/verificação, somente em `sessionStorage`; nenhum e-mail é enviado. Unit 84/84, Rules 15/15, integração Team 4/4, E2E Team 1/1, lint, TypeScript, Functions build e Next build passaram. |
-| F1.3 Agenda, capacidade, eventos e risco | TODO | Persistência, alocação transacional, prazos e risco baseado em dados reais. |
+| F1.3 Agenda, capacidade, eventos e risco | PASS | Rotas de agenda/capacidade/bloqueios/eventos/cronograma conectadas a Functions; capacidade, slots e bloqueios persistidos com validação de fuso e transações/travas por dia; CRUD autenticado de eventos; risco categórico com dados persistidos de slots, capacidade, pausas, prazos e eventos. Rules negam mutação direta. Unit 91/91, Rules 16/16, Scheduling Functions 2/2, CRM regression 11/11, Team regression 4/4 e Playwright 1/1 passaram. Lint, TypeScript, Functions build e Next build passaram. |
 | F1.4 Estoque, materiais e fornecedores | TODO | Movimentações imutáveis, saldo confiável, concorrência/idempotência e pedidos. |
 | F1.5 Pedidos, produção e change requests | TODO | Arquivos/ACL, etapas configuráveis, alterações versionadas e aprovação/snapshot do cliente. |
 | F1.6 Financeiro operacional, custos e margens | TODO | Registros internos em centavos, compensações/auditoria, sem movimentar dinheiro real. |
@@ -62,6 +62,17 @@
 | `npm run lint`, `npx tsc --noEmit`, `npm run functions:build` — após F1.2 | PASS; exit 0. Uma execução concorrente de `tsc` com `next build` perdeu arquivos temporários `.next/types`; a repetição após a build terminou com exit 0. | Local, Node 24.11.1/npm 11.6.4 |
 | `npm run build` — após F1.2 | PASS; Next 15.5.27 compilou, validou tipos e gerou 81 páginas estáticas. | Local, sem dev server concorrente |
 | `npm run docs:check` — checkpoint F1.2 | PASS; documentação canônica vigente v0.2.0 e links/manifests verificados. | Local |
+| `npm test -- --reporter=dot` — após F1.3 | PASS, 91/91 testes em 15 arquivos. | Local, Node 24.11.1 |
+| `npm run test:rules` — após F1.3 | PASS, 16/16; inclui bloqueio de escrita direta às coleções de agenda. | Firebase Emulator |
+| `npm run test:scheduling` | PASS, 2/2 suítes de integração; valida capacidade, concorrência, idempotência, bloqueios, eventos, riscos, permissões, auditoria e isolamento de tenant. | Firebase Emulator, `demo-cosmaker` |
+| `npm run test:commercial` — regressão CRM após F1.3 | PASS, 11/11. | Firebase Emulator, `demo-cosmaker` |
+| `npm run test:team` — regressão após F1.3 | PASS, 4/4. | Firebase Emulator, `demo-cosmaker` |
+| `npx playwright test tests/e2e/scheduling-workflow.spec.ts` | PASS, 1/1; percorre configuração de capacidade, alocação/cancelamento, bloqueio e criação de evento, confirmando persistência no Firestore Emulator. | `dev:local` e Firebase Emulator, dados sintéticos |
+| `npm run lint`, `npx tsc --noEmit`, `npm run functions:build` — após F1.3 | PASS; exit 0. | Local, Node 24.11.1 |
+| `npm run build` — após UI F1.3 | PASS; Next 15.5.27 compilou, validou tipos e gerou 81 páginas estáticas. Execução anterior aos últimos ajustes backend-only de cálculo de risco e rejeição de horário passado; Functions build e integração foram repetidos depois desses ajustes. | Local, sem dev server concorrente |
+| `node -e "JSON.parse(require('fs').readFileSync('firestore.indexes.json','utf8'))"` | PASS após remover fechamento duplicado no final do manifesto de índices. | Local, Node 24.11.1 |
+| `npm run docs:check` — checkpoint F1.3 | PASS; documentação vigente v0.2.0, links/manifests e estrutura Firebase verificados. | Local |
+| `components/agenda/README.md` | PASS; descreve jornadas, Functions, coleções, autorização, risco e validação do módulo F1.3. | Documentação do repositório |
 | `npm run lint` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
 | `npx tsc --noEmit` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
 | `npm run functions:build` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
@@ -96,6 +107,7 @@
 - Provedores de e-mail, WhatsApp, shipping e pagamentos não foram selecionados/autorizados; adaptadores devem permanecer `disabled` ou sandbox e registrar `BLOCKED_EXTERNAL`/`DEFERRED`.
 - Decisões de matriz comercial feature/limit seguem pendentes; não podem ser codificadas como política de produção.
 - Backup/restauração não pode tocar em produção; preparar e testar somente Emulator ou staging explicitamente autorizado.
+- Firebase Emulator passou as suítes de agenda, CRM e equipe usando Node 24.11.1, enquanto Functions declara runtime Node 22; avisos de metadados do Google Auth apareceram no Emulator, sem falha dos testes. Repetir os gates em Node 22 quando o runtime estiver disponível.
 
 ## Migrações, produção e segurança dos dados
 
@@ -105,12 +117,12 @@ Nenhuma migração, deploy, envio externo, cobrança ou mutação de dados reais
 
 ## Commits e arquivos
 
-- SHAs de commits deste goal: `b08f6cc` (checkpoint inicial), `9ebfb67` e `7382873` (F1.1 CRM), `c19b887` (base F1.2), `5f8d584` (F1.2 equipe) e o checkpoint documental atual.
+- SHAs de commits deste goal: `b08f6cc` (checkpoint inicial), `9ebfb67` e `7382873` (F1.1 CRM), `c19b887` (base F1.2), `5f8d584` (F1.2 equipe), `45681dd` (checkpoint documental F1.2); registrar os SHAs F1.3 após o commit do checkpoint.
 - Arquivos tocados após o checkpoint: harness local e lockfile; F1.1 adicionou `functions/src/clients/`, rotas `/atelier/clientes`, repository/schema/types, índice Firestore, regras, integração ao vínculo de resposta de orçamento, seed, testes unitários/integrados/E2E e backfill Emulator-only. F1.2 implementou callables e política de equipe, rotas de equipe/convites/aceite/permissões, regras server-managed, retorno seguro do convite, e testes unitários, Functions, Rules e Playwright.
 - O antigo `next start -p 3000` foi encerrado após confirmar seu caminho e erro. As sessões `dev:local` e Emulator iniciadas para E2E foram encerradas após as provas; a porta 8080, ocupada por outro projeto, não foi tocada.
 
 ## Próximos passos seguros
 
-1. Iniciar F1.3 (agenda, capacidade, eventos e risco), mapeando lacunas nas rotas e serviços existentes.
+1. Iniciar F1.4 (estoque, materiais e fornecedores), confirmando contratos e regras já existentes antes de implementar movimentos imutáveis e saldo confiável.
 2. Preservar prova A×B/role e executar os gates de testes a cada módulo antes de seguir para o próximo.
 3. Manter staging, produção, migração real e billing desativados até autorização separada.

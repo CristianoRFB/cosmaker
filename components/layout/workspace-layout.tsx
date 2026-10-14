@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { ArrowUpRight, Bell, CalendarDays, ChartNoAxesCombined, CircleUserRound, ClipboardList, CreditCard, FileText, Home, Layers3, LogOut, MessageCircle, Package, Ruler, Scissors, Settings, Sparkles, Users, Tags, ReceiptText } from 'lucide-react';
+import { ArrowUpRight, Bell, CalendarDays, ChartNoAxesCombined, CircleUserRound, ClipboardList, CreditCard, FileText, Home, Layers3, LogOut, MessageCircle, Package, Ruler, Scissors, Settings, Sparkles, Users, Tags, ReceiptText, CalendarClock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/ui/avatar';
 import { AuthGuard, type Audience } from './auth-guard';
@@ -28,6 +28,7 @@ const atelierNavigation = [
   { href: '/atelier/pedidos', label: 'Pedidos', icon: Package },
   { href: '/atelier/producao', label: 'Produção', icon: Scissors },
   { href: '/atelier/agenda', label: 'Agenda e capacidade', icon: CalendarDays },
+  { href: '/atelier/eventos', label: 'Eventos e prazos', icon: CalendarClock },
   { href: '/atelier/clientes', label: 'Clientes', icon: Users },
   { href: '/atelier/equipe', label: 'Equipe', icon: Users },
   { href: '/atelier/financeiro', label: 'Financeiro', icon: CreditCard },

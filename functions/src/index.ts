@@ -8,6 +8,8 @@ export { getTenantCommercialContext, getTenantFeatureAccess, runTestOnlyCommerci
 export { listAtelierClients, saveAtelierClient, addAtelierClientInteraction, getAtelierClient } from './clients/clients';
 export { listAtelierTeam, updateAtelierMember, transferAtelierOwnership } from './team/members';
 export { createAtelierInvitation, listAtelierInvitations, revokeAtelierInvitation, acceptAtelierInvitation } from './team/invitations';
+export { saveMemberScheduleCapacity, allocateProductionTime, cancelProductionSlot, createScheduleBlock, cancelScheduleBlock, listScheduleWorkspace } from './scheduling/planning';
+export { listAtelierEvents, createAtelierEvent, updateAtelierEvent, cancelAtelierEvent } from './scheduling/events';
 export { createQuoteDraft } from './quotes/create-quote-draft';
 export { publishQuote } from './quotes/publish-quote';
 export { respondToQuote } from './quotes/respond-to-quote';

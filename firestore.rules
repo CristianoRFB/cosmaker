@@ -305,15 +305,22 @@ service cloud.firestore {
       }
       match /productionSlots/{slotId} {
         allow read: if hasAtelierPermission(atelierId, 'schedule:read');
-        allow write: if hasAtelierPermission(atelierId, 'schedule:write');
+        allow write: if false;
         match /allocations/{allocationId} {
           allow read: if hasAtelierPermission(atelierId, 'schedule:read');
-          allow write: if hasAtelierPermission(atelierId, 'schedule:write');
+          allow write: if false;
         }
       }
       match /scheduleBlocks/{blockId} {
         allow read: if hasAtelierPermission(atelierId, 'schedule:read');
-        allow write: if hasAtelierPermission(atelierId, 'schedule:write');
+        allow write: if false;
+      }
+      match /teamCapacity/{memberId} {
+        allow read: if hasAtelierPermission(atelierId, 'schedule:read');
+        allow write: if false;
+      }
+      match /scheduleDays/{dayId} {
+        allow read, write: if false;
       }
       match /services/{serviceId} {
         allow get, list: if hasAtelierPermission(atelierId, 'services:read');
@@ -321,7 +328,7 @@ service cloud.firestore {
       }
       match /events/{eventId} {
         allow read: if hasAtelierPermission(atelierId, 'events:read');
-        allow write: if hasAtelierPermission(atelierId, 'events:write');
+        allow write: if false;
       }
       match /notifications/{notificationId} {
         allow read: if signedIn() && resource.data.userId == request.auth.uid;
