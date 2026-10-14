@@ -117,7 +117,7 @@ Nenhuma migração, deploy, envio externo, cobrança ou mutação de dados reais
 
 ## Commits e arquivos
 
-- SHAs de commits deste goal: `b08f6cc` (checkpoint inicial), `9ebfb67` e `7382873` (F1.1 CRM), `c19b887` (base F1.2), `5f8d584` (F1.2 equipe), `45681dd` (checkpoint documental F1.2); registrar os SHAs F1.3 após o commit do checkpoint.
+- SHAs de commits deste goal: `b08f6cc` (checkpoint inicial), `9ebfb67` e `7382873` (F1.1 CRM), `c19b887` (base F1.2), `5f8d584` (F1.2 equipe), `45681dd` (checkpoint documental F1.2) e `d5385e9` (F1.3 agenda, capacidade, eventos e risco).
 - Arquivos tocados após o checkpoint: harness local e lockfile; F1.1 adicionou `functions/src/clients/`, rotas `/atelier/clientes`, repository/schema/types, índice Firestore, regras, integração ao vínculo de resposta de orçamento, seed, testes unitários/integrados/E2E e backfill Emulator-only. F1.2 implementou callables e política de equipe, rotas de equipe/convites/aceite/permissões, regras server-managed, retorno seguro do convite, e testes unitários, Functions, Rules e Playwright.
 - O antigo `next start -p 3000` foi encerrado após confirmar seu caminho e erro. As sessões `dev:local` e Emulator iniciadas para E2E foram encerradas após as provas; a porta 8080, ocupada por outro projeto, não foi tocada.
 
