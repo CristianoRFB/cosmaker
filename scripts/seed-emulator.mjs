@@ -8,6 +8,8 @@ const { getFirestore, Timestamp } = requireFromFunctions('firebase-admin/firesto
 
 const projectId = 'demo-cosmaker';
 const fixturePassword = 'CosmakerLocal!2026';
+const fixtureClock = Date.now();
+const fixtureDate = (days) => new Date(fixtureClock + days * 86_400_000).toISOString().slice(0, 10);
 if (!process.env.FIRESTORE_EMULATOR_HOST || !process.env.FIREBASE_AUTH_EMULATOR_HOST) {
   throw new Error('Recusei a gravação: inicie os emuladores locais de Auth e Firestore antes de criar dados de teste.');
 }
@@ -205,7 +207,7 @@ batch.set(db.doc(`ateliers/${atelierId}/quotes/${quoteId}`), {
   atelierId, requestId, clientId: null, email: clientUser.email, status: 'sent',
   materialsCost: 850, laborCost: 1050, otherCost: 100, urgencyFee: 0, shipping: 45, discount: 45,
   subtotal: 2045, total: 2000, depositPercentage: 30, depositAmount: 600,
-  validUntil: '2026-10-15', expectedStartDate: '2026-10-20', expectedCompletionDate: '2027-02-28',
+  validUntil: fixtureDate(14), expectedStartDate: fixtureDate(20), expectedCompletionDate: fixtureDate(120),
   createdBy: atelierUser.uid, createdAt: now, updatedAt: now, sentAt: now,
 });
 batch.set(db.doc(`ateliers/${atelierId}/quotes/${quoteId}/items/material-demo`), {

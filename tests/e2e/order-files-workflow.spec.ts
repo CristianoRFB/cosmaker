@@ -68,7 +68,7 @@ test('envia bytes reais, compartilha anexos e revoga acesso do cliente mantendo 
     await login(ownerPage, owner, workspacePath);
     await expect(ownerPage.getByRole('heading', { name: 'Arquivos do pedido', exact: true })).toBeVisible();
     await ownerPage.locator('input[type="file"]').setInputFiles({ name: 'imagem-interna.png', mimeType: 'image/png', buffer: pngBytes });
-    await ownerPage.getByLabel('Categoria', { exact: true }).selectOption('document');
+    await ownerPage.getByRole('combobox', { name: 'Categoria', exact: true }).selectOption('document');
     await ownerPage.getByRole('button', { name: 'Enviar e validar', exact: true }).click();
     await expect(ownerPage.getByText('Arquivo validado e anexado ao pedido.', { exact: true })).toBeVisible();
     await expect(ownerPage.getByText('Interno da equipe', { exact: false })).toBeVisible();

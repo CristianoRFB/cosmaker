@@ -83,11 +83,11 @@ test('equipe configura produção e aplica mudança somente após aprovação ex
     await staffPage.getByRole('button', { name: 'Configurar etapas, responsáveis e prazos', exact: true }).click();
     await expect(staffPage.getByRole('heading', { name: 'Configuração da produção', exact: true })).toBeVisible();
     await staffPage.getByLabel('Nome da etapa própria', { exact: true }).fill(customName);
-    await staffPage.getByLabel('Fase', { exact: true }).selectOption('in_production');
+    await staffPage.getByRole('combobox', { name: 'Fase', exact: true }).selectOption('in_production');
     await staffPage.getByRole('button', { name: 'Adicionar etapa', exact: true }).click();
     const customEditor = staffPage.locator('section').filter({ has: staffPage.getByRole('button', { name: `Remover ${customName}`, exact: true }) }).last();
     await customEditor.getByLabel('Nome', { exact: true }).fill(customName);
-    await customEditor.getByLabel('Responsável', { exact: true }).selectOption(staff.uid);
+    await customEditor.getByRole('combobox', { name: 'Responsável', exact: true }).selectOption(staff.uid);
     await customEditor.getByLabel('Início planejado', { exact: true }).fill('2027-02-10');
     await customEditor.getByLabel('Prazo da etapa', { exact: true }).fill('2027-02-20');
     await customEditor.getByLabel('Peso no progresso', { exact: true }).fill('12');
@@ -109,7 +109,7 @@ test('equipe configura produção e aplica mudança somente após aprovação ex
     await staffPage.getByRole('button', { name: 'Propor alteração do acordo', exact: true }).click();
     await staffPage.getByLabel('Motivo da alteração', { exact: true }).fill(reason);
     await staffPage.getByLabel('Alterar escopo', { exact: true }).check();
-    await staffPage.getByLabel('Novo escopo', { exact: true }).fill(revisedScope);
+    await staffPage.getByRole('textbox', { name: 'Novo escopo', exact: true }).fill(revisedScope);
     await staffPage.getByLabel('Alterar prazo de entrega', { exact: true }).check();
     await staffPage.getByLabel('Nova data de entrega', { exact: true }).fill('2027-03-22');
     await staffPage.getByLabel('Alterar valor total', { exact: true }).check();
