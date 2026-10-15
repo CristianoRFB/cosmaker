@@ -1,8 +1,9 @@
-export default function ArquivosDoPedido() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Arquivos do pedido</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
+'use client';
+
+import { useParams } from 'next/navigation';
+import { OrderFilesWorkspace } from '@/components/orders/order-files';
+
+export default function OrderFilesPage() {
+  const params = useParams<{ pedidoId: string }>();
+  return <OrderFilesWorkspace orderId={params.pedidoId} />;
 }

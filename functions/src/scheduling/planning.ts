@@ -164,7 +164,8 @@ export const allocateProductionTime = onCall(async (call) => {
       const endAt = toISOString(existing.endAt);
       if (existing.status === 'scheduled' && existing.createdBy === call.auth!.uid && existing.orderId === data.orderId && existing.stageId === data.stageId
         && existing.assignedTo === data.assignedTo && startAt === new Date(startMillis).toISOString()
-        && endAt === new Date(endMillis).toISOString() && Number(existing.plannedHours) === plannedHours) {
+        && endAt === new Date(endMillis).toISOString() && Number(existing.plannedHours) === plannedHours
+        && (existing.requestedDeadline ?? null) === (data.deadline ?? null)) {
         resultingDate = String(existing.date); alreadyCreated = true; return;
       }
       throw new HttpsError('already-exists', 'Este identificador de alocação já foi usado.');
@@ -172,7 +173,7 @@ export const allocateProductionTime = onCall(async (call) => {
     if (!order.exists || !activeOrderStatuses.has(String(order.data()?.status)) || !stage.exists) {
       throw new HttpsError('failed-precondition', 'O pedido ativo e a etapa precisam pertencer a este ateliê.');
     }
-    if (completedStageStatuses.has(String(stage.data()?.status))) throw new HttpsError('failed-precondition', 'Uma etapa concluída ou aprovada não pode receber horas.');
+    if (completedStageStatuses.has(String(stage.data()?.status)) || stage.data()?.status === 'waiting_approval') throw new HttpsError('failed-precondition', 'Uma etapa concluída, aprovada ou aguardando aprovação não pode receber novas horas.');
     if (!member.exists || member.data()?.active !== true || !user.exists || user.data()?.active !== true
       || user.data()?.accountType !== 'atelier_member' || user.data()?.atelierId !== identity.atelierId) throw new HttpsError('failed-precondition', 'O responsável precisa ser membro ativo deste ateliê.');
     if (!capacitySnapshot.exists) throw new HttpsError('failed-precondition', 'Configure a capacidade semanal do responsável antes de alocar horas.');
@@ -195,16 +196,25 @@ export const allocateProductionTime = onCall(async (call) => {
     const dailyCapacity = capacityHoursForDate(capacity, date);
     if (dailyCapacity <= 0) throw new HttpsError('failed-precondition', 'O responsável não tem capacidade configurada para este dia da semana.');
     if (stage.data()?.assignedTo && stage.data()?.assignedTo !== data.assignedTo) throw new HttpsError('failed-precondition', 'A etapa já está atribuída a outra pessoa. Cancele as horas atuais antes de reatribuir.');
+    const plannedStartDate = stage.get('plannedStartDate') ?? null;
+    const stageDeadline = data.deadline !== undefined ? data.deadline : stage.get('deadline') ?? null;
+    if ((plannedStartDate !== null && !parseScheduleDate(plannedStartDate)) || (stageDeadline !== null && !parseScheduleDate(stageDeadline))) throw new HttpsError('failed-precondition', 'As datas configuradas da etapa precisam de revisão.');
+    if ((plannedStartDate && date < String(plannedStartDate)) || (stageDeadline && date > String(stageDeadline))
+      || (plannedStartDate && stageDeadline && String(plannedStartDate) > String(stageDeadline))) throw new HttpsError('failed-precondition', 'As horas precisam respeitar o início planejado e o prazo da etapa.');
 
     const dayLockRef = adminDb.doc(`ateliers/${identity.atelierId}/scheduleDays/${capacityDayId(data.assignedTo as string, date)}`);
     const slotsQuery = adminDb.collection(`ateliers/${identity.atelierId}/productionSlots`)
       .where('assignedTo', '==', data.assignedTo).where('date', '==', date).where('status', '==', 'scheduled').limit(101);
     const blocksQuery = adminDb.collection(`ateliers/${identity.atelierId}/scheduleBlocks`)
       .where('memberId', '==', data.assignedTo).where('date', '==', date).where('status', '==', 'active').limit(101);
-    const [dayLock, slots, blocks] = await Promise.all([
-      transaction.get(dayLockRef), transaction.get(slotsQuery), transaction.get(blocksQuery),
+    const stageSlotsQuery = adminDb.collection(`ateliers/${identity.atelierId}/productionSlots`)
+      .where('orderId', '==', data.orderId).where('stageId', '==', data.stageId).where('status', '==', 'scheduled').limit(101);
+    const [dayLock, slots, blocks, stageSlots] = await Promise.all([
+      transaction.get(dayLockRef), transaction.get(slotsQuery), transaction.get(blocksQuery), transaction.get(stageSlotsQuery),
     ]);
-    if (slots.size > 100 || blocks.size > 100) throw new HttpsError('resource-exhausted', 'Há muitos registros neste dia para validar a alocação.');
+    if (slots.size > 100 || blocks.size > 100 || stageSlots.size > 100) throw new HttpsError('resource-exhausted', 'Há muitos registros neste dia ou etapa para validar a alocação.');
+    if (stageSlots.docs.some((slot) => (plannedStartDate && String(slot.get('date')) < String(plannedStartDate))
+      || (stageDeadline && String(slot.get('date')) > String(stageDeadline)))) throw new HttpsError('failed-precondition', 'O prazo e o início planejado precisam incluir as horas já alocadas na etapa.');
     const allocatedHours = sumScheduledHours(slots.docs.map((slot) => ({ plannedHours: Number(slot.data().plannedHours) || 0, status: slot.data().status })));
     const blockedHours = scheduleBlockedHours(blocks.docs.map((block) => ({ ...block.data() })), dailyCapacity,
       Number(capacity.workdayStartMinute), Number(capacity.workdayEndMinute));
@@ -227,6 +237,7 @@ export const allocateProductionTime = onCall(async (call) => {
       stageName: String(stage.data()?.name ?? 'Etapa'), assignedTo: data.assignedTo,
       startAt: Timestamp.fromMillis(startMillis), endAt: Timestamp.fromMillis(endMillis),
       timezone, plannedHours, status: 'scheduled', createdBy: call.auth!.uid, createdAt: now, updatedAt: now,
+      requestedDeadline: data.deadline ?? null,
     });
     transaction.set(dayLockRef, {
       memberId: data.assignedTo, date, allocatedHours: allocatedHours + plannedHours,
@@ -235,6 +246,7 @@ export const allocateProductionTime = onCall(async (call) => {
     transaction.update(stageRef, {
       assignedTo: data.assignedTo,
       ...(data.deadline !== undefined ? { deadline: data.deadline } : {}),
+      version: FieldValue.increment(1),
       updatedAt: now,
     });
     if (statusHistory !== order.data()?.status) {
@@ -286,6 +298,11 @@ export const cancelProductionSlot = onCall(async (call) => {
       transaction.get(sameDayQuery), transaction.get(sameStageQuery), transaction.get(sameOrderQuery), transaction.get(allStagesQuery),
     ]);
     if (sameDay.size > 100 || sameStage.size > 100 || sameOrder.size > 200) throw new HttpsError('resource-exhausted', 'Há muitos registros para recalcular esta alocação.');
+    const frozenStage = stage.exists && (completedStageStatuses.has(String(stage.get('status'))) || stage.get('status') === 'waiting_approval');
+    if (frozenStage) {
+      const startsAt = toISOString(item.startAt);
+      if (!startsAt || Date.parse(startsAt) <= Date.now()) throw new HttpsError('failed-precondition', 'Somente horas futuras de uma etapa concluída, aprovada ou aguardando aprovação podem ser liberadas.');
+    }
     const nextHours = Math.max(0, sumScheduledHours(sameDay.docs.filter((document) => document.id !== slotRef.id)
       .map((document) => ({ plannedHours: Number(document.data().plannedHours) || 0, status: document.data().status }))));
     const hasOtherStageSlots = sameStage.docs.some((document) => document.id !== slotRef.id);
@@ -297,8 +314,8 @@ export const cancelProductionSlot = onCall(async (call) => {
       memberId: item.assignedTo, date: item.date, allocatedHours: nextHours,
       revision: Number(dayLock.data()?.revision ?? 0) + 1, updatedAt: now,
     }, { merge: true });
-    if (!hasOtherStageSlots && stage.exists && stage.data()?.assignedTo === item.assignedTo) {
-      transaction.update(stageRef, { assignedTo: null, updatedAt: now });
+    if (!frozenStage && !hasOtherStageSlots && stage.exists && stage.data()?.assignedTo === item.assignedTo) {
+      transaction.update(stageRef, { assignedTo: null, version: FieldValue.increment(1), updatedAt: now });
     }
     if (order.exists && order.data()?.status === 'scheduled' && !hasOtherOrderSlots && allStagesStillPending) {
       transaction.update(orderRef, { status: 'confirmed', updatedAt: now });

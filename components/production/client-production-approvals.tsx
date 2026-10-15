@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/toast';
 import { respondToProductionApproval } from '@/repositories/orders.repository';
 import type { OrderRecord } from '@/types/order';
+import { photosForProductionApproval } from '@/features/production/approval-evidence';
 
 export function ClientProductionApprovals({ record, reload }: { record: OrderRecord; reload: () => Promise<void> }) {
   const toast = useToast();
@@ -37,7 +38,7 @@ export function ClientProductionApprovals({ record, reload }: { record: OrderRec
     <CardHeader><CardTitle className="flex items-center gap-2"><MessageSquareText className="text-fuchsia-700" size={19} />Sua aprovação é necessária</CardTitle><p className="text-sm text-slate-600">Revise as fotos e aprove ou descreva o ajuste solicitado. Sua resposta ficará registrada no pedido.</p></CardHeader>
     <CardContent className="grid gap-4">
       {pending.map((approval) => {
-        const photos = record.productionPhotos.filter((photo) => photo.stageId === approval.stageId && photo.visibleToClient && photo.uploadStatus === 'ready');
+        const photos = photosForProductionApproval(approval, record.productionPhotos);
         return <section className="rounded-2xl border border-fuchsia-100 bg-fuchsia-50/50 p-4" key={approval.id}>
           <h3 className="font-semibold text-slate-950">{approval.stageName}</h3>
           <p className="mt-1 text-sm text-slate-600">A equipe enviou esta etapa para sua revisão.</p>

@@ -22,7 +22,7 @@ export function ProductionKanban() {
   const { orders, loading: ordersLoading } = useAtelierOrders();
   const currentByOrder = new Map<string, (typeof stages)[number]>();
   [...stages].sort((a, b) => a.order - b.order).forEach((stage) => {
-    if (stage.orderStatus === 'waiting_final_payment' && stage.name === 'Envio') return;
+    if (stage.orderStatus === 'waiting_final_payment' && stage.id === 'stage-shipping') return;
     if (!currentByOrder.has(stage.orderId) && !['completed', 'approved'].includes(stage.status)) currentByOrder.set(stage.orderId, stage);
   });
   const current = [...currentByOrder.values()];
@@ -55,6 +55,6 @@ export function ProductionKanban() {
         </section>;
       })}
     </div> : !waitingDeposit.length && !waitingFinalPayment.length ? <EmptyState description="Quando um pedido tiver entrada confirmada, suas etapas aparecerão aqui. Nenhuma ocupação é inventada para preencher o quadro." title="Sem pedidos em produção" /> : <EmptyState description="Os pedidos deste ateliê ainda aguardam confirmação financeira antes de iniciar a produção." title="Produção ainda não iniciada" />}
-    <p className="text-xs leading-5 text-slate-500">O cálculo de risco de atraso será exibido junto à agenda de capacidade depois que horas disponíveis, bloqueios e carga de cada pedido estiverem configurados.</p>
+    <p className="text-xs leading-5 text-slate-500">Consulte prazos, horas alocadas e risco de atraso na <Link className="font-semibold text-violet-800 underline" href="/atelier/producao/cronograma">agenda de produção</Link>.</p>
   </div>;
 }

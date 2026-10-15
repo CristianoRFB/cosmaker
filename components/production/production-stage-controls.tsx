@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Camera, Check, CirclePlay, LockKeyhole, RefreshCw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,9 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/toast';
 import { useTenant } from '@/providers/tenant-provider';
-import { updateProductionStage, uploadProductionPhoto } from '@/repositories/orders.repository';
+import { uploadProductionPhoto } from '@/repositories/orders.repository';
+import { advanceProductionStage } from '@/repositories/production.repository';
+import { ProductionConfigurationEditor } from './production-configuration-editor';
 import type { OrderRecord } from '@/types/order';
-import type { ProductionStage } from '@/types/production';
+import type { ProductionStage, ProductionStageAction } from '@/types/production';
 
 const labels = { pending: 'A iniciar', in_progress: 'Em andamento', waiting_approval: 'Aguardando aprovação', approved: 'Aprovada', completed: 'Concluída', blocked: 'Bloqueada' };
 
@@ -24,21 +26,26 @@ export function ProductionStageControls({ record, reload }: { record: OrderRecor
   const [captions, setCaptions] = useState<Record<string, string>>({});
   const [visible, setVisible] = useState<Record<string, boolean>>({});
   const [busy, setBusy] = useState('');
+  const operation = useRef<{ fingerprint: string; id: string } | null>(null);
   const canManage = hasPermission('orders:manage');
   const stages = [...record.productionStages].sort((a, b) => a.order - b.order);
-  const orderLive = ['confirmed', 'scheduled', 'modeling', 'in_production', 'fitting', 'adjustments', 'finishing', 'paused'].includes(record.order.status);
+  const orderLive = ['confirmed', 'scheduled', 'modeling', 'in_production', 'fitting', 'adjustments', 'finishing', 'paused', 'waiting_final_payment', 'ready_to_ship'].includes(record.order.status);
 
-  async function run(stage: ProductionStage, action: 'start' | 'progress' | 'complete' | 'block') {
+  async function run(stage: ProductionStage, action: ProductionStageAction) {
     const note = notes[stage.id] ?? '';
-    if (action === 'block' && note.trim().length < 4) { toast('Explique o motivo do bloqueio.', 'error'); return; }
+    if (['block', 'cancel_approval'].includes(action) && note.trim().length < 4) { toast('Explique o motivo desta ação.', 'error'); return; }
     setBusy(stage.id);
     try {
-      await updateProductionStage({
+      const payload = {
         atelierId: record.order.atelierId, orderId: record.order.id, stageId: stage.id, action,
         ...(action === 'progress' ? { progress: progress[stage.id] ?? Math.max(1, stage.progress) } : {}),
-        note,
-      });
-      toast(action === 'complete' && stage.requiresClientApproval ? 'Etapa enviada para aprovação do cliente.' : 'Etapa atualizada.', 'success');
+        note, expectedVersion: stage.version ?? 0,
+      };
+      const fingerprint = JSON.stringify(payload);
+      if (operation.current?.fingerprint !== fingerprint) operation.current = { fingerprint, id: crypto.randomUUID() };
+      await advanceProductionStage({ ...payload, requestId: operation.current.id });
+      operation.current = null;
+      toast(action === 'cancel_approval' ? 'Solicitação cancelada no histórico. Revise a etapa antes de solicitar nova aprovação.' : action === 'complete' && stage.requiresClientApproval ? 'Etapa enviada para aprovação do cliente.' : 'Etapa atualizada.', 'success');
       await reload();
     } catch (error) { toast(error instanceof Error ? error.message : 'Não foi possível atualizar a etapa.', 'error'); }
     finally { setBusy(''); }
@@ -70,18 +77,22 @@ export function ProductionStageControls({ record, reload }: { record: OrderRecor
 
   const nextStageIndex = stages.findIndex((stage) => !['completed', 'approved'].includes(stage.status));
   return <div className="grid gap-4">
+    <ProductionConfigurationEditor atelierId={record.order.atelierId} disabled={!orderLive || Boolean(busy)} orderId={record.order.id} reload={reload} />
     {!orderLive ? <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">Este pedido não está em uma etapa ativa de produção.</div> : null}
     {stages.map((stage, index) => {
       const isCurrent = index === nextStageIndex;
       const active = stage.status === 'in_progress';
       const waiting = stage.status === 'waiting_approval';
-      const stageBusy = busy === stage.id;
+      const stageBusy = Boolean(busy);
       return <Card className={isCurrent ? 'border-violet-300 ring-1 ring-violet-100' : ''} key={stage.id}>
-        <CardHeader className="flex flex-row items-start justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-wide text-violet-700">Etapa {index + 1} · peso {stage.progressWeight}%</p><CardTitle className="mt-1">{stage.name}</CardTitle><p className="text-sm text-slate-600">{stage.requiresClientApproval ? 'Aprovação do cliente obrigatória' : 'Aprovação do cliente não exigida'}</p></div><Badge tone={stage.status === 'completed' ? 'green' : stage.status === 'blocked' ? 'red' : waiting ? 'amber' : active ? 'violet' : 'neutral'}>{labels[stage.status]}</Badge></CardHeader>
+        <CardHeader className="flex flex-row items-start justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-wide text-violet-700">Etapa {index + 1} · peso {stage.progressWeight}</p><CardTitle className="mt-1">{stage.name}</CardTitle><p className="text-sm text-slate-600">{stage.requiresClientApproval ? 'Aprovação do cliente obrigatória' : 'Aprovação do cliente não exigida'}</p></div><Badge tone={stage.status === 'completed' ? 'green' : stage.status === 'blocked' ? 'red' : waiting ? 'amber' : active ? 'violet' : 'neutral'}>{labels[stage.status]}</Badge></CardHeader>
         <CardContent>
           <div className="flex items-center justify-between text-sm"><span className="text-slate-600">Progresso desta etapa</span><strong>{stage.progress}%</strong></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-violet-100"><div className="h-full rounded-full bg-violet-600" style={{ width: `${stage.progress}%` }} /></div>
           {stage.notes ? <p className="mt-3 rounded-xl bg-slate-50 p-3 text-sm text-slate-600">Última observação: {stage.notes}</p> : null}
+          {(stage.plannedStartDate || stage.deadline || stage.assignedTo) ? <p className="mt-3 text-sm text-slate-600">{stage.plannedStartDate ? `Início planejado: ${stage.plannedStartDate}. ` : ''}{stage.deadline ? `Prazo: ${stage.deadline}. ` : ''}{stage.assignedTo ? 'Responsável definido na configuração.' : 'Sem responsável atribuído.'}</p> : null}
+          {stage.status === 'blocked' && stage.blockedReason ? <p className="mt-3 rounded-xl bg-rose-50 p-3 text-sm text-rose-800">Bloqueio: {stage.blockedReason}</p> : null}
           {waiting ? <p className="mt-4 text-sm leading-6 text-amber-800">A equipe aguarda a resposta do cliente. O avanço das próximas etapas fica bloqueado até a decisão.</p> : null}
+          {waiting && orderLive ? <div className="mt-4 grid gap-2"><label className="text-sm font-medium text-slate-700" htmlFor={`cancel-approval-${stage.id}`}>Motivo para cancelar a solicitação e revisar a etapa</label><Textarea id={`cancel-approval-${stage.id}`} maxLength={600} onChange={(event) => setNotes((current) => ({ ...current, [stage.id]: event.target.value }))} value={notes[stage.id] ?? ''} /><Button className="justify-self-start" disabled={stageBusy || (notes[stage.id] ?? '').trim().length < 4} onClick={() => void run(stage, 'cancel_approval')} variant="secondary">Cancelar solicitação e revisar</Button></div> : null}
           {isCurrent && orderLive && !waiting ? <div className="mt-4 grid gap-3">
             {active ? <>
               <label className="text-sm font-medium text-slate-700" htmlFor={`stage-progress-${stage.id}`}>Progresso: {progress[stage.id] ?? stage.progress}%</label>
@@ -97,7 +108,7 @@ export function ProductionStageControls({ record, reload }: { record: OrderRecor
               <div className="flex items-center gap-2"><Camera className="text-violet-700" size={17} /><h3 className="text-sm font-semibold">Foto de progresso</h3></div>
               <div className="mt-3 grid gap-3 sm:grid-cols-2"><div><label className="mb-1.5 block text-xs font-semibold text-slate-600" htmlFor={`production-photo-${stage.id}`}>Imagem (até 10 MB)</label><Input accept="image/jpeg,image/png,image/webp" id={`production-photo-${stage.id}`} onChange={(event) => setFiles((current) => ({ ...current, [stage.id]: event.target.files?.[0] ?? null }))} type="file" /></div><div><label className="mb-1.5 block text-xs font-semibold text-slate-600" htmlFor={`photo-caption-${stage.id}`}>Descrição para o histórico</label><Input id={`photo-caption-${stage.id}`} maxLength={500} onChange={(event) => setCaptions((current) => ({ ...current, [stage.id]: event.target.value }))} placeholder="Ex.: prova do acabamento da manga" value={captions[stage.id] ?? ''} /></div></div>
               <label className="mt-3 flex items-start gap-2 text-sm text-slate-700"><input checked={visible[stage.id] !== false} className="mt-1 accent-violet-700" onChange={(event) => setVisible((current) => ({ ...current, [stage.id]: event.target.checked }))} type="checkbox" />Visível ao cliente</label>
-              <Button className="mt-3" disabled={busy === `photo-${stage.id}`} onClick={() => void sendPhoto(stage)} variant="secondary"><Camera size={16} />Enviar foto</Button>
+              <Button className="mt-3" disabled={Boolean(busy)} onClick={() => void sendPhoto(stage)} variant="secondary"><Camera size={16} />Enviar foto</Button>
             </div> : null}
           </div> : null}
         </CardContent>

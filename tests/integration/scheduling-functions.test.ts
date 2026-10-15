@@ -130,6 +130,43 @@ afterAll(async () => {
 });
 
 describe('Scheduling Functions em Firebase Emulator', () => {
+  it('mantém prazos coerentes com início/slots e libera capacidade futura sem alterar etapa congelada', async () => {
+    await signIn(ownerA);
+    const date = daysAfter(nextMonday(), 28);
+    const laterDate = daysAfter(date, 7);
+    const finalDate = daysAfter(date, 14);
+    await call('saveMemberScheduleCapacity', { memberId: memberA.uid, weeklyHoursByWeekday: { '0': 0, '1': 8, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0 }, workdayStartMinute: 480, workdayEndMinute: 1020, timezone: 'America/Sao_Paulo' });
+    await seedOrder(atelierA, 'order-dates', 'stage-dates', finalDate);
+    const stageRef = adminDb.doc(`ateliers/${atelierA}/orders/order-dates/productionStages/stage-dates`);
+    await stageRef.update({ plannedStartDate: date });
+    const first = { ...makeSlot('slot-dates-first', 'order-dates', 'stage-dates', laterDate, 8, 1), deadline: finalDate };
+    await call('allocateProductionTime', first as unknown as Record<string, unknown>);
+    await expect(call('allocateProductionTime', { ...first, deadline: laterDate })).rejects.toMatchObject({ code: 'functions/already-exists' });
+    await expect(call('allocateProductionTime', { ...makeSlot('slot-dates-before-start', 'order-dates', 'stage-dates', daysAfter(date, -7), 8, 1), deadline: finalDate })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+    await expect(call('allocateProductionTime', { ...makeSlot('slot-dates-narrowing', 'order-dates', 'stage-dates', date, 8, 1), deadline: date })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+    expect((await stageRef.get()).get('deadline')).toBe(finalDate);
+    await call('allocateProductionTime', { ...makeSlot('slot-dates-allowed', 'order-dates', 'stage-dates', date, 8, 1), deadline: finalDate });
+
+    for (const [index, status] of ['waiting_approval', 'completed', 'approved'].entries()) {
+      const orderId = `order-frozen-${status}`; const stageId = `stage-frozen-${status}`;
+      await seedOrder(atelierA, orderId, stageId, finalDate);
+      const slot = makeSlot(`slot-frozen-${status}`, orderId, stageId, date, 12 + index, 1);
+      await call('allocateProductionTime', slot as unknown as Record<string, unknown>);
+      const frozenRef = adminDb.doc(`ateliers/${atelierA}/orders/${orderId}/productionStages/${stageId}`);
+      await frozenRef.update({ status, pendingApprovalId: status === 'waiting_approval' ? 'approval-frozen' : null });
+      const approvalRef = adminDb.doc(`ateliers/${atelierA}/orders/${orderId}/approvals/approval-frozen`);
+      await approvalRef.set({ stageId, status: status === 'waiting_approval' ? 'pending' : 'approved', stageSnapshot: { assignedTo: memberA.uid, deadline: finalDate } });
+      const before = (await frozenRef.get()).data(); const approvalBefore = (await approvalRef.get()).data();
+      await expect(call('allocateProductionTime', { ...makeSlot(`slot-frozen-extra-${index}`, orderId, stageId, laterDate, 12 + index, 1) })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+      expect(await call('cancelProductionSlot', { slotId: slot.requestId })).toMatchObject({ status: 'cancelled' });
+      expect((await frozenRef.get()).data()).toEqual(before);
+      expect((await approvalRef.get()).data()).toEqual(approvalBefore);
+      expect((await adminDb.doc(`ateliers/${atelierA}/productionSlots/${slot.requestId}`).get()).get('status')).toBe('cancelled');
+    }
+    const workspace = await call<{ capacityByDate: Array<{ memberId: string; date: string; allocatedHours: number }> }>('listScheduleWorkspace', { fromDate: date, toDate: laterDate });
+    expect(workspace.capacityByDate.find((item) => item.memberId === memberA.uid && item.date === date)?.allocatedHours).toBe(1);
+  }, 120000);
+
   it('salva capacidade, serializa alocações concorrentes, aplica bloqueios e mantém os efeitos auditáveis', async () => {
     const date = nextMonday();
     const weeklyHoursByWeekday = { '0': 0, '1': 4, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0 };

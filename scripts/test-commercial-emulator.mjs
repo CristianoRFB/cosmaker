@@ -2,15 +2,19 @@ import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { readFile, rm, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 
 const requireFromRoot = createRequire(import.meta.url);
 const firebaseCli = requireFromRoot.resolve('firebase-tools/lib/bin/firebase.js');
+const vitestCli = resolve(dirname(requireFromRoot.resolve('vitest/package.json')), 'vitest.mjs');
 const suites = {
   commercial: 'tests/integration/commercial-functions.test.ts',
   team: 'tests/integration/team-functions.test.ts',
   scheduling: 'tests/integration/scheduling-functions.test.ts',
   inventory: 'tests/integration/inventory-functions.test.ts',
+  'order-files': 'tests/integration/order-files-functions.test.ts',
+  'order-changes': 'tests/integration/order-change-functions.test.ts',
+  'production-configuration': 'tests/integration/production-configuration-functions.test.ts',
 };
 const suiteName = process.argv[2] || 'commercial';
 const testFile = suites[suiteName];
@@ -18,7 +22,8 @@ if (!testFile) {
   console.error(`Suíte inválida: ${suiteName}. Opções: ${Object.keys(suites).join(', ')}.`);
   process.exit(2);
 }
-const testCommand = `vitest run ${testFile}`;
+const testCommand = `"${process.execPath}" "${vitestCli}" run ${testFile}`;
+const withStorage = ['order-files', 'production-configuration'].includes(suiteName);
 
 function findAvailablePort() {
   return new Promise((resolvePort, reject) => {
@@ -37,6 +42,7 @@ const ports = {
   functions: await findAvailablePort(),
   firestore: await findAvailablePort(),
   pubsub: await findAvailablePort(),
+  ...(withStorage ? { storage: await findAvailablePort() } : {}),
 };
 const baseConfig = JSON.parse(await readFile(new URL('../firebase.commercial-test.json', import.meta.url), 'utf8'));
 for (const [name, port] of Object.entries(ports)) baseConfig.emulators[name] = { host: '127.0.0.1', port };
@@ -51,7 +57,7 @@ try {
       'emulators:exec',
       '--config', configName,
       '--project', 'demo-cosmaker',
-      '--only', 'auth,firestore,functions,pubsub',
+      '--only', withStorage ? 'auth,firestore,functions,pubsub,storage' : 'auth,firestore,functions,pubsub',
       testCommand,
     ], {
       stdio: 'inherit',
@@ -61,6 +67,7 @@ try {
         FIREBASE_EMULATOR_HOST: '127.0.0.1',
         COSMAKER_AUTH_EMULATOR_PORT: String(ports.auth),
         COSMAKER_FUNCTIONS_EMULATOR_PORT: String(ports.functions),
+        ...(withStorage ? { COSMAKER_STORAGE_EMULATOR_PORT: String(ports.storage) } : {}),
       },
     });
     child.once('error', reject);

@@ -277,6 +277,25 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-b/quoteRequests/request-a/references/ref-a'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
   });
 
+  it('keeps order agreements and production operation ledgers server-managed', async () => {
+    const owner = environment.authenticatedContext('member-a').firestore();
+    const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
+    const root = 'ateliers/atelier-a/orders/order-a';
+    const paths = ['productionOperations/op-a', 'changeRequests/change-a', 'changeRequests/change-a/events/event-a', 'agreementVersions/1', 'changeRequestOperations/op-a'];
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await Promise.all([...paths, 'productionConfigurations/1'].map((path) => setDoc(doc(context.firestore(), `${root}/${path}`), { version: 1 })));
+    });
+    for (const path of paths) {
+      await assertFails(getDoc(doc(owner, `${root}/${path}`)));
+      await assertFails(getDoc(doc(client, `${root}/${path}`)));
+      await assertFails(setDoc(doc(owner, `${root}/${path}`), { version: 999 }));
+      await assertFails(setDoc(doc(client, `${root}/${path}`), { version: 999 }));
+    }
+    await assertSucceeds(getDoc(doc(owner, `${root}/productionConfigurations/1`)));
+    await assertFails(getDoc(doc(client, `${root}/productionConfigurations/1`)));
+    await assertFails(updateDoc(doc(owner, `${root}/productionConfigurations/1`), { version: 2 }));
+  });
+
   it('keeps commercial records server-managed and protects the demo marker', async () => {
     const owner = environment.authenticatedContext('member-a').firestore();
     await assertFails(getDoc(doc(owner, 'ateliers/atelier-a/commercial/state')));
@@ -339,13 +358,63 @@ describe('Firestore and Storage tenant rules', () => {
     }
   });
 
-  it('keeps non-demo document and logistical writes available to the existing authorized tenant', async () => {
+  it('keeps non-demo contracts and invoices writable and denies generic order file writes', async () => {
     const storage = environment.authenticatedContext('member-a').storage();
-    for (const path of ['contracts/new.pdf', 'invoices/new.pdf', 'orders/order-a/shipping/new.pdf', 'orders/order-a/documents/new.pdf']) {
+    for (const path of ['contracts/new.pdf', 'invoices/new.pdf']) {
       const ownFile = ref(storage, `ateliers/atelier-a/${path}`);
       await assertSucceeds(uploadBytes(ownFile, new Uint8Array([1, 2, 3]), { contentType: 'application/pdf' }));
       await assertSucceeds(deleteObject(ownFile));
       await assertFails(uploadBytes(ref(storage, `ateliers/atelier-b/${path}`), new Uint8Array([1, 2, 3]), { contentType: 'application/pdf' }));
     }
+    for (const area of ['shipping', 'documents', 'references', 'approvals', 'attachments']) {
+      await assertFails(uploadBytes(ref(storage, `ateliers/atelier-a/orders/order-a/${area}/unregistered.pdf`), new Uint8Array([1, 2, 3]), { contentType: 'application/pdf' }));
+    }
+  });
+
+  it('allows registered attachment uploads once and revokes client reads when sharing or archival changes', async () => {
+    const bytes = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0]);
+    const path = 'ateliers/atelier-a/orders/order-a/attachments/file-registered';
+    const filePath = 'ateliers/atelier-a/orders/order-a/files/file-registered';
+    const owner = environment.authenticatedContext('member-a', { email: 'owner@example.test', email_verified: true });
+    const noPermission = environment.authenticatedContext('no-order-access', { email: 'reader@example.test', email_verified: true });
+    const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true });
+    const tenantB = environment.authenticatedContext('member-b', { email: 'b@example.test', email_verified: true });
+    const unauthenticated = environment.unauthenticatedContext();
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await setDoc(doc(context.firestore(), filePath), { atelierId: 'atelier-a', orderId: 'order-a', storagePath: path, uploadedBy: 'member-a', uploadStatus: 'pending', contentType: 'image/png', size: bytes.length, visibleToClient: true, archived: false });
+    });
+    const metadata = { contentType: 'image/png', customMetadata: { fileId: 'file-registered', orderId: 'order-a' } };
+    await assertFails(setDoc(doc(owner.firestore(), 'ateliers/atelier-a/orders/order-a/files/forged'), { visibleToClient: true, uploadStatus: 'ready' }));
+    await assertFails(updateDoc(doc(owner.firestore(), filePath), { visibleToClient: true }));
+    await assertFails(setDoc(doc(owner.firestore(), 'ateliers/atelier-a/orders/order-a/fileActions/forged'), { revision: 1 }));
+    await assertFails(getDoc(doc(client.firestore(), filePath)));
+    await assertSucceeds(getDoc(doc(owner.firestore(), filePath)));
+    await assertFails(getDoc(doc(tenantB.firestore(), filePath)));
+    await assertFails(uploadBytes(ref(client.storage(), path), bytes, metadata));
+    await assertFails(uploadBytes(ref(noPermission.storage(), path), bytes, metadata));
+    await assertFails(uploadBytes(ref(tenantB.storage(), path), bytes, metadata));
+    await assertFails(uploadBytes(ref(owner.storage(), path), bytes, { ...metadata, customMetadata: { fileId: 'wrong', orderId: 'order-a' } }));
+    await assertFails(uploadBytes(ref(owner.storage(), path), bytes.subarray(0, 8), metadata));
+    await assertSucceeds(uploadBytes(ref(owner.storage(), path), bytes, metadata));
+    await assertFails(uploadBytes(ref(owner.storage(), path), bytes, metadata));
+    await assertFails(deleteObject(ref(owner.storage(), path)));
+    await assertFails(getBytes(ref(client.storage(), path)));
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), filePath), { uploadStatus: 'ready' });
+    });
+    await assertSucceeds(getBytes(ref(client.storage(), path)));
+    await assertFails(getBytes(ref(noPermission.storage(), path)));
+    await assertFails(getBytes(ref(tenantB.storage(), path)));
+    await assertFails(getBytes(ref(unauthenticated.storage(), path)));
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), filePath), { visibleToClient: false });
+    });
+    await assertFails(getBytes(ref(client.storage(), path)));
+    await assertSucceeds(getBytes(ref(owner.storage(), path)));
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), filePath), { visibleToClient: true, archived: true });
+    });
+    await assertFails(getBytes(ref(client.storage(), path)));
+    await assertSucceeds(getBytes(ref(owner.storage(), path)));
   });
 });

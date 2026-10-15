@@ -40,16 +40,18 @@ export function useClientOrders() {
 }
 
 export function useOrderDetail(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier') {
+  const { hasPermission } = useTenant();
+  const includePayments = viewer === 'client' || hasPermission('finance:read');
   const [record, setRecord] = useState<OrderRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const reload = useCallback(async () => {
     if (!atelierId || !orderId) { setRecord(null); setLoading(false); return; }
     setLoading(true); setError('');
-    try { setRecord(await getOrder(atelierId, orderId, viewer)); }
+    try { setRecord(await getOrder(atelierId, orderId, viewer, includePayments)); }
     catch (reason) { setError(reason instanceof Error ? reason.message : 'Não foi possível abrir o pedido.'); }
     finally { setLoading(false); }
-  }, [atelierId, orderId, viewer]);
+  }, [atelierId, orderId, viewer, includePayments]);
   useEffect(() => { void reload(); }, [reload]);
   return { record, loading, error, reload };
 }

@@ -26,6 +26,7 @@ service firebase.storage {
     function ownVerifiedOrder(atelierId, orderId) {
       let orderPath = /databases/(default)/documents/ateliers/$(atelierId)/orders/$(orderId);
       return signedIn() && request.auth.token.email_verified == true
+        && firestore.get(/databases/(default)/documents/ateliers/$(atelierId)).data.active == true
         && firestore.exists(orderPath)
         && ((firestore.get(orderPath).data.clientUserId is string && firestore.get(orderPath).data.clientUserId == request.auth.uid)
           || (firestore.get(orderPath).data.email is string
@@ -132,23 +133,25 @@ service firebase.storage {
           && firestore.get(photoPath()).data.visibleToClient == true);
       allow create: if hasAtelierPermission(atelierId, 'orders:manage')
         && !isDemoWorkspace(atelierId)
+        && firestore.get(/databases/(default)/documents/ateliers/$(atelierId)/orders/$(orderId)).data.status in ['confirmed', 'scheduled', 'modeling', 'in_production', 'fitting', 'adjustments', 'finishing', 'paused', 'ready_to_ship', 'waiting_final_payment']
         && firestore.exists(photoPath())
         && firestore.get(photoPath()).data.uploadedBy == request.auth.uid
         && firestore.get(photoPath()).data.uploadStatus == 'pending'
+        && firestore.get(photoPath()).data.contentType == request.resource.contentType
+        && request.resource.metadata.photoId == photoId && request.resource.metadata.orderId == orderId
         && request.resource.size <= 10 * 1024 * 1024
         && isReferenceImage();
       allow update, delete: if false;
     }
 
+    match /ateliers/{atelierId}/orders/{orderId}/attachments/{fileId} {
+      // Attachment bytes are transferred only by authenticated server endpoints.
+      allow read, write: if false;
+    }
+
     match /ateliers/{atelierId}/orders/{orderId}/{area}/{fileName} {
-      allow read: if hasAtelierPermission(atelierId, 'orders:read');
-      allow create, update: if isAtelierMember(atelierId)
-        && !isDemoWorkspace(atelierId)
-        && area in ['references', 'approvals', 'documents', 'shipping']
-        && isAtelierFile();
-      allow delete: if isAtelierMember(atelierId)
-        && !isDemoWorkspace(atelierId)
-        && area in ['references', 'approvals', 'documents', 'shipping'];
+      allow read: if area != 'attachments' && hasAtelierPermission(atelierId, 'orders:read');
+      allow create, update, delete: if false;
     }
 
     match /ateliers/{atelierId}/{area}/{fileName} {

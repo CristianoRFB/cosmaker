@@ -10,7 +10,7 @@ const paymentMethods = ['pix', 'bank_transfer', 'cash', 'other'] as const;
 export const confirmOrderDeposit = onCall(async (call) => {
   requireVerifiedIdentity(call.auth);
   const data = call.data as { atelierId?: unknown; orderId?: unknown; method?: unknown; reference?: unknown };
-  if (typeof data.atelierId !== 'string' || !data.atelierId || typeof data.orderId !== 'string' || !data.orderId) {
+  if (typeof data.atelierId !== 'string' || !/^[A-Za-z0-9_-]{1,150}$/.test(data.atelierId) || typeof data.orderId !== 'string' || !/^[A-Za-z0-9_-]{1,150}$/.test(data.orderId)) {
     throw new HttpsError('invalid-argument', 'Ateliê e pedido são obrigatórios.');
   }
   if (typeof data.method !== 'string' || !paymentMethods.includes(data.method as typeof paymentMethods[number])) {
@@ -30,6 +30,18 @@ export const confirmOrderDeposit = onCall(async (call) => {
   let alreadyConfirmed = false;
 
   await adminDb.runTransaction(async (transaction) => {
+    const [activeAtelier, activeMember, activeProfile] = await Promise.all([
+      transaction.get(atelier), transaction.get(atelier.collection('members').doc(call.auth!.uid)),
+      transaction.get(adminDb.doc(`users/${call.auth!.uid}`)),
+    ]);
+    const member = activeMember.data();
+    const permissions = Array.isArray(member?.permissions) ? member.permissions : [];
+    if (activeAtelier.data()?.active !== true || member?.active !== true || activeProfile.data()?.active !== true
+      || activeProfile.data()?.accountType !== 'atelier_member' || activeProfile.data()?.atelierId !== data.atelierId
+      || !(member.role === 'owner' || member.role === 'admin' || permissions.includes('payments:write') || permissions.includes('finance:write'))) {
+      throw new HttpsError('permission-denied', 'A permissão para confirmar pagamentos foi alterada.');
+    }
+    if (activeAtelier.data()?.demoWorkspace === true) throw new HttpsError('failed-precondition', 'A demonstração não aceita registros financeiros.');
     const [orderSnapshot, paymentSnapshot, ...stageSnapshots] = await Promise.all([
       transaction.get(orderRef), transaction.get(paymentRef), ...stageRefs.map((stageRef) => transaction.get(stageRef)),
     ]);
@@ -43,6 +55,11 @@ export const confirmOrderDeposit = onCall(async (call) => {
     if (typeof amount !== 'number' || !Number.isFinite(amount) || amount <= 0 || amount !== order.approvedQuoteSnapshot?.depositAmount) {
       throw new HttpsError('failed-precondition', 'O valor da entrada não corresponde à proposta aprovada.');
     }
+    const amountCents = Math.round(amount * 100);
+    const totalCents = order.currentAgreement?.totalCents ?? Math.round(Number(order.approvedQuoteSnapshot?.total) * 100);
+    if (!Number.isSafeInteger(totalCents) || totalCents < amountCents || Math.abs(amount * 100 - amountCents) > 0.000001) {
+      throw new HttpsError('failed-precondition', 'O acordo vigente tem valores inconsistentes. Revise antes de confirmar a entrada.');
+    }
 
     const now = Timestamp.now();
     transaction.update(paymentRef, {
@@ -50,8 +67,8 @@ export const confirmOrderDeposit = onCall(async (call) => {
       confirmedBy: call.auth!.uid, paidAt: now, updatedAt: now,
     });
     transaction.update(orderRef, {
-      status: 'confirmed', amountPaid: amount,
-      amountRemaining: Math.max(0, Number(order.approvedQuoteSnapshot.total) - amount),
+      status: 'confirmed', amountPaid: amount, amountPaidCents: amountCents,
+      amountRemaining: (totalCents - amountCents) / 100, amountRemainingCents: totalCents - amountCents,
       updatedAt: now,
     });
     stageSnapshots.forEach((snapshot, index) => {

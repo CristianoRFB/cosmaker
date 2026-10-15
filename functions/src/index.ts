@@ -22,6 +22,10 @@ export { updateProductionStage } from './orders/update-production-stage';
 export { respondToProductionApproval } from './orders/respond-to-production-approval';
 export { createProductionPhotoUpload, completeProductionPhotoUpload } from './orders/production-photos';
 export { listProductionBoard } from './orders/list-production-board';
+export { listOrderFiles, createOrderFileUpload, completeOrderFileUpload, updateOrderFileAccess } from './orders/order-files';
+export { uploadOrderFileBytes, downloadOrderFileBytes } from './orders/order-file-bytes';
+export { listOrderChangeRequests, proposeOrderChangeRequest, respondToOrderChangeRequest, applyOrderChangeRequest, cancelOrderChangeRequest } from './orders/change-requests';
+export { getOrderProductionConfiguration, saveOrderProductionConfiguration } from './orders/production-configuration';
 export {
   resolvePublicTenant,
   createPublicQuoteRequest,

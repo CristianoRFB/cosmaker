@@ -20,6 +20,12 @@ export interface Order {
   progress: number;
   amountPaid: number;
   amountRemaining: number;
+  amountPaidCents?: number;
+  amountRemainingCents?: number;
+  totalAmountCents?: number;
+  currentAgreement?: import('./order-change').OrderAgreementSnapshot;
+  agreementVersion?: number;
+  planningNeedsReview?: boolean;
   expectedDeliveryDate: string;
   eventDate?: string | null;
   approvedQuoteSnapshot: {
@@ -49,6 +55,11 @@ export interface OrderFile {
   contentType: string;
   size: number;
   source: string;
+  category?: 'reference' | 'document' | 'approval' | 'shipping';
+  visibleToClient?: boolean;
+  uploadStatus?: 'pending' | 'ready' | 'rejected' | 'cancelled';
+  archived?: boolean;
+  revision?: number;
   createdAt: unknown;
 }
 

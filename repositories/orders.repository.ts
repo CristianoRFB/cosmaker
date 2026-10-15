@@ -1,10 +1,11 @@
-import { collection, collectionGroup, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
+import { collection, collectionGroup, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where, type QueryConstraint } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { requireFirebase } from '@/services/firebase/firebase.client';
 import type { Order, OrderFile, OrderHistoryEntry, OrderLineItem, OrderRecord } from '@/types/order';
 import type { Measurement } from '@/types/measurement';
 import type { ProductionStageAction } from '@/types/production';
+import { listOrderFiles } from './order-files.repository';
 
 function orderFromSnapshot(snapshot: { id: string; ref: { path: string }; data: () => Record<string, unknown> }, atelierId?: string) {
   const pathParts = snapshot.ref.path.split('/');
@@ -15,6 +16,20 @@ export async function listAtelierOrders(atelierId: string) {
   const { db } = requireFirebase();
   const result = await getDocs(query(collection(db, 'ateliers', atelierId, 'orders'), orderBy('updatedAt', 'desc'), limit(100)));
   return result.docs.map((snapshot) => orderFromSnapshot(snapshot, atelierId));
+}
+
+export async function listOrderStatusHistory(atelierId: string, orderId: string, cursor?: string) {
+  const { db } = requireFirebase();
+  const history = collection(db, 'ateliers', atelierId, 'orders', orderId, 'statusHistory');
+  const constraints: QueryConstraint[] = [orderBy('createdAt', 'desc'), limit(51)];
+  if (cursor) {
+    const last = await getDoc(doc(history, cursor));
+    if (!last.exists()) throw new Error('A página do histórico expirou. Atualize o pedido.');
+    constraints.push(startAfter(last));
+  }
+  const snapshot = await getDocs(query(history, ...constraints));
+  const entries = snapshot.docs.slice(0, 50).map((document) => ({ id: document.id, ...document.data() }) as OrderHistoryEntry);
+  return { entries, nextCursor: snapshot.size > 50 ? entries.at(-1)?.id ?? null : null };
 }
 
 export async function listClientOrders(email: string) {
@@ -30,14 +45,14 @@ export async function listClientOrders(email: string) {
   return result.docs.map((snapshot) => orderFromSnapshot(snapshot));
 }
 
-export async function getOrder(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier'): Promise<OrderRecord | null> {
+export async function getOrder(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier', includePayments = true): Promise<OrderRecord | null> {
   const { db, storage } = requireFirebase();
   const orderRef = doc(db, 'ateliers', atelierId, 'orders', orderId);
   const orderSnapshot = await getDoc(orderRef);
   if (!orderSnapshot.exists()) return null;
   const [itemSnapshots, fileSnapshots, historySnapshots, measurementSnapshots] = await Promise.all([
     getDocs(collection(orderRef, 'items')),
-    getDocs(collection(orderRef, 'files')),
+    viewer === 'client' ? listOrderFiles(atelierId, orderId) : getDocs(collection(orderRef, 'files')),
     getDocs(query(collection(orderRef, 'statusHistory'), orderBy('createdAt', 'asc'))),
     getDocs(collection(orderRef, 'measurementSnapshot')),
   ]);
@@ -47,7 +62,7 @@ export async function getOrder(atelierId: string, orderId: string, viewer: 'atel
       ? query(collection(orderRef, 'photos'), where('visibleToClient', '==', true), where('uploadStatus', '==', 'ready'), orderBy('createdAt', 'asc'))
       : query(collection(orderRef, 'photos'), orderBy('createdAt', 'asc'))),
     getDocs(query(collection(orderRef, 'approvals'), orderBy('requestedAt', 'asc'))),
-    getDocs(query(collection(orderRef, 'payments'), orderBy('createdAt', 'asc'))),
+    includePayments ? getDocs(query(collection(orderRef, 'payments'), orderBy('createdAt', 'asc'))) : Promise.resolve(null),
   ]);
   const productionPhotos = await Promise.all(photoSnapshots.docs.map(async (snapshot) => {
     const photo = { id: snapshot.id, ...snapshot.data() } as import('@/types/production').ProductionPhoto;
@@ -57,13 +72,13 @@ export async function getOrder(atelierId: string, orderId: string, viewer: 'atel
   return {
     order: { id: orderSnapshot.id, atelierId, ...orderSnapshot.data() } as Order,
     items: itemSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as OrderLineItem),
-    files: fileSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as OrderFile),
+    files: Array.isArray(fileSnapshots) ? fileSnapshots : fileSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as OrderFile),
     history: historySnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as OrderHistoryEntry),
     measurements: measurementSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as Measurement),
     productionStages: stageSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as import('@/types/production').ProductionStage),
     productionPhotos,
     approvals: approvalSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as import('@/types/production').ProductionApproval),
-    payments: paymentSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as import('@/types/payment').Payment),
+    payments: paymentSnapshots?.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as import('@/types/payment').Payment) ?? [],
   };
 }
 

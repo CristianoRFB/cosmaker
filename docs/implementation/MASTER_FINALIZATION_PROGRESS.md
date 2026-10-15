@@ -1,6 +1,10 @@
 # Cosmaker Master Finalization — Progress
 
-Última atualização: 2026-10-14 — F1.1 a F1.4 validados; F1.5 é o próximo módulo.
+Última atualização: 2026-10-15 — checkpoint WIP solicitado pelo proprietário para envio imediato ao GitHub; F1.1 a F1.4 validados e F1.5 em implementação/validação.
+
+## Checkpoint imediato solicitado pelo proprietário — 2026-10-15
+
+O proprietário autorizou explicitamente commit e push da branch de trabalho. Este snapshot salva o trabalho parcial de F1.5 e não representa release nem aceite: a transferência autenticada de bytes dos anexos está em adaptação após duas falhas de revogação de tokens; produção/agenda receberam correções adicionais ainda sem regressão final. A última evidência verde de unitários foi 107/107, mas houve alterações posteriores. Functions build, TypeScript e lint passaram antes desses últimos ajustes e precisam ser repetidos. Integrações, Rules, E2E e build final de F1.5 seguem pendentes. O goal permanece ativo e o trabalho prossegue após o push.
 
 ## Identidade e baseline
 
@@ -28,7 +32,7 @@
 | F1.2 Equipe, onboarding e permissões | PASS | Rotas de equipe, convites, aceite e permissões implementadas com callables transacionais. Token aleatório de uso único fica armazenado somente como hash; expiração/revogação, verificação de e-mail e bloqueio de reuso, perfil de cliente existente, isolamento A×B, escalada, desativação e transferência para exatamente um titular foram comprovados no Emulator. Regras bloqueiam escrita direta em `members`, convites, índice de e-mail, `ownerId` e `active` do ateliê. Link mantém o token no fragmento e, durante login/verificação, somente em `sessionStorage`; nenhum e-mail é enviado. Unit 84/84, Rules 15/15, integração Team 4/4, E2E Team 1/1, lint, TypeScript, Functions build e Next build passaram. |
 | F1.3 Agenda, capacidade, eventos e risco | PASS | Rotas de agenda/capacidade/bloqueios/eventos/cronograma conectadas a Functions; capacidade, slots e bloqueios persistidos com validação de fuso e transações/travas por dia; CRUD autenticado de eventos; risco categórico com dados persistidos de slots, capacidade, pausas, prazos e eventos. Rules negam mutação direta. Unit 91/91, Rules 16/16, Scheduling Functions 2/2, CRM regression 11/11, Team regression 4/4 e Playwright 1/1 passaram. Lint, TypeScript, Functions build e Next build passaram. |
 | F1.4 Estoque, materiais e fornecedores | PASS | Cadastro/edição/arquivo de materiais e fornecedores; SKU único transacional; entrada, saída, reserva e liberação com ledger imutável, saldo inteiro em milésimos, trava contra negativo, idempotência e auditoria; BOM/reserva/consumo associados ao pedido; alertas de baixo estoque e UI responsiva. Rules negam mutação direta. Unit 95/95, Rules 17/17, Inventory Functions 3/3, Playwright 1/1, lint, TypeScript, Functions build, Next build e docs:check passaram. A paginação ampla das listas é parte do refinamento transversal F3; esta versão protege a listagem com teto operacional explícito de 500 itens por coleção. |
-| F1.5 Pedidos, produção e change requests | TODO | Arquivos/ACL, etapas configuráveis, alterações versionadas e aprovação/snapshot do cliente. |
+| F1.5 Pedidos, produção e change requests | IN_PROGRESS | Arquivos/ACL e histórico paginado conectados; uploads com validação de bytes e revogação de tokens, visibilidade e arquivamento versionados; etapas canônicas/configuráveis e próprias com responsáveis/datas/bloqueios, snapshots de aprovação, gates financeiros e integridade da agenda; change requests com versão, aprovação explícita, aplicação transacional e acordo vigente em centavos preservando proposta original. Unit 107/107, Functions build, TypeScript e lint passaram. Integrações de anexos/produção/change requests, Rules, E2E e Next build ainda não comprovados neste checkpoint. |
 | F1.6 Financeiro operacional, custos e margens | TODO | Registros internos em centavos, compensações/auditoria, sem movimentar dinheiro real. |
 | F1.7 Serviços e portfólio | TODO | Conteúdo publicado tenant-aware, imagens autorizadas e privacidade. |
 | F1.8 Mensagens e notificações internas | TODO | Conversas, leitura, anexos protegidos e deduplicação de eventos. |
@@ -79,6 +83,10 @@
 | `npx playwright test tests/e2e/inventory-workflow.spec.ts` | PASS, 1/1; criação de fornecedor e material, entrada, reserva e consumo pela UI com verificação de documentos persistidos. | `dev:local` e Firebase Emulator, dados sintéticos |
 | `npm run lint`, `npx tsc --noEmit`, `npm run functions:build`, `npm run build` — após F1.4 | PASS; Next 15.5.27 compilou 81 rotas e Functions compilaram. | Local, Node 24.11.1 |
 | `npm run docs:check`, `git diff --check`, JSON dos índices — após F1.4 | PASS; manifesto de índices válido e sem erro de whitespace no diff. | Local |
+| `npm test -- --reporter=dot` — F1.5 em desenvolvimento | PASS, 107/107 em 18 arquivos, incluindo 7 unitários de produção e 5 de política de mudanças. | Local, Node 24.11.1 |
+| Functions build, TypeScript e lint — F1.5 em validação | PASS após corrigir inferência de snapshots do servidor e warnings de refs/destructuring. A primeira Functions build falhou em tipos das etapas; a repetição final terminou com exit 0. | Local |
+| Harness de integração de anexos — primeira tentativa F1.5 | FAILED antes dos testes: invocação direta do script não tinha Vitest no PATH. Lançador corrigido para usar Node/Vitest locais com paths explícitos; repetição em andamento. | Emulator isolado, nenhuma suíte executada na tentativa inicial |
+| Integração de anexos — segunda tentativa F1.5 | FAILED, 7/9 passaram; 2 casos provaram que limpar metadados não revogava tokens permanentes no Emulator. O servidor de bytes e o browser estão sendo ajustados para upload/download autenticados, com Storage direto negado e revogação de tokens residuais. Nenhum PASS amplo foi inferido desta execução. | Emulator isolado com Auth/Firestore/Functions/Storage |
 | `npm run lint` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
 | `npx tsc --noEmit` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
 | `npm run functions:build` — após F1.1 inicial | PASS; exit 0 | Local, Node 24.11.1/npm 11.6.4 |
@@ -129,6 +137,6 @@ Nenhuma migração, deploy, envio externo, cobrança ou mutação de dados reais
 
 ## Próximos passos seguros
 
-1. Iniciar F1.5 (pedidos, produção configurável e change requests), preservando seis etapas, proposta aprovada, bloqueios financeiros e ACL de arquivos.
+1. Fechar F1.5: compilar os endpoints autenticados de arquivos e os ajustes de consistência de produção/agenda; executar integrações, Rules, jornadas Playwright e build; registrar evidências antes de marcar PASS e commitar.
 2. Preservar prova A×B/role e executar os gates de testes a cada módulo antes de seguir para o próximo.
 3. Manter staging, produção, migração real e billing desativados até autorização separada.

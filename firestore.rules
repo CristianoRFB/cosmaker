@@ -232,9 +232,22 @@ service cloud.firestore {
           allow read: if hasAtelierPermission(atelierId, 'inventory:read') || hasAtelierPermission(atelierId, 'inventory:write');
           allow write: if false;
         }
+        match /files/{fileId} {
+          // Clients receive the allowlisted file projection through listOrderFiles.
+          allow read: if hasAtelierPermission(atelierId, 'orders:read');
+          allow write: if false;
+        }
+        match /productionConfigurations/{versionId} {
+          allow read: if hasAtelierPermission(atelierId, 'orders:read');
+          allow write: if false;
+        }
+        match /productionOperations/{operationId} { allow read, write: if false; }
+        match /changeRequests/{changeId} { allow read, write: if false; }
+        match /agreementVersions/{versionId} { allow read, write: if false; }
+        match /changeRequestOperations/{operationId} { allow read, write: if false; }
         match /{subcollection}/{documentId} {
           allow read: if canReadOrder(atelierId, orderId)
-            && subcollection in ['items', 'productionStages', 'photos', 'approvals', 'payments', 'messages', 'files', 'statusHistory', 'measurementSnapshot']
+            && subcollection in ['items', 'productionStages', 'photos', 'approvals', 'payments', 'messages', 'statusHistory', 'measurementSnapshot']
             && (subcollection != 'photos'
               || hasAtelierPermission(atelierId, 'orders:read')
               || (isOrderClient(atelierId, orderId) && resource.data.visibleToClient == true && resource.data.uploadStatus == 'ready'))
@@ -244,6 +257,8 @@ service cloud.firestore {
           allow create, update, delete: if false;
           match /{nestedCollection}/{nestedId} {
             allow read: if canReadOrder(atelierId, orderId)
+              && subcollection in ['productionStages', 'approvals']
+              && nestedCollection in ['updates', 'events']
               && (nestedCollection != 'updates' || hasAtelierPermission(atelierId, 'orders:read'));
             allow create, update, delete: if false;
           }
