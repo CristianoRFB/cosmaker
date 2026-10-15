@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -67,12 +67,24 @@ function call<T = Record<string, unknown>>(name: string, data: Record<string, un
   return httpsCallable<Record<string, unknown>, T>(functions, name)(data).then((response) => response.data);
 }
 function request(extra: Record<string, unknown> = {}) {
-  return { atelierId: atelierA, orderId, requestId: randomUUID(), originalName: 'referencia.png', contentType: 'image/png', size: pngBytes.length, category: 'reference', visibleToClient: false, ...extra };
+  return { atelierId: atelierA, orderId, requestId: randomUUID(), originalName: 'referencia.png', contentType: 'image/png', size: pngBytes.length, sha256: createHash('sha256').update(pngBytes).digest('hex'), category: 'reference', visibleToClient: false, ...extra };
 }
+async function byteRequest(name: string, fileId: string, bytes?: Buffer, contentType = 'image/png') {
+  const url = new URL(`http://${host}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || 15001}/${projectId}/us-central1/${name}`);
+  url.searchParams.set('atelierId', atelierA); url.searchParams.set('orderId', orderId); url.searchParams.set('fileId', fileId);
+  const token = await auth.currentUser?.getIdToken();
+  const response = await fetch(url, { method: bytes ? 'POST' : 'GET', headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(bytes ? { 'Content-Type': contentType } : {}) }, ...(bytes ? { body: new Uint8Array(bytes) } : {}) });
+  if (!response.ok) {
+    const payload = await response.json() as { error: { code: string; message: string; details?: unknown } };
+    throw Object.assign(new Error(payload.error.message), { code: `functions/${payload.error.code}`, details: payload.error.details });
+  }
+  return response;
+}
+const uploadHttp = (upload: Upload, bytes = pngBytes, contentType = 'image/png') => byteRequest('uploadOrderFileBytes', upload.fileId, bytes, contentType).then((response) => response.json());
+const downloadHttp = (upload: Upload) => byteRequest('downloadOrderFileBytes', upload.fileId).then(async (response) => Buffer.from(await response.arrayBuffer()));
 async function createReady(extra: Record<string, unknown> = {}) {
   const upload = await call<Upload>('createOrderFileUpload', request(extra));
-  await uploadBytes(ref(storage, upload.storagePath), pngBytes, { contentType: 'image/png', customMetadata: { fileId: upload.fileId, orderId } });
-  await call('completeOrderFileUpload', { atelierId: atelierA, orderId, fileId: upload.fileId });
+  await uploadHttp(upload);
   return upload;
 }
 function access(fileId: string, expectedRevision: number, visibleToClient: boolean, archived = false, requestId = randomUUID()) {
@@ -87,6 +99,11 @@ beforeAll(async () => {
   [ownerA, ownerB, clientA, stranger, reader, unverified] = await Promise.all([
     identity('owner-files-a'), identity('owner-files-b'), identity('client-files-a'), identity('stranger-files'), identity('reader-files-a'), identity('unverified-files', false),
   ]);
+  await Promise.all(createdIdentities.map((user) => adminDb.doc(`users/${user.uid}`).set({
+    id: user.uid, email: user.email, active: true,
+    accountType: [ownerA.uid, ownerB.uid, reader.uid, unverified.uid].includes(user.uid) ? 'atelier_member' : 'client',
+    ...([ownerA.uid, ownerB.uid, reader.uid, unverified.uid].includes(user.uid) ? { atelierId: user.uid === ownerB.uid ? atelierB : atelierA } : {}),
+  })));
   await Promise.all([
     adminDb.doc(`ateliers/${atelierA}`).set({ active: true, ownerId: ownerA.uid }),
     adminDb.doc(`ateliers/${atelierB}`).set({ active: true, ownerId: ownerB.uid }),
@@ -115,11 +132,50 @@ afterAll(async () => {
     await Promise.all(audits.docs.map((document: { ref: { delete(): Promise<unknown> } }) => document.ref.delete()));
   }
   await Promise.all(createdIdentities.map((user) => adminAuth.deleteUser(user.uid).catch(() => undefined)));
+  await Promise.all(createdIdentities.map((user) => adminDb.doc(`users/${user.uid}`).delete()));
   await deleteApp(clientApp);
   await adminApp.delete();
 }, 30_000);
 
 describe('Order file Functions and Storage in Firebase Emulator', () => {
+  it('serializes simultaneous byte uploads and keeps the ready generation readable on retries', async () => {
+    await signIn(ownerA);
+    const upload = await call<Upload>('createOrderFileUpload', request());
+    const attempts = await Promise.allSettled([uploadHttp(upload), uploadHttp(upload)]);
+    expect(attempts.some((attempt) => attempt.status === 'fulfilled')).toBe(true);
+    for (const attempt of attempts) if (attempt.status === 'rejected') expect(attempt.reason).toMatchObject({ code: 'functions/aborted' });
+    expect(await uploadHttp(upload)).toMatchObject({ status: 'ready', alreadyApplied: true });
+    expect((await downloadHttp(upload)).equals(pngBytes)).toBe(true);
+    const file = await adminDb.doc(`ateliers/${atelierA}/orders/${orderId}/files/${upload.fileId}`).get();
+    expect(file.get('uploadLeaseId')).toBeUndefined();
+    const audits = await adminDb.collection('auditLogs').where('atelierId', '==', atelierA).where('action', '==', 'order.file_uploaded').get();
+    expect(audits.docs.filter((document: { data(): { after: { fileId: string } } }) => document.data().after.fileId === upload.fileId)).toHaveLength(1);
+  }, 120_000);
+
+  it('revalidates active profiles, client links and the declared hash at each byte transfer', async () => {
+    await signIn(ownerA);
+    const intent = request();
+    const upload = await call<Upload>('createOrderFileUpload', intent);
+    await expect(uploadHttp(upload, Buffer.from('different bytes'))).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    expect((await adminDb.doc(`ateliers/${atelierA}/orders/${orderId}/files/${upload.fileId}`).get()).get('uploadStatus')).toBe('pending');
+    await adminDb.doc(`users/${ownerA.uid}`).update({ active: false });
+    await expect(uploadHttp(upload)).rejects.toMatchObject({ code: 'functions/permission-denied' });
+    await adminDb.doc(`users/${ownerA.uid}`).update({ active: true });
+    await uploadHttp(upload);
+    await call('updateOrderFileAccess', access(upload.fileId, 0, true));
+    const clientId = `conflicting-link-${nonce}`;
+    await adminDb.doc(`ateliers/${atelierA}/clients/${clientId}`).set({ userId: stranger.uid });
+    await adminDb.doc(`ateliers/${atelierA}/orders/${orderId}`).update({ clientId });
+    await signIn(clientA);
+    await expect(downloadHttp(upload)).rejects.toMatchObject({ code: 'functions/permission-denied' });
+    await expect(call('listOrderFiles', { atelierId: atelierA, orderId })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+    await adminDb.doc(`ateliers/${atelierA}/orders/${orderId}`).update({ clientId: null });
+    expect((await downloadHttp(upload)).equals(pngBytes)).toBe(true);
+    await adminDb.doc(`users/${clientA.uid}`).update({ active: false });
+    await expect(downloadHttp(upload)).rejects.toMatchObject({ code: 'functions/permission-denied' });
+    await adminDb.doc(`users/${clientA.uid}`).update({ active: true });
+  }, 120_000);
+
   it('rejects anonymous, unverified, reader, client, demo and Tenant B mutations and validates the upload intent', async () => {
     await signOut(auth);
     await expect(call('createOrderFileUpload', request())).rejects.toMatchObject({ code: 'functions/unauthenticated' });
@@ -155,16 +211,14 @@ describe('Order file Functions and Storage in Firebase Emulator', () => {
     await signIn(ownerA);
     const upload = await call<Upload>('createOrderFileUpload', request({ visibleToClient: true }));
     await expect(uploadBytes(ref(storage, upload.storagePath), pngBytes, { contentType: 'image/png', customMetadata: { fileId: 'wrong-file', orderId } })).rejects.toMatchObject({ code: 'storage/unauthorized' });
-    await uploadBytes(ref(storage, upload.storagePath), pngBytes, { contentType: 'image/png', customMetadata: { fileId: upload.fileId, orderId } });
-    // A link obtained before backend validation must become unusable after token removal.
-    const preValidationUrl = await getDownloadURL(ref(storage, upload.storagePath)).catch(() => null);
+    expect(await uploadHttp(upload)).toMatchObject({ status: 'ready', alreadyApplied: false });
     await expect(uploadBytes(ref(storage, upload.storagePath), pngBytes, { contentType: 'image/png', customMetadata: { fileId: upload.fileId, orderId } })).rejects.toMatchObject({ code: 'storage/unauthorized' });
-    expect(await call('completeOrderFileUpload', { atelierId: atelierA, orderId, fileId: upload.fileId })).toMatchObject({ status: 'ready', alreadyApplied: false });
+    expect(await uploadHttp(upload)).toMatchObject({ status: 'ready', alreadyApplied: true });
     expect(await call('completeOrderFileUpload', { atelierId: atelierA, orderId, fileId: upload.fileId })).toMatchObject({ status: 'ready', alreadyApplied: true });
-    const storedBytes = await getBytes(ref(storage, upload.storagePath));
+    const storedBytes = await downloadHttp(upload);
     expect(Buffer.from(storedBytes).equals(pngBytes)).toBe(true);
-    await expect(getDownloadURL(ref(storage, upload.storagePath))).rejects.toMatchObject({ code: 'storage/no-download-url' });
-    if (preValidationUrl) expect((await fetch(preValidationUrl)).ok).toBe(false);
+    await expect(getDownloadURL(ref(storage, upload.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
+    await expect(getBytes(ref(storage, upload.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
     const [metadata] = await bucket.file(upload.storagePath).getMetadata();
     expect(metadata.metadata?.firebaseStorageDownloadTokens).toBeFalsy();
     const ready = (await adminDb.doc(`ateliers/${atelierA}/orders/${orderId}/files/${upload.fileId}`).get()).data();
@@ -177,10 +231,9 @@ describe('Order file Functions and Storage in Firebase Emulator', () => {
   it.each(['image/png', 'image/jpeg', 'image/webp', 'application/pdf'])('rejects MIME-spoofed %s bytes and deletes the rejected object', async (contentType) => {
     await signIn(ownerA);
     const bytes = Buffer.from('This is not an image or PDF.');
-    const input = request({ contentType, size: bytes.length });
+    const input = request({ contentType, size: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') });
     const upload = await call<Upload>('createOrderFileUpload', input);
-    await uploadBytes(ref(storage, upload.storagePath), bytes, { contentType, customMetadata: { fileId: upload.fileId, orderId } });
-    await expect(call('completeOrderFileUpload', { atelierId: atelierA, orderId, fileId: upload.fileId })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+    await expect(uploadHttp(upload, bytes, contentType)).rejects.toMatchObject({ code: 'functions/failed-precondition' });
     expect((await adminDb.doc(`ateliers/${atelierA}/orders/${orderId}/files/${upload.fileId}`).get()).data()?.uploadStatus).toBe('rejected');
     expect((await bucket.file(upload.storagePath).exists())[0]).toBe(false);
     await expect(call('createOrderFileUpload', input)).rejects.toMatchObject({ code: 'functions/failed-precondition' });
@@ -202,17 +255,21 @@ describe('Order file Functions and Storage in Firebase Emulator', () => {
     expect(clientList.files.some((file) => file.id === shared.fileId)).toBe(true);
     expect(clientList.files.some((file) => file.id === internal.fileId || file.id === pending.fileId)).toBe(false);
     await expect(getDoc(doc(db, `ateliers/${atelierA}/orders/${orderId}/files/${shared.fileId}`))).rejects.toMatchObject({ code: 'permission-denied' });
-    expect(Buffer.from(await getBytes(ref(storage, shared.storagePath))).equals(pngBytes)).toBe(true);
+    expect((await downloadHttp(shared)).equals(pngBytes)).toBe(true);
+    await expect(downloadHttp(internal)).rejects.toMatchObject({ code: 'functions/permission-denied' });
     await expect(getBytes(ref(storage, internal.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
-    await expect(getDownloadURL(ref(storage, shared.storagePath))).rejects.toMatchObject({ code: 'storage/no-download-url' });
+    await expect(getDownloadURL(ref(storage, shared.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
     // Model a previously stored attachment carrying a residual public token.
-    await bucket.file(shared.storagePath).setMetadata({ metadata: { fileId: shared.fileId, orderId, firebaseStorageDownloadTokens: randomUUID() } });
-    const legacyUrl = await getDownloadURL(ref(storage, shared.storagePath));
+    const residualToken = randomUUID();
+    await bucket.file(shared.storagePath).setMetadata({ metadata: { fileId: shared.fileId, orderId, firebaseStorageDownloadTokens: residualToken } });
+    const legacyUrl = `http://${host}:${storagePort}/v0/b/${bucketName}/o/${encodeURIComponent(shared.storagePath)}?alt=media&token=${residualToken}`;
     expect((await fetch(legacyUrl)).ok).toBe(true);
     await signIn(stranger);
+    await expect(downloadHttp(shared)).rejects.toMatchObject({ code: 'functions/permission-denied' });
     await expect(call('listOrderFiles', { atelierId: atelierA, orderId })).rejects.toMatchObject({ code: 'functions/permission-denied' });
     await expect(getBytes(ref(storage, shared.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
     await signIn(ownerB);
+    await expect(downloadHttp(shared)).rejects.toMatchObject({ code: 'functions/permission-denied' });
     await expect(getBytes(ref(storage, shared.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
     await expect(call('completeOrderFileUpload', { atelierId: atelierA, orderId, fileId: shared.fileId })).rejects.toMatchObject({ code: 'functions/permission-denied' });
 
@@ -223,6 +280,7 @@ describe('Order file Functions and Storage in Firebase Emulator', () => {
     await expect(call('updateOrderFileAccess', { ...revoke, visibleToClient: true })).rejects.toMatchObject({ code: 'functions/already-exists' });
     await expect(call('updateOrderFileAccess', access(shared.fileId, 0, true))).rejects.toMatchObject({ code: 'functions/failed-precondition' });
     await signIn(clientA);
+    await expect(downloadHttp(shared)).rejects.toMatchObject({ code: 'functions/permission-denied' });
     await expect(getBytes(ref(storage, shared.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
     expect((await fetch(legacyUrl)).ok).toBe(false);
     expect((await call<{ files: FileView[] }>('listOrderFiles', { atelierId: atelierA, orderId })).files.some((file) => file.id === shared.fileId)).toBe(false);
@@ -234,7 +292,7 @@ describe('Order file Functions and Storage in Firebase Emulator', () => {
     await signIn(clientA);
     await expect(getBytes(ref(storage, shared.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
     await signIn(ownerA);
-    expect(Buffer.from(await getBytes(ref(storage, shared.storagePath))).equals(pngBytes)).toBe(true);
+    expect((await downloadHttp(shared)).equals(pngBytes)).toBe(true);
     await expect(deleteObject(ref(storage, shared.storagePath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
     expect(await call('updateOrderFileAccess', access(shared.fileId, 3, false))).toMatchObject({ revision: 4 });
     const audits = await adminDb.collection('auditLogs').where('atelierId', '==', atelierA).where('action', '==', 'order.file_access_updated').get();
@@ -258,10 +316,9 @@ describe('Order file Functions and Storage in Firebase Emulator', () => {
     const pendingInput = request({ originalName: 'nao-enviado.png', visibleToClient: true });
     const pending = await call<Upload>('createOrderFileUpload', pendingInput);
     const rejectBytes = Buffer.from('Invalid image content.');
-    const rejectedInput = request({ originalName: 'recusado.png', size: rejectBytes.length });
+    const rejectedInput = request({ originalName: 'recusado.png', size: rejectBytes.length, sha256: createHash('sha256').update(rejectBytes).digest('hex') });
     const rejected = await call<Upload>('createOrderFileUpload', rejectedInput);
-    await uploadBytes(ref(storage, rejected.storagePath), rejectBytes, { contentType: 'image/png', customMetadata: { fileId: rejected.fileId, orderId } });
-    await expect(call('completeOrderFileUpload', { atelierId: atelierA, orderId, fileId: rejected.fileId })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+    await expect(uploadHttp(rejected, rejectBytes)).rejects.toMatchObject({ code: 'functions/failed-precondition' });
     await signIn(reader);
     await expect(call('updateOrderFileAccess', access(pending.fileId, 0, false, true))).rejects.toMatchObject({ code: 'functions/permission-denied' });
     await signIn(ownerA);

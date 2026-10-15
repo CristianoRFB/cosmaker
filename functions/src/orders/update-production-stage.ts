@@ -139,7 +139,7 @@ export const updateProductionStage = onCall(async (call) => {
     });
     transaction.update(orderRef, { status: nextOrderStatus, progress: weightedProgress, updatedAt: now });
     transaction.create(stageRef.collection('updates').doc(), { actorId: call.auth!.uid, action, version: version + 1, before: { status: priorStatus, progress: Number(currentStage.progress) || 0 }, after: { status: nextStageStatus, progress: nextStageProgress }, note: note || null, requestId, createdAt: now });
-    if (nextOrderStatus !== order.status) transaction.create(orderRef.collection('statusHistory').doc(), { status: nextOrderStatus, actorId: call.auth!.uid, source: `production_stage_${action}`, stageId, createdAt: now });
+    transaction.create(orderRef.collection('statusHistory').doc(), { status: nextOrderStatus, actorId: call.auth!.uid, source: `production_stage_${action}`, stageId, stageName: currentStage.name, progress: nextStageProgress, createdAt: now });
     transaction.create(adminDb.collection('auditLogs').doc(), { actorId: call.auth!.uid, atelierId, action: `production.stage_${action}`, entity: 'order', entityId: orderId, before: { stageId, status: priorStatus, progress: currentStage.progress, orderStatus: order.status }, after: { stageId, status: nextStageStatus, progress: nextStageProgress, orderStatus: nextOrderStatus }, timestamp: FieldValue.serverTimestamp() });
     const result = { orderId, stageId, status: nextOrderStatus, progress: weightedProgress, version: version + 1, replayed: false };
     if (operationRef) transaction.create(operationRef, { action, actorId: call.auth!.uid, requestId, fingerprint, result, createdAt: now });

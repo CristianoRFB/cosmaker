@@ -16,6 +16,8 @@ const sources: Record<string, string> = {
   production_stage_start: 'Etapa iniciada', production_stage_progress: 'Progresso registrado',
   production_stage_complete: 'Etapa concluída', production_stage_block: 'Etapa bloqueada',
   client_production_approval: 'Resposta do cliente à produção',
+  client_approved_production_stage: 'Etapa aprovada pelo cliente', client_requested_production_adjustment: 'Ajustes de produção solicitados pelo cliente',
+  production_stage_cancel_approval: 'Solicitação de aprovação cancelada pela equipe',
   change_request_proposed: 'Alteração de acordo proposta', change_request_approved: 'Alteração aprovada pelo cliente',
   change_request_rejected: 'Alteração recusada pelo cliente', change_request_changes_requested: 'Ajustes solicitados pelo cliente',
   change_request_applied: 'Acordo aprovado aplicado', change_request_cancelled: 'Alteração cancelada',

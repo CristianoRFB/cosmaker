@@ -15,6 +15,7 @@ const suites = {
   'order-files': 'tests/integration/order-files-functions.test.ts',
   'order-changes': 'tests/integration/order-change-functions.test.ts',
   'production-configuration': 'tests/integration/production-configuration-functions.test.ts',
+  orders: 'tests/integration/order-files-functions.test.ts tests/integration/order-change-functions.test.ts tests/integration/production-configuration-functions.test.ts tests/integration/scheduling-functions.test.ts',
 };
 const suiteName = process.argv[2] || 'commercial';
 const testFile = suites[suiteName];
@@ -22,8 +23,10 @@ if (!testFile) {
   console.error(`Suíte inválida: ${suiteName}. Opções: ${Object.keys(suites).join(', ')}.`);
   process.exit(2);
 }
-const testCommand = `"${process.execPath}" "${vitestCli}" run ${testFile}`;
-const withStorage = ['order-files', 'production-configuration'].includes(suiteName);
+const testCommand = `"${process.execPath}" "${vitestCli}" run ${testFile}${suiteName === 'orders' ? ' --no-file-parallelism --maxWorkers=1' : ''}`;
+const withStorage = ['order-files', 'production-configuration', 'orders'].includes(suiteName);
+// These callable/HTTP suites do not invoke scheduled handlers. Scheduler gates opt in explicitly.
+const withPubsub = process.env.COSMAKER_TEST_PUBSUB === 'true';
 
 function findAvailablePort() {
   return new Promise((resolvePort, reject) => {
@@ -41,7 +44,7 @@ const ports = {
   auth: await findAvailablePort(),
   functions: await findAvailablePort(),
   firestore: await findAvailablePort(),
-  pubsub: await findAvailablePort(),
+  ...(withPubsub ? { pubsub: await findAvailablePort() } : {}),
   ...(withStorage ? { storage: await findAvailablePort() } : {}),
 };
 const baseConfig = JSON.parse(await readFile(new URL('../firebase.commercial-test.json', import.meta.url), 'utf8'));
@@ -57,7 +60,7 @@ try {
       'emulators:exec',
       '--config', configName,
       '--project', 'demo-cosmaker',
-      '--only', withStorage ? 'auth,firestore,functions,pubsub,storage' : 'auth,firestore,functions,pubsub',
+      '--only', ['auth', 'firestore', 'functions', ...(withPubsub ? ['pubsub'] : []), ...(withStorage ? ['storage'] : [])].join(','),
       testCommand,
     ], {
       stdio: 'inherit',

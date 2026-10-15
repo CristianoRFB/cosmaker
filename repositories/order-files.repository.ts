@@ -40,7 +40,7 @@ async function authenticatedFileRequest(name: string, atelierId: string, orderId
     : `https://${region}-${projectId}.cloudfunctions.net`;
   const url = new URL(`${base}/${name}`);
   url.searchParams.set('atelierId', atelierId); url.searchParams.set('orderId', orderId); url.searchParams.set('fileId', fileId);
-  const response = await fetch(url, { ...options, cache: 'no-store', headers: { ...options.headers, Authorization: `Bearer ${await user.getIdToken()}` } });
+  const response = await fetch(url, { ...options, signal: options.signal ?? AbortSignal.timeout(120_000), cache: 'no-store', headers: { ...options.headers, Authorization: `Bearer ${await user.getIdToken()}` } });
   if (!response.ok) {
     const payload = await response.json().catch(() => null) as { error?: { message?: string; code?: string; details?: unknown } } | null;
     throw Object.assign(new Error(payload?.error?.message || 'Não foi possível acessar o arquivo. Tente novamente.'), { code: `functions/${payload?.error?.code || 'unknown'}`, details: payload?.error?.details });

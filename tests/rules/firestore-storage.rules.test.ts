@@ -371,7 +371,7 @@ describe('Firestore and Storage tenant rules', () => {
     }
   });
 
-  it('allows registered attachment uploads once and revokes client reads when sharing or archival changes', async () => {
+  it('keeps attachment bytes server-only regardless of role, sharing or archival state', async () => {
     const bytes = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0]);
     const path = 'ateliers/atelier-a/orders/order-a/attachments/file-registered';
     const filePath = 'ateliers/atelier-a/orders/order-a/files/file-registered';
@@ -395,14 +395,17 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(uploadBytes(ref(tenantB.storage(), path), bytes, metadata));
     await assertFails(uploadBytes(ref(owner.storage(), path), bytes, { ...metadata, customMetadata: { fileId: 'wrong', orderId: 'order-a' } }));
     await assertFails(uploadBytes(ref(owner.storage(), path), bytes.subarray(0, 8), metadata));
-    await assertSucceeds(uploadBytes(ref(owner.storage(), path), bytes, metadata));
+    await assertFails(uploadBytes(ref(owner.storage(), path), bytes, metadata));
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await uploadBytes(ref(context.storage(), path), bytes, metadata);
+    });
     await assertFails(uploadBytes(ref(owner.storage(), path), bytes, metadata));
     await assertFails(deleteObject(ref(owner.storage(), path)));
     await assertFails(getBytes(ref(client.storage(), path)));
     await environment.withSecurityRulesDisabled(async (context) => {
       await updateDoc(doc(context.firestore(), filePath), { uploadStatus: 'ready' });
     });
-    await assertSucceeds(getBytes(ref(client.storage(), path)));
+    await assertFails(getBytes(ref(client.storage(), path)));
     await assertFails(getBytes(ref(noPermission.storage(), path)));
     await assertFails(getBytes(ref(tenantB.storage(), path)));
     await assertFails(getBytes(ref(unauthenticated.storage(), path)));
@@ -410,11 +413,11 @@ describe('Firestore and Storage tenant rules', () => {
       await updateDoc(doc(context.firestore(), filePath), { visibleToClient: false });
     });
     await assertFails(getBytes(ref(client.storage(), path)));
-    await assertSucceeds(getBytes(ref(owner.storage(), path)));
+    await assertFails(getBytes(ref(owner.storage(), path)));
     await environment.withSecurityRulesDisabled(async (context) => {
       await updateDoc(doc(context.firestore(), filePath), { visibleToClient: true, archived: true });
     });
     await assertFails(getBytes(ref(client.storage(), path)));
-    await assertSucceeds(getBytes(ref(owner.storage(), path)));
+    await assertFails(getBytes(ref(owner.storage(), path)));
   });
 });

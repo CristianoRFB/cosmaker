@@ -31,8 +31,7 @@ export const respondToProductionApproval = onCall(async (call) => {
     const order = orderSnapshot.data()!;
     const approval = approvalSnapshot.data()!;
     const email = typeof identity.email === 'string' ? identity.email.trim().toLowerCase() : '';
-    if (!email || String(order.email).trim().toLowerCase() !== email
-      || (typeof order.clientUserId === 'string' && order.clientUserId !== call.auth!.uid)) throw new HttpsError('permission-denied', 'Este pedido não pertence à sua conta verificada.');
+    if (!email || (typeof order.clientUserId === 'string' && order.clientUserId !== call.auth!.uid)) throw new HttpsError('permission-denied', 'Este pedido não pertence à sua conta verificada.');
     let linked = order.clientUserId === call.auth!.uid;
     if (typeof order.clientId === 'string' && order.clientId) {
       const clientRecord = await transaction.get(adminDb.doc(`ateliers/${atelierId}/clients/${productionId(order.clientId, 'Cliente vinculado')}`));

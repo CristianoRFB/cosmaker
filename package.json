@@ -17,6 +17,7 @@
     "test:order-files": "npm run functions:build && node scripts/test-commercial-emulator.mjs order-files",
     "test:order-changes": "npm run functions:build && node scripts/test-commercial-emulator.mjs order-changes",
     "test:production-configuration": "npm run functions:build && node scripts/test-commercial-emulator.mjs production-configuration",
+    "test:orders": "npm run functions:build && node scripts/test-commercial-emulator.mjs orders",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "screenshots": "node scripts/capture-screenshots.mjs",

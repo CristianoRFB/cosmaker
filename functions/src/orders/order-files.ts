@@ -78,7 +78,15 @@ export const listOrderFiles = onCall(async (call) => {
     const staff = profile.data()?.active === true && profile.data()?.accountType === 'atelier_member' && profile.data()?.atelierId === atelierId
       && membership?.active === true && (['owner', 'admin'].includes(String(membership.role)) || permissions.includes('orders:read') || permissions.includes('orders:manage'));
     const orderData = order.data()!;
-    const owns = orderData.clientUserId === call.auth!.uid || (typeof token.email === 'string' && typeof orderData.email === 'string' && token.email.toLowerCase() === orderData.email.toLowerCase());
+    const clientId = id(orderData.clientId) ? orderData.clientId : null;
+    const client = clientId ? await transaction.get(adminDb.doc(`ateliers/${atelierId}/clients/${clientId}`)) : null;
+    const orderUid = id(orderData.clientUserId) ? orderData.clientUserId : null;
+    const profileUid = id(client?.data()?.userId) ? String(client!.data()!.userId) : null;
+    const linkedUid = orderUid ?? profileUid;
+    const conflictingLink = orderUid && profileUid && orderUid !== profileUid;
+    const owns = profile.data()?.accountType === 'client' && !conflictingLink && (linkedUid
+      ? linkedUid === call.auth!.uid
+      : typeof token.email === 'string' && typeof orderData.email === 'string' && token.email.toLowerCase() === orderData.email.toLowerCase());
     if (profile.data()?.active !== true || (!staff && !owns)) throw new HttpsError('permission-denied', 'O pedido não está disponível para esta conta.');
     const snapshot = await transaction.get(orderRef.collection('files').orderBy('createdAt', 'asc'));
     const files = snapshot.docs.map((document) => fileView(document.id, document.data(), atelierId));
@@ -143,18 +151,15 @@ export const completeOrderFileUpload = onCall(async (call) => {
   let bytes: Buffer;
   try {
     [metadata] = await object.getMetadata();
-    [bytes] = await object.download({ start: 0, end: 11 });
+    if (Number(metadata.size) > maxBytes) throw new Error('oversized');
+    [bytes] = await object.download();
   } catch { throw new HttpsError('failed-precondition', 'O arquivo não chegou ao armazenamento. Tente enviar novamente.', { reason: 'file_not_received' }); }
   const type = String(metadata.contentType ?? '');
-  const signature = type === 'application/pdf' ? bytes.toString('ascii', 0, 5) === '%PDF-'
-    : type === 'image/png' ? bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))
-      : type === 'image/jpeg' ? bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff
-        : type === 'image/webp' && bytes.length >= 12 && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP';
-  const valid = signature && acceptedTypes.has(type) && Number(metadata.size) === snapshot.size && type === snapshot.contentType
+  const valid = validOrderFileBytes(bytes, type) && orderFileHash(bytes) === snapshot.sha256 && Number(metadata.size) === snapshot.size && type === snapshot.contentType
     && metadata.metadata?.fileId === fileId && metadata.metadata?.orderId === orderId;
   if (valid) {
     // Download tokens bypass Storage Rules. Ready attachments are read with authenticated bytes.
-    await object.setMetadata({ metadata: { fileId, orderId, firebaseStorageDownloadTokens: null } });
+    await revokeOrderFileTokens(path);
   }
   const auditRef = adminDb.collection('auditLogs').doc();
   const result = await adminDb.runTransaction(async (transaction) => {
@@ -194,14 +199,7 @@ export const updateOrderFileAccess = onCall(async (call) => {
         throw new HttpsError('failed-precondition', 'O arquivo não pertence ao fluxo de anexos deste pedido.');
       }
     });
-    try {
-      await adminStorage.bucket().file(`ateliers/${atelierId}/orders/${orderId}/attachments/${fileId}`)
-        .setMetadata({ metadata: { fileId, orderId, firebaseStorageDownloadTokens: null } });
-    } catch (failure) {
-      if (!(failure && typeof failure === 'object' && 'code' in failure && Number(failure.code) === 404)) {
-        throw new HttpsError('unavailable', 'Não foi possível revogar os links anteriores deste arquivo. Tente novamente.');
-      }
-    }
+    await revokeOrderFileTokens(`ateliers/${atelierId}/orders/${orderId}/attachments/${fileId}`);
   }
   return adminDb.runTransaction(async (transaction) => {
     await manager(transaction, atelierId, call.auth!.uid);
