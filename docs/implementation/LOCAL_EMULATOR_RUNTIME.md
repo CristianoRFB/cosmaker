@@ -16,4 +16,4 @@ Este bundle é específico do Emulator. Para um build de outro ambiente, use `np
 
 ## Validação e evidências
 
-O lançador recusa modos diferentes de `dev`, `build` e `start`. O histórico de execução e os resultados de build/E2E estão em [MASTER_FINALIZATION_PROGRESS.md](MASTER_FINALIZATION_PROGRESS.md). A compilação e o smoke do runtime compilado estão em validação neste checkpoint; não são prova de staging ou produção.
+O lançador recusa modos diferentes de `dev`, `build` e `start`. Build, smoke e E2Es desktop 3/3 e mobile 2/2 passaram em 2026-10-19. `COSMAKER_E2E_MOBILE=true` aplica viewport 390×844 e toque às sessões independentes dos workflows de pedidos. O histórico está em [MASTER_FINALIZATION_PROGRESS.md](MASTER_FINALIZATION_PROGRESS.md). Estes resultados são locais e não provam staging ou produção.

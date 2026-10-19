@@ -17,8 +17,8 @@ Mudanças financeiras exigem a permissão financeira além da gestão do pedido.
 
 ## Evidências e pendências
 
-`npm run test:orders`: 30/30 testes de integração no Emulator em 2026-10-15 (11 arquivos, 7 revisões, 9 produção e 3 agenda). `npm run test:rules`: 19/19. Unitários: 109/109. Functions build, TypeScript, lint e Next build passaram.
+Gate de 2026-10-19: `npm run test:orders` 32/32 (11 anexos, 7 revisões, 11 produção/ownership e 3 agenda); Rules 21/21; CI Node 22 com 109/109 unitários e builds Functions/Next. TypeScript, lint e build local também passaram.
 
-As duas jornadas Playwright de configuração/revisão e de arquivos passaram em 2026-10-15 (2/2, exit 0). Conferem alterações persistidas, snapshots, financeiro, histórico, bytes de download, revogação, mobile e isolamento A×B. A regressão do orçamento original também passou (1/1, exit 0, 5,0 min), incluindo medida atualizada no cadastro versus snapshot preservado, entrada manual, foto, aprovação de produção e histórico CRM. O acesso por URLs permanentes dos fluxos legados de fotos de produção e referências ainda requer revisão antes do aceite global de privacidade. O estado atualizado e os comandos executados estão em [MASTER_FINALIZATION_PROGRESS.md](../../docs/implementation/MASTER_FINALIZATION_PROGRESS.md).
+Playwright desktop 3/3 e mobile 2/2 passaram na retomada, com efeitos persistidos e isolamento A×B. Fotos usam Blobs autenticados; a regressão confere o protocolo Blob e a imagem decodificada antes da aprovação. A listagem do cliente valida UID e projeta campos no servidor, mantendo candidatos legados sem contornar vínculos existentes. Referências pré-pedido e revogação global de URLs históricas permanecem no gate transversal de privacidade. Evidências em [MASTER_FINALIZATION_PROGRESS.md](../../docs/implementation/MASTER_FINALIZATION_PROGRESS.md).
 
 Nenhum deploy, migração real, cobrança ou envio externo é executado por esses fluxos.
