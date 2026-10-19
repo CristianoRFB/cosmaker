@@ -5,7 +5,7 @@ import { adminAuth, adminDb, adminStorage } from '../admin';
 import { ids, manager } from './order-files';
 import { orderFileHash, orderFileMaxBytes, orderFilePath, revokeOrderFileTokens, validOrderFileBytes } from './order-file-storage';
 
-async function identity(request: Request) {
+export async function identity(request: Request) {
   const bearer = request.get('authorization')?.match(/^Bearer (\S+)$/)?.[1];
   if (!bearer) throw new HttpsError('unauthenticated', 'Entre na sua conta para acessar arquivos.');
   let token;
@@ -15,7 +15,7 @@ async function identity(request: Request) {
   return token;
 }
 
-function failure(error: unknown) {
+export function failure(error: unknown) {
   const known = error instanceof HttpsError ? error : new HttpsError('internal', 'Não foi possível concluir a transferência do arquivo.');
   const statuses: Record<string, number> = { 'unauthenticated': 401, 'permission-denied': 403, 'not-found': 404, 'invalid-argument': 400, 'failed-precondition': 409, 'already-exists': 409, 'aborted': 409, 'resource-exhausted': 413, 'unavailable': 503 };
   return { status: statuses[known.code] ?? 500, error: { code: known.code, message: known.message, ...(known.details === undefined ? {} : { details: known.details }) } };

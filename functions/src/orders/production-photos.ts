@@ -4,6 +4,7 @@ import { adminDb, adminStorage } from '../admin';
 import { requireOrderManager, requireVerifiedIdentity } from './access';
 import { requireNonDemoWorkspace } from '../commercial/access';
 import { productionId, readProductionManager } from './production-configuration';
+import { revokeOrderFileTokens } from './order-file-storage';
 
 const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const maxPhotoBytes = 10 * 1024 * 1024;
@@ -79,7 +80,10 @@ export const completeProductionPhotoUpload = onCall(async (call) => {
     if (current.storagePath !== `ateliers/${data.atelierId}/orders/${data.orderId}/production/${data.photoId}`) throw new HttpsError('failed-precondition', 'O arquivo não pertence ao pedido.');
     return current;
   });
-  if (photo.uploadStatus === 'ready') return { photoId: data.photoId, status: 'ready' as const };
+  if (photo.uploadStatus === 'ready') {
+    await revokeOrderFileTokens(String(photo.storagePath));
+    return { photoId: data.photoId, status: 'ready' as const };
+  }
   if (photo.uploadStatus !== 'pending') throw new HttpsError('failed-precondition', 'Este upload não está pendente.');
 
   const file = adminStorage.bucket().file(String(photo.storagePath));
@@ -112,6 +116,9 @@ export const completeProductionPhotoUpload = onCall(async (call) => {
     throw new HttpsError('failed-precondition', 'A imagem enviada não passou pela validação de tamanho, tipo ou conteúdo.');
   }
 
+  await revokeOrderFileTokens(String(photo.storagePath));
+  const [privateMetadata] = await file.getMetadata();
+  objectMetadata.generation = privateMetadata.generation;
   const auditRef = adminDb.collection('auditLogs').doc();
   await adminDb.runTransaction(async (transaction) => {
     const [actor, current, order] = await Promise.all([

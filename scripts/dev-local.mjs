@@ -2,7 +2,12 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const nextCli = fileURLToPath(new URL('../node_modules/next/dist/bin/next', import.meta.url));
-const child = spawn(process.execPath, [nextCli, 'dev', '--hostname', '127.0.0.1'], {
+const mode = process.argv[2] || 'dev';
+if (!['dev', 'build', 'start'].includes(mode)) {
+  throw new Error('Modo local inválido. Use dev, build ou start, sempre com o projeto demo-cosmaker nos emuladores.');
+}
+const argumentsForNext = mode === 'build' ? ['build'] : [mode, '--hostname', '127.0.0.1'];
+const child = spawn(process.execPath, [nextCli, ...argumentsForNext], {
   stdio: 'inherit',
   env: {
     ...process.env,

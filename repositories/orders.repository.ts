@@ -1,6 +1,6 @@
 import { collection, collectionGroup, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where, type QueryConstraint } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes } from 'firebase/storage';
 import { requireFirebase } from '@/services/firebase/firebase.client';
 import type { Order, OrderFile, OrderHistoryEntry, OrderLineItem, OrderRecord } from '@/types/order';
 import type { Measurement } from '@/types/measurement';
@@ -46,7 +46,7 @@ export async function listClientOrders(email: string) {
 }
 
 export async function getOrder(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier', includePayments = true): Promise<OrderRecord | null> {
-  const { db, storage } = requireFirebase();
+  const { db } = requireFirebase();
   const orderRef = doc(db, 'ateliers', atelierId, 'orders', orderId);
   const orderSnapshot = await getDoc(orderRef);
   if (!orderSnapshot.exists()) return null;
@@ -64,11 +64,7 @@ export async function getOrder(atelierId: string, orderId: string, viewer: 'atel
     getDocs(query(collection(orderRef, 'approvals'), orderBy('requestedAt', 'asc'))),
     includePayments ? getDocs(query(collection(orderRef, 'payments'), orderBy('createdAt', 'asc'))) : Promise.resolve(null),
   ]);
-  const productionPhotos = await Promise.all(photoSnapshots.docs.map(async (snapshot) => {
-    const photo = { id: snapshot.id, ...snapshot.data() } as import('@/types/production').ProductionPhoto;
-    try { return { ...photo, downloadUrl: await getDownloadURL(ref(storage, photo.storagePath)) }; }
-    catch { return { ...photo, downloadUrl: null }; }
-  }));
+  const productionPhotos = photoSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data(), downloadUrl: null }) as import('@/types/production').ProductionPhoto);
   return {
     order: { id: orderSnapshot.id, atelierId, ...orderSnapshot.data() } as Order,
     items: itemSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as OrderLineItem),

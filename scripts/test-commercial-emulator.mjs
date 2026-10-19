@@ -57,6 +57,7 @@ try {
   const exitCode = await new Promise((resolveExit, reject) => {
     const child = spawn(process.execPath, [
       firebaseCli,
+      ...(process.env.COSMAKER_TEST_DEBUG === 'true' ? ['--debug'] : []),
       'emulators:exec',
       '--config', configName,
       '--project', 'demo-cosmaker',

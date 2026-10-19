@@ -36,13 +36,15 @@ async function signInAsAtelier(page: Page) {
 }
 
 test('cliente aprova orçamento e o backend cria pedido com valores imutáveis', async ({ page }) => {
-  test.setTimeout(300_000);
+  // This journey crosses client/staff sessions and many cold Next development routes.
+  // Per-action and assertion timeouts still bound individual failures.
+  test.setTimeout(600_000);
   await signInAsClient(page);
   await page.goto(`/cliente/orcamentos/${encodeURIComponent(quoteId)}?atelierId=${encodeURIComponent(atelierId)}`);
   await expect(page.getByRole('heading', { name: 'Proposta de cosplay' })).toBeVisible();
   await page.getByRole('button', { name: 'Aprovar proposta' }).click();
   await page.getByRole('button', { name: 'Aprovar orçamento' }).click();
-  await expect(page.getByText('Aprovação registrada')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('Aprovação registrada')).toBeVisible();
 
   const appName = `quote-e2e-${Date.now()}`;
   const app = initializeApp({ projectId }, appName);
@@ -73,9 +75,12 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   await expect(page.getByRole('link', { name: /Ficha principal/ })).toBeVisible();
   await page.getByRole('link', { name: /Ficha principal/ }).click();
   await expect(page.getByRole('heading', { name: 'Ficha principal' })).toBeVisible();
-  await page.getByLabel('Valor').first().fill('101');
-  await page.getByRole('button', { name: 'Atualizar medida' }).first().click();
-  await expect(page.getByLabel('Valor').first()).toHaveValue('101');
+  const chestEditor = page.locator('form').filter({ has: page.getByText('Tórax', { exact: true }) });
+  await chestEditor.getByRole('spinbutton', { name: 'Valor', exact: true }).fill('101');
+  await chestEditor.getByRole('button', { name: 'Atualizar medida' }).click();
+  await expect(chestEditor.getByRole('spinbutton', { name: 'Valor', exact: true })).toHaveValue('101');
+  const editedProfileId = new URL(page.url()).pathname.split('/').at(-1);
+  await expect.poll(async () => (await db.doc(`ateliers/${atelierId}/measurementProfiles/${editedProfileId}/measurements/chest`).get()).get('value')).toBe(101);
   await page.goto(`/cliente/pedidos/${encodeURIComponent(quoteId)}?atelierId=${encodeURIComponent(atelierId)}`);
   await expect(page.getByText('88 cm')).toBeVisible();
 
@@ -94,7 +99,7 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   await page.getByRole('button', { name: 'Registrar recebimento' }).click();
   await page.getByRole('button', { name: 'Confirmar entrada' }).click();
   try {
-    await expect(page.getByText('Entrada registrada', { exact: false })).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText('Entrada registrada', { exact: false })).toBeVisible();
   } catch (error) {
     const message = error instanceof Error ? error.message : 'A confirmação não apareceu.';
     throw new Error(`${message}\nResposta HTTP do callable: ${JSON.stringify(depositResponses)}; falhas de rede: ${JSON.stringify(depositFailures)}`);
@@ -138,22 +143,25 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   });
   await page.getByRole('button', { name: 'Enviar foto' }).click();
   try {
-    await expect(page.getByText('Foto de progresso enviada.')).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText('Foto de progresso enviada.')).toBeVisible();
   } catch (error) {
     const message = error instanceof Error ? error.message : 'O envio da foto não foi confirmado.';
     throw new Error(`${message}\nChamadas do Storage Emulator: ${JSON.stringify(photoRequests)}`);
   }
   await page.getByRole('button', { name: 'Solicitar aprovação do cliente' }).click();
-  await expect(page.getByText('Etapa enviada para aprovação do cliente.')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('Etapa enviada para aprovação do cliente.')).toBeVisible();
 
   await page.goto('/logout');
   await expect(page).toHaveURL(/\/login$/);
   await signInAsClient(page);
   await page.goto(`/cliente/pedidos/${encodeURIComponent(quoteId)}?atelierId=${encodeURIComponent(atelierId)}`);
   await expect(page.getByRole('heading', { name: 'Sua aprovação é necessária' })).toBeVisible();
-  await expect(page.locator('section').filter({ hasText: 'A equipe enviou esta etapa para sua revisão.' }).getByRole('img', { name: 'Prova do ajuste da manga' })).toBeVisible({ timeout: 15_000 });
+  const approvalPhoto = page.locator('section').filter({ hasText: 'A equipe enviou esta etapa para sua revisão.' }).getByRole('img', { name: 'Prova do ajuste da manga' });
+  await expect(approvalPhoto).toBeVisible();
+  await expect(approvalPhoto).toHaveAttribute('src', /^blob:/);
+  await expect.poll(() => approvalPhoto.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   await page.getByRole('button', { name: 'Aprovar etapa' }).click();
-  await expect(page.getByText('Etapa aprovada. A equipe já pode continuar.')).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText('Etapa aprovada. A equipe já pode continuar.')).toBeVisible();
 
   order = await orderRef.get();
   expect(order.data()?.status).toBe('fitting');

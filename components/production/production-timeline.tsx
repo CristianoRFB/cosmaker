@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
+import { ProductionPhotoImage } from './production-photo-image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { OrderRecord } from '@/types/order';
 import type { ProductionStageStatus } from '@/types/production';
@@ -33,7 +33,7 @@ export function ProductionTimeline({ record, clientView = false }: { record: Ord
             {stage.notes ? <p className="mt-3 rounded-xl bg-slate-50 p-3 text-sm leading-5 text-slate-600">{stage.notes}</p> : null}
             {stage.requiresClientApproval ? <p className="mt-3 text-xs text-slate-500">Esta etapa exige sua aprovação{pendingApproval ? ' antes de a produção continuar' : ''}.</p> : null}
             {photos.length ? <div className="mt-4 grid grid-cols-2 gap-2">{photos.map((photo) => <figure className="overflow-hidden rounded-xl bg-slate-100" key={photo.id}>
-              {photo.downloadUrl ? <Image alt={photo.caption || `Progresso em ${stage.name}`} className="aspect-[4/3] w-full object-cover" height={480} src={photo.downloadUrl} unoptimized width={640} /> : <div aria-label="Imagem indisponível" className="grid aspect-[4/3] place-items-center text-xs text-slate-500">Imagem não disponível</div>}
+              <ProductionPhotoImage alt={photo.caption || `Progresso em ${stage.name}`} className="aspect-[4/3] w-full object-cover" height={480} photo={photo} width={640} />
               {photo.caption ? <figcaption className="p-2 text-xs leading-4 text-slate-600">{photo.caption}</figcaption> : null}
               {!clientView && !photo.visibleToClient ? <span className="block px-2 pb-2 text-[11px] font-semibold text-amber-700">Visível apenas ao ateliê</span> : null}
             </figure>)}</div> : null}

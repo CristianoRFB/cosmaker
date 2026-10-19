@@ -29,7 +29,7 @@ export async function updateOrderFileAccess(input: { atelierId: string; orderId:
   return (await httpsCallable(functions, 'updateOrderFileAccess')(input)).data;
 }
 
-async function authenticatedFileRequest(name: string, atelierId: string, orderId: string, fileId: string, options: RequestInit = {}) {
+export async function authenticatedFileRequest(name: string, atelierId: string, orderId: string, fileId: string, options: RequestInit = {}, idParameter: 'fileId' | 'photoId' = 'fileId') {
   const { app, auth } = requireFirebase();
   const user = auth.currentUser;
   if (!app || !user) throw new Error('Entre na sua conta para acessar arquivos.');
@@ -39,8 +39,9 @@ async function authenticatedFileRequest(name: string, atelierId: string, orderId
     ? `http://${process.env.NEXT_PUBLIC_FIREBASE_EMULATOR_HOST || '127.0.0.1'}:${process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_PORT || '5001'}/${projectId}/${region}`
     : `https://${region}-${projectId}.cloudfunctions.net`;
   const url = new URL(`${base}/${name}`);
-  url.searchParams.set('atelierId', atelierId); url.searchParams.set('orderId', orderId); url.searchParams.set('fileId', fileId);
-  const response = await fetch(url, { ...options, signal: options.signal ?? AbortSignal.timeout(120_000), cache: 'no-store', headers: { ...options.headers, Authorization: `Bearer ${await user.getIdToken()}` } });
+  url.searchParams.set('atelierId', atelierId); url.searchParams.set('orderId', orderId); url.searchParams.set(idParameter, fileId);
+  const timeoutSignal = AbortSignal.timeout(120_000);
+  const response = await fetch(url, { ...options, signal: options.signal ? AbortSignal.any([options.signal, timeoutSignal]) : timeoutSignal, cache: 'no-store', headers: { ...options.headers, Authorization: `Bearer ${await user.getIdToken()}` } });
   if (!response.ok) {
     const payload = await response.json().catch(() => null) as { error?: { message?: string; code?: string; details?: unknown } } | null;
     throw Object.assign(new Error(payload?.error?.message || 'Não foi possível acessar o arquivo. Tente novamente.'), { code: `functions/${payload?.error?.code || 'unknown'}`, details: payload?.error?.details });

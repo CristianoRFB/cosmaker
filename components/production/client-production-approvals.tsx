@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import { ProductionPhotoImage } from './production-photo-image';
 import { Check, MessageSquareText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -43,7 +43,7 @@ export function ClientProductionApprovals({ record, reload }: { record: OrderRec
           <h3 className="font-semibold text-slate-950">{approval.stageName}</h3>
           <p className="mt-1 text-sm text-slate-600">A equipe enviou esta etapa para sua revisão.</p>
           {photos.length ? <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">{photos.map((photo) => <figure className="overflow-hidden rounded-xl border border-white bg-white" key={photo.id}>
-            {photo.downloadUrl ? <Image alt={photo.caption || `Foto da etapa ${approval.stageName}`} className="aspect-square w-full object-cover" height={480} src={photo.downloadUrl} unoptimized width={480} /> : <div className="grid aspect-square place-items-center text-xs text-slate-500">Imagem não disponível</div>}
+            <ProductionPhotoImage alt={photo.caption || `Foto da etapa ${approval.stageName}`} className="aspect-square w-full object-cover" height={480} photo={photo} width={480} />
             {photo.caption ? <figcaption className="p-2 text-xs text-slate-600">{photo.caption}</figcaption> : null}
           </figure>)}</div> : <p className="mt-3 text-sm text-rose-700">As fotos desta aprovação ainda não estão disponíveis. Avise o ateliê para reenviá-las.</p>}
           <label className="mt-4 block text-sm font-medium text-slate-700" htmlFor={`approval-comment-${approval.id}`}>Comentário ou ajustes desejados</label>

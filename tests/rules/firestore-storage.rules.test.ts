@@ -326,7 +326,7 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(updateDoc(doc(member, 'ateliers/atelier-a'), { ownerId: 'finance-reader' }));
   });
 
-  it('restricts production image uploads to assigned staff and serves only visible photos to clients', async () => {
+  it('restricts production image uploads to staff and requires server byte reads for private evidence', async () => {
     const member = environment.authenticatedContext('member-a').storage();
     const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).storage();
     const visiblePath = 'ateliers/atelier-a/orders/order-a/production/photo-visible';
@@ -335,7 +335,9 @@ describe('Firestore and Storage tenant rules', () => {
     await assertSucceeds(uploadBytes(ref(member, pendingPath), new Uint8Array([1, 2, 3]), {
       contentType: 'image/png', customMetadata: { photoId: 'photo-upload', orderId: 'order-a' },
     }));
-    await assertSucceeds(getBytes(ref(client, visiblePath)));
+    await assertFails(getBytes(ref(client, visiblePath)));
+    await assertFails(getBytes(ref(member, visiblePath)));
+    await assertFails(getBytes(ref(member, privatePath)));
     await assertFails(getBytes(ref(client, privatePath)));
     await assertFails(uploadBytes(ref(client, 'ateliers/atelier-a/orders/order-a/production/unauthorized'), new Uint8Array([1]), {
       contentType: 'image/png', customMetadata: { photoId: 'unauthorized', orderId: 'order-a' },

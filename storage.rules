@@ -126,11 +126,8 @@ service firebase.storage {
       function photoPath() {
         return /databases/(default)/documents/ateliers/$(atelierId)/orders/$(orderId)/photos/$(photoId);
       }
-      allow read: if hasAtelierPermission(atelierId, 'orders:read')
-        || (ownVerifiedOrder(atelierId, orderId)
-          && firestore.exists(photoPath())
-          && firestore.get(photoPath()).data.uploadStatus == 'ready'
-          && firestore.get(photoPath()).data.visibleToClient == true);
+      // Private evidence is read through the authenticated byte endpoint.
+      allow read: if false;
       allow create: if hasAtelierPermission(atelierId, 'orders:manage')
         && !isDemoWorkspace(atelierId)
         && firestore.get(/databases/(default)/documents/ateliers/$(atelierId)/orders/$(orderId)).data.status in ['confirmed', 'scheduled', 'modeling', 'in_production', 'fitting', 'adjustments', 'finishing', 'paused', 'ready_to_ship', 'waiting_final_payment']
@@ -150,7 +147,7 @@ service firebase.storage {
     }
 
     match /ateliers/{atelierId}/orders/{orderId}/{area}/{fileName} {
-      allow read: if area != 'attachments' && hasAtelierPermission(atelierId, 'orders:read');
+      allow read: if !(area in ['attachments', 'production']) && hasAtelierPermission(atelierId, 'orders:read');
       allow create, update, delete: if false;
     }
 

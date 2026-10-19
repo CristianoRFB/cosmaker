@@ -24,6 +24,7 @@ export { createProductionPhotoUpload, completeProductionPhotoUpload } from './or
 export { listProductionBoard } from './orders/list-production-board';
 export { listOrderFiles, createOrderFileUpload, completeOrderFileUpload, updateOrderFileAccess } from './orders/order-files';
 export { uploadOrderFileBytes, downloadOrderFileBytes } from './orders/order-file-bytes';
+export { downloadProductionPhotoBytes } from './orders/production-photo-bytes';
 export { listOrderChangeRequests, proposeOrderChangeRequest, respondToOrderChangeRequest, applyOrderChangeRequest, cancelOrderChangeRequest } from './orders/change-requests';
 export { getOrderProductionConfiguration, saveOrderProductionConfiguration } from './orders/production-configuration';
 export {

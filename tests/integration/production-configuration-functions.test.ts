@@ -1,5 +1,6 @@
 import { createRequire } from 'node:module';
 import { randomUUID } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { initializeApp, deleteApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
@@ -121,6 +122,59 @@ afterAll(async () => {
 }, 60000);
 
 describe('configurable production callables', () => {
+  it('serves photo bytes only to current authorized viewers and revokes persistent legacy URLs', async () => {
+    await signIn(ownerA);
+    const { orderId, order } = await seedOrder('authenticated-photo');
+    await order.collection('productionStages').doc('stage-start').update({ status: 'in_progress' });
+    const photo = await call<{ photoId: string; storagePath: string }>('createProductionPhotoUpload', {
+      atelierId: atelierA, orderId, stageId: 'stage-start', originalName: 'private-proof.png', contentType: 'image/png', caption: 'Prova sintética', visibleToClient: true,
+    });
+    const bytes = await readFile(new URL('../fixtures/production-progress.png', import.meta.url));
+    const legacyToken = randomUUID();
+    await bucket.file(photo.storagePath).save(bytes, { resumable: false, metadata: { contentType: 'image/png', metadata: { photoId: photo.photoId, orderId, firebaseStorageDownloadTokens: legacyToken } } });
+    await call('completeProductionPhotoUpload', { atelierId: atelierA, orderId, photoId: photo.photoId });
+    const storageHost = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+    if (!storageHost) throw new Error('Photo byte integration requires the local Storage Emulator.');
+    const oldUrl = `http://${storageHost}/v0/b/${bucket.name}/o/${encodeURIComponent(photo.storagePath)}?alt=media&token=${legacyToken}`;
+    expect((await fetch(oldUrl)).ok).toBe(false);
+    const endpoint = new URL(`http://${emulatorHost}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || 15001}/${projectId}/us-central1/downloadProductionPhotoBytes`);
+    endpoint.searchParams.set('atelierId', atelierA); endpoint.searchParams.set('orderId', orderId); endpoint.searchParams.set('photoId', photo.photoId);
+    async function download(person?: Identity) {
+      if (person) await signIn(person);
+      return fetch(endpoint, { headers: person ? { Authorization: `Bearer ${await auth.currentUser!.getIdToken()}` } : {}, signal: AbortSignal.timeout(120_000) });
+    }
+    for (const viewer of [ownerA, reader, client]) {
+      const response = await download(viewer);
+      expect(response.status).toBe(200);
+      expect(response.headers.get('cache-control')).toBe('private, no-store');
+      expect(response.headers.get('content-type')).toContain('image/png');
+      expect(Buffer.from(await response.arrayBuffer()).equals(bytes)).toBe(true);
+    }
+    expect((await download()).status).toBe(401);
+    expect((await download(ownerB)).status).toBe(403);
+    expect((await download(foreignClient)).status).toBe(403);
+    const photoRef = order.collection('photos').doc(photo.photoId);
+    await photoRef.update({ visibleToClient: false });
+    expect((await download(client)).status).toBe(403);
+    expect((await download(reader)).status).toBe(200);
+    await photoRef.update({ visibleToClient: true });
+    await adminDb.doc(`users/${client.uid}`).update({ active: false });
+    try { expect((await download(client)).status).toBe(403); }
+    finally { await adminDb.doc(`users/${client.uid}`).update({ active: true }); }
+    await order.update({ clientUserId: foreignClient.uid });
+    expect((await download(client)).status).toBe(403);
+    expect((await download(foreignClient)).status).toBe(403);
+    await order.update({ clientUserId: client.uid });
+    await photoRef.update({ storagePath: `ateliers/${atelierB}/orders/${orderId}/production/${photo.photoId}` });
+    expect((await download(ownerA)).status).toBe(409);
+    await photoRef.update({ storagePath: photo.storagePath });
+    const ready = await photoRef.get();
+    await photoRef.update({ storageGeneration: 'invalid-generation' });
+    expect((await download(ownerA)).ok).toBe(false);
+    await photoRef.update({ storageGeneration: ready.get('storageGeneration') });
+    expect((await download(client)).status).toBe(200);
+  }, 180000);
+
   it('persists configuration, custom work, safe reorder/removal, assignment and idempotent snapshots', async () => {
     await signIn(ownerA);
     const { orderId, order } = await seedOrder('configure');
