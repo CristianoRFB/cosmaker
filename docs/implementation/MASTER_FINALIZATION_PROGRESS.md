@@ -2,6 +2,21 @@
 
 ## Retomada autônoma — 2026-10-19
 
+Checkpoint pendente salvo e confirmado no remoto: [`fed3faff2d61bda1c0a62dc98feb6a2e0e389c6b`](https://github.com/CristianoRFB/cosmaker/commit/fed3faff2d61bda1c0a62dc98feb6a2e0e389c6b), WIP com os 19 arquivos preservados. Correção de dependências do CI: [`6204172`](https://github.com/CristianoRFB/cosmaker/commit/6204172).
+
+| Gate da retomada | Resultado |
+| --- | --- |
+| CI do checkpoint WIP | FAILED: o workflow instalava somente dependências da raiz, e a checagem de tipos não encontrava `firebase-admin/firestore` importado pelos testes/política. Nenhum deploy foi executado. |
+| CI após correção `6204172` | PASS, [run 39303473178](https://github.com/CristianoRFB/cosmaker/actions/runs/39303473178): instalação de dependências da raiz e Functions, compilação Functions, build Next e 109/109 unitários em Node 22. |
+| `npm run test:orders` — rodada nova | PASS, 31/31 em 4 arquivos, exit 0, 189,08s: produção/fotos 10, agenda 3, revisões 7 e anexos 11. Log local `.local-orders-20261019.log`; dados exclusivamente sintéticos no Emulator. Este resultado é da retomada, sem promover a rodada interrompida anterior a PASS. |
+| TypeScript após perfil mobile | PASS, `npx tsc --noEmit`, exit 0. |
+| Runtime para E2E | Bundle local compilado existente respondeu 200 com meta `emulator`; Auth/Firestore/Functions/Storage locais iniciados, seed exclusivamente `demo-cosmaker` com exit 0. Desktop e mobile em execução/pendentes. |
+| E2E desktop antes do reforço de ownership | PASS, 3/3, exit 0, 2,5 min: produção/revisões, anexos/ACL e orçamento→pedido→entrada→foto Blob decodificada→aprovação→CRM. |
+| Prova adversarial de e-mail reutilizado (RED) | FAILED como esperado: novo teste recebeu acesso ao pedido vinculado a outro UID. 19/20 demais resultados: 19 passaram, 1 reproduziu a falha (`Expected request to fail, but it succeeded`). Correção necessária antes do aceite F1.5. |
+| Reforço de ownership do pedido | Implementada listagem server-side com projeção explícita, prioridade de UID e verificação de vínculo de cliente, tenant/perfil ativos; consulta bruta collection-group de pedidos negada. Rules das leituras do pedido e seus metadados usam perfil ativo e staff verificado, impedindo e-mail antigo de contornar vínculo forte. Legado sem UID continua elegível por e-mail verificado somente sem outro vínculo forte. Índice por `clientUserId` preparado, sem deploy. |
+| Rules após reforço (GREEN) | PASS, 21/21, exit 0, 17,24s. Cobre e-mail reutilizado, conflito de UIDs, perfil inativo, staff não verificado e tenant suspenso, além dos 19 casos anteriores. Uma execução intermediária teve 20/21 porque uma fixture de staff não declarava `email_verified`; fixture corrigida para a identidade verificada exigida. |
+| Lint/TypeScript no reforço | Primeira checagem detectou um `let` desnecessário e dois símbolos não usados; corrigidos. Repetição passou sem erros, com TypeScript exit 0. |
+
 - Checkout preservado na branch `codex/cosmaker-master-finalizacao`, HEAD `364f5ccabe7e5dc74a7061bc5e17d497551bfb6c`. `git fetch origin` confirmou 0 commits à frente/atrás; os 19 arquivos locais pendentes foram mantidos integralmente.
 - Checkpoint WIP de preservação autorizado pelo proprietário. Varredura dos 19 arquivos não encontrou padrões de chaves privadas, tokens GitHub, credenciais AWS, Stripe live ou chaves Google reais. Os testes usam identidades sintéticas e emuladores; logs locais, `.env`, artefatos e credenciais não entram no commit.
 - Publicação: único workflow local/remoto ativo é `.github/workflows/ci.yml`, somente instalação, build e unitários. A API GitHub retornou zero webhooks e nenhum deployment nos resultados consultados. Não há comando de deploy neste checkpoint; push somente à branch de desenvolvimento, sem merge/force-push.
@@ -12,7 +27,7 @@
 
 `PRODUCTION_MIGRATION=NOT_RUN` · `PRODUCTION_DEPLOY=NOT_RUN` · `LIVE_BILLING=NOT_ENABLED` · `STAGING_EXECUTION=NOT_AUTHORIZED`
 
-Última atualização: 2026-10-15 — checkpoint WIP solicitado pelo proprietário para envio imediato ao GitHub; F1.1 a F1.4 validados e F1.5 em implementação/validação.
+Última atualização: 2026-10-19 — checkpoint pendente preservado no GitHub; F1.1 a F1.4 validados e F1.5 fechando ownership, fotos autenticadas e gates desktop/mobile.
 
 ## Checkpoint imediato solicitado pelo proprietário — 2026-10-15
 

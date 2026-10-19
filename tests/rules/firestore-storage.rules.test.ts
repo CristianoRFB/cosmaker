@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest';
 import { assertFails, assertSucceeds, initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import { collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { deleteObject, getBytes, ref, uploadBytes } from 'firebase/storage';
@@ -48,6 +48,9 @@ beforeEach(async () => {
       setDoc(doc(db, 'publicAtelierSlugs/atelier-a'), { slug: 'atelier-a', atelierId: 'atelier-a' }),
       setDoc(doc(db, 'publicAtelierSlugs/atelier-b'), { slug: 'atelier-b', atelierId: 'atelier-b' }),
       setDoc(doc(db, 'ateliers/atelier-a/members/member-a'), { active: true, role: 'owner', permissions: [] }),
+      setDoc(doc(db, 'users/member-a'), { active: true, accountType: 'atelier_member', atelierId: 'atelier-a' }),
+      setDoc(doc(db, 'users/client-a'), { active: true, accountType: 'client' }),
+      setDoc(doc(db, 'users/client-b'), { active: true, accountType: 'client' }),
       setDoc(doc(db, 'ateliers/atelier-b/members/member-b'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
       setDoc(doc(db, 'ateliers/atelier-demo/members/demo-owner'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'ateliers/atelier-a/members/finance-reader'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
@@ -116,6 +119,45 @@ beforeEach(async () => {
 });
 
 describe('Firestore and Storage tenant rules', () => {
+  it('revokes order reads for inactive profiles, unverified staff and suspended tenants', async () => {
+    const customer = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
+    const staff = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    const unverifiedStaff = environment.authenticatedContext('member-a', { email_verified: false }).firestore();
+    await assertSucceeds(getDoc(doc(customer, 'ateliers/atelier-a/orders/order-a')));
+    await assertSucceeds(getDoc(doc(staff, 'ateliers/atelier-a/orders/order-a')));
+    await assertFails(getDoc(doc(unverifiedStaff, 'ateliers/atelier-a/orders/order-a')));
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), 'users/client-a'), { active: false });
+      await updateDoc(doc(context.firestore(), 'users/member-a'), { active: false });
+    });
+    await assertFails(getDoc(doc(customer, 'ateliers/atelier-a/orders/order-a/measurementSnapshot/chest')));
+    await assertFails(getDoc(doc(staff, 'ateliers/atelier-a/orders/order-a')));
+    await assertFails(getDoc(doc(staff, 'ateliers/atelier-a/orders/order-a/files/private')));
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), 'users/client-a'), { active: true });
+      await updateDoc(doc(context.firestore(), 'ateliers/atelier-a'), { active: false });
+    });
+    await assertFails(getDoc(doc(customer, 'ateliers/atelier-a/orders/order-a')));
+  });
+
+  it('rejects a recycled email and conflicting UID links when reading an order and its private metadata', async () => {
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), 'ateliers/atelier-a/orders/order-a'), { clientUserId: 'client-a', email: 'reused@example.com' });
+    });
+    const reassignedEmail = environment.authenticatedContext('client-b', { email: 'reused@example.com', email_verified: true }).firestore();
+    const actualClient = environment.authenticatedContext('client-a', { email: 'new-client@example.com', email_verified: true }).firestore();
+    await assertFails(getDoc(doc(reassignedEmail, 'ateliers/atelier-a/orders/order-a')));
+    for (const path of ['photos/photo-visible', 'payments/deposit', 'measurementSnapshot/chest', 'approvals/approval-a']) {
+      await assertFails(getDoc(doc(reassignedEmail, `ateliers/atelier-a/orders/order-a/${path}`)));
+    }
+    await assertSucceeds(getDoc(doc(actualClient, 'ateliers/atelier-a/orders/order-a')));
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), 'ateliers/atelier-a/orders/order-a'), { clientUserId: 'client-b' });
+    });
+    await assertFails(getDoc(doc(actualClient, 'ateliers/atelier-a/orders/order-a')));
+    await assertFails(getDoc(doc(reassignedEmail, 'ateliers/atelier-a/orders/order-a')));
+  });
+
   it('keeps public slug mappings private and routes intake writes through the trusted backend', async () => {
     const guest = environment.unauthenticatedContext().firestore();
     const validRequest = {
@@ -213,8 +255,8 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(getDoc(doc(memberWithoutOrderAccess, 'ateliers/atelier-a/orders/order-a')));
     const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
     await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/orders/order-a/measurementSnapshot/chest')));
-    const orders = await getDocs(query(collectionGroup(client, 'orders'), where('email', '==', 'client@example.com'), orderBy('createdAt', 'desc')));
-    expect(orders.size).toBe(1);
+    await assertFails(getDocs(query(collectionGroup(client, 'orders'), where('email', '==', 'client@example.com'), orderBy('createdAt', 'desc'))));
+    await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/orders/order-a')));
     await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-a')));
     await assertFails(getDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-b')));
     await assertSucceeds(setDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-a/measurements/height'), {
@@ -278,7 +320,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('keeps order agreements and production operation ledgers server-managed', async () => {
-    const owner = environment.authenticatedContext('member-a').firestore();
+    const owner = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
     const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
     const root = 'ateliers/atelier-a/orders/order-a';
     const paths = ['productionOperations/op-a', 'changeRequests/change-a', 'changeRequests/change-a/events/event-a', 'agreementVersions/1', 'changeRequestOperations/op-a'];

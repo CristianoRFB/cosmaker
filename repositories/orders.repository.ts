@@ -1,4 +1,4 @@
-import { collection, collectionGroup, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where, type QueryConstraint } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where, type QueryConstraint } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { ref, uploadBytes } from 'firebase/storage';
 import { requireFirebase } from '@/services/firebase/firebase.client';
@@ -35,14 +35,9 @@ export async function listOrderStatusHistory(atelierId: string, orderId: string,
 export async function listClientOrders(email: string) {
   const normalizedEmail = email.trim().toLowerCase();
   if (!normalizedEmail) return [];
-  const { db } = requireFirebase();
-  const result = await getDocs(query(
-    collectionGroup(db, 'orders'),
-    where('email', '==', normalizedEmail),
-    orderBy('createdAt', 'desc'),
-    limit(50),
-  ));
-  return result.docs.map((snapshot) => orderFromSnapshot(snapshot));
+  const { functions } = requireFirebase();
+  const result = await httpsCallable<Record<string, never>, { orders: Order[]; hasMore: boolean }>(functions, 'listClientOrders')({});
+  return result.data.orders;
 }
 
 export async function getOrder(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier', includePayments = true): Promise<OrderRecord | null> {

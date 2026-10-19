@@ -12,3 +12,4 @@ playwright-report
 *.log
 functions/lib
 *.tsbuildinfo
+firebase.commercial-test.[0-9]*.json

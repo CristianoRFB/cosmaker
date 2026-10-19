@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
+import { workflowContextOptions } from './workflow-context-options';
 
 const host = process.env.FIREBASE_EMULATOR_HOST || '127.0.0.1';
 process.env.FIREBASE_AUTH_EMULATOR_HOST ||= `${host}:${process.env.COSMAKER_AUTH_EMULATOR_PORT || '19099'}`;
@@ -23,6 +24,10 @@ type Identity = { uid: string; email: string; password: string };
 async function login(page: Page, user: Identity, target: string) {
   await page.goto(`/login?next=${encodeURIComponent(target)}`, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('meta[name="cosmaker-firebase-mode"]')).toHaveAttribute('content', 'emulator');
+  if (process.env.COSMAKER_E2E_MOBILE === 'true') {
+    expect(page.viewportSize()).toEqual({ width: 390, height: 844 });
+    expect(await page.evaluate(() => navigator.maxTouchPoints)).toBeGreaterThan(0);
+  }
   await page.locator('#email').fill(user.email);
   await page.locator('#password').fill(user.password);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
@@ -36,7 +41,7 @@ test('envia bytes reais, compartilha anexos e revoga acesso do cliente mantendo 
   const atelierB = `order-files-e2e-${nonce}-b`;
   const orderId = `order-files-${nonce}`;
   const identities: Identity[] = [];
-  const contexts = await Promise.all([browser.newContext(), browser.newContext(), browser.newContext()]);
+  const contexts = await Promise.all([browser.newContext(workflowContextOptions()), browser.newContext(workflowContextOptions()), browser.newContext(workflowContextOptions())]);
   const [ownerPage, clientPage, otherPage] = await Promise.all(contexts.map((context) => context.newPage()));
   const pngBytes = await readFile(resolve(process.cwd(), 'tests/fixtures/production-progress.png'));
 

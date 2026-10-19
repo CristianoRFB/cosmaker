@@ -122,6 +122,41 @@ afterAll(async () => {
 }, 60000);
 
 describe('configurable production callables', () => {
+  it('lists only UID-owned or unbound legacy orders and projects client-safe fields', async () => {
+    const { orderId, order } = await seedOrder('client-order-list', {
+      createdAt: Timestamp.now(), privateStaffNote: 'DO_NOT_EXPOSE',
+      approvedQuoteSnapshot: { total: 100, depositAmount: 0, internalCost: 60 },
+    });
+    const list = () => call<{ orders: Array<Record<string, unknown>> }>('listClientOrders', {});
+    await signIn(client);
+    const result = (await list()).orders.find((item) => item.id === orderId);
+    expect(result).toMatchObject({ id: orderId, atelierId: atelierA, approvedQuoteSnapshot: { total: 100, depositAmount: 0 } });
+    expect(result).not.toHaveProperty('privateStaffNote');
+    expect(result?.approvedQuoteSnapshot).not.toHaveProperty('internalCost');
+    await order.update({ email: foreignClient.email });
+    expect((await list()).orders.some((item) => item.id === orderId)).toBe(true);
+    await signIn(foreignClient);
+    expect((await list()).orders.some((item) => item.id === orderId)).toBe(false);
+    await order.update({ clientUserId: null, email: client.email });
+    await signIn(client);
+    expect((await list()).orders.some((item) => item.id === orderId)).toBe(true);
+    await order.update({ clientUserId: foreignClient.uid });
+    expect((await list()).orders.some((item) => item.id === orderId)).toBe(false);
+    await signIn(foreignClient);
+    expect((await list()).orders.some((item) => item.id === orderId)).toBe(false);
+    await order.update({ clientUserId: client.uid });
+    await signIn(client);
+    await expect(call('listClientOrders', { email: foreignClient.email })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    await adminDb.doc(`users/${client.uid}`).update({ active: false });
+    try { await expect(list()).rejects.toMatchObject({ code: 'functions/permission-denied' }); }
+    finally { await adminDb.doc(`users/${client.uid}`).update({ active: true }); }
+    await adminDb.doc(`ateliers/${atelierA}`).update({ active: false });
+    try { expect((await list()).orders.some((item) => item.id === orderId)).toBe(false); }
+    finally { await adminDb.doc(`ateliers/${atelierA}`).update({ active: true }); }
+    await signIn(ownerB);
+    await expect(list()).rejects.toMatchObject({ code: 'functions/permission-denied' });
+  }, 120000);
+
   it('serves photo bytes only to current authorized viewers and revokes persistent legacy URLs', async () => {
     await signIn(ownerA);
     const { orderId, order } = await seedOrder('authenticated-photo');

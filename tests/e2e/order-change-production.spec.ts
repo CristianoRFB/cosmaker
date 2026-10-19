@@ -2,6 +2,7 @@ import { createRequire } from 'node:module';
 import { randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
+import { workflowContextOptions } from './workflow-context-options';
 
 const host = process.env.FIREBASE_EMULATOR_HOST || '127.0.0.1';
 if (!['127.0.0.1', 'localhost', '::1'].includes(host)) throw new Error('This workflow may only use a local Firebase Emulator.');
@@ -19,6 +20,10 @@ type Identity = { uid: string; email: string; password: string };
 async function login(page: Page, identity: Identity, target: string) {
   await page.goto(`/login?next=${encodeURIComponent(target)}`, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('meta[name="cosmaker-firebase-mode"]')).toHaveAttribute('content', 'emulator');
+  if (process.env.COSMAKER_E2E_MOBILE === 'true') {
+    expect(page.viewportSize()).toEqual({ width: 390, height: 844 });
+    expect(await page.evaluate(() => navigator.maxTouchPoints)).toBeGreaterThan(0);
+  }
   await page.locator('#email').fill(identity.email);
   await page.locator('#password').fill(identity.password);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
@@ -47,7 +52,7 @@ test('equipe configura produção e aplica mudança somente após aprovação ex
   const reason = 'Cliente solicitou acabamento metálico e acessórios adicionais para o evento';
   const originalQuote = { total: 500.25, depositAmount: 100, depositPercentage: 20, expectedStartDate: '2027-02-01', expectedCompletionDate: '2027-03-10' };
   const identities: Identity[] = [];
-  const contexts = await Promise.all([browser.newContext(), browser.newContext(), browser.newContext()]);
+  const contexts = await Promise.all([browser.newContext(workflowContextOptions()), browser.newContext(workflowContextOptions()), browser.newContext(workflowContextOptions())]);
   const [staffPage, clientPage, otherPage] = await Promise.all(contexts.map((context) => context.newPage()));
 
   async function createIdentity(label: string, accountType: 'atelier_member' | 'client', atelierId?: string, role = 'owner', permissions: string[] = []) {

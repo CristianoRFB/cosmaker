@@ -64,20 +64,35 @@ service cloud.firestore {
     }
 
     function canReadOrder(atelierId, orderId) {
-      let orderPath = /databases/$(database)/documents/ateliers/$(atelierId)/orders/$(orderId);
-      return hasAtelierPermission(atelierId, 'orders:read')
-        || (signedIn() && exists(orderPath) && (
-          (get(orderPath).data.clientId is string && isOwnClient(atelierId, get(orderPath).data.clientId))
-          || verifiedEmailMatches(get(orderPath).data.email)
-      ));
+      return activeOrderStaff(atelierId) || isOrderClient(atelierId, orderId);
+    }
+
+    function activeOrderStaff(atelierId) {
+      let profile = /databases/$(database)/documents/users/$(request.auth.uid);
+      return signedIn() && request.auth.token.email_verified == true && exists(profile) && get(profile).data.active == true
+        && get(profile).data.accountType == 'atelier_member' && get(profile).data.atelierId == atelierId
+        && hasAtelierPermission(atelierId, 'orders:read');
+    }
+
+    function orderClientLink(atelierId, orderData) {
+      let clientId = orderData.get('clientId', null);
+      let clientKey = clientId is string && clientId.size() > 0 ? clientId : '__unlinked__';
+      let clientPath = /databases/$(database)/documents/ateliers/$(atelierId)/clients/$(clientKey);
+      let clientUid = exists(clientPath) ? get(clientPath).data.get('userId', null) : null;
+      let orderUid = orderData.get('clientUserId', null);
+      return (!(orderUid is string && clientUid is string) || orderUid == clientUid)
+        && (orderUid is string ? orderUid == request.auth.uid
+          : clientUid is string ? clientUid == request.auth.uid
+          : verifiedEmailMatches(orderData.get('email', '')));
     }
 
     function isOrderClient(atelierId, orderId) {
       let orderPath = /databases/$(database)/documents/ateliers/$(atelierId)/orders/$(orderId);
-      return signedIn() && exists(orderPath) && (
-        (get(orderPath).data.clientId is string && isOwnClient(atelierId, get(orderPath).data.clientId))
-        || verifiedEmailMatches(get(orderPath).data.email)
-      );
+      let profile = /databases/$(database)/documents/users/$(request.auth.uid);
+      return signedIn() && request.auth.token.email_verified == true && exists(profile)
+        && get(profile).data.active == true && get(profile).data.accountType == 'client'
+        && get(/databases/$(database)/documents/ateliers/$(atelierId)).data.active == true
+        && exists(orderPath) && orderClientLink(atelierId, get(orderPath).data);
     }
 
     function validMeasurement() {
@@ -105,9 +120,9 @@ service cloud.firestore {
         && resource.data.status in ['sent', 'approved', 'rejected', 'expired'];
     }
 
-    // A client portal may list only orders indexed to its own verified email across tenants.
+    // Cross-tenant client listing uses a callable that validates UID links and projects fields.
     match /{path=**}/orders/{orderId} {
-      allow get, list: if verifiedEmailMatches(resource.data.email);
+      allow get, list: if false;
     }
 
     match /users/{userId} {
@@ -234,11 +249,11 @@ service cloud.firestore {
         }
         match /files/{fileId} {
           // Clients receive the allowlisted file projection through listOrderFiles.
-          allow read: if hasAtelierPermission(atelierId, 'orders:read');
+          allow read: if activeOrderStaff(atelierId);
           allow write: if false;
         }
         match /productionConfigurations/{versionId} {
-          allow read: if hasAtelierPermission(atelierId, 'orders:read');
+          allow read: if activeOrderStaff(atelierId);
           allow write: if false;
         }
         match /productionOperations/{operationId} { allow read, write: if false; }
