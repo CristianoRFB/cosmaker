@@ -1,5 +1,15 @@
 # Cosmaker Master Finalization — Progress
 
+## Aceite F1.7 — 2026-10-22
+
+- F1.7 **PASS** no fluxo local aprovado: serviços/projetos/imagens/admin/branding/publicação, catálogo por slug, filtros/ordem, origem do orçamento com snapshot e projeções que não expõem notas ou dados privados. Contrato completo em [SHOWCASE_CONTENT.md](SHOWCASE_CONTENT.md).
+- Backend final **5/5 PASS**, Rules **23/23 PASS**, unitários direcionados **7/7 PASS**, TypeScript/lint/docs:check verdes. Build local final com navegação **PASS**, exit 0, 81 páginas, `/tmp/cosmaker-f17-build-final.log`. Nenhuma mudança posterior em código executável de F1.7.
+- E2E desktop **1/1 PASS**, exit 0, 1,1 min, `/tmp/cosmaker-f17-e2e-desktop.log`; mobile **1/1 PASS**, exit 0, 27,4s (cenário 24,9s), `/tmp/cosmaker-f17-e2e-mobile.log`. Cadastro→foto Blob decodificada→publicação/branding→catálogo/filtro→orçamento contextual→ficha interna→despublicação→404 e isolamento B comprovados. Capturas públicas/admin desktop/mobile inspecionadas e mantidas em `/tmp/cosmaker-showcase-*.png`; as capturas fullPage preservam a posição dos headers sticky da viewport, sem alterar o layout do produto.
+- Remoto do código aceito: [`a973885`](https://github.com/CristianoRFB/cosmaker/commit/a97388534f21fcd6b2e65ac9ef09420d6a3e78bb); CI **PASS**, [39709281488](https://github.com/CristianoRFB/cosmaker/actions/runs/39709281488). Checkpoint anterior 5569140 também com CI verde.
+- F1.1–F1.7 aceitos no escopo de desenvolvimento local; F1.8/F1.9 e F2–F8 pendentes. Índice conservador de aceite do GOAL: **7/16 gates = 43,75%** (nove módulos F1 e sete fases F2–F8 com peso igual; WIP não conta; não é percentual de readiness de produção).
+- Próximo módulo exato: **F1.8 mensagens/notificações internas**. Recuperação confirmou telas/repositories/types estruturais e Rules antigas de conversas com escrita direta permissiva; implementar callables por UID/tenant/pedido, sequência/leitura, anexos protegidos e notificações deduplicadas antes de aceitar. E-mail/WhatsApp permanecem stubs desativados, sem integrar serviço externo.
+
+
 ## F1.7 catálogo público e vínculo ao orçamento — 2026-10-22 (WIP)
 
 - Checkpoint backend/painel enviado: [`5569140`](https://github.com/CristianoRFB/cosmaker/commit/5569140ab07f65fc28eef6ca323d4ddb127516b4), CI [`39708283520`](https://github.com/CristianoRFB/cosmaker/actions/runs/39708283520) **PASS**. Contrato em [SHOWCASE_CONTENT.md](SHOWCASE_CONTENT.md).
@@ -114,7 +124,7 @@ O proprietário autorizou explicitamente commit e push da branch de trabalho. Es
 | F1.4 Estoque, materiais e fornecedores | PASS | Cadastro/edição/arquivo de materiais e fornecedores; SKU único transacional; entrada, saída, reserva e liberação com ledger imutável, saldo inteiro em milésimos, trava contra negativo, idempotência e auditoria; BOM/reserva/consumo associados ao pedido; alertas de baixo estoque e UI responsiva. Rules negam mutação direta. Unit 95/95, Rules 17/17, Inventory Functions 3/3, Playwright 1/1, lint, TypeScript, Functions build, Next build e docs:check passaram. A paginação ampla das listas é parte do refinamento transversal F3; esta versão protege a listagem com teto operacional explícito de 500 itens por coleção. |
 | F1.5 Pedidos, produção e change requests | PASS | Anexos/fotos por bytes autenticados, revogação, histórico paginado, configuração/etapas próprias, snapshots de evidências, revisões aprovadas com acordo versionado em centavos e integridade de agenda. Ownership por UID prevalece sobre e-mail antigo, perfis/tenant ativos e projeção segura no portal. Retomada 2026-10-19: integração 32/32, Rules 21/21, desktop 3/3, mobile 2/2; CI Node 22 com 109 unitários, Functions/Next build verdes. Segurança transversal e migração/revogação global permanecem gates F2/F6/F7. |
 | F1.6 Financeiro operacional, custos e margens | PASS | Ledger, compensações, conciliação legada, pagamentos manuais e margens; integração 7/7, Rules 22/22 + 1 direcionado, desktop 2/2 e mobile 1/1; build local e CI 39706976082 verdes. |
-| F1.7 Serviços e portfólio | WIP | Backend/catálogo/branding/imagens com integração 4/4, Rules 23/23 e unitários 2/2; painel em andamento, página pública/vínculo ao orçamento/build/E2E pendentes. |
+| F1.7 Serviços e portfólio | PASS | Catálogo/admin/branding/imagens/publicação/origem do orçamento; integração 5/5, Rules 23/23, unitários 7/7, desktop 1/1, mobile 1/1; build e CI 39709281488 verdes. |
 | F1.8 Mensagens e notificações internas | TODO | Conversas, leitura, anexos protegidos e deduplicação de eventos. |
 | F1.9 Relatórios e configurações | TODO | Métricas reproduzíveis, filtros/timezone, preferências e escopo de Platform Owner. |
 | Checkpoint F1 — completude funcional | TODO | Cada módulo operacional precisa criar→ler→alterar/ação→persistir e provar denial em outra fronteira. |

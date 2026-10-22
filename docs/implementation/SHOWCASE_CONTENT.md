@@ -42,3 +42,5 @@ A solicitação guarda `showcaseContext` com id/título público daquele momento
 - E2E desktop/mobile: cadastro, foto Blob decodificada, publicação, identidade, catálogo/filtro, solicitação com contexto, ficha da equipe, despublicação, imagem 404 e isolamento do segundo slug. Build e lint completam o gate local.
 
 Resultados observados e pendências são registrados separadamente no checkpoint. Nenhum deploy, uso de Firebase real, gateway ou envio externo faz parte deste módulo.
+
+Aceite local em 2026-10-22: integração final 5/5, Rules 23/23, unitários direcionados 7/7, build 81 páginas, TypeScript/lint/docs:check, E2E desktop 1/1 e mobile 1/1; CI 39709281488 verde. Segurança global de links legados e preparação real permanecem nas fases transversais.

@@ -81,6 +81,7 @@ test('mantém serviços e portfólio, publica fotos, vincula orçamento e revoga
     await visitor.goto(`http://127.0.0.1:3000/${slugs[0]}`);
     await expect(visitor.getByRole('heading', { name: serviceTitle, exact: true })).toBeVisible();
     await expect(visitor.getByRole('heading', { name: projectTitle, exact: true })).toBeVisible();
+    await visitor.getByRole('img', { name: caption, exact: true }).scrollIntoViewIfNeeded();
     await expect(visitor.getByRole('img', { name: caption, exact: true })).toBeVisible();
     await expect.poll(() => visitor.getByRole('img', { name: caption, exact: true }).evaluate((node) => (node as HTMLImageElement).complete && (node as HTMLImageElement).naturalWidth > 0)).toBe(true);
     await expect(visitor.getByText(/PRIVATE-/)).toHaveCount(0);
