@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight, Scissors, Sparkles } from 'lucide-react';
+import { PublicShowcaseContent } from '@/components/portfolio/public-showcase';
 import { usePublicTenant } from '@/providers/public-tenant-provider';
 
 function TenantMessage({ title, detail }: { title: string; detail: string }) {
@@ -44,5 +45,6 @@ export default function TenantLandingPage() {
         </div>
       </div>
     </section>
+    <PublicShowcaseContent />
   </main>;
 }

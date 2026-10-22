@@ -97,6 +97,8 @@ export const listPublicShowcase = onCall(async (call) => {
   if (lookup.status !== 'available' || !lookup.atelierId) return { status: lookup.status, services: [], projects: [] };
   const snapshots = await Promise.all(['services', 'portfolio'].map((section) => adminDb.collection(`ateliers/${lookup.atelierId}/${section}`).where('public', '==', true).limit(501).get()));
   if (snapshots.some((snapshot) => snapshot.size > 500)) throw new HttpsError('resource-exhausted', 'Este catálogo exige paginação antes de ser publicado integralmente.');
+  const latest = await lookupTenant(data.tenantSlug);
+  if (latest.status !== 'available' || latest.atelierId !== lookup.atelierId) return { status: latest.status === 'available' ? 'not_found' : latest.status, services: [], projects: [] };
   return { status: 'available', services: sortRows(snapshots[0].docs.filter((doc) => doc.data().active !== false).map((doc) => showcasePublicProjection(doc.id, doc.data(), 'services'))),
     projects: sortRows(snapshots[1].docs.filter((doc) => doc.data().active !== false && Array.isArray(doc.data().images) && doc.data().images.length > 0).map((doc) => showcasePublicProjection(doc.id, doc.data(), 'portfolio'))) };
 });

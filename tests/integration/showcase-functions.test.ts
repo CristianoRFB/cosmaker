@@ -164,6 +164,19 @@ describe('Showcase Functions em demo-cosmaker', () => {
     await expect(call('listPublicShowcase', { tenantSlug: slugs[0], atelierId: atelierIds[1] })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
   }, 60_000);
 
+  it('vincula solicitação ao serviço publicado do próprio slug e preserva snapshot comercial', async () => {
+    await signIn(ownerA); const service = await saveService({ title: 'Perucas autorais', category: 'wig' });
+    const input = { name: 'Visitante sintético', email: 'visitor@example.test', character: 'Personagem sintético', franchise: 'Universo sintético', category: 'wig', description: 'Projeto fictício para validar o vínculo comercial.', desiredDeliveryDate: '2027-10-22', urgency: 'normal', serviceId: service.id };
+    const result = await call<{ requestId: string }>('createPublicQuoteRequest', { tenantSlug: slugs[0], input, references: [] });
+    const request = await adminDb.doc(`ateliers/${atelierIds[0]}/quoteRequests/${result.requestId}`).get();
+    expect(request.data()).toMatchObject({ showcaseContext: { service: { id: service.id, title: 'Perucas autorais' } } });
+    await expect(call('createPublicQuoteRequest', { tenantSlug: slugs[1], input, references: [] })).rejects.toMatchObject({ code: 'functions/not-found' });
+    await saveService({ id: service.id, version: 1, public: false });
+    await expect(call('createPublicQuoteRequest', { tenantSlug: slugs[0], input, references: [] })).rejects.toMatchObject({ code: 'functions/not-found' });
+    expect((await adminDb.doc(`ateliers/${atelierIds[0]}/quoteRequests/${result.requestId}`).get()).data()?.showcaseContext.service.title).toBe('Perucas autorais');
+    await expect(call('createPublicQuoteRequest', { tenantSlug: slugs[0], input: { ...input, serviceId: '../other' }, references: [] })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+  }, 60_000);
+
   it('preserva slug e flags comerciais, audita branding e bloqueia intake de demonstração', async () => {
     await signIn(ownerA);
     const profile = { ...profileInput, version: 2, requestId: newId() };

@@ -10,7 +10,11 @@ const optionalAmount = z.string().trim().optional().refine((value) => !value || 
 const optionalDate = z.string().optional().transform((value) => value?.trim() || undefined)
   .refine((value) => !value || isDate(value), 'Informe uma data válida.');
 
+const optionalShowcaseId = z.string().optional().transform((value) => value?.trim() || undefined).refine((value) => !value || /^[A-Za-z0-9_-]{1,150}$/.test(value), 'Referência comercial inválida.');
+
 export const quoteRequestSchema = z.object({
+  serviceId: optionalShowcaseId,
+  projectId: optionalShowcaseId,
   name: z.string().trim().min(2, 'Informe seu nome.').max(100, 'Use até 100 caracteres.'),
   email: z.string().trim().email('Informe um e-mail válido.').transform((email) => email.toLowerCase()),
   phone: z.string().trim().max(30, 'Use até 30 caracteres.').optional(),

@@ -9,7 +9,7 @@ import { useTenant } from '@/providers/tenant-provider';
 import { listAtelierShowcase, saveShowcaseContent, saveAtelierPublicProfile, uploadShowcaseImage, removeShowcaseImage } from '@/repositories/portfolio.repository';
 import type { AtelierShowcase, AtelierShowcaseItem, PublicShowcaseProfile, ShowcaseContentInput, ShowcaseSection } from '@/types/portfolio';
 import { ShowcaseImage } from './showcase-image';
-export const showcaseCategoryLabels: Record<string, string> = { full_cosplay: 'Cosplay completo', wig: 'Perucas', armor: 'Armaduras', prop: 'Props', accessory: 'Acessórios', other: 'Outros' };
+import { showcaseCategoryLabels } from '@/constants/showcase';
 const blank = (): ShowcaseContentInput => ({ title: '', description: '', category: 'full_cosplay', public: false, active: true, sortOrder: 0, internalNotes: '', version: 0, character: '', franchise: '', featured: false });
 const errorMessage = (error: unknown) => error instanceof Error ? error.message : 'Não foi possível concluir. Tente novamente.';
 export function ShowcaseAdmin({ section, selectedId, startNew = false }: { section: ShowcaseSection; selectedId?: string; startNew?: boolean }) {

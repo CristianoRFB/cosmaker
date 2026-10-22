@@ -1,0 +1,29 @@
+'use client';
+import Link from 'next/link';
+import { useEffect, useId, useState } from 'react';
+import { usePublicTenant } from '@/providers/public-tenant-provider';
+import { listPublicShowcase } from '@/repositories/portfolio.repository';
+import { showcaseCategoryLabels } from '@/constants/showcase';
+import type { PublicShowcase } from '@/types/portfolio';
+import { ShowcaseImage } from './showcase-image';
+export function PublicShowcaseContent() {
+  const { tenantSlug, tenant, status, loading: tenantLoading } = usePublicTenant();
+  const [catalog, setCatalog] = useState<PublicShowcase | null>(null); const [error, setError] = useState('');
+  const [category, setCategory] = useState(''); const [loading, setLoading] = useState(true); const filterId = useId();
+  useEffect(() => {
+    let active = true; setCatalog(null); setError(''); setLoading(true); setCategory('');
+    if (tenantLoading || status !== 'available' || tenant?.slug !== tenantSlug) { setLoading(false); return; }
+    void listPublicShowcase(tenantSlug).then((data) => { if (active) setCatalog(data); }).catch(() => { if (active) setError('Não foi possível carregar os trabalhos agora. Tente atualizar a página.'); }).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [tenantSlug, tenant?.slug, status, tenantLoading]);
+  if (tenantLoading || !tenant?.published || tenant.slug !== tenantSlug) return null;
+  const services = catalog?.services.filter((item) => !category || item.category === category) ?? [];
+  const projects = catalog?.projects.filter((item) => !category || item.category === category) ?? [];
+  const quoteLink = (kind: 'service' | 'project', id: string) => `/${encodeURIComponent(tenantSlug)}/orcamento?${kind}Id=${encodeURIComponent(id)}`;
+  return <section aria-labelledby="showcase-heading" className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8">
+    <div className="flex flex-wrap items-end justify-between gap-4"><div><h2 id="showcase-heading" className="text-3xl font-bold tracking-tight text-slate-950">Serviços e trabalhos do ateliê</h2><p className="mt-3 text-sm leading-6 text-slate-600">Conheça as especialidades e os projetos publicados por {tenant.name}.</p></div><div className="grid gap-2 text-sm font-medium text-slate-700"><label htmlFor={filterId}>Filtrar categoria</label><select id={filterId} className="min-h-11 rounded-xl border border-slate-300 bg-white px-3" value={category} onChange={(event) => setCategory(event.target.value)}><option value="">Todas as categorias</option>{Object.entries(showcaseCategoryLabels).map(([key, value]) => <option key={key} value={key}>{value}</option>)}</select></div></div>
+    {loading && <p role="status" className="rounded-xl bg-slate-50 p-5 text-sm text-slate-600">Carregando serviços e portfólio…</p>}{error && <p role="alert" className="rounded-xl bg-amber-50 p-5 text-sm text-amber-900">{error}</p>}
+    {!loading && !error && catalog?.status === 'available' && <><div id="servicos"><h3 className="text-xl font-semibold text-slate-950">Serviços oferecidos</h3><div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{services.length ? services.map((service) => <article key={service.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{showcaseCategoryLabels[service.category]}</p><h4 className="mt-3 break-words text-lg font-semibold text-slate-950">{service.title}</h4><p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600">{service.description}</p>{tenant.quoteRequestsEnabled && <Link className="mt-5 inline-flex min-h-11 items-center font-semibold text-violet-700" style={{ color: tenant.brandColor }} href={quoteLink('service', service.id)}>Solicitar orçamento deste serviço →</Link>}</article>) : <p className="text-sm text-slate-500">Nenhum serviço publicado nesta categoria.</p>}</div></div>
+      <div id="portfolio"><h3 className="text-xl font-semibold text-slate-950">Portfólio de trabalhos</h3><div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{projects.length ? projects.map((project) => <article key={project.id} className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">{project.images?.[0] && <ShowcaseImage tenantSlug={tenantSlug} projectId={project.id} imageId={project.images[0].id} caption={project.images[0].caption || project.title} />}<div className="p-2 pt-5">{project.featured && <span className="text-xs font-bold uppercase tracking-wider text-violet-700" style={{ color: tenant.brandColor }}>Em destaque</span>}<h4 className="mt-1 break-words text-lg font-semibold text-slate-950">{project.title}</h4><p className="mt-2 text-xs text-slate-500">{[project.character, project.franchise, showcaseCategoryLabels[project.category]].filter(Boolean).join(' · ')}</p><p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600">{project.description}</p>{(project.images?.length ?? 0) > 1 && <details className="mt-4"><summary className="min-h-11 cursor-pointer text-sm font-semibold text-slate-700">Ver outras fotos</summary><div className="mt-3 grid gap-3">{project.images?.slice(1).map((image) => <figure key={image.id}><ShowcaseImage tenantSlug={tenantSlug} projectId={project.id} imageId={image.id} caption={image.caption || project.title} />{image.caption && <figcaption className="mt-1 text-xs text-slate-500">{image.caption}</figcaption>}</figure>)}</div></details>}{tenant.quoteRequestsEnabled && <Link className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-violet-700" style={{ color: tenant.brandColor }} href={quoteLink('project', project.id)}>Solicitar um projeto semelhante →</Link>}</div></article>) : <p className="text-sm text-slate-500">Nenhum trabalho publicado nesta categoria.</p>}</div></div></>}
+  </section>;
+}

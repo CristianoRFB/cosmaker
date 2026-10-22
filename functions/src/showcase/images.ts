@@ -75,7 +75,10 @@ export const downloadShowcaseImage = onRequest({ cors: true, timeoutSeconds: 120
       const lookup = publicRead ? await lookupTenant(data.tenantSlug) : null;
       const atelierId = actor?.atelierId ?? (lookup?.status === 'available' ? lookup.atelierId : null);
       if (!atelierId) throw new HttpsError('not-found', 'Imagem indisponível.');
-      if (actor && token) await showcaseIdentity({ uid: token.uid, token }, 'portfolio:manage');
+      if (actor && token) {
+        const currentActor = await showcaseIdentity({ uid: token.uid, token }, 'portfolio:manage');
+        if (currentActor.atelierId !== actor.atelierId) throw new HttpsError('permission-denied', 'O vínculo do ateliê mudou durante a leitura.');
+      }
       const project = await adminDb.doc(`ateliers/${atelierId}/portfolio/${data.projectId}`).get();
       if (!project.exists || (publicRead && (project.data()?.public !== true || project.data()?.active === false))) throw new HttpsError('not-found', 'Imagem indisponível.');
       const image = (Array.isArray(project.data()!.images) ? project.data()!.images : []).find((entry: FirebaseFirestore.DocumentData) => entry.id === data.imageId);

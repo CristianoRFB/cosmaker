@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## F1.7 catálogo público e vínculo ao orçamento — 2026-10-22 (WIP)
+
+- Checkpoint backend/painel enviado: [`5569140`](https://github.com/CristianoRFB/cosmaker/commit/5569140ab07f65fc28eef6ca323d4ddb127516b4), CI [`39708283520`](https://github.com/CristianoRFB/cosmaker/actions/runs/39708283520) **PASS**. Contrato em [SHOWCASE_CONTENT.md](SHOWCASE_CONTENT.md).
+- Página pública agora consome catálogo allowlisted, com serviços, galeria de fotos por bytes, filtros, destaques, ordem e CTAs do próprio slug. Painel mantém conteúdo, imagens, arquivo/publicação e identidade; navegação de serviços/portfólio adicionada conforme permissões, com rolagem da barra lateral.
+- Intake passou a revalidar ateliê/slug/publicação e origem comercial em transação. Guarda snapshot de título/id do serviço/projeto público e o exibe na ficha interna. Referência de outro tenant, privada, arquivada ou com path adulterado é negada. Solicitações sem origem preservam o contrato anterior.
+- Integração final após revalidação adicional de tenant/publicação **5/5 PASS**, exit 0, 58,09s, `/tmp/cosmaker-f17-integration-acl-final.log`. Unitários direcionados de projeção/formulário/orçamento **7/7 PASS**, TypeScript e lint direcionado **PASS**. Rules **23/23 PASS** mantidas sem alterações posteriores. Build local anterior à inclusão do menu **PASS**; build final com navegação em andamento.
+- Jornadas desktop/mobile preparadas para cadastro→foto→publicação→catálogo/filtro→orçamento→ficha interna→despublicação→404/A×B. **E2E PENDING, sem aceite F1.7 ainda.** F1.6 permanece PASS; F1.8–F1.9 e F2–F8 TODO.
+
+
 ## F1.6 aceita e início F1.7 — 2026-10-22
 
 - F1.6 **PASS** no escopo local aprovado. CI [`39706976082`](https://github.com/CristianoRFB/cosmaker/actions/runs/39706976082) do HEAD [`5231eda`](https://github.com/CristianoRFB/cosmaker/commit/5231edac52ad464859aed4b1857bb61bcf030419) e CI [`39706312371`](https://github.com/CristianoRFB/cosmaker/actions/runs/39706312371) ficaram verdes, além dos gates locais documentados abaixo. Sem aceite de produção/staging/global de segurança.

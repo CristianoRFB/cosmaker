@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, CalendarDays, CheckCircle2, ImagePlus, Info, Sparkles, X } from 'lucide-react';
 import { quoteRequestSchema } from '@/schemas/quote-request.schema';
 import { createPublicQuoteRequest, validateReferenceFiles, validateReferenceFileSignatures, type ReferenceUploadIssue } from '@/repositories/quote-requests.repository';
 import { firebaseConfigured } from '@/services/firebase/firebase.client';
+import { listPublicShowcase } from '@/repositories/portfolio.repository';
 import { usePublicTenant } from '@/providers/public-tenant-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,8 @@ const localToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padSta
 export default function QuoteRequestPage() {
   const router = useRouter();
   const { tenantSlug, tenant, status: tenantStatus, loading: tenantLoading } = usePublicTenant();
+  const [sourceContext, setSourceContext] = useState<{ serviceId?: string; projectId?: string; title?: string }>({});
+  const [sourceLoading, setSourceLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [fileIssues, setFileIssues] = useState<ReferenceUploadIssue[]>([]);
@@ -39,6 +42,23 @@ export default function QuoteRequestPage() {
           : !tenant?.quoteRequestsEnabled
             ? 'Este ateliê não está recebendo solicitações de orçamento no momento.'
       : '';
+
+  useEffect(() => {
+    let active = true; setSourceContext({});
+    if (tenantLoading || tenantStatus !== 'available' || tenant?.slug !== tenantSlug) return;
+    const query = new URLSearchParams(window.location.search);
+    const serviceId = query.get('serviceId'); const projectId = query.get('projectId');
+    if (!serviceId && !projectId) { setSourceLoading(false); return; }
+    setSourceLoading(true);
+    void listPublicShowcase(tenantSlug).then((catalog) => {
+      if (!active) return;
+      const service = serviceId ? catalog.services.find((item) => item.id === serviceId) : null;
+      const project = projectId ? catalog.projects.find((item) => item.id === projectId) : null;
+      if ((serviceId && !service) || (projectId && !project)) { setError('A referência comercial está indisponível. Descreva sua ideia para solicitar sem esse vínculo.'); return; }
+      setSourceContext({ ...(service ? { serviceId: service.id } : {}), ...(project ? { projectId: project.id } : {}), title: [service?.title, project?.title].filter(Boolean).join(' · ') });
+    }).catch(() => { if (active) setError('A referência comercial não pôde ser carregada. Atualize a página para tentar novamente.'); }).finally(() => { if (active) setSourceLoading(false); });
+    return () => { active = false; };
+  }, [tenantSlug, tenant?.slug, tenantStatus, tenantLoading]);
 
   function addFiles(list: FileList | null) {
     if (!list) return;
@@ -61,6 +81,7 @@ export default function QuoteRequestPage() {
       setError(setupMessage || 'O envio ainda não está disponível neste ambiente.');
       return;
     }
+    if (sourceLoading) { setError('Aguarde a referência comercial carregar antes de enviar.'); return; }
     const parsed = quoteRequestSchema.safeParse(Object.fromEntries(new FormData(form).entries()));
     if (!parsed.success) {
       const next: Record<string, string> = {};
@@ -102,6 +123,10 @@ export default function QuoteRequestPage() {
           {success ? <div className="mb-7 flex gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-900" role="status"><CheckCircle2 className="mt-0.5 shrink-0" size={19} /><p>{success}</p></div> : null}
           {error ? <p className="mb-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">{error}</p> : null}
           <form className="grid gap-8" noValidate onSubmit={submit}>
+            <input type="hidden" name="serviceId" value={sourceContext.serviceId ?? ''} />
+            <input type="hidden" name="projectId" value={sourceContext.projectId ?? ''} />
+            {sourceContext.title && <p className="rounded-xl bg-violet-50 p-4 text-sm text-violet-900">Referência selecionada: {sourceContext.title}</p>}
+            {sourceLoading && <p role="status" className="text-sm text-slate-500">Carregando referência comercial…</p>}
             <section aria-labelledby="project-heading" className="grid gap-5">
               <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">01 · Projeto</p><h2 className="mt-1 text-xl font-semibold" id="project-heading">O que você gostaria de criar?</h2></div>
               <div className="grid gap-4 sm:grid-cols-2"><Field label="Personagem" name="character" error={fieldErrors.character} placeholder="Ex.: Miku Hatsune" /><Field label="Obra ou franquia" name="franchise" error={fieldErrors.franchise} placeholder="Ex.: Vocaloid" /></div>
@@ -130,7 +155,7 @@ export default function QuoteRequestPage() {
               <Field label="Telefone ou WhatsApp" name="phone" error={fieldErrors.phone} hint="Opcional"><Input autoComplete="tel" id="phone" name="phone" placeholder="(11) 99999-9999" type="tel" /></Field>
             </section>
 
-            <div className="border-t border-slate-100 pt-6"><Button className="w-full sm:w-auto" disabled={pending || !configured} type="submit">{pending ? 'Enviando solicitação…' : 'Enviar solicitação'}{!pending ? <ArrowRight size={17} /> : null}</Button><p className="mt-3 text-xs leading-5 text-slate-500">Ao enviar, suas informações serão compartilhadas com o ateliê selecionado para análise do projeto.</p></div>
+            <div className="border-t border-slate-100 pt-6"><Button className="w-full sm:w-auto" disabled={pending || sourceLoading || !configured} type="submit">{pending ? 'Enviando solicitação…' : 'Enviar solicitação'}{!pending ? <ArrowRight size={17} /> : null}</Button><p className="mt-3 text-xs leading-5 text-slate-500">Ao enviar, suas informações serão compartilhadas com o ateliê selecionado para análise do projeto.</p></div>
           </form>
         </Card>
 

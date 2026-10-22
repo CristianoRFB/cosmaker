@@ -20,6 +20,8 @@ export function PublicTenantProvider({ tenantSlug, children }: { tenantSlug: str
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setTenant(null);
+    setStatus('error');
     void resolvePublicTenant(tenantSlug).then((result) => {
       if (!active) return;
       setTenant(result.tenant ?? null);

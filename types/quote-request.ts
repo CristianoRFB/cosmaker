@@ -17,6 +17,7 @@ export interface QuoteRequest {
   budgetMax?: number;
   urgency: QuoteRequestUrgency;
   observations?: string;
+  showcaseContext?: { service?: { id: string; title: string }; project?: { id: string; title: string } };
   activeQuoteId?: string;
   status: QuoteRequestStatus;
   createdAt: unknown;

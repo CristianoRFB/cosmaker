@@ -174,24 +174,37 @@ export const createPublicQuoteRequest = onCall(async (call) => {
   const quoteRequest = validateQuoteInput(call.data?.input);
   const descriptors = validateReferenceDescriptors(call.data?.references);
   const requestRef = adminDb.collection('ateliers').doc(atelierId).collection('quoteRequests').doc();
-  const batch = adminDb.batch();
-  batch.create(requestRef, quoteRequest);
-
-  const references = descriptors.map((descriptor) => {
+  const references = descriptors.map(() => {
     const uploadId = randomUUID();
-    const storagePath = `ateliers/${atelierId}/quoteRequests/${requestRef.id}/references/${uploadId}`;
-    batch.create(requestRef.collection('references').doc(uploadId), {
-      storagePath,
-      originalName: descriptor.name,
-      contentType: descriptor.contentType,
-      size: descriptor.size,
-      uploadStatus: 'pending',
-      createdAt: FieldValue.serverTimestamp(),
-    });
-    return { uploadId, storagePath };
+    return { uploadId, storagePath: `ateliers/${atelierId}/quoteRequests/${requestRef.id}/references/${uploadId}` };
   });
-
-  await batch.commit();
+  await adminDb.runTransaction(async (transaction) => {
+    const [atelier, publicProfile, slug] = await Promise.all([
+      transaction.get(adminDb.doc(`ateliers/${atelierId}`)), transaction.get(adminDb.doc(`publicAteliers/${atelierId}`)),
+      transaction.get(adminDb.doc(`publicAtelierSlugs/${lookup.tenant!.slug}`)),
+    ]);
+    if (atelier.data()?.active !== true || atelier.data()?.demoWorkspace === true || publicProfile.data()?.published !== true
+      || publicProfile.data()?.quoteRequestsEnabled !== true || publicProfile.data()?.slug !== lookup.tenant!.slug || slug.data()?.atelierId !== atelierId) {
+      throw new HttpsError('failed-precondition', 'O ateliê não está recebendo solicitações neste endereço.');
+    }
+    const showcaseContext: Record<string, { id: string; title: string }> = {};
+    for (const [field, section, key] of [['serviceId', 'services', 'service'], ['projectId', 'portfolio', 'project']] as const) {
+      const id = call.data?.input?.[field];
+      if (id === undefined || id === null || id === '') continue;
+      if (typeof id !== 'string' || !/^[A-Za-z0-9_-]{1,150}$/.test(id)) throw new HttpsError('invalid-argument', 'A referência comercial é inválida.');
+      const content = await transaction.get(adminDb.doc(`ateliers/${atelierId}/${section}/${id}`));
+      if (!content.exists || content.data()?.public !== true || content.data()?.active === false || typeof content.data()?.title !== 'string'
+        || (key === 'project' && (!Array.isArray(content.data()?.images) || !content.data()!.images.length))) {
+        throw new HttpsError('not-found', 'A referência comercial não está publicada neste ateliê.');
+      }
+      showcaseContext[key] = { id, title: content.data()!.title.slice(0, 120) };
+    }
+    transaction.create(requestRef, { ...quoteRequest, ...(Object.keys(showcaseContext).length ? { showcaseContext } : {}) });
+    references.forEach((reference, index) => transaction.create(requestRef.collection('references').doc(reference.uploadId), {
+      storagePath: reference.storagePath, originalName: descriptors[index].name, contentType: descriptors[index].contentType,
+      size: descriptors[index].size, uploadStatus: 'pending', createdAt: FieldValue.serverTimestamp(),
+    }));
+  });
   return { requestId: requestRef.id, references };
 });
 
