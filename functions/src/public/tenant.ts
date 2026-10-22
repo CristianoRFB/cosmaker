@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { FieldValue } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb, adminStorage } from '../admin';
+import { orderFileHash, revokeOrderFileTokens } from '../orders/order-file-storage';
 
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -255,7 +256,16 @@ export const completePublicQuoteReferenceUpload = onCall(async (call) => {
     throw new HttpsError('invalid-argument', 'O conteúdo da imagem não corresponde ao formato informado.');
   }
 
-  await referenceRef.update({ uploadStatus: 'ready', validatedAt: FieldValue.serverTimestamp() });
+  await revokeOrderFileTokens(expectedPath);
+  await adminDb.runTransaction(async (transaction) => {
+    const [atelier, profile, slug, currentRequest, currentReference] = await Promise.all([
+      transaction.get(adminDb.doc(`ateliers/${atelierId}`)), transaction.get(adminDb.doc(`publicAteliers/${atelierId}`)),
+      transaction.get(adminDb.doc(`publicAtelierSlugs/${lookup.tenant!.slug}`)), transaction.get(requestRef), transaction.get(referenceRef),
+    ]);
+    if (atelier.get('active') !== true || atelier.get('demoWorkspace') === true || profile.get('published') !== true || profile.get('quoteRequestsEnabled') !== true || slug.get('atelierId') !== atelierId || profile.get('slug') !== lookup.tenant!.slug
+      || currentRequest.get('status') !== 'new' || currentReference.get('uploadStatus') !== 'pending' || currentReference.get('storagePath') !== expectedPath || currentReference.get('size') !== reference.size || currentReference.get('contentType') !== reference.contentType) throw new HttpsError('failed-precondition', 'A solicitação mudou durante a validação do arquivo.');
+    transaction.update(referenceRef, { uploadStatus: 'ready', storageGeneration: String(metadata.generation), sha256: orderFileHash(content), validatedAt: FieldValue.serverTimestamp() });
+  });
   return { uploadId, ready: true };
 });
 

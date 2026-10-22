@@ -110,8 +110,8 @@ service firebase.storage {
     }
 
     match /ateliers/{atelierId}/quoteRequests/{requestId}/references/{referenceId} {
-      allow read: if referenceIsReady(atelierId, requestId, referenceId)
-        && (isAtelierMember(atelierId) || mayReadOwnPublicReference(atelierId, requestId));
+      // Private reference bytes require current server-side authorization; no reusable download URLs.
+      allow read: if false;
       allow create: if isReferenceImage() && !isDemoWorkspace(atelierId) && mayWritePublicReference(atelierId, requestId, referenceId);
       allow update, delete: if false;
     }

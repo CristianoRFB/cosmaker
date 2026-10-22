@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { QuoteReferenceDownload } from '@/components/quote-requests/reference-download';
 import { useParams } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { ArrowLeft, ArrowRight, CalendarDays, FileText, Mail, Phone, Ruler, Sparkles } from 'lucide-react';
@@ -30,7 +31,7 @@ export default function QuoteRequestDetailPage() {
 
       {request.showcaseContext && <Card className="p-5 sm:p-7"><h2 className="text-lg font-semibold">Origem no catálogo do ateliê</h2>{request.showcaseContext.service && <p className="mt-3 text-sm text-slate-700">Serviço: {request.showcaseContext.service.title}</p>}{request.showcaseContext.project && <p className="mt-3 text-sm text-slate-700">Trabalho de referência: {request.showcaseContext.project.title}</p>}<p className="mt-3 text-xs text-slate-500">Títulos preservados no momento da solicitação.</p></Card>}
 
-      <Card className="p-5 sm:p-7"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.16em] text-violet-700">Referências</p><h2 className="mt-1 text-lg font-semibold">Imagens do projeto</h2></div><span className="grid size-10 place-items-center rounded-xl bg-violet-100 text-violet-700"><Sparkles size={18} /></span></div>{references.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{references.map((reference) => <li className="rounded-xl border border-slate-100 p-3" key={reference.id}><p className="truncate text-sm font-medium text-slate-800">{reference.originalName}</p><p className="mt-1 text-xs text-slate-500">{(reference.size / 1024 / 1024).toFixed(1)} MB <span className="px-1">·</span> {reference.contentType}</p>{reference.downloadUrl ? <a className="mt-2 inline-flex text-xs font-semibold text-violet-700 hover:text-violet-900" href={reference.downloadUrl} rel="noreferrer" target="_blank">Abrir referência</a> : <p className="mt-2 text-xs text-amber-700">Arquivo indisponível</p>}</li>)}</ul> : <p className="mt-4 text-sm text-slate-500">O cliente não anexou imagens.</p>}</Card>
+      <Card className="p-5 sm:p-7"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.16em] text-violet-700">Referências</p><h2 className="mt-1 text-lg font-semibold">Imagens do projeto</h2></div><span className="grid size-10 place-items-center rounded-xl bg-violet-100 text-violet-700"><Sparkles size={18} /></span></div>{references.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{references.map((reference) => <li className="rounded-xl border border-slate-100 p-3" key={reference.id}><p className="truncate text-sm font-medium text-slate-800">{reference.originalName}</p><p className="mt-1 text-xs text-slate-500">{(reference.size / 1024 / 1024).toFixed(1)} MB <span className="px-1">·</span> {reference.contentType}</p><QuoteReferenceDownload requestId={request.id} reference={reference} /></li>)}</ul> : <p className="mt-4 text-sm text-slate-500">O cliente não anexou imagens.</p>}</Card>
     </div>
 
     <aside className="grid content-start gap-4">

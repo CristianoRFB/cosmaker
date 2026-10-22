@@ -2,7 +2,6 @@
 
 import { collection, collectionGroup, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
-import { getDownloadURL, ref } from 'firebase/storage';
 import { requireFirebase } from '@/services/firebase/firebase.client';
 import type { Quote, QuoteItem, QuoteResponse } from '@/types/quote';
 import type { QuoteRequest, QuoteRequestReference } from '@/types/quote-request';
@@ -15,15 +14,11 @@ export async function listQuoteRequests(atelierId: string) {
 }
 
 export async function getQuoteRequest(atelierId: string, requestId: string) {
-  const { db, storage } = requireFirebase();
+  const { db } = requireFirebase();
   const requestSnapshot = await getDoc(doc(db, 'ateliers', atelierId, 'quoteRequests', requestId));
   if (!requestSnapshot.exists()) return null;
   const referenceSnapshots = await getDocs(query(collection(db, 'ateliers', atelierId, 'quoteRequests', requestId, 'references'), orderBy('createdAt', 'asc')));
-  const references = await Promise.all(referenceSnapshots.docs.map(async (snapshot) => {
-    const reference = { id: snapshot.id, ...snapshot.data() } as QuoteRequestReference;
-    try { return { ...reference, downloadUrl: await getDownloadURL(ref(storage, reference.storagePath)) }; }
-    catch { return { ...reference, downloadUrl: null }; }
-  }));
+  const references = referenceSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data(), downloadUrl: null }) as QuoteRequestReference);
   return {
     request: { id: requestSnapshot.id, ...requestSnapshot.data() } as QuoteRequest,
     references,
@@ -81,4 +76,17 @@ export async function respondToQuote(atelierId: string, quoteId: string, decisio
   const { functions } = requireFirebase();
   const respond = httpsCallable<{ atelierId: string; quoteId: string; decision: string; comment: string }, { quoteId: string; decision: string }>(functions, 'respondToQuote');
   return (await respond({ atelierId, quoteId, decision, comment })).data;
+}
+
+export async function downloadQuoteRequestReference(requestId: string, reference: QuoteRequestReference) {
+  const { app, auth } = requireFirebase();
+  if (!app || !auth.currentUser) throw new Error('Entre na sua conta para acessar referências.');
+  const projectId = app.options.projectId;
+  const base = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true'
+    ? `http://${process.env.NEXT_PUBLIC_FIREBASE_EMULATOR_HOST || '127.0.0.1'}:${process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_PORT || '5001'}/${projectId}/us-central1`
+    : `https://us-central1-${projectId}.cloudfunctions.net`;
+  const url = new URL(`${base}/downloadQuoteReferenceBytes`); url.searchParams.set('requestId', requestId); url.searchParams.set('referenceId', reference.id);
+  const response = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(120_000), headers: { Authorization: `Bearer ${await auth.currentUser.getIdToken()}` } });
+  if (!response.ok) { const payload = await response.json().catch(() => null); throw new Error(payload?.error?.message || 'A referência está indisponível. Atualize a solicitação.'); }
+  const blob = await response.blob(); const objectUrl = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = objectUrl; link.download = reference.originalName; link.click(); setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
 }

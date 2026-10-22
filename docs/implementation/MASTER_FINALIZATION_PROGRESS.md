@@ -1,5 +1,13 @@
 # Cosmaker Master Finalization — Progress
 
+## F2/F5 — referências pré-pedido em validação — 2026-10-22
+
+- Checkpoint anterior `565b1e0ca5dc9e8c56131a012b3cdf09cf177ab9` enviado com árvore idêntica; CI **PASS**, [39792259078](https://github.com/CristianoRFB/cosmaker/actions/runs/39792259078).
+- **WIP**: retirada de `getDownloadURL` no painel de solicitações, endpoint de bytes com tenant derivado e permissão de orçamentos, validação de vínculo/tipo/tamanho/hash/geração e releitura de autorização após I/O. Upload público revoga tokens antes de ready e registra hash/geração; Storage nega leitura direta. Legado é preservado e revogado somente no objeto acessado de forma autorizada; não há revogação global/real. [Contrato](QUOTE_REFERENCE_BYTES.md).
+- Functions build, TypeScript/lint e build local 81 páginas passaram. Integração específica e Rules/E2E **AINDA NÃO APROVADAS**. Duas tentativas do harness falharam em fixtures: índice público sem campo `slug`, depois Storage Web sem bucket explícito; corrigidos e nova execução em andamento. Não foram relaxadas as permissões para contornar falhas.
+- Uma execução Rules foi iniciada em paralelo por engano; interrompida com SIGINT para manter a integração como única suíte de Emulator ativa. Esse teste interrompido não conta como PASS. As Rules específicas devem rodar sequencialmente após o backend.
+- F1.1–F1.9 mantêm aceite local, índice **9/16 = 56,25%**. F2/F3/F5/F6 parciais; F4 regressão atual, F7 e F8 pendentes. Próximos gates: integração referências, Rules, smoke de upload público e bytes no painel mobile/desktop, checkpoint e CI.
+
 ## F1.9 aceita; F2 entrega e F5/F6 locais — 2026-10-22
 
 - CI F1.9 **PASS**, [39789058086](https://github.com/CristianoRFB/cosmaker/actions/runs/39789058086), SHA `e514e25f35ef3fe93e1f4fbf35cf80dc3c812169`. CI do checkpoint de entrega `1831ef8f1a9eac8ad3191562cf704fcba0b78d9a` **PASS**, [39790682838](https://github.com/CristianoRFB/cosmaker/actions/runs/39790682838). A consulta anterior sem runs foi transitória; não era falha de código. **F1.1–F1.9 aceitas no escopo local**, mantendo contratos e gates anteriores.

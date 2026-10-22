@@ -405,6 +405,17 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/inventorySkuIndex/forged'), { materialId: 'forged' }));
   });
 
+  it('denies direct reference bytes and token URLs even for owner and matching client email', async () => {
+    const path = 'ateliers/atelier-a/quoteRequests/request-a/references/ref-a';
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), path), { uploadStatus: 'ready' });
+      await uploadBytes(ref(context.storage(), path), new Uint8Array([1, 2, 3]), { contentType: 'image/png' });
+    });
+    for (const context of [environment.unauthenticatedContext(), environment.authenticatedContext('member-a', { email_verified: true }), environment.authenticatedContext('member-b', { email_verified: true }), environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true })]) {
+      await assertFails(getBytes(ref(context.storage(), path)));
+    }
+  });
+
   it('limits public reference uploads to image types and enabled public intake', async () => {
     const guest = environment.unauthenticatedContext().storage();
     await assertSucceeds(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref-a'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));

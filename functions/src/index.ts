@@ -43,3 +43,5 @@ export { listInternalNotifications, markInternalNotificationRead } from './notif
 export { getOperationalPreferences, saveOperationalPreferences, getAtelierOperationalReport } from './reports/reports';
 
 export { finalizeOrder } from './orders/finalize-order';
+
+export { downloadQuoteReferenceBytes } from './public/quote-reference-bytes';
