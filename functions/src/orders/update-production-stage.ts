@@ -5,6 +5,7 @@ import { requireOrderManager, requireVerifiedIdentity } from './access';
 import { calculateWeightedProductionProgress, productionSemantic, statusAfterProductionCompletion } from './production-template';
 import { productionFingerprint, productionId, productionOperationId, productionVersion, readProductionManager } from './production-configuration';
 import { orderRemainingCents } from './change-policy';
+import { writeInternalNotification } from '../notifications/create-notification';
 import { captureProductionPhotoEvidence, type ProductionPhotoEvidence } from './production-evidence';
 
 type Action = 'start' | 'progress' | 'complete' | 'block' | 'cancel_approval';
@@ -106,9 +107,9 @@ export const updateProductionStage = onCall(async (call) => {
           },
         });
         transaction.create(approvalRef.collection('events').doc(), { actorId: call.auth!.uid, action: 'requested', comment: note || null, createdAt: now });
-        if (typeof order.clientUserId === 'string') transaction.create(adminDb.collection(`ateliers/${atelierId}/notifications`).doc(), {
-          userId: order.clientUserId, type: 'approval_required', title: 'Aprovação de etapa necessária',
-          message: `A etapa ${String(currentStage.name)} do projeto ${String(order.character)} aguarda sua aprovação.`, orderId, createdAt: now, read: false,
+        if (typeof order.clientUserId === 'string') writeInternalNotification(transaction, {
+          atelierId, eventId: approvalRef.id, userId: order.clientUserId, type: 'approval_required', title: 'Aprovação de etapa necessária',
+          message: `A etapa ${String(currentStage.name)} do projeto ${String(order.character)} aguarda sua aprovação.`, orderId,
         });
       } else {
         nextStageStatus = 'completed';

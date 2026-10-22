@@ -1,8 +1,2 @@
-export default function Mensagens() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Mensagens</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
-}
+import { MessagesWorkspace } from '@/components/messages/messages-workspace';
+export default function MessagesPage() { return <MessagesWorkspace viewer="client" />; }

@@ -38,3 +38,5 @@ export { recordFinanceEntry, reverseFinanceEntry, listFinanceWorkspace } from '.
 export { reconcileLegacyFinancePayment } from './finance/finance';
 export { listAtelierShowcase, saveAtelierService, saveAtelierPortfolioProject, listPublicShowcase, saveAtelierPublicProfile } from './showcase/showcase';
 export { uploadShowcaseImage, downloadShowcaseImage, removeShowcaseImage } from './showcase/images';
+export { sendOrderMessage, getOrderConversation, markOrderConversationRead, listMessageInbox } from './messages/conversations';
+export { listInternalNotifications, markInternalNotificationRead } from './notifications/internal-notifications';

@@ -269,7 +269,7 @@ service cloud.firestore {
         match /changeRequestOperations/{operationId} { allow read, write: if false; }
         match /{subcollection}/{documentId} {
           allow read: if canReadOrder(atelierId, orderId)
-            && subcollection in ['items', 'productionStages', 'photos', 'approvals', 'payments', 'messages', 'statusHistory', 'measurementSnapshot']
+            && subcollection in ['items', 'productionStages', 'photos', 'approvals', 'payments', 'statusHistory', 'measurementSnapshot']
             && (subcollection != 'photos'
               || hasAtelierPermission(atelierId, 'orders:read')
               || (isOrderClient(atelierId, orderId) && resource.data.visibleToClient == true && resource.data.uploadStatus == 'ready'))
@@ -381,23 +381,12 @@ service cloud.firestore {
         allow write: if false;
       }
       match /notifications/{notificationId} {
-        allow read: if signedIn() && resource.data.userId == request.auth.uid;
-        allow update: if signedIn() && resource.data.userId == request.auth.uid
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
-        allow create, delete: if false;
+        // Callables validate UID and current order access again before exposing content or reading it.
+        allow read, write: if false;
       }
       match /conversations/{conversationId} {
-        allow read: if isAtelierMember(atelierId) || (signedIn() && resource.data.clientUserId == request.auth.uid);
-        allow create, update: if isAtelierMember(atelierId) || (signedIn() && request.resource.data.clientUserId == request.auth.uid);
-        allow delete: if false;
-        match /messages/{messageId} {
-          allow read: if isAtelierMember(atelierId)
-            || (signedIn() && get(/databases/$(database)/documents/ateliers/$(atelierId)/conversations/$(conversationId)).data.clientUserId == request.auth.uid);
-          allow create: if isAtelierMember(atelierId)
-            || (signedIn() && get(/databases/$(database)/documents/ateliers/$(atelierId)/conversations/$(conversationId)).data.clientUserId == request.auth.uid
-              && request.resource.data.senderId == request.auth.uid);
-          allow update, delete: if false;
-        }
+        allow read, write: if false;
+        match /{document=**} { allow read, write: if false; }
       }
     }
 

@@ -35,6 +35,7 @@ const atelierNavigation = [
   { href: '/atelier/estoque', label: 'Estoque', icon: Layers3 },
   { href: '/atelier/servicos', label: 'Serviços', icon: Scissors },
   { href: '/atelier/portfolio', label: 'Portfólio', icon: Sparkles },
+  { href: '/atelier/mensagens', label: 'Mensagens', icon: MessageCircle },
   { href: '/atelier/relatorios', label: 'Relatórios', icon: ChartNoAxesCombined },
   { href: '/atelier/configuracoes', label: 'Configurações', icon: Settings },
 ];
@@ -55,7 +56,8 @@ export function WorkspaceLayout({ audience, title, children }: { audience: Audie
       (item.href !== '/atelier/pedidos' || hasPermission('orders:read'))
       && (item.href !== '/atelier/producao' || hasPermission('orders:read'))
       && (item.href !== '/atelier/servicos' || hasPermission('services:read') || hasPermission('services:write'))
-      && (item.href !== '/atelier/portfolio' || hasPermission('portfolio:manage')))
+      && (item.href !== '/atelier/portfolio' || hasPermission('portfolio:manage'))
+      && (item.href !== '/atelier/mensagens' || hasPermission('orders:read')))
     : adminNavigation;
   const pageTitle = audience === 'admin'
     ? pathname === '/admin' ? 'Visão geral' : pathname === '/admin/logs' ? 'Auditoria' : pathname === '/admin/ateliers' ? 'Ateliês' : pathname === '/admin/planos' ? 'Planos' : pathname === '/admin/assinaturas' ? 'Assinaturas' : pathname.startsWith('/admin/ateliers/') ? 'Detalhes do ateliê' : 'Administração'

@@ -1,5 +1,16 @@
 # Cosmaker Master Finalization — Progress
 
+## F1.8 — checkpoint de implementação parcial 2026-10-22
+
+- F1.7 aceita e preservada no remoto [`0f44545`](https://github.com/CristianoRFB/cosmaker/commit/0f445456e1f120753e32e8e44141720b029dd977). F1.6/F1.7 mantêm os gates anteriores, sem nova declaração de produção/staging.
+- F1.8 **WIP**: backend de conversas por pedido, envio idempotente/fingerprint, sequência concorrente, histórico paginado, leitura monotônica por UID, notificações internas por destinatário, marcas de leitura e anexos protegidos. Ownership usa UID forte antes de e-mail legado, confere perfil/membership/tenant ativos e nega papéis sem acesso ao pedido. Plataform Owner não herda acesso a mensagens privadas.
+- Mensagens não devolvem UIDs dos participantes nem caminhos/URLs de arquivos. Anexos só podem referenciar arquivos do próprio pedido prontos e compartilhados; revogação oculta seus metadados nas novas leituras. Conteúdo de conversa anterior sem prova server-side em auditoria/ledger exige conciliação, sem migração ou exclusão silenciosa.
+- Rules antigas de conversas permitiam escrita direta e falsificação de remetente/participantes; passaram a negar leitura/escrita bruta de conversas, mensagens, operações, leituras e notificações. Índices de inbox/notificações preparados localmente; **não publicados**. Notificações de aprovação de produção existentes passaram ao helper idempotente, preservando o tipo `approval_required`; a regressão de produção ainda precisa rodar.
+- Integração inicial real **4/4 PASS**, exit 0, 55,55s (`/tmp/cosmaker-f18-integration.log`): dedupe/concorrência/auditoria/UID destinatário, leitura, A/B, e-mail reutilizado, vínculo conflitante, perfil inativo, roles, anexos/revogação, paginação/sequências e histórico legado não verificado. Functions build, TypeScript e lint direcionado passaram antes da última adição de navegação/CTA.
+- Telas/repos/types de mensagens e notificações conectados, com proteção contra respostas assíncronas de outra sessão/seleção. **UI ainda não validada por build/smoke**, Rules negativas específicas F1.8 e regressão de produção pendentes. Não marcar F1.8 PASS. Próximos gates: Rules, casos adicionais de notif/cursor, produção, build, desktop/mobile, CI.
+- Nenhum WhatsApp, e-mail externo, gateway, deploy ou mutação Firebase real foi executado. F1.9/F2–F8 continuam TODO; WIP F1.8 não altera o índice de aceite 7/16 (43,75%).
+
+
 ## Aceite F1.7 — 2026-10-22
 
 - F1.7 **PASS** no fluxo local aprovado: serviços/projetos/imagens/admin/branding/publicação, catálogo por slug, filtros/ordem, origem do orçamento com snapshot e projeções que não expõem notas ou dados privados. Contrato completo em [SHOWCASE_CONTENT.md](SHOWCASE_CONTENT.md).
@@ -125,7 +136,7 @@ O proprietário autorizou explicitamente commit e push da branch de trabalho. Es
 | F1.5 Pedidos, produção e change requests | PASS | Anexos/fotos por bytes autenticados, revogação, histórico paginado, configuração/etapas próprias, snapshots de evidências, revisões aprovadas com acordo versionado em centavos e integridade de agenda. Ownership por UID prevalece sobre e-mail antigo, perfis/tenant ativos e projeção segura no portal. Retomada 2026-10-19: integração 32/32, Rules 21/21, desktop 3/3, mobile 2/2; CI Node 22 com 109 unitários, Functions/Next build verdes. Segurança transversal e migração/revogação global permanecem gates F2/F6/F7. |
 | F1.6 Financeiro operacional, custos e margens | PASS | Ledger, compensações, conciliação legada, pagamentos manuais e margens; integração 7/7, Rules 22/22 + 1 direcionado, desktop 2/2 e mobile 1/1; build local e CI 39706976082 verdes. |
 | F1.7 Serviços e portfólio | PASS | Catálogo/admin/branding/imagens/publicação/origem do orçamento; integração 5/5, Rules 23/23, unitários 7/7, desktop 1/1, mobile 1/1; build e CI 39709281488 verdes. |
-| F1.8 Mensagens e notificações internas | TODO | Conversas, leitura, anexos protegidos e deduplicação de eventos. |
+| F1.8 Mensagens e notificações internas | WIP | Backend e UI conectados; integração inicial 4/4, Functions/TypeScript/lint direcionado verdes; Rules específicas, regressão produção, build/E2E e CI ainda pendentes. |
 | F1.9 Relatórios e configurações | TODO | Métricas reproduzíveis, filtros/timezone, preferências e escopo de Platform Owner. |
 | Checkpoint F1 — completude funcional | TODO | Cada módulo operacional precisa criar→ler→alterar/ação→persistir e provar denial em outra fronteira. |
 | F2 — jornada integrada A×B | TODO | E2E ponta a ponta com persistência no Emulator, falhas, concorrência, retry e ACL. |

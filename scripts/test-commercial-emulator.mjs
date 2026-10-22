@@ -14,6 +14,7 @@ const suites = {
   inventory: 'tests/integration/inventory-functions.test.ts',
   finance: 'tests/integration/finance-functions.test.ts',
   showcase: 'tests/integration/showcase-functions.test.ts',
+  messages: 'tests/integration/messages-functions.test.ts',
   'order-files': 'tests/integration/order-files-functions.test.ts',
   'order-changes': 'tests/integration/order-change-functions.test.ts',
   'production-configuration': 'tests/integration/production-configuration-functions.test.ts',
