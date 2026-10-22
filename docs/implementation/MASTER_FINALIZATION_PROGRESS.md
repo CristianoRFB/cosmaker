@@ -1,5 +1,16 @@
 # Cosmaker Master Finalization — Progress
 
+## F1.9 — gates locais concluídos, CI pendente — 2026-10-22
+
+- WIP anterior preservado no remoto `c4cadc1262c3b2636e62931dc6f43734e550ec07`; árvore remota idêntica à local. Não há execução CI associada a esse SHA na consulta atual; último CI comprovado continua `1192ecf` (39712999574). Não tratar ausência de execução como PASS.
+- Relatórios/configurações **IMPLEMENTADO / TESTADO_LOCALMENTE**, contrato em [OPERATIONAL_REPORTS.md](OPERATIONAL_REPORTS.md). Snapshot consistente, coortes/datas civis/fuso, progresso e prazos reais, finanças herdadas em centavos com escopo do filtro explícito, mascaramento por domínio, preferências com versão/idempotência/auditoria e manutenção da identidade pública existente. Platform Owner reutiliza métricas protegidas reais e controles já aprovados.
+- Integração Functions **5/5 PASS**, exit 0, 10,53s (`/tmp/cosmaker-f19-integration.log`): fuso/coortes, posição financeira vs período, A/B, RBAC, ausência de dados privados na projeção, perfil/membership/tenant/e-mail, adulteração, concorrência/CAS/idempotência/auditoria, corrupção monetária e limite explícito de agregação.
+- Rules **25/25 PASS**, exit 0, 19,70s (`/tmp/cosmaker-f19-rules.log`), incluindo negações get/list/create/update/delete de preferências e operações por owner, cliente, visitante e outro tenant. Unitários direcionados **5/5 PASS** (4 relatórios + 1 transporte); TypeScript/lint e docs:check verdes.
+- Build local **PASS**, exit 0, 81 páginas, pelo setup reutilizável (`/tmp/cosmaker-cloud-setup.log`); código executável F1.9 não mudou depois desse build. E2E relatórios/preferências **1/1 PASS**, exit 0, 15,3s (`/tmp/cosmaker-f19-e2e-reports-final.log`): persistência/reload, filtros, saldos atuais, sem overflow em **320/375/768/1440** e capturas inspecionadas. Platform Owner **1/1 PASS**, 7,4s no log `/tmp/cosmaker-f19-e2e.log`, com contagem comparada ao Firestore e controles 320/1440.
+- Tentativas anteriores não são omitidas: runner inicial E2E falhou por `import.meta` sob CommonJS, corrigido conforme padrão existente. Primeiro teste de relatórios falhou com fixture sem quoteId/description do acordo; backend recusou corretamente o valor e a fixture foi corrigida. A repetição direcionada passou; não foi relaxada validação monetária.
+- Ambiente local preparado e comprovado; valores para publicação no editor Cloud documentados, sem API disponível para publicá-los nesta sessão. Projeto único `demo-cosmaker`, Node 22/Java 21, cinco emuladores, seed e start HTTP 200; nenhuma configuração Firebase real.
+- F1.9 aguarda CI remoto para aceite formal; índice conservador permanece **8/16 = 50%**, com mais um gate validado localmente (9/16 = 56,25% somente após CI). F2–F8 pendentes. Próximo trabalho concreto: **F2 entrega/finalização do pedido e suas integrações**, cujo backend ainda é stub; F3 corrigirá títulos genéricos de navegação observados nas capturas, sem redesign.
+
 ## Retomada GOAL MASTER II — 2026-10-22
 
 - Fetch antes de alterações confirmou remoto e checkout em `1192ecfaffc32b8046a329e522f298babf08c36a`, branch `codex/cosmaker-master-finalizacao`. Working tree contém implementação parcial F1.9 preservada, sem descarte/reinício.
@@ -163,7 +174,7 @@ O proprietário autorizou explicitamente commit e push da branch de trabalho. Es
 | F1.6 Financeiro operacional, custos e margens | PASS | Ledger, compensações, conciliação legada, pagamentos manuais e margens; integração 7/7, Rules 22/22 + 1 direcionado, desktop 2/2 e mobile 1/1; build local e CI 39706976082 verdes. |
 | F1.7 Serviços e portfólio | PASS | Catálogo/admin/branding/imagens/publicação/origem do orçamento; integração 5/5, Rules 23/23, unitários 7/7, desktop 1/1, mobile 1/1; build e CI 39709281488 verdes. |
 | F1.8 Mensagens e notificações internas | PASS LOCAL | Backend 5/5, produção 11/11, Rules 24/24, desktop/mobile 1/1 cada, build e CI final verdes; detalhes nos checkpoints posteriores. |
-| F1.9 Relatórios e configurações | WIP | Backend/UI parciais preservados; integração interrompida sem evidência, Rules/build/E2E pendentes. |
+| F1.9 Relatórios e configurações | TESTADO_LOCALMENTE / CI PENDENTE | Backend 5/5, Rules 25/25, build, filtros/persistência 320/375/768/1440 e métricas globais aprovados; sem CI do código novo na consulta. |
 | Checkpoint F1 — completude funcional | TODO | Cada módulo operacional precisa criar→ler→alterar/ação→persistir e provar denial em outra fronteira. |
 | F2 — jornada integrada A×B | TODO | E2E ponta a ponta com persistência no Emulator, falhas, concorrência, retry e ACL. |
 | F3 — UX/UI e white-label | TODO | Rotas/estados reais em três papéis, desktop/mobile, acessibilidade e sem stubs ativos. |

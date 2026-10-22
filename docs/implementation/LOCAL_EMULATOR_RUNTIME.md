@@ -58,3 +58,5 @@ bash scripts/cloud-run.sh npm run test:reports
 ```
 
 Portas: app 3000; Auth 19099; Firestore 18080; Storage 19199; Functions 15001; Pub/Sub 8085; hub 14403; logs 14404. Projeto fixo `demo-cosmaker`. O servidor web continua limitado ao loopback, conforme `dev-local.mjs`.
+
+Validação da retomada em 2026-10-22: `cloud-setup.sh` **exit 0**, Node 22.23.4 com SHA-256 verificado, Java 21, instalação raiz/Functions, três artefatos de emuladores preparados e build local de 81 páginas. `cloud-start.sh start` iniciou os cinco serviços, seed e servidor; HTTP 200 e resolução pública no navegador comprovados. Segunda inicialização recusou porta 19099 ocupada sem parar a primeira. Encerramento liberou as portas e uma nova inicialização reutilizou o runtime/cache. `METADATA_SERVER_DETECTION=none` evita descoberta de identidade GCE no lançador exclusivamente demo; não altera proxy/CA. O smoke inicial usou um nome de heading exato que omitia o subtítulo e expirou; o seletor canônico por conteúdo confirmou o tenant na jornada posterior. Não houve mudança de credenciais, deploy ou acesso a projeto real.

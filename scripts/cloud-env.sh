@@ -27,4 +27,6 @@ fi
 export GCLOUD_PROJECT=demo-cosmaker GOOGLE_CLOUD_PROJECT=demo-cosmaker
 export FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:19099 FIRESTORE_EMULATOR_HOST=127.0.0.1:18080 FIREBASE_STORAGE_EMULATOR_HOST=127.0.0.1:19199
 export PUBSUB_EMULATOR_HOST=127.0.0.1:8085
+# This entrypoint is exclusively for demo emulators, never a GCE identity.
+export METADATA_SERVER_DETECTION=none
 if [[ -x /usr/bin/chromium ]]; then export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium; fi

@@ -240,6 +240,6 @@ console.log(`Conta do ateliê: ${atelierUser.email}`);
 console.log(`Conta do segundo ateliê: ${atelierUserB.email}`);
 console.log(`Conta do cliente: ${clientUser.email}`);
 console.log(`Conta administrativa local: ${platformAdminUser.email}`);
-console.log(`Senha local das três contas: ${fixturePassword}`);
+console.log(`Senha local das contas fictícias: ${fixturePassword}`);
 
 await app.delete();

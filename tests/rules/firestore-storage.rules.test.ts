@@ -217,6 +217,24 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(getDoc(doc(client, 'ateliers/atelier-b/orders/order-b')));
   });
 
+  it('keeps operational preferences and settings idempotency records server-managed', async () => {
+    const paths = ['ateliers/atelier-a/preferences/operations', 'ateliers/atelier-a/settingsOperations/op-a'];
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await Promise.all(paths.map((path) => setDoc(doc(context.firestore(), path), { timezone: 'UTC', version: 1, fingerprint: 'protected' })));
+    });
+    for (const context of [environment.unauthenticatedContext(), environment.authenticatedContext('member-a', { email_verified: true }), environment.authenticatedContext('member-b', { email_verified: true }), environment.authenticatedContext('client-a', { email_verified: true })]) {
+      const db = context.firestore();
+      for (const path of paths) {
+        await assertFails(getDoc(doc(db, path)));
+        await assertFails(setDoc(doc(db, path + '-new'), { version: 999, timezone: 'UTC' }));
+        await assertFails(updateDoc(doc(db, path), { version: 999 }));
+        await assertFails(deleteDoc(doc(db, path)));
+      }
+      await assertFails(getDocs(collection(db, 'ateliers/atelier-a/preferences')));
+      await assertFails(getDocs(collection(db, 'ateliers/atelier-a/settingsOperations')));
+    }
+  });
+
   it('keeps message participants, history, read cursors and personal notifications callable-only', async () => {
     const paths = ['ateliers/atelier-a/conversations/order-a', 'ateliers/atelier-a/conversations/order-a/messages/message-a', 'ateliers/atelier-a/conversations/order-a/operations/op-a', 'ateliers/atelier-a/conversations/order-a/reads/client-a', 'ateliers/atelier-a/notifications/notice-a', 'ateliers/atelier-a/orders/order-a/messages/legacy-a'];
     await environment.withSecurityRulesDisabled(async (context) => {
