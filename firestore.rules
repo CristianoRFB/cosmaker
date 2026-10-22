@@ -315,12 +315,17 @@ service cloud.firestore {
 
       match /transactions/{transactionId} {
         allow read: if hasAtelierPermission(atelierId, 'finance:read');
-        allow write: if hasAtelierPermission(atelierId, 'finance:write');
+        allow write: if false;
       }
       match /expenses/{expenseId} {
         allow read: if hasAtelierPermission(atelierId, 'finance:read');
-        allow write: if hasAtelierPermission(atelierId, 'finance:write');
+        allow write: if false;
       }
+      // Financial ledger, retry keys and compensation locks are callable-only.
+      match /financeEntries/{entryId} { allow read, write: if false; }
+      match /financeOperations/{operationId} { allow read, write: if false; }
+      match /financeReversals/{entryId} { allow read, write: if false; }
+      match /financePaymentReferences/{referenceId} { allow read, write: if false; }
       match /payments/{paymentId} {
         allow read: if hasAtelierPermission(atelierId, 'finance:read');
         allow write: if false;

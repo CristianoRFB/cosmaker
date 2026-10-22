@@ -16,6 +16,7 @@
     "test:team": "npm run functions:build && node scripts/test-commercial-emulator.mjs team",
     "test:scheduling": "npm run functions:build && node scripts/test-commercial-emulator.mjs scheduling",
     "test:inventory": "npm run functions:build && node scripts/test-commercial-emulator.mjs inventory",
+    "test:finance": "npm run functions:build && node scripts/test-commercial-emulator.mjs finance",
     "test:order-files": "npm run functions:build && node scripts/test-commercial-emulator.mjs order-files",
     "test:order-changes": "npm run functions:build && node scripts/test-commercial-emulator.mjs order-changes",
     "test:production-configuration": "npm run functions:build && node scripts/test-commercial-emulator.mjs production-configuration",

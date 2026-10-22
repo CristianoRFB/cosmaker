@@ -12,6 +12,7 @@ const suites = {
   team: 'tests/integration/team-functions.test.ts',
   scheduling: 'tests/integration/scheduling-functions.test.ts',
   inventory: 'tests/integration/inventory-functions.test.ts',
+  finance: 'tests/integration/finance-functions.test.ts',
   'order-files': 'tests/integration/order-files-functions.test.ts',
   'order-changes': 'tests/integration/order-change-functions.test.ts',
   'production-configuration': 'tests/integration/production-configuration-functions.test.ts',

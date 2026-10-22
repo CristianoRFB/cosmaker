@@ -1,5 +1,17 @@
 # Cosmaker Master Finalization — Progress
 
+## Retomada Cloud — 2026-10-22 (F1.6 WIP)
+
+- Remoto conferido antes de editar: `4d1da1d265b2d0f84fba4ae3b59a0035e1510d44`, branch `codex/cosmaker-master-finalizacao`, árvore inicial limpa. CI do HEAD inicial PASS: [39306454878](https://github.com/CristianoRFB/cosmaker/actions/runs/39306454878). Consulta via conector GitHub; `gh` recebe Forbidden na rede deste Cloud.
+- Node 22.23.4 instalado em `/tmp/node-v22.23.4-linux-x64`; usar `export PATH=/tmp/node-v22.23.4-linux-x64/bin:$PATH` nesta sessão. Java 21.0.12.1 disponível. Dependências raiz e Functions instaladas com `npm ci` sob Node 22 e cache isolado `/tmp/cosmaker-npm-cache22`, após falha do cache padrão.
+- Implementação F1.6 em andamento: ledger de custos/receitas/recebimentos, compensações imutáveis, idempotência e referência duplicada, auditoria transacional, integração da entrada existente, saldos reais/centavos consistentes, margens e UI financeira. Contrato: [FINANCE_OPERATIONS.md](FINANCE_OPERATIONS.md).
+- Gates observados neste WIP: unitários financeiros **6/6 PASS**; Functions build **PASS**; TypeScript **PASS**; lint direcionado **PASS** após corrigir o componente Button e o narrowing do formulário.
+- Integração inicial **NOT_RUN**: Emulator baixou Firestore e iniciou em Standard, mas o registro do trigger em Eventarc local falhou antes do Vitest. Investigar esse erro, sem repetir tentativas cegas. Rules e E2E **PENDING**.
+- Download de navegador Playwright: HTTP 403 `Domain forbidden` para `cdn.playwright.dev`. Chromium 154 já está instalado em `/usr/bin/chromium`; configuração E2E agora aceita `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` para reutilizá-lo.
+- F1.6 segue **WIP**, F1.7–F1.9 e F2–F8 **TODO**. Nenhum novo aceite de fase. F1.1–F1.5 mantêm evidências anteriores, sujeito à regressão proporcional da entrada financeira alterada.
+- Nenhum deploy, migração real, alteração remota administrativa ou cobrança executados.
+
+
 ## Retomada autônoma — 2026-10-19
 
 Checkpoint pendente salvo e confirmado no remoto: [`fed3faff2d61bda1c0a62dc98feb6a2e0e389c6b`](https://github.com/CristianoRFB/cosmaker/commit/fed3faff2d61bda1c0a62dc98feb6a2e0e389c6b), WIP com os 19 arquivos preservados. Correção de dependências do CI: [`6204172`](https://github.com/CristianoRFB/cosmaker/commit/6204172).

@@ -34,3 +34,4 @@ export {
   completePublicQuoteReferenceUpload,
   discardPublicQuoteReferenceUpload,
 } from './public/tenant';
+export { recordFinanceEntry, reverseFinanceEntry, listFinanceWorkspace } from './finance/finance';

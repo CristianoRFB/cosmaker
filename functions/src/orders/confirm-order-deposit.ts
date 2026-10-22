@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
@@ -24,6 +25,7 @@ export const confirmOrderDeposit = onCall(async (call) => {
   const atelier = adminDb.doc(`ateliers/${data.atelierId}`);
   const orderRef = atelier.collection('orders').doc(data.orderId);
   const paymentRef = orderRef.collection('payments').doc('deposit');
+  const financeEntryId = createHash('sha256').update(JSON.stringify(['order_deposit', data.orderId])).digest('hex');
   const stageRefs = defaultProductionStages.map((stage) => orderRef.collection('productionStages').doc(stage.id));
   const historyRef = orderRef.collection('statusHistory').doc();
   const auditRef = adminDb.collection('auditLogs').doc();
@@ -63,7 +65,7 @@ export const confirmOrderDeposit = onCall(async (call) => {
 
     const now = Timestamp.now();
     transaction.update(paymentRef, {
-      status: 'paid', method: data.method, reference: reference || null,
+      status: 'paid', amountCents, financeEntryId, source: 'manual_deposit', method: data.method, reference: reference || null,
       confirmedBy: call.auth!.uid, paidAt: now, updatedAt: now,
     });
     transaction.update(orderRef, {
@@ -78,6 +80,12 @@ export const confirmOrderDeposit = onCall(async (call) => {
       });
     });
     transaction.create(historyRef, { status: 'confirmed', actorId: call.auth!.uid, source: 'manual_deposit_confirmation', createdAt: now });
+    transaction.create(atelier.collection('financeEntries').doc(financeEntryId), {
+      kind: 'payment', basis: 'actual', category: 'other', amountCents,
+      description: 'Entrada confirmada manualmente', effectiveDate: now.toDate().toISOString().slice(0, 10),
+      orderId: data.orderId, paymentId: 'deposit', method: data.method, reference: reference || null,
+      reversesEntryId: null, reason: null, actorId: call.auth!.uid, createdAt: now,
+    });
     transaction.create(auditRef, {
       actorId: call.auth!.uid, atelierId: data.atelierId, action: 'payment.deposit_confirmed_manually',
       entity: 'order', entityId: data.orderId,

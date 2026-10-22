@@ -217,6 +217,35 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(getDoc(doc(client, 'ateliers/atelier-b/orders/order-b')));
   });
 
+  it('keeps financial ledger, compensation locks and legacy mutations server-managed', async () => {
+    const root = 'ateliers/atelier-a';
+    const paths = ['financeEntries/entry-a', 'financeOperations/operation-a', 'financeReversals/entry-a', 'financePaymentReferences/reference-a'];
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await Promise.all([...paths, 'expenses/expense-a'].map((path) => setDoc(doc(context.firestore(), `${root}/${path}`), { amountCents: 1000, actorId: 'member-a' })));
+    });
+    const owner = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    const other = environment.authenticatedContext('member-b', { email_verified: true }).firestore();
+    const client = environment.authenticatedContext('client-a', { email_verified: true }).firestore();
+    const guest = environment.unauthenticatedContext().firestore();
+    for (const path of paths) {
+      for (const db of [owner, other, client, guest]) {
+        await assertFails(getDoc(doc(db, `${root}/${path}`)));
+        await assertFails(setDoc(doc(db, `${root}/${path}`), { amountCents: -1, actorId: 'forged' }));
+        await assertFails(updateDoc(doc(db, `${root}/${path}`), { actorId: 'forged', amountCents: 'invalid', createdAt: new Date(0) }));
+        await assertFails(deleteDoc(doc(db, `${root}/${path}`)));
+      }
+    }
+    await assertFails(getDocs(collection(guest, `${root}/financeEntries`)));
+    for (const path of ['transactions/transaction-a', 'expenses/expense-a']) {
+      await assertSucceeds(getDoc(doc(owner, `${root}/${path}`)));
+      await assertFails(updateDoc(doc(owner, `${root}/${path}`), { amountCents: 99 }));
+      await assertFails(setDoc(doc(owner, `${root}/${path}-new`), { amountCents: 99 }));
+      await assertFails(deleteDoc(doc(owner, `${root}/${path}`)));
+      await assertFails(getDoc(doc(other, `${root}/${path}`)));
+      await assertFails(getDoc(doc(client, `${root}/${path}`)));
+    }
+  });
+
   it('keeps finance records unavailable to a quote-only member', async () => {
     const reader = environment.authenticatedContext('finance-reader').firestore();
     await assertFails(getDoc(doc(reader, 'ateliers/atelier-a/transactions/transaction-a')));
