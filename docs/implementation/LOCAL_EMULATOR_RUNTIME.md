@@ -28,3 +28,33 @@ Use Node 22 (nesta sessão: `/tmp/node-v22.23.4-linux-x64/bin`) e Java 21. A ver
 O download Playwright por `cdn.playwright.dev` foi negado pela rede; reutilize o Chromium Linux instalado com `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium`. A configuração é opcional e não altera o navegador padrão do CI.
 
 Git no terminal usa a identidade `Nevez06`, que recebeu 403 ao tentar push neste repositório. O conector GitHub da conta `CristianoRFB` conseguiu enviar o checkpoint para a branch autorizada via árvore/commit/ref com atualização fast-forward e SHA esperado. A árvore remota foi comparada à local e o checkout foi realinhado com rebase que reconheceu o patch já aplicado. O commit local original foi preservado na branch local `local/cloud-finance-wip-6ee6cf2`; nenhum force push/reset foi usado.
+
+## Entradas reutilizáveis do ambiente `cosmaker`
+
+A retomada confirmou que arquivos temporários e processos não sobrevivem à recriação do runtime. O setup agora seleciona Node 22 automaticamente; quando a imagem traz outra versão, baixa Node **22.23.4** de `nodejs.org`, verifica SHA-256 do arquivo oficial e guarda o runtime no cache do usuário. Java 21 já integra a imagem validada; o script verifica sua compatibilidade e falha com uma mensagem concreta se a imagem deixar de fornecê-lo. Proxy e certificados herdados são preservados.
+
+Configuração concreta para **publicação no editor do ambiente Cloud** (a API disponível nesta sessão permite consultar o ambiente, mas não publicar sua configuração):
+
+| Campo | Valor |
+| --- | --- |
+| Nome | `cosmaker` |
+| Diretório | `/workspace/cosmaker` |
+| Instalação | `bash scripts/cloud-setup.sh` |
+| Inicialização | `bash scripts/cloud-start.sh` |
+| Alternativa com bundle compilado | `bash scripts/cloud-start.sh start` |
+| Imagem | Linux, Bash, curl, tar/xz, SHA-256 e Java 21 (`openjdk-21-jre-headless`) |
+| Rede | preset de gerenciadores de pacotes + `storage.googleapis.com`; Node usa `nodejs.org` do preset |
+| Segredos/credenciais Firebase | nenhum |
+
+O setup executa `npm ci` na raiz e em Functions com cache dedicado, compila Functions, prepara Firestore/Storage/PubSub e executa `build:local`. Auth e Functions não precisam de artefatos Java próprios. Não executa testes extensos, seed, migração nem deploy.
+
+A inicialização usa `firebase:emulators:local`, aguarda a prontidão de todos os emuladores, executa `seed:emulator` com endpoints loopback e inicia `dev:local` (ou `start:local`). Recusa portas já ocupadas para preservar outra sessão; encerra os grupos de processos ao receber sinal ou falha. O log fica em `.firebase/cloud-emulators.log` (ignorado pelo Git). Cada inicialização cria dados de demonstração; não é um mecanismo de backup. O seed existente usa somente identidades e dados fictícios.
+
+Para comandos avulsos, sem repetir a seleção manual de Node:
+
+```bash
+bash scripts/cloud-run.sh npm run build:local
+bash scripts/cloud-run.sh npm run test:reports
+```
+
+Portas: app 3000; Auth 19099; Firestore 18080; Storage 19199; Functions 15001; Pub/Sub 8085; hub 14403; logs 14404. Projeto fixo `demo-cosmaker`. O servidor web continua limitado ao loopback, conforme `dev-local.mjs`.

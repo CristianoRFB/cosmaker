@@ -1,5 +1,13 @@
 # Cosmaker Master Finalization — Progress
 
+## Retomada GOAL MASTER II — 2026-10-22
+
+- Fetch antes de alterações confirmou remoto e checkout em `1192ecfaffc32b8046a329e522f298babf08c36a`, branch `codex/cosmaker-master-finalizacao`. Working tree contém implementação parcial F1.9 preservada, sem descarte/reinício.
+- CI final F1.8 **PASS**, [39712298682](https://github.com/CristianoRFB/cosmaker/actions/runs/39712298682); CI do HEAD documental **PASS**, [39712999574](https://github.com/CristianoRFB/cosmaker/actions/runs/39712999574). Somados aos gates locais documentados, **F1.8 aceita localmente**. F1.1–F1.8 = 8/16 gates do GOAL (**50%**); nove módulos F1 + sete fases F2–F8 com peso igual, WIP excluído. Não mede prontidão comercial/produção.
+- F1.9 **IMPLEMENTAÇÃO PARCIAL / NÃO ACEITA**: relatórios server-side com snapshot consistente, mascaramento por domínio, datas civis por fuso, preferências versionadas/auditadas e telas conectadas. Unitários 4/4, TypeScript/lint passaram na execução anterior; a integração havia iniciado, mas seu processo/log temporário não sobreviveu à recriação do ambiente. Resultado daquela tentativa **NÃO COMPROVADO**, não PASS. Build, integração final, Rules e E2E permanecem obrigatórios.
+- Runtime recriado trouxe Node 24 e Java 21; cache temporário de Node/processos/logs não existe mais. Entradas de instalação/inicialização reutilizáveis estão sendo preparadas antes de continuar desenvolvimento. Contrato e valores concretos para o editor Cloud em [LOCAL_EMULATOR_RUNTIME.md](LOCAL_EMULATOR_RUNTIME.md); a ferramenta desta sessão consulta configuração, mas não publica alterações do ambiente.
+- F2–F8 continuam **PENDENTES**. Pendências concretas recuperadas: entrega/finalização ainda stub, referências pré-pedido/URLs legadas, scheduler, integração ponta a ponta, smoke 320/375/768/1440, auditoria de dependências, backup/restauração fictícios e preparação operacional. Nenhum módulo aprovado será reimplementado.
+
 ## F1.8 — fechamento local 2026-10-22 (aguardando CI)
 
 - Código preservado em [`2564374`](https://github.com/CristianoRFB/cosmaker/commit/2564374ce49b1f9cdeaeec9ce987441c8ddace7d). CI anterior do WIP c2548e2 **PASS**, [39711277828](https://github.com/CristianoRFB/cosmaker/actions/runs/39711277828); CI do código final [39712298682](https://github.com/CristianoRFB/cosmaker/actions/runs/39712298682) ainda em andamento na última consulta.
@@ -154,8 +162,8 @@ O proprietário autorizou explicitamente commit e push da branch de trabalho. Es
 | F1.5 Pedidos, produção e change requests | PASS | Anexos/fotos por bytes autenticados, revogação, histórico paginado, configuração/etapas próprias, snapshots de evidências, revisões aprovadas com acordo versionado em centavos e integridade de agenda. Ownership por UID prevalece sobre e-mail antigo, perfis/tenant ativos e projeção segura no portal. Retomada 2026-10-19: integração 32/32, Rules 21/21, desktop 3/3, mobile 2/2; CI Node 22 com 109 unitários, Functions/Next build verdes. Segurança transversal e migração/revogação global permanecem gates F2/F6/F7. |
 | F1.6 Financeiro operacional, custos e margens | PASS | Ledger, compensações, conciliação legada, pagamentos manuais e margens; integração 7/7, Rules 22/22 + 1 direcionado, desktop 2/2 e mobile 1/1; build local e CI 39706976082 verdes. |
 | F1.7 Serviços e portfólio | PASS | Catálogo/admin/branding/imagens/publicação/origem do orçamento; integração 5/5, Rules 23/23, unitários 7/7, desktop 1/1, mobile 1/1; build e CI 39709281488 verdes. |
-| F1.8 Mensagens e notificações internas | WIP | Backend e UI conectados; integração inicial 4/4, Functions/TypeScript/lint direcionado verdes; Rules específicas, regressão produção, build/E2E e CI ainda pendentes. |
-| F1.9 Relatórios e configurações | TODO | Métricas reproduzíveis, filtros/timezone, preferências e escopo de Platform Owner. |
+| F1.8 Mensagens e notificações internas | PASS LOCAL | Backend 5/5, produção 11/11, Rules 24/24, desktop/mobile 1/1 cada, build e CI final verdes; detalhes nos checkpoints posteriores. |
+| F1.9 Relatórios e configurações | WIP | Backend/UI parciais preservados; integração interrompida sem evidência, Rules/build/E2E pendentes. |
 | Checkpoint F1 — completude funcional | TODO | Cada módulo operacional precisa criar→ler→alterar/ação→persistir e provar denial em outra fronteira. |
 | F2 — jornada integrada A×B | TODO | E2E ponta a ponta com persistência no Emulator, falhas, concorrência, retry e ACL. |
 | F3 — UX/UI e white-label | TODO | Rotas/estados reais em três papéis, desktop/mobile, acessibilidade e sem stubs ativos. |

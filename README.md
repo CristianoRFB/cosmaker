@@ -6,6 +6,8 @@ O estado técnico mais recente, os commits e os gates reais ficam em [MASTER_FIN
 
 ## Execução Linux somente local
 
+No ambiente Cloud `cosmaker`, use `bash scripts/cloud-setup.sh` na instalação e `bash scripts/cloud-start.sh` na inicialização. As entradas selecionam Node 22 automaticamente, reaproveitam os lançadores abaixo e não usam credenciais reais. Consulte a configuração publicável em [LOCAL_EMULATOR_RUNTIME.md](docs/implementation/LOCAL_EMULATOR_RUNTIME.md).
+
 Use Node.js 22, npm e Java 21 para a Firebase Emulator Suite atual. Instale dependências da raiz e de Functions:
 
 ```bash

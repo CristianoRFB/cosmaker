@@ -317,6 +317,8 @@ service cloud.firestore {
         allow read, write: if false;
       }
       match /showcaseOperations/{operationId} { allow read, write: if false; }
+      match /preferences/{documentId} { allow read, write: if false; }
+      match /settingsOperations/{operationId} { allow read, write: if false; }
 
       match /transactions/{transactionId} {
         allow read: if activeFinanceStaff(atelierId);

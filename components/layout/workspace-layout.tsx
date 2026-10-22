@@ -45,6 +45,8 @@ const adminNavigation = [
   { href: '/admin/planos', label: 'Planos', icon: Tags },
   { href: '/admin/assinaturas', label: 'Assinaturas', icon: ReceiptText },
   { href: '/admin/logs', label: 'Auditoria', icon: FileText },
+  { href: '/admin/metricas', label: 'Métricas', icon: ChartNoAxesCombined },
+  { href: '/admin/configuracoes', label: 'Configurações', icon: Settings },
 ];
 
 export function WorkspaceLayout({ audience, title, children }: { audience: Audience; title: string; children: ReactNode }) {
@@ -60,7 +62,7 @@ export function WorkspaceLayout({ audience, title, children }: { audience: Audie
       && (item.href !== '/atelier/mensagens' || hasPermission('orders:read')))
     : adminNavigation;
   const pageTitle = audience === 'admin'
-    ? pathname === '/admin' ? 'Visão geral' : pathname === '/admin/logs' ? 'Auditoria' : pathname === '/admin/ateliers' ? 'Ateliês' : pathname === '/admin/planos' ? 'Planos' : pathname === '/admin/assinaturas' ? 'Assinaturas' : pathname.startsWith('/admin/ateliers/') ? 'Detalhes do ateliê' : 'Administração'
+    ? pathname === '/admin' ? 'Visão geral' : pathname === '/admin/logs' ? 'Auditoria' : pathname === '/admin/ateliers' ? 'Ateliês' : pathname === '/admin/planos' ? 'Planos' : pathname === '/admin/assinaturas' ? 'Assinaturas' : pathname === '/admin/metricas' ? 'Métricas' : pathname === '/admin/configuracoes' ? 'Configurações' : pathname.startsWith('/admin/ateliers/') ? 'Detalhes do ateliê' : 'Administração'
     : title;
   return <AuthGuard audience={audience}><div className="min-h-screen bg-[#f8f7fc] lg:grid lg:content-start lg:grid-cols-[248px_minmax(0,1fr)]">
     {process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' ? <div className="border-b border-amber-300 bg-amber-100 px-4 py-2 text-center text-xs font-bold tracking-wide text-amber-950 lg:col-span-2">AMBIENTE LOCAL · dados isolados nos emuladores Firebase</div> : null}
