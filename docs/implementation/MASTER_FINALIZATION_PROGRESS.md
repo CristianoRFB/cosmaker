@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## F1.8 — fechamento local 2026-10-22 (aguardando CI)
+
+- Código preservado em [`2564374`](https://github.com/CristianoRFB/cosmaker/commit/2564374ce49b1f9cdeaeec9ce987441c8ddace7d). CI anterior do WIP c2548e2 **PASS**, [39711277828](https://github.com/CristianoRFB/cosmaker/actions/runs/39711277828); CI do código final [39712298682](https://github.com/CristianoRFB/cosmaker/actions/runs/39712298682) ainda em andamento na última consulta.
+- E2E desktop **1/1 PASS**, exit 0, 50,1s (cenário 47,2s), `/tmp/cosmaker-f18-e2e-desktop.log`; mobile **1/1 PASS**, exit 0, 25,4s (cenário 23,4s), `/tmp/cosmaker-f18-e2e-mobile.log`. Equipe↔cliente, envio/leitura, notificações do UID, download de PDF sintético com bytes iguais, revogação, persistência/reload e terceiro tenant negado comprovados. Capturas desktop/mobile inspecionadas em `/tmp/cosmaker-messages-*.png`.
+- Backend final 5/5, produção 11/11, Rules 24/24, build local/TypeScript/lint permanecem verdes sem mudança posterior no código executável. **F1.8 VALIDADO LOCAL / CI PENDENTE**; não registrar CI como PASS antes da conclusão.
+- README corrigido conforme decisões posteriores: Node 22/Java 21, dependências raiz/Functions, emuladores/seed e lançadores demo sem API keys reais; estado comercial manual vigente e link para checkpoints, sem promover a documentação canônica a v0.3.0.
+- Próximo módulo após CI: **F1.9 relatórios/configurações**, com coortes e saldos explícitos, filtros por fuso, preferências operacionais persistidas e escopo global do Platform Owner. Nenhuma restrição/plano comercial novo será inferido.
+
+
 ## F1.8 — gates backend finais 2026-10-22 (UI pendente)
 
 - Checkpoint WIP enviado: [`c2548e2`](https://github.com/CristianoRFB/cosmaker/commit/c2548e2b7c96db142fe840158945dd3285577bc2). Contrato em [INTERNAL_MESSAGES.md](INTERNAL_MESSAGES.md).

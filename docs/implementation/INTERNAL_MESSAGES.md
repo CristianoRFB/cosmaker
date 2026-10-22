@@ -37,3 +37,5 @@ Solicitações de aprovação de produção usam o mesmo helper idempotente e pr
 ## Gates necessários
 
 Integração cobre retry/fingerprint, sequência concorrente, leitura, destinatário, notificações de pedidos com a mesma chave, cursor/UID, A/B, e-mail reutilizado, conflito de vínculo, perfil inativo/não verificado, papéis, anexos/revogação, paginação e legado não verificado. Rules exercitam get/list/create/update/delete por owner, cliente, outro tenant e anônimo. Regressão de produção é obrigatória por causa do helper de aprovação; UI exige desktop/mobile com duas partes, bytes reais sintéticos e negação do terceiro tenant.
+
+Gates locais finais em 2026-10-22: integração 5/5, produção 11/11, Rules 24/24, build/TypeScript/lint verdes; E2E desktop 1/1 (50,1s) e mobile 1/1 (25,4s), com bytes autenticados, revogação e A/B. CI remoto é acompanhado separadamente no checkpoint.

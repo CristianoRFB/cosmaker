@@ -1,31 +1,40 @@
 # Cosmaker OS
 
-O Cosmaker OS é um sistema empresarial para gestão de cosmakers e ateliês de cosplay. A aplicação compartilhada mantém dados privados separados por atelierId; o fluxo público resolve cada ateliê pelo slug da rota.
+SaaS multi-tenant para gestão de ateliês de cosplay. A aplicação compartilhada separa os dados privados por `atelierId`; páginas públicas resolvem o ateliê pelo slug da rota, sem fallback global.
 
-## Núcleo multi-tenant público
+O estado técnico mais recente, os commits e os gates reais ficam em [MASTER_FINALIZATION_PROGRESS.md](docs/implementation/MASTER_FINALIZATION_PROGRESS.md). A documentação canônica permanece em [docs/CURRENT.md](docs/CURRENT.md), atualmente v0.2.0; versões históricas foram preservadas.
 
-- Landing, solicitação de orçamento e confirmação usam /{tenantSlug}, /{tenantSlug}/orcamento e /{tenantSlug}/orcamento/sucesso.
-- O resolver central valida slug, publicação e status do ateliê. Devolve somente nome, tagline, cor de marca e flags públicas necessárias.
-- O intake e os caminhos de upload são criados no backend dentro do tenant resolvido. atelierId enviado pelo browser não escolhe o destino.
-- /orcamento e /orcamento/sucesso antigos mostram orientação de compatibilidade; não selecionam um ateliê global.
-- O seed local oferece os tenants fictícios aurora-cosplay e luna-cosplay. A migração de slug existente está documentada em [docs/versions/v0.1.0/README.md](docs/versions/v0.1.0/README.md#migração-de-slug).
+## Execução Linux somente local
 
-## Aplicação e testes locais
+Use Node.js 22, npm e Java 21 para a Firebase Emulator Suite atual. Instale dependências da raiz e de Functions:
 
-Requisitos: Node.js 22+, npm e Java 11+ para Firebase Emulator Suite. Instale dependências com npm install. Copie .env.example para .env.local e preencha a configuração Firebase Web. O fluxo público não requer ID de ateliê global.
+```bash
+npm ci
+npm ci --prefix functions
+```
 
-Para integração local, abra terminais separados:
+Em terminais separados, execute:
 
-1. npm run firebase:emulators:local
-2. npm run seed:emulator
-3. npm run dev:local
+```bash
+npm run firebase:emulators:local
+```
 
-Abra http://localhost:3000/aurora-cosplay e http://localhost:3000/luna-cosplay. O seed usa somente contas e registros fictícios no projeto local demo-cosmaker.
+```bash
+FIRESTORE_EMULATOR_HOST=127.0.0.1:18080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:19099 npm run seed:emulator
+npm run dev:local
+```
 
-As suítes, scripts de documentação e limites desta versão estão em [docs/versions/v0.1.0/README.md](docs/versions/v0.1.0/README.md). O estado técnico vigente fica em [docs/CURRENT.md](docs/CURRENT.md). Material anterior permanece preservado em docs/initial/ e docs/screenshots/.
+Abra `http://127.0.0.1:3000/aurora-cosplay` e `/luna-cosplay`. Os lançadores locais fixam o projeto `demo-cosmaker`, os emuladores e a configuração sintética. Não exigem API keys ou credenciais Firebase reais. O seed recusa endpoints fora do loopback e usa somente identidades/arquivos fictícios.
 
-## Produto além do core
+Para testar a interface compilada, encerre o dev server deste checkout, execute `npm run build:local` e depois `npm run start:local`. Não use dev/build concorrentes sobre `.next`. Detalhes de portas, proxy Cloud, Node/Java, navegador e transporte GitHub: [LOCAL_EMULATOR_RUNTIME.md](docs/implementation/LOCAL_EMULATOR_RUNTIME.md).
 
-Autenticação, propostas, aprovação, criação de pedido, snapshots de medidas, produção, fotos, aprovação do cliente e painel de plataforma já fazem parte da base existente. CRM completo, integrações de cobrança, automação comercial e módulos ainda estruturais continuam fora do escopo entregue neste marco.
+## Domínios e fronteiras
 
-O GLOBAL STANDARD v01 de planos/entitlements/gating comercial não foi implementado; é a próxima etapa após este core passar pelo readiness gate.
+- Fluxo público: `/{tenantSlug}`, `/{tenantSlug}/orcamento` e confirmação; resolver central e projeções explícitas sem conteúdo privado.
+- Jornadas existentes: CRM, equipe/permissões, agenda/capacidade, estoque, orçamento/proposta/aprovação, pedido, produção, revisões, arquivos e evidências.
+- Financeiro operacional: custos planejados/realizados, recebimentos declarados, margens e compensações auditadas em centavos, sem movimentação bancária.
+- Serviços/portfólio: painel, publicação/branding, imagens por acesso controlado e solicitação de orçamento com origem preservada.
+- Mensagens/notificações internas e fases seguintes: consultar o checkpoint para distinguir implementação, validação local, CI e aceite. Telas ou WIP não significam módulo aceito.
+- Global Standard v01 mantém atribuição manual de planos, trial/demo e política central validada localmente. `features: []` e `limits: {}` preservam a ausência de matriz comercial detalhada aprovada. Billing/gateway, e-mail/WhatsApp externos e cobranças reais não estão ativados.
+
+Os contratos operacionais recentes ficam em [docs/implementation/](docs/implementation/). Os scripts de testes por domínio estão em `package.json`; use gates direcionados durante implementação e regressão proporcional nos checkpoints. Nenhum comando local descrito aqui publica Functions, Rules, índices ou aplicação no Firebase real.
