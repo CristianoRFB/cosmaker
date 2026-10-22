@@ -13,6 +13,11 @@ const fixtureDate = (days) => new Date(fixtureClock + days * 86_400_000).toISOSt
 if (!process.env.FIRESTORE_EMULATOR_HOST || !process.env.FIREBASE_AUTH_EMULATOR_HOST) {
   throw new Error('Recusei a gravação: inicie os emuladores locais de Auth e Firestore antes de criar dados de teste.');
 }
+for (const name of ['FIRESTORE_EMULATOR_HOST', 'FIREBASE_AUTH_EMULATOR_HOST']) {
+  if (!/^(127\.0\.0\.1|localhost|\[::1\]):\d{1,5}$/.test(process.env[name]) || Number(process.env[name].split(':').at(-1)) > 65535) {
+    throw new Error('O seed aceita somente endpoints Emulator no loopback local.');
+  }
+}
 
 const app = initializeApp({ projectId }, `cosmaker-demo-${Date.now()}`);
 const auth = getAuth(app);
@@ -77,6 +82,15 @@ const now = Timestamp.now();
 const eventAt = Timestamp.fromDate(new Date('2026-09-30T12:00:00.000Z'));
 
 // Keep the quote-to-order production journey repeatable without touching a real Firebase project.
+// Reset only the financial records of this exact synthetic order, preserving other fixture work.
+const fixtureLedger = await db.collection(`ateliers/${atelierId}/financeEntries`).where('orderId', '==', quoteId).get();
+const fixtureEntryIds = new Set(fixtureLedger.docs.map((entry) => entry.id));
+const [fixtureOperations, fixtureReferences] = await Promise.all(['financeOperations', 'financePaymentReferences'].map((collection) => db.collection(`ateliers/${atelierId}/${collection}`).get()));
+await Promise.all([
+  ...fixtureLedger.docs.map((entry) => entry.ref.delete()),
+  ...fixtureLedger.docs.map((entry) => db.doc(`ateliers/${atelierId}/financeReversals/${entry.id}`).delete()),
+  ...[...fixtureOperations.docs, ...fixtureReferences.docs].filter((entry) => fixtureEntryIds.has(entry.data().entryId)).map((entry) => entry.ref.delete()),
+]);
 await Promise.all([
   db.recursiveDelete(db.doc(`ateliers/${atelierId}/orders/${quoteId}`)),
   db.recursiveDelete(db.doc(`ateliers/${atelierId}/quotes/${quoteId}`)),

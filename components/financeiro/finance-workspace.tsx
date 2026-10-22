@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { cloneElement, useCallback, useEffect, useId, useRef, useState, type FormEvent, type ReactElement, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -104,7 +104,7 @@ export function FinanceWorkspace({ view = 'overview', orderId }: { view?: View; 
   const entries = workspace?.entries.filter((entry) => view === 'expenses' ? entry.kind === 'expense' : view === 'income' ? entry.kind === 'income' : view === 'payments' ? entry.kind === 'payment' : true) ?? [];
   return <section className="grid min-w-0 gap-5">
     {orderId && <Link className="text-sm font-semibold text-violet-700" href={`/atelier/pedidos/${encodeURIComponent(orderId)}`}>← Voltar ao pedido e à confirmação da entrada</Link>}
-    <div className="flex flex-wrap items-start justify-between gap-3"><div><h1 className="text-2xl font-bold text-slate-950">{orderId ? 'Financeiro do pedido' : titles[view]}</h1><p className="mt-1 max-w-2xl text-sm text-slate-600">Planejamento, custos realizados e recebimentos declarados pela equipe. Cada correção preserva o registro original.</p></div>{canWrite && <Button onClick={openEntry}>Novo lançamento</Button>}</div>
+    <div className="flex flex-wrap items-start justify-between gap-3"><div><h1 className="text-2xl font-bold text-slate-950">{orderId ? 'Financeiro do pedido' : titles[view]}</h1><p className="mt-1 max-w-2xl text-sm text-slate-600">Planejamento, custos realizados e recebimentos declarados pela equipe. Cada correção preserva o registro original.</p></div>{canWrite && <Button disabled={loading || !workspace} onClick={openEntry}>Novo lançamento</Button>}</div>
     <nav aria-label="Áreas do financeiro" className="flex flex-wrap gap-2">{paths.map(([key, path, title]) => <Link aria-current={!orderId && view === key ? 'page' : undefined} className={`rounded-xl px-3 py-2.5 text-sm font-medium ${!orderId && view === key ? 'bg-violet-100 text-violet-800' : 'bg-white text-slate-700 hover:bg-slate-100'}`} href={path} key={key}>{title}</Link>)}</nav>
     <div className="flex flex-wrap items-end gap-3"><Field label="Lançamentos desde"><Input type="date" value={from} onChange={(event) => setFrom(event.target.value)} /></Field><Field label="Até"><Input type="date" value={to} onChange={(event) => setTo(event.target.value)} /></Field><Button variant="secondary" disabled={loading} onClick={() => void load()}>Atualizar</Button></div>
     <p className="text-xs text-slate-500">O período filtra os lançamentos e custos. Acordos, recebimentos de pedidos e saldos mostram a posição atual. Planejado e realizado são comparativos separados.</p>
@@ -135,5 +135,6 @@ export function FinanceWorkspace({ view = 'overview', orderId }: { view?: View; 
   </section>;
 }
 function Field({ label, children, wide }: { label: string; children: ReactNode; wide?: boolean }) {
-  return <label className={`grid min-w-0 gap-1.5 text-sm font-medium text-slate-700 ${wide ? 'sm:col-span-2' : ''}`}><span>{label}</span>{children}</label>;
+  const id = useId();
+  return <div className={`grid min-w-0 gap-1.5 text-sm font-medium text-slate-700 ${wide ? 'sm:col-span-2' : ''}`}><label htmlFor={id}>{label}</label>{cloneElement(children as ReactElement<{ id?: string }>, { id })}</div>;
 }

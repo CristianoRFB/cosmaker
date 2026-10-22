@@ -1,6 +1,6 @@
 # Financeiro operacional — contrato F1.6
 
-Implementação local em andamento em 2026-10-22; o aceite e os resultados observados ficam em [MASTER_FINALIZATION_PROGRESS.md](MASTER_FINALIZATION_PROGRESS.md).
+Implementação validada localmente em 2026-10-22; o aceite remoto e os resultados observados ficam em [MASTER_FINALIZATION_PROGRESS.md](MASTER_FINALIZATION_PROGRESS.md).
 
 ## Contrato e fontes de verdade
 
@@ -36,3 +36,5 @@ A listagem devolve projeção explícita, sem UIDs de atores, com histórico de 
 - E2E desktop/mobile: custo, margem, compensação, recebimento, persistência/reload, navegação pelas seis rotas afetadas e overflow horizontal.
 
 Nenhum gate é PASS somente por estar escrito. Os resultados reais serão registrados no checkpoint.
+
+Gates locais finais: unitários financeiros 6/6, transporte 1/1, integração 7/7, Rules 22/22 + 1 direcionado após reforço de perfil, E2E desktop 2/2 (financeiro e regressão integrada) e mobile 1/1, build local de 81 páginas, lint e docs:check aprovados. CI remoto é acompanhado separadamente no checkpoint.
