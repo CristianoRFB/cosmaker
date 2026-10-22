@@ -57,7 +57,7 @@ await writeFile(configPath, JSON.stringify(baseConfig, null, 2), 'utf8');
 try {
   const exitCode = await new Promise((resolveExit, reject) => {
     const child = spawn(process.execPath, [
-      firebaseCli,
+      '--require', resolve('scripts/firebase-loopback-proxy.cjs'), firebaseCli,
       ...(process.env.COSMAKER_TEST_DEBUG === 'true' ? ['--debug'] : []),
       'emulators:exec',
       '--config', configName,

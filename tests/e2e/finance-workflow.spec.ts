@@ -78,6 +78,17 @@ test('registra custo, compara margem, corrige histórico e declara recebimento e
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await page.screenshot({ path: testInfo.outputPath('finance-workflow.png'), fullPage: true });
     await page.reload(); await expect(page.getByText('Parcela declarada pela equipe', { exact: true })).toBeVisible();
+    await adminDb.doc(`ateliers/${atelierId}/orders/finance-order/payments/deposit`).set({ type: 'deposit', amount: 300, status: 'paid', method: 'cash', confirmedBy: uid, paidAt: new Date(), createdAt: new Date() });
+    await page.getByRole('link', { name: 'Armadura violeta', exact: true }).click();
+    await page.getByRole('button', { name: 'Preparar correção deste recebimento', exact: true }).click();
+    await expect(page.getByText('Recebimento manual anterior conciliado', { exact: true })).toBeVisible();
+    expect((await adminDb.doc(`ateliers/${atelierId}/orders/finance-order`).get()).data()?.amountPaidCents).toBe(40000);
+    await page.locator('article').filter({ has: page.getByText('Recebimento manual anterior conciliado', { exact: true }) }).getByRole('button', { name: 'Corrigir lançamento', exact: true }).click();
+    dialog = page.getByRole('dialog');
+    await dialog.getByLabel('Motivo da correção', { exact: true }).fill('Entrada anterior declarada por engano');
+    await dialog.getByRole('button', { name: 'Registrar compensação', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect((await adminDb.doc(`ateliers/${atelierId}/orders/finance-order`).get()).data()).toMatchObject({ amountPaidCents: 10000, amountRemainingCents: 90000, status: 'confirmed' });
   } finally {
     await adminDb.recursiveDelete(adminDb.doc(`ateliers/${atelierId}`));
     const audits = await adminDb.collection('auditLogs').where('atelierId', '==', atelierId).get();

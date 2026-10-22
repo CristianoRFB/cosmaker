@@ -4,7 +4,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
 import { requireTenantWorkspaceIdentity } from '../commercial/access';
 import { requireVerifiedIdentity } from '../orders/access';
-import { validAgreementDate } from '../orders/change-policy';
+import { moneyToCents, validAgreementDate } from '../orders/change-policy';
 import { cents, financeCategories, financialOrder, sumCents, summarizeFinance, type FinanceEntry, type FinanceOrder, type FinanceKind, type FinanceBasis, type FinanceCategory } from './policy';
 
 const hash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -198,7 +198,58 @@ export const listFinanceWorkspace = onCall(async (call) => {
   const cursorIndex = data.cursor ? sorted.findIndex((entry) => entry.id === data.cursor) : -1;
   if (data.cursor && cursorIndex < 0) throw new HttpsError('invalid-argument', 'A página expirou. Atualize o histórico.');
   const page = sorted.slice(cursorIndex + 1, cursorIndex + 51);
+  const legacyPayments = data.orderId ? await atelier.collection('orders').doc(String(data.orderId)).collection('payments').limit(501).get() : null;
+  if (legacyPayments && legacyPayments.size > 500) throw new HttpsError('resource-exhausted', 'O histórico de recebimentos exige paginação antes de ser exibido.');
   return { summary, entries: page.map((entry) => ({ ...entry, reversed: reversedIds.has(entry.id) })),
+    legacyPayments: legacyPayments?.docs.filter((doc) => !doc.data().financeEntryId).map((doc) => {
+      const payment = doc.data();
+      return { id: doc.id, amountCents: moneyToCents(payment.amount), type: payment.type, status: payment.status, reference: typeof payment.reference === 'string' ? payment.reference : null };
+    }) ?? [],
     nextCursor: sorted.length > cursorIndex + 51 ? page.at(-1)?.id ?? null : null,
     filteredCount: entries.length, balanceAsOf: new Date().toISOString(), periodAppliesTo: 'ledger_only' };
+});
+
+/** Reconcile one existing manual receipt on explicit staff action, without changing any balance. */
+export const reconcileLegacyFinancePayment = onCall(async (call) => {
+  const actor = await identity(call.auth, true);
+  const data = input(call.data, ['requestId', 'orderId', 'paymentId']);
+  if (![data.requestId, data.orderId, data.paymentId].every(validId)) throw new HttpsError('invalid-argument', 'Informe a referência do recebimento anterior.');
+  const atelier = adminDb.doc(`ateliers/${actor.atelierId}`);
+  const paymentRef = atelier.collection('orders').doc(String(data.orderId)).collection('payments').doc(String(data.paymentId));
+  const id = hash(['legacy_payment', data.orderId, data.paymentId]);
+  const operationRef = atelier.collection('financeOperations').doc(hash([call.auth!.uid, data.requestId]));
+  const fingerprint = hash(['reconcile_legacy_payment', data.orderId, data.paymentId]);
+  return adminDb.runTransaction(async (tx) => {
+    await activeActor(tx, actor.atelierId, call.auth!.uid);
+    const [order, payment, operation] = await Promise.all([tx.get(paymentRef.parent.parent!), tx.get(paymentRef), tx.get(operationRef)]);
+    if (operation.exists) {
+      if (operation.data()?.fingerprint !== fingerprint) throw new HttpsError('failed-precondition', 'A chave de repetição já foi usada com outros valores.');
+      return { entryId: operation.data()!.entryId, alreadyApplied: true };
+    }
+    if (!order.exists || !payment.exists) throw new HttpsError('not-found', 'O recebimento não pertence a este ateliê.');
+    const receipt = payment.data()!;
+    if (receipt.financeEntryId) return { entryId: receipt.financeEntryId as string, alreadyApplied: true };
+    if (receipt.status !== 'paid' || typeof receipt.confirmedBy !== 'string' || !methods.includes(receipt.method)
+      || !receipt.paidAt?.toDate || !Number.isFinite(receipt.paidAt.toDate().getTime())) {
+      throw new HttpsError('failed-precondition', 'O histórico não comprova uma confirmação manual válida para conciliação.');
+    }
+    const amountCents = checkedCents(moneyToCents(receipt.amount));
+    if (checkedOrder(order.data()!).receivedCents < amountCents) throw new HttpsError('failed-precondition', 'O histórico excede os recebimentos atuais do pedido.');
+    const reference = typeof receipt.reference === 'string' ? receipt.reference.trim().slice(0, 120) || null : null;
+    const referenceRef = reference ? atelier.collection('financePaymentReferences').doc(hash([data.orderId, reference.toLowerCase()])) : null;
+    if (referenceRef && (await tx.get(referenceRef)).exists) throw new HttpsError('already-exists', 'Esta referência já está vinculada a outro recebimento. Revise o histórico antes de conciliar.');
+    const now = Timestamp.now();
+    const stored = { kind: 'payment', basis: 'actual', category: 'other', amountCents,
+      description: 'Recebimento manual anterior conciliado', effectiveDate: receipt.paidAt.toDate().toISOString().slice(0, 10),
+      orderId: data.orderId, paymentId: data.paymentId, method: receipt.method,
+      reference,
+      reversesEntryId: null, reason: 'Conciliação explícita do registro manual anterior, sem alterar saldo.',
+      actorId: call.auth!.uid, originalConfirmedBy: receipt.confirmedBy, originalPaidAt: receipt.paidAt, createdAt: now };
+    tx.create(atelier.collection('financeEntries').doc(id), stored);
+    tx.update(paymentRef, { financeEntryId: id, amountCents, reconciledAt: now });
+    tx.create(operationRef, { fingerprint, entryId: id, createdAt: now });
+    if (referenceRef) tx.create(referenceRef, { entryId: id, createdAt: now });
+    audit(tx, actor.atelierId, call.auth!.uid, id, 'finance.legacy_payment_reconciled', { paymentId: data.paymentId, amountCents }, stored, now);
+    return { entryId: id, alreadyApplied: false };
+  });
 });

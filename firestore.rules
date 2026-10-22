@@ -74,6 +74,14 @@ service cloud.firestore {
         && hasAtelierPermission(atelierId, 'orders:read');
     }
 
+    function activeFinanceStaff(atelierId) {
+      let profile = /databases/$(database)/documents/users/$(request.auth.uid);
+      return signedIn() && request.auth.token.email_verified == true && exists(profile)
+        && get(profile).data.active == true && get(profile).data.accountType == 'atelier_member'
+        && get(profile).data.atelierId == atelierId
+        && (hasAtelierPermission(atelierId, 'finance:read') || hasAtelierPermission(atelierId, 'finance:write'));
+    }
+
     function orderClientLink(atelierId, orderData) {
       let clientId = orderData.get('clientId', null);
       let clientKey = clientId is string && clientId.size() > 0 ? clientId : '__unlinked__';
@@ -314,11 +322,11 @@ service cloud.firestore {
       }
 
       match /transactions/{transactionId} {
-        allow read: if hasAtelierPermission(atelierId, 'finance:read');
+        allow read: if activeFinanceStaff(atelierId);
         allow write: if false;
       }
       match /expenses/{expenseId} {
-        allow read: if hasAtelierPermission(atelierId, 'finance:read');
+        allow read: if activeFinanceStaff(atelierId);
         allow write: if false;
       }
       // Financial ledger, retry keys and compensation locks are callable-only.
@@ -327,7 +335,7 @@ service cloud.firestore {
       match /financeReversals/{entryId} { allow read, write: if false; }
       match /financePaymentReferences/{referenceId} { allow read, write: if false; }
       match /payments/{paymentId} {
-        allow read: if hasAtelierPermission(atelierId, 'finance:read');
+        allow read: if activeFinanceStaff(atelierId);
         allow write: if false;
       }
       match /materials/{materialId} {

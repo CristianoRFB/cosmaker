@@ -12,7 +12,7 @@ Implementação local em andamento em 2026-10-22; o aceite e os resultados obser
 
 ## Operações, histórico e correções
 
-`recordFinanceEntry`, `reverseFinanceEntry` e `listFinanceWorkspace` derivam o tenant do perfil autenticado. Payloads com tenant, ator ou campos extras são rejeitados. Exigem e-mail verificado, perfil/membership/tenant ativos e `finance:read` ou `finance:write`, com leitura implícita para quem escreve. Escritas revalidam perfil/permissão/tenant na transação e mantêm o bloqueio de `demoWorkspace` aprovado na v0.2. O projeto Emulator `demo-cosmaker` contém tenants sintéticos operacionais e não se confunde com esse marcador comercial.
+`recordFinanceEntry`, `reverseFinanceEntry` e `listFinanceWorkspace` derivam o tenant do perfil autenticado. Payloads com tenant, ator ou campos extras são rejeitados. A conciliação reutiliza a mesma autorização. Exigem e-mail verificado, perfil/membership/tenant ativos e `finance:read` ou `finance:write`, com leitura implícita para quem escreve. Escritas revalidam perfil/permissão/tenant na transação e mantêm o bloqueio de `demoWorkspace` aprovado na v0.2. O projeto Emulator `demo-cosmaker` contém tenants sintéticos operacionais e não se confunde com esse marcador comercial.
 
 `financeOperations` usa chave de requisição por UID e fingerprint normalizado: repetir a mesma requisição devolve o mesmo resultado; reutilizá-la com dados diferentes falha. `financePaymentReferences` impede reusar a mesma referência interna, normalizada sem distinção de maiúsculas, no mesmo pedido. Uma referência compensada permanece reservada como histórico; o registro correto deve usar nova referência. Sem referência informada, a proteção é a chave idempotente da operação e o teto do saldo.
 
@@ -20,7 +20,7 @@ A correção exige motivo de 8–500 caracteres, cria lançamento inverso e trav
 
 Recebimentos criam registro em `orders/{id}/payments`, mantêm o histórico do cliente/CRM e atualizam os dois formatos de saldo. A confirmação de entrada existente continua criando etapas/histórico e agora cria seu ledger na mesma transação. Compensação de recebimento marca o pagamento como reversão interna (`refunded`), reabre somente o saldo financeiro e preserva o estado/histórico de produção. Isso permite corrigir declaração sem desfazer trabalho executado. Não ocorre transferência, devolução bancária ou cobrança real.
 
-Entradas anteriores ao ledger continuam nos saldos e histórico do pedido. Correções automáticas de registros legados sem vínculo de ledger exigem uma rotina de conciliação/backfill com dry-run; nenhum dado real foi migrado nem convertido silenciosamente.
+Entradas anteriores ao ledger continuam nos saldos e histórico do pedido. A ação explícita `reconcileLegacyFinancePayment` concilia um recebimento manual anterior com evidência de confirmação (ator, meio e data), sem mudar saldos. Ela permite a compensação posterior com motivo; repetir não duplica o vínculo. Originais são preservados. Registros inconsistentes ou sem evidência manual falham fechados para revisão. Nenhum dado real foi migrado nem convertido silenciosamente.
 
 ## Segurança e limites técnicos
 

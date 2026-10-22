@@ -26,6 +26,7 @@ export const confirmOrderDeposit = onCall(async (call) => {
   const orderRef = atelier.collection('orders').doc(data.orderId);
   const paymentRef = orderRef.collection('payments').doc('deposit');
   const financeEntryId = createHash('sha256').update(JSON.stringify(['order_deposit', data.orderId])).digest('hex');
+  const referenceRef = reference ? atelier.collection('financePaymentReferences').doc(createHash('sha256').update(JSON.stringify([data.orderId, reference.toLowerCase()])).digest('hex')) : null;
   const stageRefs = defaultProductionStages.map((stage) => orderRef.collection('productionStages').doc(stage.id));
   const historyRef = orderRef.collection('statusHistory').doc();
   const auditRef = adminDb.collection('auditLogs').doc();
@@ -44,12 +45,14 @@ export const confirmOrderDeposit = onCall(async (call) => {
       throw new HttpsError('permission-denied', 'A permissão para confirmar pagamentos foi alterada.');
     }
     if (activeAtelier.data()?.demoWorkspace === true) throw new HttpsError('failed-precondition', 'A demonstração não aceita registros financeiros.');
+    const referenceSnapshot = referenceRef ? await transaction.get(referenceRef) : null;
     const [orderSnapshot, paymentSnapshot, ...stageSnapshots] = await Promise.all([
       transaction.get(orderRef), transaction.get(paymentRef), ...stageRefs.map((stageRef) => transaction.get(stageRef)),
     ]);
     if (!orderSnapshot.exists) throw new HttpsError('not-found', 'O pedido não foi encontrado neste ateliê.');
     const order = orderSnapshot.data()!;
     if (order.status === 'confirmed' && paymentSnapshot.data()?.status === 'paid') { alreadyConfirmed = true; return; }
+    if (referenceSnapshot?.exists) throw new HttpsError('already-exists', 'Esta referência já foi registrada neste pedido.');
     if (order.status !== 'waiting_deposit' || !paymentSnapshot.exists || paymentSnapshot.data()?.status !== 'pending') {
       throw new HttpsError('failed-precondition', 'O pedido não está aguardando a confirmação da entrada.');
     }
@@ -86,6 +89,7 @@ export const confirmOrderDeposit = onCall(async (call) => {
       orderId: data.orderId, paymentId: 'deposit', method: data.method, reference: reference || null,
       reversesEntryId: null, reason: null, actorId: call.auth!.uid, createdAt: now,
     });
+    if (referenceRef) transaction.create(referenceRef, { entryId: financeEntryId, createdAt: now });
     transaction.create(auditRef, {
       actorId: call.auth!.uid, atelierId: data.atelierId, action: 'payment.deposit_confirmed_manually',
       entity: 'order', entityId: data.orderId,

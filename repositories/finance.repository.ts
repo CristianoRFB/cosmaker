@@ -11,3 +11,6 @@ export async function recordFinanceEntry(input: FinanceEntryInput, requestId: st
 export async function reverseFinanceEntry(input: { entryId: string; reason: string; effectiveDate: string }, requestId: string) {
   return (await httpsCallable<typeof input & { requestId: string }, { entryId: string; alreadyApplied: boolean }>(requireFirebase().functions, 'reverseFinanceEntry')({ ...input, requestId })).data;
 }
+export async function reconcileLegacyFinancePayment(orderId: string, paymentId: string, requestId: string) {
+  return (await httpsCallable<{ orderId: string; paymentId: string; requestId: string }, { entryId: string; alreadyApplied: boolean }>(requireFirebase().functions, 'reconcileLegacyFinancePayment')({ orderId, paymentId, requestId })).data;
+}

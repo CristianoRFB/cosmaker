@@ -243,7 +243,12 @@ describe('Firestore and Storage tenant rules', () => {
       await assertFails(deleteDoc(doc(owner, `${root}/${path}`)));
       await assertFails(getDoc(doc(other, `${root}/${path}`)));
       await assertFails(getDoc(doc(client, `${root}/${path}`)));
+      await assertFails(getDoc(doc(environment.authenticatedContext('member-a', { email_verified: false }).firestore(), `${root}/${path}`)));
     }
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), 'users/member-a'), { active: false });
+    });
+    await assertFails(getDoc(doc(owner, `${root}/transactions/transaction-a`)));
   });
 
   it('keeps finance records unavailable to a quote-only member', async () => {

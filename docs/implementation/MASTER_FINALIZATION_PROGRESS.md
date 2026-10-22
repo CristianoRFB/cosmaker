@@ -1,5 +1,13 @@
 # Cosmaker Master Finalization — Progress
 
+## Gate intermediário F1.6 — 2026-10-22
+
+- Checkpoint WIP enviado pelo conector GitHub CristianoRFB: [`e1b585e`](https://github.com/CristianoRFB/cosmaker/commit/e1b585e16c3414622260e7ea4588fb49e364d1d4). Árvore remota idêntica à local (`69eea93`); branch realinhada, original local `6ee6cf2` preservado em branch local de backup. CI desse checkpoint **PASS**, [39705402183](https://github.com/CristianoRFB/cosmaker/actions/runs/39705402183).
+- Corrigido transporte local: Firebase CLI 15.32 ignorava NO_PROXY e enviava registro de trigger de `127.0.0.1` ao proxy externo. Preload limita bypass a loopback literal; proxy/CA externos preservados. Teste de transporte **1/1 PASS**. Downloads Firestore/Storage permitidos e concluídos.
+- Integração final financeira **7/7 PASS**, exit 0, 31,88s de cenários (log `/tmp/cosmaker-f16-integration-final.log`): centavos, custos/categorias, auditoria, retry/fingerprint, referência duplicada, concorrência/excesso/compensação, A/B, papéis, perfil/tenant/demo, entrada existente, conciliação legada e paginação/período.
+- Rules **22/22 PASS**, exit 0, 42,22s (log `/tmp/cosmaker-f16-rules.log`). Após o último reforço de perfil financeiro, gate direcionado **1/1 PASS**, 21 casos não selecionados, exit 0, 7,28s (log `/tmp/cosmaker-f16-rules-final-targeted2.log`); confirma negação de owner não verificado e perfil inativo além das escritas/read brutos. A tentativa direcionada anterior saiu 127 porque `vitest` estava fora do PATH do shell; corrigida com caminho explícito, sem promover aquela tentativa a PASS.
+- Build local final **PASS**, exit 0, 81 páginas (log `/tmp/cosmaker-f16-build-final.log`); lint direcionado e `docs:check` **PASS**. TypeScript foi validado pelo build. Runtime `start:local` responde com meta `emulator`. E2Es desktop/mobile ainda **PENDING**; F1.6 permanece WIP até esses gates.
+
 ## Retomada Cloud — 2026-10-22 (F1.6 WIP)
 
 - Remoto conferido antes de editar: `4d1da1d265b2d0f84fba4ae3b59a0035e1510d44`, branch `codex/cosmaker-master-finalizacao`, árvore inicial limpa. CI do HEAD inicial PASS: [39306454878](https://github.com/CristianoRFB/cosmaker/actions/runs/39306454878). Consulta via conector GitHub; `gh` recebe Forbidden na rede deste Cloud.

@@ -203,6 +203,24 @@ describe('Finance Functions em demo-cosmaker', () => {
     expect((await workspace(id)).summary.byOrder[0]).toMatchObject({ receivedCents: 30_000 });
   }, 60_000);
 
+  it('concilia recebimento manual legado antes da correção sem duplicar valores nem perder o original', async () => {
+    await signIn(ownerA); const id = 'legacy-order'; await seedOrder(id);
+    const paymentRef = root().collection('orders').doc(id).collection('payments').doc('deposit');
+    await paymentRef.set({ type: 'deposit', amount: 300, status: 'paid', method: 'cash', confirmedBy: ownerA.uid, paidAt: new Date(), createdAt: new Date() });
+    const payload = { orderId: id, paymentId: 'deposit', requestId: newId() };
+    const result = await call<{ entryId: string }>('reconcileLegacyFinancePayment', payload);
+    expect(await call('reconcileLegacyFinancePayment', payload)).toMatchObject({ entryId: result.entryId, alreadyApplied: true });
+    expect((await workspace(id)).summary.receivedCents).toBe(30_000);
+    await reverse(result.entryId);
+    expect((await workspace(id)).summary.receivedCents).toBe(0);
+    expect((await paymentRef.get()).data()).toMatchObject({ amount: 300, amountCents: 30_000, confirmedBy: ownerA.uid, status: 'refunded' });
+    await signIn(ownerB);
+    await expect(call('reconcileLegacyFinancePayment', { ...payload, requestId: newId() })).rejects.toMatchObject({ code: 'functions/not-found' });
+    await signIn(ownerA);
+    await paymentRef.set({ type: 'deposit', amount: 300, status: 'paid', method: 'cash' });
+    await expect(call('reconcileLegacyFinancePayment', { ...payload, requestId: newId() })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+  }, 60_000);
+
   it('pagina o histórico, aplica datas e mostra compensação mesmo fora da página original', async () => {
     await signIn(ownerA); const id = 'pagination-order'; await seedOrder(id);
     const batch = adminDb.batch();

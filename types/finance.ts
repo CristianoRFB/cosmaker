@@ -4,6 +4,7 @@ export interface FinanceWorkspaceData {
   summary: ReturnType<typeof summarizeFinance>;
   entries: Array<import('../functions/src/finance/policy').FinanceEntry & { reversed: boolean }>;
   nextCursor: string | null; filteredCount: number; balanceAsOf: string; periodAppliesTo: 'ledger_only';
+  legacyPayments: Array<{ id: string; amountCents: number; type: string; status: string; reference: string | null }>;
 }
 export interface FinanceFilters { orderId?: string; from?: string; to?: string; cursor?: string }
 export interface FinanceEntryInput {
