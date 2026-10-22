@@ -1,6 +1,7 @@
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { adminDb } from '../admin';
+import { parseScheduleDate } from '../scheduling/allocate-capacity';
 
 const BATCH_SIZE = 100;
 
@@ -18,7 +19,10 @@ export const expireQuotes = onSchedule({ schedule: 'every 60 minutes', timeZone:
     const page = expired.docs.slice(offset, offset + 10);
     await Promise.all(page.map(async (candidate) => {
       const quoteRef = candidate.ref;
+      const parts = quoteRef.path.split('/');
+      if (parts.length !== 4 || parts[0] !== 'ateliers' || parts[2] !== 'quotes') return;
       const requestId = candidate.get('requestId');
+      if (typeof requestId !== 'string' || !/^[A-Za-z0-9_-]{1,150}$/.test(requestId)) return;
       const requestRef = quoteRef.parent.parent?.collection('quoteRequests').doc(String(requestId));
       if (!requestRef) return;
       const auditRef = adminDb.collection('auditLogs').doc();
@@ -28,9 +32,10 @@ export const expireQuotes = onSchedule({ schedule: 'every 60 minutes', timeZone:
           transaction.get(quoteRef), transaction.get(requestRef),
         ]);
         if (!quoteSnapshot.exists || quoteSnapshot.get('status') !== 'sent'
-          || typeof quoteSnapshot.get('validUntil') !== 'string' || quoteSnapshot.get('validUntil') >= today) return;
+          || !parseScheduleDate(quoteSnapshot.get('validUntil')) || quoteSnapshot.get('validUntil') >= today) return;
 
         const quote = quoteSnapshot.data()!;
+        if (typeof quote.total !== 'number' || !Number.isFinite(quote.total) || quote.total < 0) return;
         const now = Timestamp.now();
         transaction.update(quoteRef, { status: 'expired', expiredAt: now, updatedAt: now });
         if (requestSnapshot.exists && requestSnapshot.get('activeQuoteId') === quoteSnapshot.id) {

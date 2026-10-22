@@ -1,46 +1,31 @@
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
-
+import { requireVerifiedIdentity } from '../orders/access';
+import { productionId } from '../orders/production-configuration';
+import { requireTenantWorkspaceIdentity } from '../commercial/access';
+import { parseScheduleDate } from '../scheduling/allocate-capacity';
+import { requireQuoteWriter } from './access';
 export const publishQuote = onCall(async (call) => {
-  if (!call.auth) throw new HttpsError('unauthenticated', 'Entre na conta do ateliê para disponibilizar o orçamento.');
-  const { atelierId, quoteId } = call.data as { atelierId?: unknown; quoteId?: unknown };
-  if (typeof atelierId !== 'string' || !atelierId || typeof quoteId !== 'string' || !quoteId) {
-    throw new HttpsError('invalid-argument', 'Ateliê e orçamento são obrigatórios.');
-  }
-  const memberRef = adminDb.doc(`ateliers/${atelierId}/members/${call.auth.uid}`);
-  const [member, atelierSnapshot] = await Promise.all([memberRef.get(), adminDb.doc(`ateliers/${atelierId}`).get()]);
-  const membership = member.data();
-  if (!atelierSnapshot.exists || atelierSnapshot.data()?.active !== true || !member.exists || membership?.active !== true
-    || (!['owner', 'admin'].includes(String(membership.role)) && !membership?.permissions?.includes('quotes:write'))) {
-    throw new HttpsError('permission-denied', 'Você não tem permissão para disponibilizar orçamentos neste ateliê.');
-  }
-
-  const atelier = adminDb.collection('ateliers').doc(atelierId);
-  const quoteRef = atelier.collection('quotes').doc(quoteId);
-  const auditRef = adminDb.collection('auditLogs').doc();
-  await adminDb.runTransaction(async (transaction) => {
+  requireVerifiedIdentity(call.auth);
+  if (!call.data || typeof call.data !== 'object' || Array.isArray(call.data) || Object.keys(call.data).some((key) => !['atelierId', 'quoteId'].includes(key))) throw new HttpsError('invalid-argument', 'Há campos fora do contrato da publicação.');
+  const atelierId = productionId(call.data.atelierId, 'Ateliê'); const quoteId = productionId(call.data.quoteId, 'Orçamento');
+  const identity = await requireTenantWorkspaceIdentity(call.auth!.uid, call.auth!.token);
+  if (identity.atelierId !== atelierId) throw new HttpsError('permission-denied', 'O perfil não pertence a este ateliê.');
+  const atelier = adminDb.doc(`ateliers/${atelierId}`); const quoteRef = atelier.collection('quotes').doc(quoteId); const auditRef = adminDb.collection('auditLogs').doc();
+  return adminDb.runTransaction(async (transaction) => {
+    await requireQuoteWriter(transaction, atelierId, call.auth!.uid);
     const quoteSnapshot = await transaction.get(quoteRef);
     if (!quoteSnapshot.exists) throw new HttpsError('not-found', 'O orçamento não foi encontrado neste ateliê.');
-    const quote = quoteSnapshot.data()!;
+    const quote = quoteSnapshot.data()!; const requestId = productionId(quote.requestId, 'Solicitação');
+    const requestRef = atelier.collection('quoteRequests').doc(requestId); const requestSnapshot = await transaction.get(requestRef);
+    if (!requestSnapshot.exists || requestSnapshot.get('activeQuoteId') !== quoteId) throw new HttpsError('failed-precondition', 'O orçamento não é a versão atual desta solicitação.');
+    if (quote.status === 'sent' && requestSnapshot.get('status') === 'quoted') return { quoteId, status: 'sent' as const, alreadyPublished: true };
     if (quote.status !== 'draft') throw new HttpsError('failed-precondition', 'Somente um rascunho pode ser disponibilizado.');
-    const requestRef = atelier.collection('quoteRequests').doc(String(quote.requestId));
-    const requestSnapshot = await transaction.get(requestRef);
-    if (!requestSnapshot.exists) throw new HttpsError('failed-precondition', 'A solicitação ligada ao orçamento não existe.');
+    if (!parseScheduleDate(quote.validUntil) || quote.validUntil < new Date().toISOString().slice(0, 10)) throw new HttpsError('failed-precondition', 'Revise a validade antes de publicar o orçamento.');
     const now = Timestamp.now();
-    transaction.update(quoteRef, { status: 'sent', sentAt: now, updatedAt: now });
-    transaction.update(requestRef, { status: 'quoted', updatedAt: now });
-    transaction.set(auditRef, {
-      actorId: call.auth!.uid,
-      atelierId,
-      action: 'quote.sent_to_client_portal',
-      entity: 'quote',
-      entityId: quoteId,
-      before: { status: quote.status, total: quote.total },
-      after: { status: 'sent', total: quote.total },
-      timestamp: FieldValue.serverTimestamp(),
-    });
+    transaction.update(quoteRef, { status: 'sent', sentAt: now, updatedAt: now }); transaction.update(requestRef, { status: 'quoted', updatedAt: now });
+    transaction.set(auditRef, { actorId: call.auth!.uid, atelierId, action: 'quote.sent_to_client_portal', entity: 'quote', entityId: quoteId, before: { status: quote.status, total: quote.total }, after: { status: 'sent', total: quote.total }, timestamp: FieldValue.serverTimestamp() });
+    return { quoteId, status: 'sent' as const, alreadyPublished: false };
   });
-
-  return { quoteId, status: 'sent' as const };
 });

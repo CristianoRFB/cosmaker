@@ -1,6 +1,7 @@
 import { FieldValue, Timestamp, type DocumentSnapshot } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
+import { productionId } from '../orders/production-configuration';
 import { buildClientSearchPrefixes, clientEmailIndexId, normalizeClientSearch } from '../clients/client-data';
 
 type Decision = 'approved' | 'rejected' | 'request_changes';
@@ -10,10 +11,13 @@ export const respondToQuote = onCall(async (call) => {
   if (call.auth.token.email_verified !== true || typeof call.auth.token.email !== 'string') {
     throw new HttpsError('failed-precondition', 'Confirme seu e-mail para responder ao orçamento.');
   }
+  if (!call.data || typeof call.data !== 'object' || Array.isArray(call.data) || Object.keys(call.data).some((key) => !['atelierId', 'quoteId', 'decision', 'comment'].includes(key))) throw new HttpsError('invalid-argument', 'Há campos fora do contrato da resposta.');
   const { atelierId, quoteId, decision, comment } = call.data as { atelierId?: unknown; quoteId?: unknown; decision?: unknown; comment?: unknown };
   if (typeof atelierId !== 'string' || !atelierId || typeof quoteId !== 'string' || !quoteId) {
     throw new HttpsError('invalid-argument', 'Ateliê e orçamento são obrigatórios.');
   }
+  productionId(atelierId, 'Ateliê'); productionId(quoteId, 'Orçamento');
+  if (comment !== undefined && typeof comment !== 'string') throw new HttpsError('invalid-argument', 'O comentário deve ser um texto.');
   if (!['approved', 'rejected', 'request_changes'].includes(String(decision))) throw new HttpsError('invalid-argument', 'Escolha uma resposta válida.');
   const normalizedComment = typeof comment === 'string' ? comment.trim() : '';
   if (normalizedComment.length > 1000 || (decision === 'request_changes' && normalizedComment.length < 5)) {
@@ -25,9 +29,11 @@ export const respondToQuote = onCall(async (call) => {
   const responseRef = quoteRef.collection('responses').doc();
   const auditRef = adminDb.collection('auditLogs').doc();
   await adminDb.runTransaction(async (transaction) => {
-    const quoteSnapshot = await transaction.get(quoteRef);
+    const [quoteSnapshot, tenant, profile] = await Promise.all([transaction.get(quoteRef), transaction.get(atelier), transaction.get(adminDb.doc(`users/${call.auth!.uid}`))]);
+    if (tenant.get('active') !== true || profile.get('active') !== true || profile.get('accountType') !== 'client') throw new HttpsError('permission-denied', 'Seu perfil não pode responder a este orçamento.');
     if (!quoteSnapshot.exists) throw new HttpsError('not-found', 'O orçamento não foi encontrado.');
     const quote = quoteSnapshot.data()!;
+    if (typeof quote.clientUserId === 'string' && quote.clientUserId !== call.auth!.uid) throw new HttpsError('permission-denied', 'Este orçamento está vinculado a outra conta.');
     if (String(quote.email).trim().toLowerCase() !== call.auth!.token.email!.trim().toLowerCase()) {
       throw new HttpsError('permission-denied', 'Este orçamento pertence a outro endereço verificado.');
     }

@@ -18,6 +18,7 @@ const suites = {
   reports: 'tests/integration/reports-functions.test.ts',
   delivery: 'tests/integration/order-finalization-functions.test.ts',
   references: 'tests/integration/quote-reference-functions.test.ts',
+  quotes: 'tests/integration/quote-security-functions.test.ts',
   'order-files': 'tests/integration/order-files-functions.test.ts',
   'order-changes': 'tests/integration/order-change-functions.test.ts',
   'production-configuration': 'tests/integration/production-configuration-functions.test.ts',

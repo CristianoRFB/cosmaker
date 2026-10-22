@@ -1,6 +1,11 @@
 import { FieldValue } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
+import { requireVerifiedIdentity } from '../orders/access';
+import { requireTenantWorkspaceIdentity } from '../commercial/access';
+import { productionId } from '../orders/production-configuration';
+import { moneyToCents } from '../orders/change-policy';
+import { requireQuoteWriter } from './access';
 
 type ItemInput = { description: string; category: 'material' | 'labor' | 'other'; quantity: number; unitPrice: number };
 type Input = {
@@ -23,7 +28,7 @@ function amount(value: unknown, label: string) {
   return value;
 }
 function isoDate(value: unknown, label: string) {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || Number.isNaN(Date.parse(`${value}T00:00:00Z`))) fail(`${label} precisa ser uma data válida.`);
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || Number.isNaN(Date.parse(`${value}T00:00:00Z`)) || new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) !== value) fail(`${label} precisa ser uma data válida.`);
   return value;
 }
 function parseItems(value: unknown): ItemInput[] {
@@ -39,21 +44,13 @@ function parseItems(value: unknown): ItemInput[] {
   });
 }
 
-async function canWriteQuotes(atelierId: string, uid: string) {
-  const [member, atelier] = await Promise.all([
-    adminDb.doc(`ateliers/${atelierId}/members/${uid}`).get(),
-    adminDb.doc(`ateliers/${atelierId}`).get(),
-  ]);
-  const data = member.data();
-  return atelier.exists && atelier.data()?.active === true && member.exists && data?.active === true
-    && (['owner', 'admin'].includes(String(data.role)) || data?.permissions?.includes('quotes:write'));
-}
-
 export const createQuoteDraft = onCall(async (call) => {
-  if (!call.auth) throw new HttpsError('unauthenticated', 'Entre na conta do ateliê para criar um orçamento.');
+  requireVerifiedIdentity(call.auth);
   const data = call.data as Partial<Input>;
-  if (typeof data.atelierId !== 'string' || !data.atelierId || typeof data.requestId !== 'string' || !data.requestId) fail('Ateliê e solicitação são obrigatórios.');
-  if (!(await canWriteQuotes(data.atelierId, call.auth.uid))) throw new HttpsError('permission-denied', 'Você não tem permissão para criar orçamentos neste ateliê.');
+  if (!data || typeof data !== 'object' || Array.isArray(data) || Object.keys(data).some((key) => !['atelierId', 'requestId', 'items', 'urgencyFee', 'shipping', 'discount', 'validUntil', 'expectedStartDate', 'expectedCompletionDate', 'depositPercentage'].includes(key))) fail('Há campos fora do contrato de orçamento.');
+  productionId(data.atelierId, 'Ateliê'); productionId(data.requestId, 'Solicitação');
+  const identity = await requireTenantWorkspaceIdentity(call.auth!.uid, call.auth!.token);
+  if (identity.atelierId !== data.atelierId) throw new HttpsError('permission-denied', 'O perfil não pertence a este ateliê.');
 
   const items = parseItems(data.items);
   const urgencyFee = amount(data.urgencyFee, 'Taxa de urgência');
@@ -77,13 +74,16 @@ export const createQuoteDraft = onCall(async (call) => {
   if (discount > subtotal) fail('O desconto não pode ser maior que o subtotal.');
   const total = money(subtotal - discount);
   const depositAmount = money(total * depositPercentage / 100);
+  try { [...lineItems.map((item) => item.total), materialsCost, laborCost, otherCost, subtotal, total, depositAmount, urgencyFee, shipping, discount].forEach((value) => moneyToCents(value)); }
+  catch { fail('Os valores do orçamento excedem o intervalo monetário seguro.'); }
 
-  const atelier = adminDb.collection('ateliers').doc(data.atelierId);
-  const requestRef = atelier.collection('quoteRequests').doc(data.requestId);
+  const atelier = adminDb.collection('ateliers').doc(identity.atelierId);
+  const requestRef = atelier.collection('quoteRequests').doc(data.requestId as string);
   const quoteRef = atelier.collection('quotes').doc();
   const createdItemRefs = lineItems.map(() => quoteRef.collection('items').doc());
   const auditRef = adminDb.collection('auditLogs').doc();
   await adminDb.runTransaction(async (transaction) => {
+    await requireQuoteWriter(transaction, identity.atelierId, call.auth!.uid);
     const requestSnapshot = await transaction.get(requestRef);
     if (!requestSnapshot.exists) throw new HttpsError('not-found', 'A solicitação não foi encontrada neste ateliê.');
     const request = requestSnapshot.data()!;
