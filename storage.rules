@@ -101,12 +101,12 @@ service firebase.storage {
     }
 
     match /ateliers/{atelierId}/portfolio/{projectId}/{fileName} {
-      allow read: if isAtelierMember(atelierId)
-        || (firestore.exists(/databases/(default)/documents/publicAteliers/$(atelierId)/portfolio/$(projectId))
-          && firestore.get(/databases/(default)/documents/publicAteliers/$(atelierId)/portfolio/$(projectId)).data.public == true
-          && firestore.get(/databases/(default)/documents/publicAteliers/$(atelierId)).data.published == true);
-      allow create, update: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId) && isReferenceImage();
-      allow delete: if isAtelierMember(atelierId) && !isDemoWorkspace(atelierId);
+      // Legacy images remain readable by their atelier staff; new catalog images use server bytes.
+      allow read: if hasAtelierPermission(atelierId, 'portfolio:manage');
+      allow write: if false;
+    }
+    match /ateliers/{atelierId}/portfolio/{projectId}/images/{imageId} {
+      allow read, write: if false;
     }
 
     match /ateliers/{atelierId}/quoteRequests/{requestId}/references/{referenceId} {

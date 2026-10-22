@@ -159,9 +159,8 @@ service cloud.firestore {
       allow list: if false;
       allow write: if false;
       match /portfolio/{projectId} {
-        allow get, list: if get(/databases/$(database)/documents/publicAteliers/$(atelierId)).data.published == true
-          && resource.data.public == true;
-        allow write: if false;
+        // Public catalogs are allowlisted by the slug-resolving callable.
+        allow read, write: if false;
       }
     }
 
@@ -315,11 +314,9 @@ service cloud.firestore {
       }
 
       match /portfolio/{projectId} {
-        allow get, list: if hasAtelierPermission(atelierId, 'portfolio:manage')
-          || (resource.data.public == true && get(/databases/$(database)/documents/publicAteliers/$(atelierId)).data.published == true);
-        allow create, update: if hasAtelierPermission(atelierId, 'portfolio:manage');
-        allow delete: if hasAtelierPermission(atelierId, 'portfolio:manage');
+        allow read, write: if false;
       }
+      match /showcaseOperations/{operationId} { allow read, write: if false; }
 
       match /transactions/{transactionId} {
         allow read: if activeFinanceStaff(atelierId);
@@ -377,8 +374,7 @@ service cloud.firestore {
         allow read, write: if false;
       }
       match /services/{serviceId} {
-        allow get, list: if hasAtelierPermission(atelierId, 'services:read');
-        allow write: if hasAtelierPermission(atelierId, 'services:write');
+        allow read, write: if false;
       }
       match /events/{eventId} {
         allow read: if hasAtelierPermission(atelierId, 'events:read');

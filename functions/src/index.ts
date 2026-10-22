@@ -36,3 +36,5 @@ export {
 } from './public/tenant';
 export { recordFinanceEntry, reverseFinanceEntry, listFinanceWorkspace } from './finance/finance';
 export { reconcileLegacyFinancePayment } from './finance/finance';
+export { listAtelierShowcase, saveAtelierService, saveAtelierPortfolioProject, listPublicShowcase, saveAtelierPublicProfile } from './showcase/showcase';
+export { uploadShowcaseImage, downloadShowcaseImage, removeShowcaseImage } from './showcase/images';

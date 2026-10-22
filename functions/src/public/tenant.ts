@@ -30,7 +30,7 @@ function normalizeSlug(value: unknown) {
   return slug.length <= 63 && slugPattern.test(slug) ? slug : null;
 }
 
-async function lookupTenant(tenantSlug: unknown): Promise<TenantLookup> {
+export async function lookupTenant(tenantSlug: unknown): Promise<TenantLookup> {
   const slug = normalizeSlug(tenantSlug);
   if (!slug) return { status: 'invalid_slug' };
 

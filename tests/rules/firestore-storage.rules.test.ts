@@ -217,6 +217,32 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(getDoc(doc(client, 'ateliers/atelier-b/orders/order-b')));
   });
 
+  it('routes showcase content and image bytes through tenant-aware projections instead of raw public documents', async () => {
+    const paths = ['ateliers/atelier-a/portfolio/project-public', 'ateliers/atelier-a/services/service-public', 'publicAteliers/atelier-a/portfolio/project-public', 'ateliers/atelier-a/showcaseOperations/op-a'];
+    const image = 'ateliers/atelier-a/portfolio/project-public/images/image-a';
+    const legacyImage = 'ateliers/atelier-a/portfolio/project-public/legacy.png';
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await Promise.all(paths.map((path) => setDoc(doc(context.firestore(), path), { public: true, active: true, title: 'Público', internalNotes: 'PRIVATE' })));
+      await uploadBytes(ref(context.storage(), image), new Uint8Array([1, 2, 3]), { contentType: 'image/png' });
+      await uploadBytes(ref(context.storage(), legacyImage), new Uint8Array([1, 2, 3]), { contentType: 'image/png' });
+    });
+    const contexts = [environment.unauthenticatedContext(), environment.authenticatedContext('member-a', { email_verified: true }), environment.authenticatedContext('member-b', { email_verified: true }), environment.authenticatedContext('client-a', { email_verified: true })];
+    for (const context of contexts) {
+      for (const path of paths) {
+        await assertFails(getDoc(doc(context.firestore(), path)));
+        await assertFails(setDoc(doc(context.firestore(), path), { public: true, actorId: 'forged', title: 'x'.repeat(10000) }));
+        await assertFails(updateDoc(doc(context.firestore(), path), { public: true, atelierId: 'atelier-b' }));
+        await assertFails(deleteDoc(doc(context.firestore(), path)));
+      }
+      await assertFails(getBytes(ref(context.storage(), image)));
+      await assertFails(uploadBytes(ref(context.storage(), image), new Uint8Array([4]), { contentType: 'image/png' }));
+      await assertFails(deleteObject(ref(context.storage(), image)));
+    }
+    await assertFails(getBytes(ref(environment.unauthenticatedContext().storage(), legacyImage)));
+    await assertFails(getDocs(collection(environment.unauthenticatedContext().firestore(), 'ateliers/atelier-a/portfolio')));
+    await assertFails(getDocs(collection(environment.unauthenticatedContext().firestore(), 'publicAteliers/atelier-a/portfolio')));
+  });
+
   it('keeps financial ledger, compensation locks and legacy mutations server-managed', async () => {
     const root = 'ateliers/atelier-a';
     const paths = ['financeEntries/entry-a', 'financeOperations/operation-a', 'financeReversals/entry-a', 'financePaymentReferences/reference-a'];
