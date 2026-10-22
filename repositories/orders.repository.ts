@@ -125,3 +125,8 @@ export async function getProductionBoard(atelierId: string) {
   }> }>(functions, 'listProductionBoard');
   return (await call({ atelierId })).data.stages;
 }
+
+export async function finalizeOrder(input: { orderId: string; action: 'deliver' | 'complete'; note: string; method?: 'pickup' | 'shipping'; requestId: string; expectedVersion: number }) {
+  const { functions } = requireFirebase();
+  return (await httpsCallable<typeof input, { orderId: string; status: 'delivered' | 'completed'; version: number; alreadyApplied: boolean }>(functions, 'finalizeOrder')(input)).data;
+}

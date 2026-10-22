@@ -41,3 +41,5 @@ export { uploadShowcaseImage, downloadShowcaseImage, removeShowcaseImage } from 
 export { sendOrderMessage, getOrderConversation, markOrderConversationRead, listMessageInbox } from './messages/conversations';
 export { listInternalNotifications, markInternalNotificationRead } from './notifications/internal-notifications';
 export { getOperationalPreferences, saveOperationalPreferences, getAtelierOperationalReport } from './reports/reports';
+
+export { finalizeOrder } from './orders/finalize-order';

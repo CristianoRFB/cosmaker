@@ -25,6 +25,10 @@ export interface Order {
   totalAmountCents?: number;
   currentAgreement?: import('./order-change').OrderAgreementSnapshot;
   agreementVersion?: number;
+  lifecycleVersion?: number;
+  deliveredAt?: unknown;
+  completedAt?: unknown;
+  deliveryMethod?: 'pickup' | 'shipping';
   planningNeedsReview?: boolean;
   expectedDeliveryDate: string;
   eventDate?: string | null;
@@ -64,6 +68,7 @@ export interface OrderFile {
 }
 
 export interface OrderHistoryEntry {
+  note?: string;
   id: string;
   status: OrderStatus;
   actorId: string;

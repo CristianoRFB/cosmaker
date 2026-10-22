@@ -31,7 +31,7 @@ export const listInternalNotifications = onCall(async (call) => {
     const atelierId = record.ref.parent.parent!.id;
     if (staff && atelierId !== tenant) continue;
     const value = record.data();
-    if (!messageId(value.orderId) || !['order_message', 'approval_required'].includes(value.type)) continue;
+    if (!messageId(value.orderId) || !['order_message', 'approval_required', 'order_updated'].includes(value.type)) continue;
     try {
       const view = await adminDb.runTransaction(async (tx) => {
         const actor = await messageActor(tx, call.auth, atelierId, value.orderId);

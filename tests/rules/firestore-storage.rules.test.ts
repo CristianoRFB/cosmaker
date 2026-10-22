@@ -236,7 +236,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('keeps message participants, history, read cursors and personal notifications callable-only', async () => {
-    const paths = ['ateliers/atelier-a/conversations/order-a', 'ateliers/atelier-a/conversations/order-a/messages/message-a', 'ateliers/atelier-a/conversations/order-a/operations/op-a', 'ateliers/atelier-a/conversations/order-a/reads/client-a', 'ateliers/atelier-a/notifications/notice-a', 'ateliers/atelier-a/orders/order-a/messages/legacy-a'];
+    const paths = ['ateliers/atelier-a/conversations/order-a', 'ateliers/atelier-a/conversations/order-a/messages/message-a', 'ateliers/atelier-a/conversations/order-a/operations/op-a', 'ateliers/atelier-a/conversations/order-a/reads/client-a', 'ateliers/atelier-a/notifications/notice-a', 'ateliers/atelier-a/orders/order-a/messages/legacy-a', 'ateliers/atelier-a/orders/order-a/lifecycleOperations/op-a'];
     await environment.withSecurityRulesDisabled(async (context) => {
       await Promise.all(paths.map((path) => setDoc(doc(context.firestore(), path), { clientUserId: 'client-a', userId: 'client-a', senderId: 'member-a', read: false, sequence: 1 })));
     });

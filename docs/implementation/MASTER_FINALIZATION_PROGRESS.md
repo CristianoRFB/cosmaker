@@ -1,5 +1,15 @@
 # Cosmaker Master Finalization — Progress
 
+## F2 — entrega/conclusão parcial preservada — 2026-10-22
+
+- F1.9 local preservada em `e514e25f35ef3fe93e1f4fbf35cf80dc3c812169`. Regressão unitária no fechamento **120/120 PASS**, exit 0, 8,01s (`/tmp/cosmaker-f19-all-unit.log`). CI do novo código ainda não observado; não confundir último CI verde com HEAD atual.
+- F2 **WIP**: stub de finalização substituído por entrega/conclusão manual transacional com versão/idempotência, gates de saldo/etapas/aprovações/revisões/planejamento/materiais/horas, auditoria, histórico e notificações internas por UID. Painel/portal conectados; contrato em [ORDER_DELIVERY.md](ORDER_DELIVERY.md). Sem gateway, cobrança, frete remoto, exclusão ou consumo silencioso.
+- Integração entrega **4/4 PASS**, exit 0, 31,52s (`/tmp/cosmaker-f2-delivery-integration.log`): permissões/A×B/UID, perfis/e-mail/tenant, adulteração, concorrência/retry, saldos, agenda, revisões/aprovações e reserva/consumo por callables reais do estoque. Histórico/recebimentos preservados, relatórios e notificações atualizados.
+- Rules direcionadas **1/1 PASS**, 24 não selecionadas, exit 0, 12,53s (`/tmp/cosmaker-f2-rules.log`), cobrindo também get/create/update/delete das operações de encerramento por visitante/owner/cliente/tenant B. Base anterior Rules 25/25 continua registrada, sem afirmar nova suíte integral.
+- Primeiro build F2 passou antes de acrescentar observações manuais ao histórico visível; **build final e smoke UI ainda pendentes neste checkpoint**. TypeScript detectou união de ação alargada e condição `unknown` no JSX; correções aplicadas, build final revalida. F3 parcial: títulos do ateliê deixam de ser genéricos e link de perfil da sidebar agora respeita a área; gates visuais pendentes.
+- Auditoria inicial de dependências de produção executada (sem `audit fix`): raiz 4 alertas altos via gRPC 1.9.16 do Firestore Node; Functions 9 moderados via uuid legado. A avaliação/correção compatível pertence ao próximo checkpoint F5/F6, sem alterar Firebase para versão antiga recomendada automaticamente pelo audit.
+- F2–F8 **NÃO ACEITOS**. Nenhum avanço no índice formal: 8/16 gates = 50%, F1.9 local validada aguardando CI.
+
 ## F1.9 — gates locais concluídos, CI pendente — 2026-10-22
 
 - WIP anterior preservado no remoto `c4cadc1262c3b2636e62931dc6f43734e550ec07`; árvore remota idêntica à local. Não há execução CI associada a esse SHA na consulta atual; último CI comprovado continua `1192ecf` (39712999574). Não tratar ausência de execução como PASS.

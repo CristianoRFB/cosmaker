@@ -250,6 +250,7 @@ service cloud.firestore {
         // Order state, payment state, approvals and history are changed only by trusted functions.
         allow create, update: if false;
         allow delete: if false;
+        match /lifecycleOperations/{operationId} { allow read, write: if false; }
         match /materialRequirements/{materialId} {
           allow read: if hasAtelierPermission(atelierId, 'inventory:read') || hasAtelierPermission(atelierId, 'inventory:write');
           allow write: if false;
