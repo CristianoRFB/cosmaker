@@ -23,7 +23,8 @@ async function trustedConversation(tx: FirebaseFirestore.Transaction, ref: Fireb
   }
 }
 function readyAttachment(file: FirebaseFirestore.DocumentData | undefined) {
-  return !!file && file.source === 'order_upload' && file.uploadStatus === 'ready' && file.archived !== true && file.visibleToClient === true;
+  return !!file && typeof file.originalName === 'string' && file.originalName.length > 0 && file.originalName.length <= 160
+    && ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'].includes(file.contentType) && Number.isSafeInteger(file.size) && file.size > 0 && file.size <= 20 * 1024 * 1024 && file.source === 'order_upload' && file.uploadStatus === 'ready' && file.archived !== true && file.visibleToClient === true;
 }
 export const sendOrderMessage = onCall(async (call) => {
   requireVerifiedIdentity(call.auth);
@@ -141,7 +142,7 @@ export const listMessageInbox = onCall(async (call) => {
   const snapshot = await (staff ? adminDb.collection(`ateliers/${atelierId}/conversations`).orderBy('lastMessageAt', 'desc').limit(101)
     : adminDb.collectionGroup('conversations').where('clientUserId', '==', call.auth!.uid).orderBy('lastMessageAt', 'desc').limit(101)).get();
   if (snapshot.size > 100) throw new HttpsError('resource-exhausted', 'A caixa de entrada exige paginação antes de ser exibida integralmente.');
-  const conversations = [];
+  const conversations = []; let legacyCount = 0;
   for (const doc of snapshot.docs) {
     const tenant = doc.ref.parent.parent!.id;
     try {
@@ -156,12 +157,12 @@ export const listMessageInbox = onCall(async (call) => {
           lastMessageAt: iso(current.data()!.lastMessageAt), unread: Math.max(0, current.data()!.lastSequence - (read.data()?.sequence ?? 0)) };
       });
       if (view) conversations.push(view);
-    } catch (error) { if (!(error instanceof HttpsError) || error.code !== 'permission-denied') throw error; }
+    } catch (error) { if (error instanceof HttpsError && error.code === 'failed-precondition') legacyCount++; else if (!(error instanceof HttpsError) || error.code !== 'permission-denied') throw error; }
   }
   // An empty inbox must still validate staff membership and order permission.
   if (staff) {
     const [atelier, member] = await Promise.all([adminDb.doc(`ateliers/${atelierId}`).get(), adminDb.doc(`ateliers/${atelierId}/members/${call.auth!.uid}`).get()]);
     if (atelier.data()?.active !== true || !messagePermission(member.data())) throw new HttpsError('permission-denied', 'Seu perfil não tem acesso às conversas deste ateliê.');
   }
-  return { conversations };
+  return { conversations, legacyCount };
 });

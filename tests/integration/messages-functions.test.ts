@@ -153,5 +153,26 @@ describe('Internal messages and notifications in demo-cosmaker', () => {
     await legacyOrder.set({ character: 'Legado sintético', clientUserId: client.uid });
     await adminDb.doc(`ateliers/${atelierIds[0]}/conversations/legacy-thread`).set({ clientUserId: client.uid, lastSequence: 1, lastMessageAt: new Date() });
     await expect(get({ orderId: 'legacy-thread' })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+    const safeInbox = await call<{ conversations: unknown[]; legacyCount: number }>('listMessageInbox'); expect(safeInbox.legacyCount).toBe(1); expect(safeInbox.conversations.length).toBeGreaterThan(0);
   }, 120_000);
+  it('separa notificações de pedidos com a mesma chave e pagina somente dados do UID autenticado', async () => {
+    await signIn(ownerA); const key = newId();
+    const first = await send('Mesmo evento em pedidos diferentes.', {}, key);
+    await adminDb.doc(`ateliers/${atelierIds[0]}/orders/second-thread`).set({ character: 'Segundo pedido', clientUserId: client.uid });
+    await send('Mesmo evento em pedidos diferentes.', { orderId: 'second-thread' }, key);
+    const notices = await adminDb.collection(`ateliers/${atelierIds[0]}/notifications`).where('eventId', '==', first.messageId).get();
+    expect(notices.size).toBe(2);
+    await signIn(client);
+    const firstPage = await call<{ notifications: Array<{ id: string }>; nextCursor: string | null }>('listInternalNotifications');
+    expect(firstPage.notifications).toHaveLength(50); expect(firstPage.nextCursor).toBeTruthy();
+    const secondPage = await call<{ notifications: Array<{ id: string }> }>('listInternalNotifications', { cursor: firstPage.nextCursor });
+    expect(secondPage.notifications.length).toBeGreaterThan(0);
+    expect(new Set([...firstPage.notifications, ...secondPage.notifications].map((row) => row.id)).size).toBe(firstPage.notifications.length + secondPage.notifications.length);
+    await expect(call('listInternalNotifications', { userId: ownerA.uid })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    await signIn(ownerB); await expect(call('listInternalNotifications', { cursor: firstPage.nextCursor })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+    await signIn(client); await adminAuth.updateUser(client.uid, { emailVerified: false }); await auth.currentUser!.getIdToken(true);
+    try { await expect(get()).rejects.toMatchObject({ code: 'functions/failed-precondition' }); }
+    finally { await adminAuth.updateUser(client.uid, { emailVerified: true }); await signIn(client); }
+  }, 60_000);
+
 });

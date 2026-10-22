@@ -11,6 +11,7 @@ import type { ConversationSummary, MessageAttachment, OrderConversation } from '
 const errorMessage = (error: unknown) => error instanceof Error ? error.message : 'Não foi possível carregar as mensagens. Tente novamente.';
 export function MessagesWorkspace({ viewer, selectedOrderId }: { viewer: 'atelier' | 'client'; selectedOrderId?: string }) {
   const { user } = useAuth();
+  const [legacyCount, setLegacyCount] = useState(0);
   const [inbox, setInbox] = useState<ConversationSummary[]>([]); const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState({ atelierId: '', orderId: '' }); const [thread, setThread] = useState<OrderConversation | null>(null);
   const [threadLoading, setThreadLoading] = useState(false); const [busy, setBusy] = useState(false);
@@ -19,9 +20,9 @@ export function MessagesWorkspace({ viewer, selectedOrderId }: { viewer: 'atelie
   const epoch = useRef(0); const invalidate = useCallback(() => { epoch.current++; }, []);
   const inboxEpoch = useRef(0); const invalidateInbox = useCallback(() => { inboxEpoch.current++; }, []);
   const request = useRef({ fingerprint: '', id: '' });
-  const loadInbox = useCallback(async () => { const current = ++inboxEpoch.current; setLoading(true); try { const result = await listMessageInbox(); if (current === inboxEpoch.current) setInbox(result.conversations); } catch (err) { if (current === inboxEpoch.current) { setInbox([]); setError(errorMessage(err)); } } finally { if (current === inboxEpoch.current) setLoading(false); } }, []);
+  const loadInbox = useCallback(async () => { const current = ++inboxEpoch.current; setLoading(true); try { const result = await listMessageInbox(); if (current === inboxEpoch.current) { setInbox(result.conversations); setLegacyCount(result.legacyCount); } } catch (err) { if (current === inboxEpoch.current) { setInbox([]); setError(errorMessage(err)); } } finally { if (current === inboxEpoch.current) setLoading(false); } }, []);
   useEffect(() => {
-    setInbox([]); setThread(null); setText(''); setAttachmentIds([]); setError(''); setNotice('');
+    setInbox([]); setLegacyCount(0); setThread(null); setText(''); setAttachmentIds([]); setError(''); setNotice('');
     const query = new URLSearchParams(window.location.search);
     setSelected({ atelierId: viewer === 'atelier' ? user?.atelierId ?? '' : query.get('atelierId') ?? '', orderId: selectedOrderId ?? query.get('pedidoId') ?? '' });
     if (user?.active) void loadInbox();
@@ -67,6 +68,7 @@ export function MessagesWorkspace({ viewer, selectedOrderId }: { viewer: 'atelie
     catch (err) { setError(errorMessage(err)); }
   }
   return <section className="grid min-w-0 gap-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><h1 className="text-2xl font-bold text-slate-950">Mensagens de pedidos</h1><p className="mt-1 text-sm text-slate-600">Converse com o cliente e a equipe no histórico do próprio pedido.</p></div><Button variant="secondary" disabled={busy || threadLoading} onClick={() => { void loadInbox(); if (selected.orderId) void loadThread(); }}>Atualizar conversas</Button></div>
+    {legacyCount > 0 && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-900">Há conversas anteriores que exigem conciliação antes de exibir o histórico. Os registros permanecem preservados.</p>}
     {error && <p role="alert" className="rounded-xl bg-rose-50 p-3 text-sm text-rose-800">{error}</p>}{notice && <p role="status" className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800">{notice}</p>}
     <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[280px_minmax(0,1fr)]"><Card><CardHeader><CardTitle>Conversas</CardTitle></CardHeader><CardContent>{loading ? <Skeleton className="h-32" /> : inbox.length ? <ul className="grid gap-2">{inbox.map((conversation) => <li key={`${conversation.atelierId}/${conversation.id}`}><button className={`w-full rounded-xl border p-3 text-left ${selected.orderId === conversation.id && selected.atelierId === conversation.atelierId ? 'border-violet-300 bg-violet-50' : 'border-slate-200'}`} onClick={() => select(conversation)}><span className="block break-words text-sm font-semibold text-slate-900">{conversation.character}</span><span className="mt-1 block break-words text-xs text-slate-500">{conversation.preview}</span>{conversation.unread > 0 && <span className="mt-2 block text-xs font-semibold text-violet-700">{conversation.unread} não lida(s)</span>}</button></li>)}</ul> : <p className="text-sm leading-6 text-slate-500">Nenhuma conversa iniciada. Abra um pedido para conversar.</p>}<Link className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-violet-700" href={viewer === 'atelier' ? '/atelier/pedidos' : '/cliente/pedidos'}>Abrir meus pedidos →</Link></CardContent></Card>
       {threadLoading ? <Skeleton className="h-96 rounded-2xl" /> : thread ? <Card><CardHeader><div className="flex flex-wrap items-center justify-between gap-2"><CardTitle>{thread.character}</CardTitle><Link className="text-sm font-semibold text-violet-700" href={`${viewer === 'atelier' ? '/atelier' : '/cliente'}/pedidos/${encodeURIComponent(selected.orderId)}${viewer === 'client' ? `?atelierId=${encodeURIComponent(selected.atelierId)}` : ''}`}>Abrir pedido</Link></div></CardHeader><CardContent>{thread.nextBeforeSequence && <Button className="mb-4" variant="secondary" disabled={busy} onClick={() => void older()}>Carregar mensagens anteriores</Button>}

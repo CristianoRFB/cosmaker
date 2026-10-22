@@ -217,6 +217,24 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(getDoc(doc(client, 'ateliers/atelier-b/orders/order-b')));
   });
 
+  it('keeps message participants, history, read cursors and personal notifications callable-only', async () => {
+    const paths = ['ateliers/atelier-a/conversations/order-a', 'ateliers/atelier-a/conversations/order-a/messages/message-a', 'ateliers/atelier-a/conversations/order-a/operations/op-a', 'ateliers/atelier-a/conversations/order-a/reads/client-a', 'ateliers/atelier-a/notifications/notice-a', 'ateliers/atelier-a/orders/order-a/messages/legacy-a'];
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await Promise.all(paths.map((path) => setDoc(doc(context.firestore(), path), { clientUserId: 'client-a', userId: 'client-a', senderId: 'member-a', read: false, sequence: 1 })));
+    });
+    for (const context of [environment.unauthenticatedContext(), environment.authenticatedContext('member-a', { email_verified: true }), environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }), environment.authenticatedContext('member-b', { email_verified: true })]) {
+      const db = context.firestore();
+      for (const path of paths) {
+        await assertFails(getDoc(doc(db, path)));
+        await assertFails(setDoc(doc(db, path + '-new'), { clientUserId: 'client-a', senderId: 'member-a', userId: 'client-a', text: 'Mensagem falsificada' }));
+        await assertFails(updateDoc(doc(db, path), { clientUserId: 'member-b', senderId: 'client-a', read: true, sequence: 999999 }));
+        await assertFails(deleteDoc(doc(db, path)));
+      }
+      await assertFails(getDocs(collection(db, 'ateliers/atelier-a/conversations')));
+      await assertFails(getDocs(collection(db, 'ateliers/atelier-a/notifications')));
+    }
+  });
+
   it('routes showcase content and image bytes through tenant-aware projections instead of raw public documents', async () => {
     const paths = ['ateliers/atelier-a/portfolio/project-public', 'ateliers/atelier-a/services/service-public', 'publicAteliers/atelier-a/portfolio/project-public', 'ateliers/atelier-a/showcaseOperations/op-a'];
     const image = 'ateliers/atelier-a/portfolio/project-public/images/image-a';

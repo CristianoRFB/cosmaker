@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## F1.8 — gates backend finais 2026-10-22 (UI pendente)
+
+- Checkpoint WIP enviado: [`c2548e2`](https://github.com/CristianoRFB/cosmaker/commit/c2548e2b7c96db142fe840158945dd3285577bc2). Contrato em [INTERNAL_MESSAGES.md](INTERNAL_MESSAGES.md).
+- Integração final mensagens/notificações **5/5 PASS**, exit 0, 56,32s (`/tmp/cosmaker-f18-integration-final.log`). Inclui chave repetida em pedidos distintos sem colisão, paginação de notificações com cursor por UID, perfil não verificado, legado sinalizado sem impedir caixa válida, além dos quatro cenários anteriores.
+- Regressão de produção após helper de aprovação **11/11 PASS**, exit 0, 46,98s (`/tmp/cosmaker-f18-production-regression.log`); fotos, ownership, configuração, evidências e snapshots preservados.
+- Rules completas **24/24 PASS**, exit 0, 30,78s (`/tmp/cosmaker-f18-rules.log`): mensagens/remetente/participantes/leitura/ops e notificações não aceitam get/list/create/update/delete brutos, inclusive por owner e cliente do próprio pedido.
+- Build local **PASS**, exit 0, 81 páginas (`/tmp/cosmaker-f18-build.log`), TypeScript/lint direcionado verdes. E2E desktop/mobile preparado com equipe, cliente, terceiro tenant, bytes PDF sintéticos reais e revogação. **E2E ainda PENDING; F1.8 não aceita.**
+
+
 ## F1.8 — checkpoint de implementação parcial 2026-10-22
 
 - F1.7 aceita e preservada no remoto [`0f44545`](https://github.com/CristianoRFB/cosmaker/commit/0f445456e1f120753e32e8e44141720b029dd977). F1.6/F1.7 mantêm os gates anteriores, sem nova declaração de produção/staging.
