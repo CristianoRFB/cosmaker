@@ -17,6 +17,7 @@
     "test:scheduling": "npm run functions:build && node scripts/test-commercial-emulator.mjs scheduling",
     "test:inventory": "npm run functions:build && node scripts/test-commercial-emulator.mjs inventory",
     "test:finance": "npm run functions:build && node scripts/test-commercial-emulator.mjs finance",
+    "test:recovery": "node scripts/test-emulator-recovery.mjs",
     "test:delivery": "npm run functions:build && node scripts/test-commercial-emulator.mjs delivery",
     "test:reports": "npm run functions:build && node scripts/test-commercial-emulator.mjs reports",
     "test:messages": "npm run functions:build && node scripts/test-commercial-emulator.mjs messages",
@@ -69,6 +70,9 @@
     "vitest": "^3.0.0"
   },
   "overrides": {
-    "postcss": "^8.5.28"
+    "postcss": "^8.5.28",
+    "@firebase/firestore": {
+      "@grpc/grpc-js": "1.13.6"
+    }
   }
 }
