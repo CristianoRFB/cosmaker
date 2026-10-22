@@ -1,5 +1,13 @@
 # Cosmaker Master Finalization — Progress
 
+## F3 — navegação responsiva validada, pendências de segurança priorizadas — 2026-10-22
+
+- Código preservado no remoto `444b31245be7d4abf858abbbc59693e55ed7fbe4`. Build final da navegação **PASS**, exit 0, 81 páginas (`/tmp/cosmaker-f3-build-final.log`). Repetição staff **1/1 PASS**, 8,7s (`/tmp/cosmaker-f3-staff-final.log`), e owner **1/1 PASS**, 7,8s (`/tmp/cosmaker-f3-owner-final.log`), ambos em 320/375/768/1440 após o filtro compartilhado corrigido. Cliente/Platform Owner passaram nos respectivos ramos não alterados pelo filtro; o primeiro lote com falha staff permanece registrado, não vira 4/4 retroativamente.
+- Menu, foco/Escape, rota atual, ausência de Financeiro/Estoque para perfil quotes:read, fechamento na navegação, desktop/sidebar, IDs de dialogs e overflow foram verificados. Captura owner 320 inspecionada; o menu longo rola dentro do dialog. Sem redesign das telas aprovadas.
+- Auditoria confirmou em fontes oficiais o teto de dois documentos Firestore por avaliação Storage. Não adicionar perfil como terceira leitura no helper de Storage: primeiro migrar os uploads ativos restantes para transferência pelo servidor e negar caminhos raw. A avaliação segue parcial/score1 devido a ACL legada; [achados](security/RULES_AUDIT_2026-10-22.json). Fontes: [limites de Rules](https://firebase.google.com/docs/rules/rules-behavior), [documentação de cross-service](https://firebase.blog/posts/2022/09/announcing-cross-service-security-rules/).
+- Próximo módulo exato: **F5 leitura de propostas por UID** (backend allowlisted + paginação + cliente, fechar wildcard por e-mail e revogação de perfil no Firestore). Depois: uploads privados/públicos por bytes para remover dependências excedentes das Storage Rules, portal do cliente ainda estrutural, ferramentas dev e fechamento global proporcional.
+- F1.1–F1.9/F4 aceitos localmente; F2 jornada contínua testada com aceite global pendente de ACL legado; F3/F5/F6 WIP; F7/F8 pendentes. Índice formal **10/16 = 62,5%**, sem mudança por este refinamento.
+
 ## Jornada integrada comprovada; F4 aceita; refinamento F3 — 2026-10-22
 
 - Remoto anterior `94e8e6470ce14388318bace640811247f3c80f8d`, CI **PASS**, [39796587744](https://github.com/CristianoRFB/cosmaker/actions/runs/39796587744). Orçamentos/scheduler preservados; E2E integrado orçamento→pedido→medidas→entrada→produção/foto/aprovação→CRM **1/1 PASS**, 1,2min (`/tmp/cosmaker-quote-security-e2e.log`) após os reforços, sem relaxar segurança.
@@ -223,11 +231,11 @@ O proprietário autorizou explicitamente commit e push da branch de trabalho. Es
 | F1.8 Mensagens e notificações internas | PASS LOCAL | Backend 5/5, produção 11/11, Rules 24/24, desktop/mobile 1/1 cada, build e CI final verdes; detalhes nos checkpoints posteriores. |
 | F1.9 Relatórios e configurações | PASS LOCAL | Backend 5/5, Rules 25/25, build, filtros/persistência 320/375/768/1440, métricas globais e CI 39789058086 aprovados. |
 | Checkpoint F1 — completude funcional | TODO | Cada módulo operacional precisa criar→ler→alterar/ação→persistir e provar denial em outra fronteira. |
-| F2 — jornada integrada A×B | TODO | E2E ponta a ponta com persistência no Emulator, falhas, concorrência, retry e ACL. |
-| F3 — UX/UI e white-label | TODO | Rotas/estados reais em três papéis, desktop/mobile, acessibilidade e sem stubs ativos. |
-| F4 — coerência comercial | TODO | Preservar Global Standard v01; criar proposta separada de matriz não aprovada. |
-| F5 — integrações internas/externas | TODO | Operações internas persistidas; adaptadores externos disabled/mock e respostas honestas. |
-| F6 — segurança, CI, backup/restore | TODO | Testes adversariais, dependências/config/privacidade, pipeline e restauração apenas em ambiente permitido. |
+| F2 — jornada integrada A×B | TESTADO_LOCALMENTE / ACEITE GLOBAL PENDENTE | Jornada contínua visitor→conclusão 1/1 e regressões por domínio; falta ownership/ACL de legado de propostas para fechar o gate global. |
+| F3 — UX/UI e white-label | WIP | Relatórios/configurações/referências e menu por papel em 320/375/768/1440; stubs do portal e rotas secundárias ainda pendentes. |
+| F4 — coerência comercial | PASS LOCAL | Global Standard v01 preservado; backend 11/11, E2E 5/5 e CI 39796587744 verdes, sem cotas/benefícios inventados. |
+| F5 — segurança e privacidade (GOAL II) | WIP | Correções de bytes/autorizações/scheduler comprovadas; ownership legado, revogação global e achados da auditoria pendentes. Integrações externas permanecem desativadas. |
+| F6 — estabilidade, CI e backup/restore | WIP | Restore fictício Auth/Firestore/Storage e ACL PASS, produção raiz audit 0 após gRPC; Functions/dev tools e transporte PubSub do scheduler pendentes. |
 | F7 — staging e preparação de produção | TODO | Preflight, backup/dry-run/rollback/runbooks; staging real só com acesso e autorização explícitos. |
 | F8 — documentação e evidências v0.3.0 | TODO | Preservar v0.1/v0.2; atualizar CURRENT só após documentação, capturas, diagramas e docs:check verdes. |
 
