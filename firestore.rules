@@ -1,3 +1,6 @@
+// Authority: users/{uid} is server-managed except presentation; tenant members require
+// verified Auth, an active atelier_member profile in that tenant, active tenant and membership.
+// Client quotes/intake/references are callable projections; raw documents may contain private fields.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -27,7 +30,12 @@ service cloud.firestore {
 
     function isAtelierMember(atelierId) {
       let atelierPath = /databases/$(database)/documents/ateliers/$(atelierId);
+      let profilePath = /databases/$(database)/documents/users/$(request.auth.uid);
       return signedIn()
+        && request.auth.token.email_verified == true
+        && exists(profilePath) && get(profilePath).data.active == true
+        && get(profilePath).data.accountType == 'atelier_member'
+        && get(profilePath).data.atelierId == atelierId
         && exists(atelierPath)
         && get(atelierPath).data.active == true
         && exists(memberPath(atelierId, request.auth.uid))
@@ -46,21 +54,12 @@ service cloud.firestore {
 
     function isOwnClient(atelierId, clientId) {
       let clientPath = /databases/$(database)/documents/ateliers/$(atelierId)/clients/$(clientId);
-      return signedIn() && exists(clientPath) && get(clientPath).data.userId == request.auth.uid;
-    }
-
-    function isOwnQuoteRequest(atelierId, requestId) {
-      let requestPath = /databases/$(database)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId);
-      return signedIn() && exists(requestPath)
-        && get(requestPath).data.email is string
-        && verifiedEmailMatches(get(requestPath).data.email);
-    }
-
-    function isOwnQuote(atelierId, quoteId) {
-      let quotePath = /databases/$(database)/documents/ateliers/$(atelierId)/quotes/$(quoteId);
-      return signedIn() && exists(quotePath)
-        && verifiedEmailMatches(get(quotePath).data.email)
-        && get(quotePath).data.status in ['sent', 'approved', 'rejected', 'expired'];
+      let profilePath = /databases/$(database)/documents/users/$(request.auth.uid);
+      return signedIn() && request.auth.token.email_verified == true
+        && exists(profilePath) && get(profilePath).data.active == true
+        && get(profilePath).data.accountType == 'client'
+        && get(/databases/$(database)/documents/ateliers/$(atelierId)).data.active == true
+        && exists(clientPath) && get(clientPath).data.userId == request.auth.uid;
     }
 
     function canReadOrder(atelierId, orderId) {
@@ -122,10 +121,9 @@ service cloud.firestore {
         && data.active is bool;
     }
 
-    // Collection-group query used by a verified client to see quotes across ateliers.
+    // Client history is projected by UID-aware callables, never a global email grant.
     match /{path=**}/quotes/{quoteId} {
-      allow get, list: if verifiedEmailMatches(resource.data.email)
-        && resource.data.status in ['sent', 'approved', 'rejected', 'expired'];
+      allow get, list: if false;
     }
 
     // Cross-tenant client listing uses a callable that validates UID links and projects fields.
@@ -208,7 +206,7 @@ service cloud.firestore {
       }
 
       match /quoteRequests/{requestId} {
-        allow get, list: if hasAtelierPermission(atelierId, 'quotes:read') || isOwnQuoteRequest(atelierId, requestId);
+        allow get, list: if hasAtelierPermission(atelierId, 'quotes:read');
         // Public intake is written by a trusted callable that resolves the slug server-side.
         allow create: if false;
         allow update: if hasAtelierPermission(atelierId, 'quotes:write')
@@ -216,31 +214,27 @@ service cloud.firestore {
         allow delete: if false;
 
         match /references/{referenceId} {
-          allow get, list: if hasAtelierPermission(atelierId, 'quotes:read')
-            || (isOwnQuoteRequest(atelierId, requestId)
-              && (!('uploadStatus' in resource.data) || resource.data.uploadStatus == 'ready'));
+          allow get, list: if hasAtelierPermission(atelierId, 'quotes:read');
           // Reference metadata is created only after the backend validates the uploaded bytes.
           allow create, update, delete: if false;
         }
       }
 
       match /quotes/{quoteId} {
-        allow get, list: if hasAtelierPermission(atelierId, 'quotes:read')
-          || (verifiedEmailMatches(resource.data.email) && resource.data.status in ['sent', 'approved', 'rejected', 'expired']);
+        allow get, list: if hasAtelierPermission(atelierId, 'quotes:read');
         allow create: if false;
         allow update: if false;
         allow delete: if false;
         match /items/{itemId} {
-          allow read: if hasAtelierPermission(atelierId, 'quotes:read')
-            || isOwnQuote(atelierId, quoteId);
+          allow read: if hasAtelierPermission(atelierId, 'quotes:read');
           allow write: if false;
         }
         match /approvedItems/{itemId} {
-          allow read: if hasAtelierPermission(atelierId, 'quotes:read') || isOwnQuote(atelierId, quoteId);
+          allow read: if hasAtelierPermission(atelierId, 'quotes:read');
           allow write: if false;
         }
         match /responses/{responseId} {
-          allow read: if hasAtelierPermission(atelierId, 'quotes:read') || isOwnQuote(atelierId, quoteId);
+          allow read: if hasAtelierPermission(atelierId, 'quotes:read');
           allow write: if false;
         }
       }

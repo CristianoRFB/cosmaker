@@ -19,6 +19,7 @@ const suites = {
   delivery: 'tests/integration/order-finalization-functions.test.ts',
   references: 'tests/integration/quote-reference-functions.test.ts',
   quotes: 'tests/integration/quote-security-functions.test.ts',
+  'client-quotes': 'tests/integration/client-quotes-functions.test.ts',
   journey: 'tests/integration/integrated-journey-functions.test.ts',
   'order-files': 'tests/integration/order-files-functions.test.ts',
   'order-changes': 'tests/integration/order-change-functions.test.ts',

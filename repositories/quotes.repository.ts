@@ -1,6 +1,6 @@
 'use client';
 
-import { collection, collectionGroup, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, limit, orderBy, query } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { requireFirebase } from '@/services/firebase/firebase.client';
 import type { Quote, QuoteItem, QuoteResponse } from '@/types/quote';
@@ -31,17 +31,17 @@ export async function listQuotes(atelierId: string) {
   return result.docs.map((snapshot) => ({ id: snapshot.id, atelierId, ...snapshot.data() } as Quote));
 }
 
-export async function listClientQuotes(email: string) {
-  if (!email.trim()) return [];
-  const { db } = requireFirebase();
-  const result = await getDocs(query(
-    collectionGroup(db, 'quotes'),
-    where('email', '==', email.trim().toLowerCase()),
-    where('status', 'in', ['sent', 'approved', 'rejected', 'expired']),
-    orderBy('createdAt', 'desc'),
-    limit(50),
-  ));
-  return result.docs.map((snapshot) => ({ id: snapshot.id, atelierId: String(snapshot.data().atelierId), ...snapshot.data() } as Quote));
+export interface ClientQuotesPage { quotes: Quote[]; nextCursor: string | null }
+export interface QuoteDetailRecord { quote: Quote; items: QuoteItem[]; responses: QuoteResponse[]; nextResponsesCursor?: string | null }
+
+export async function listClientQuotes(cursor?: string): Promise<ClientQuotesPage> {
+  const { functions } = requireFirebase();
+  return (await httpsCallable<{ cursor?: string }, ClientQuotesPage>(functions, 'listClientQuotes')(cursor ? { cursor } : {})).data;
+}
+
+export async function getClientQuote(atelierId: string, quoteId: string, responseCursor?: string): Promise<QuoteDetailRecord> {
+  const { functions } = requireFirebase();
+  return (await httpsCallable<{ atelierId: string; quoteId: string; responseCursor?: string }, QuoteDetailRecord>(functions, 'getClientQuote')({ atelierId, quoteId, ...(responseCursor ? { responseCursor } : {}) })).data;
 }
 
 export async function getQuote(atelierId: string, quoteId: string) {

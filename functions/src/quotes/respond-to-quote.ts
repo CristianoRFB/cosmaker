@@ -4,6 +4,8 @@ import { adminDb } from '../admin';
 import { productionId } from '../orders/production-configuration';
 import { buildClientSearchPrefixes, clientEmailIndexId, normalizeClientSearch } from '../clients/client-data';
 
+import { visibleClientQuotes } from './client-quotes';
+
 type Decision = 'approved' | 'rejected' | 'request_changes';
 
 export const respondToQuote = onCall(async (call) => {
@@ -33,6 +35,7 @@ export const respondToQuote = onCall(async (call) => {
     if (tenant.get('active') !== true || profile.get('active') !== true || profile.get('accountType') !== 'client') throw new HttpsError('permission-denied', 'Seu perfil não pode responder a este orçamento.');
     if (!quoteSnapshot.exists) throw new HttpsError('not-found', 'O orçamento não foi encontrado.');
     const quote = quoteSnapshot.data()!;
+    if (!(await visibleClientQuotes(transaction, { uid: call.auth!.uid, email: call.auth!.token.email!.trim().toLowerCase() }, [quoteSnapshot])).length) throw new HttpsError('permission-denied', 'Este orçamento não está disponível para sua conta.');
     if (typeof quote.clientUserId === 'string' && quote.clientUserId !== call.auth!.uid) throw new HttpsError('permission-denied', 'Este orçamento está vinculado a outra conta.');
     if (String(quote.email).trim().toLowerCase() !== call.auth!.token.email!.trim().toLowerCase()) {
       throw new HttpsError('permission-denied', 'Este orçamento pertence a outro endereço verificado.');
@@ -106,12 +109,13 @@ export const respondToQuote = onCall(async (call) => {
     transaction.set(clientEmailIndexRef, { clientId, updatedAt: FieldValue.serverTimestamp() });
 
     if (reply === 'request_changes') {
-      transaction.update(requestRef, { clientId, status: 'adjustment_requested', updatedAt: now });
-      transaction.update(quoteRef, { clientId, lastClientResponseAt: now, updatedAt: now });
+      transaction.update(requestRef, { clientId, clientUserId: call.auth!.uid, status: 'adjustment_requested', updatedAt: now });
+      transaction.update(quoteRef, { clientId, clientUserId: call.auth!.uid, lastClientResponseAt: now, updatedAt: now });
     } else if (reply === 'approved') {
       const approvedItemsRef = quoteRef.collection('approvedItems');
       items!.docs.forEach((item) => transaction.set(approvedItemsRef.doc(item.id), { ...item.data(), snapshotAt: now }));
       transaction.update(quoteRef, {
+        clientUserId: call.auth!.uid,
         clientId,
         status: 'approved',
         approvedAt: now,
@@ -136,10 +140,10 @@ export const respondToQuote = onCall(async (call) => {
         },
         updatedAt: now,
       });
-      transaction.update(requestRef, { clientId, status: 'approved', updatedAt: now });
+      transaction.update(requestRef, { clientId, clientUserId: call.auth!.uid, status: 'approved', updatedAt: now });
     } else {
-      transaction.update(quoteRef, { clientId, status: 'rejected', rejectedAt: now, rejectedBy: call.auth!.uid, clientComment: normalizedComment, updatedAt: now });
-      transaction.update(requestRef, { clientId, status: 'rejected', updatedAt: now });
+      transaction.update(quoteRef, { clientId, clientUserId: call.auth!.uid, status: 'rejected', rejectedAt: now, rejectedBy: call.auth!.uid, clientComment: normalizedComment, updatedAt: now });
+      transaction.update(requestRef, { clientId, clientUserId: call.auth!.uid, status: 'rejected', updatedAt: now });
     }
     transaction.set(auditRef, {
       actorId: call.auth!.uid,

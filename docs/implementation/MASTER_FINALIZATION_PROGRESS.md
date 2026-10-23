@@ -1,5 +1,16 @@
 # Cosmaker Master Finalization — Progress
 
+## F5 — propostas por UID e revogação Firestore — WIP preservado — 2026-10-23
+
+- Recuperação: remoto/checkout `3c162fe4fb8274e94c628e2e0e1e4e6c76e5bd53`, branch autorizada, quatro arquivos WIP preservados. CI desse HEAD **PASS**, [39802106268](https://github.com/CristianoRFB/cosmaker/actions/runs/39802106268). Nenhum módulo aprovado reiniciado.
+- `cloud-setup.sh` **exit 0** (`/tmp/cosmaker-resume-setup.log`): Node 22.23.4, Java 21, instalação raiz/Functions, artefatos dos emuladores e build local de 81 páginas. Reutilizados scripts, proxy/CA, cache e projeto `demo-cosmaker`; nenhuma credencial real ou configuração manual recorrente.
+- IMPLEMENTADO/WIP: listagem/detalhe de propostas do cliente por callables, projeção allowlisted, UID/CRM prioritário ao e-mail (inclusive CRM sem índice), paginação explícita e datas legadas sem descarte silencioso. Novas respostas persistem `clientUserId`; mutações verificam a mesma fronteira de leitura. Portal usa as Functions, limpa dados por UID/sessão, pagina histórico e recarrega ajustes.
+- Rules fecham wildcard por e-mail, leitura raw de propostas/itens/respostas/solicitações/referências pelo cliente; equipe mantém consultas com permissão. Helper Firestore exige perfil ativo/verificado com accountType/tenant corretos; medidas próprias também revogam pelo perfil/tenant. Storage não foi alterado neste checkpoint.
+- TESTADO_LOCALMENTE: Rules **28/28 PASS**, exit 0 do script, 69,43s (`/tmp/cosmaker-uid-rules.log`), incluindo negativos e positivos existentes. Functions/TypeScript/build de interface iniciais sem erros; compilação final, integração de Functions e smoke cliente/equipe **ainda pendentes neste WIP**. Não marcar o módulo aceito antes desses gates.
+- F1.1–F1.9/F4 mantêm aceite local anterior. F2/F3/F5/F6 parciais; F7/F8 pendentes. Índice formal **10/16 = 62,5%** inalterado; este WIP não aumenta percentual.
+- Próximo passo: concluir testes `client-quotes` e mutações, smoke mobile/desktop das propostas e jornada integrada afetada; depois uploads por servidor para remover excesso de leituras cross-service das Storage Rules e revogação privada legada. Portal ainda possui telas estruturais documentadas.
+
+
 ## F3 — navegação responsiva validada, pendências de segurança priorizadas — 2026-10-22
 
 - Código preservado no remoto `444b31245be7d4abf858abbbc59693e55ed7fbe4`. Build final da navegação **PASS**, exit 0, 81 páginas (`/tmp/cosmaker-f3-build-final.log`). Repetição staff **1/1 PASS**, 8,7s (`/tmp/cosmaker-f3-staff-final.log`), e owner **1/1 PASS**, 7,8s (`/tmp/cosmaker-f3-owner-final.log`), ambos em 320/375/768/1440 após o filtro compartilhado corrigido. Cliente/Platform Owner passaram nos respectivos ramos não alterados pelo filtro; o primeiro lote com falha staff permanece registrado, não vira 4/4 retroativamente.

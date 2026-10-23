@@ -49,6 +49,7 @@ beforeEach(async () => {
       setDoc(doc(db, 'publicAtelierSlugs/atelier-b'), { slug: 'atelier-b', atelierId: 'atelier-b' }),
       setDoc(doc(db, 'ateliers/atelier-a/members/member-a'), { active: true, role: 'owner', permissions: [] }),
       setDoc(doc(db, 'users/member-a'), { active: true, accountType: 'atelier_member', atelierId: 'atelier-a' }),
+      ...[['member-b', 'atelier-b'], ['finance-reader', 'atelier-a'], ['no-order-access', 'atelier-a'], ['suspended-member', 'atelier-suspended']].map(([id, atelierId]) => setDoc(doc(db, `users/${id}`), { active: true, accountType: 'atelier_member', atelierId })),
       setDoc(doc(db, 'users/client-a'), { active: true, accountType: 'client' }),
       setDoc(doc(db, 'users/client-b'), { active: true, accountType: 'client' }),
       setDoc(doc(db, 'ateliers/atelier-b/members/member-b'), { active: true, role: 'assistant', permissions: ['quotes:read'] }),
@@ -119,6 +120,41 @@ beforeEach(async () => {
 });
 
 describe('Firestore and Storage tenant rules', () => {
+  it('closes quote collection-group/email grants and subcollections while keeping active staff queries', async () => {
+    const root = 'ateliers/atelier-a';
+    await environment.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await Promise.all(['items/item-a', 'approvedItems/item-a', 'responses/reply-a'].map((path) => setDoc(doc(db, `${root}/quotes/quote-a/${path}`), { privateNotes: 'PRIVATE', actorId: 'client-a' })));
+      await setDoc(doc(db, 'foreign/namespace/quotes/quote-forged'), { email: 'client@example.com', status: 'sent' });
+    });
+    const staff = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    await assertSucceeds(getDocs(collection(staff, `${root}/quotes`)));
+    for (const context of [environment.unauthenticatedContext(), environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }), environment.authenticatedContext('client-b', { email: 'client@example.com', email_verified: true }), environment.authenticatedContext('member-b', { email_verified: true }), environment.authenticatedContext('platform-admin', { email_verified: true, platformAdmin: true })]) {
+      const db = context.firestore();
+      await assertFails(getDocs(query(collectionGroup(db, 'quotes'), where('email', '==', 'client@example.com'), where('status', 'in', ['sent', 'approved', 'rejected', 'expired']))));
+      for (const path of ['quotes/quote-a', 'quotes/quote-a/items/item-a', 'quotes/quote-a/approvedItems/item-a', 'quotes/quote-a/responses/reply-a', 'quoteRequests/request-a', 'quoteRequests/request-a/references/ref-a']) await assertFails(getDoc(doc(db, `${root}/${path}`)));
+      await assertFails(getDoc(doc(db, 'foreign/namespace/quotes/quote-forged')));
+    }
+  });
+
+  it('revokes raw domain reads immediately for inactive, mismatched or unverified profiles', async () => {
+    const staff = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    const paths = ['quotes/quote-a', 'quoteRequests/request-a', 'quoteRequests/request-a/references/ref-a', 'members/member-b', 'measurementProfiles/profile-a', 'transactions/transaction-a'];
+    for (const path of paths) await assertSucceeds(getDoc(doc(staff, `ateliers/atelier-a/${path}`)));
+    for (const patch of [{ active: false }, { accountType: 'client' }, { atelierId: 'atelier-b' }]) {
+      await environment.withSecurityRulesDisabled((context) => updateDoc(doc(context.firestore(), 'users/member-a'), patch));
+      for (const path of paths) await assertFails(getDoc(doc(staff, `ateliers/atelier-a/${path}`)));
+      await environment.withSecurityRulesDisabled((context) => updateDoc(doc(context.firestore(), 'users/member-a'), { active: true, accountType: 'atelier_member', atelierId: 'atelier-a' }));
+    }
+    const unverified = environment.authenticatedContext('member-a', { email_verified: false }).firestore();
+    for (const path of paths) await assertFails(getDoc(doc(unverified, `ateliers/atelier-a/${path}`)));
+    const client = environment.authenticatedContext('client-a', { email_verified: true }).firestore();
+    await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-a')));
+    await environment.withSecurityRulesDisabled((context) => updateDoc(doc(context.firestore(), 'users/client-a'), { active: false }));
+    await assertFails(getDoc(doc(client, 'ateliers/atelier-a/clients/client-a')));
+    await assertFails(updateDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-a/measurements/chest'), { value: 99 }));
+  });
+
   it('revokes order reads for inactive profiles, unverified staff and suspended tenants', async () => {
     const customer = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
     const staff = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
@@ -176,7 +212,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('does not let a member of one tenant read another tenant requests', async () => {
-    const member = environment.authenticatedContext('member-a').firestore();
+    const member = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
     await assertSucceeds(getDoc(doc(member, 'ateliers/atelier-a/quoteRequests/request-a')));
     await assertFails(getDoc(doc(member, 'ateliers/atelier-b/quoteRequests/request-b')));
     await assertFails(getDoc(doc(member, 'ateliers/atelier-b/quoteRequests/request-b/references/ref-b')));
@@ -184,7 +220,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('blocks tenant access and public intake while an atelier is suspended', async () => {
-    const member = environment.authenticatedContext('suspended-member').firestore();
+    const member = environment.authenticatedContext('suspended-member', { email_verified: true }).firestore();
     await assertFails(getDoc(doc(member, 'ateliers/atelier-suspended/quoteRequests/request-suspended')));
     const guest = environment.unauthenticatedContext().firestore();
     const request = {
@@ -207,10 +243,10 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(getDoc(doc(client, 'auditLogs/log-a')));
   });
 
-  it('lets a verified matching client read a quote but never change its commercial status or total', async () => {
+  it('denies raw quotes even with matching verified email; client projections are server-only', async () => {
     const client = environment.authenticatedContext('client-a', { email: 'CLIENT@example.com', email_verified: true }).firestore();
     const quoteRef = doc(client, 'ateliers/atelier-a/quotes/quote-a');
-    await assertSucceeds(getDoc(quoteRef));
+    await assertFails(getDoc(quoteRef));
     await assertFails(updateDoc(quoteRef, { status: 'approved', total: 1 }));
     const otherClient = environment.authenticatedContext('client-b', { email: 'other@example.com', email_verified: true }).firestore();
     await assertFails(getDoc(doc(otherClient, 'ateliers/atelier-a/quotes/quote-a')));
@@ -314,7 +350,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('keeps finance records unavailable to a quote-only member', async () => {
-    const reader = environment.authenticatedContext('finance-reader').firestore();
+    const reader = environment.authenticatedContext('finance-reader', { email_verified: true }).firestore();
     await assertFails(getDoc(doc(reader, 'ateliers/atelier-a/transactions/transaction-a')));
   });
 
@@ -333,7 +369,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('routes staff client access through callables and allows a customer to read only their own profile', async () => {
-    const member = environment.authenticatedContext('member-a').firestore();
+    const member = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
     const ownClient = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
     const otherClient = environment.authenticatedContext('client-b', { email: 'other@example.com', email_verified: true }).firestore();
     const clientPath = 'ateliers/atelier-a/clients/client-a';
@@ -347,7 +383,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('limits order and measurement access to the assigned team and the verified client', async () => {
-    const memberWithoutOrderAccess = environment.authenticatedContext('no-order-access').firestore();
+    const memberWithoutOrderAccess = environment.authenticatedContext('no-order-access', { email_verified: true }).firestore();
     await assertFails(getDoc(doc(memberWithoutOrderAccess, 'ateliers/atelier-a/orders/order-a')));
     const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
     await assertSucceeds(getDoc(doc(client, 'ateliers/atelier-a/orders/order-a/measurementSnapshot/chest')));
@@ -364,7 +400,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('makes order state server-managed and exposes only client-approved production photos', async () => {
-    const member = environment.authenticatedContext('member-a').firestore();
+    const member = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
     const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
     const order = doc(member, 'ateliers/atelier-a/orders/order-a');
     await assertFails(updateDoc(order, { status: 'completed' }));
@@ -387,7 +423,7 @@ describe('Firestore and Storage tenant rules', () => {
         setDoc(doc(db, 'ateliers/atelier-a/orders/order-a/materialRequirements/material-a'), { plannedMilli: 5000 }),
       ]);
     });
-    const owner = environment.authenticatedContext('member-a').firestore();
+    const owner = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
     const material = doc(owner, 'ateliers/atelier-a/materials/material-a');
     const supplier = doc(owner, 'ateliers/atelier-a/suppliers/supplier-a');
     const movement = doc(owner, 'ateliers/atelier-a/inventoryMovements/movement-a');
@@ -446,7 +482,7 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('keeps commercial records server-managed and protects the demo marker', async () => {
-    const owner = environment.authenticatedContext('member-a').firestore();
+    const owner = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
     await assertFails(getDoc(doc(owner, 'ateliers/atelier-a/commercial/state')));
     await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/commercial/state'), { planId: 'premium', subscriptionStatus: 'active' }));
     await assertFails(setDoc(doc(owner, 'ateliers/atelier-a/commercial/config'), { featureConfig: { 'test_only.operation_probe': true } }));
@@ -457,8 +493,8 @@ describe('Firestore and Storage tenant rules', () => {
   });
 
   it('keeps team membership, invitations, and ownership server-managed', async () => {
-    const owner = environment.authenticatedContext('member-a').firestore();
-    const member = environment.authenticatedContext('finance-reader').firestore();
+    const owner = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    const member = environment.authenticatedContext('finance-reader', { email_verified: true }).firestore();
     const membership = doc(owner, 'ateliers/atelier-a/members/new-member');
     const invitation = doc(owner, 'ateliers/atelier-a/teamInvitations/invitation-a');
     const emailIndex = doc(owner, 'ateliers/atelier-a/teamInvitationEmailIndex/hash-a');

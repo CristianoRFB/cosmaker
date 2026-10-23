@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { getQuote, getQuoteRequest, listClientQuotes, listQuoteRequests, listQuotes } from '@/repositories/quotes.repository';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { getQuote, getClientQuote, getQuoteRequest, listClientQuotes, listQuoteRequests, listQuotes } from '@/repositories/quotes.repository';
+import type { QuoteDetailRecord } from '@/repositories/quotes.repository';
 import { useAuth } from '@/providers/auth-provider';
 import { useTenant } from '@/providers/tenant-provider';
-import type { Quote, QuoteItem, QuoteResponse } from '@/types/quote';
+import type { Quote } from '@/types/quote';
 import type { QuoteRequest, QuoteRequestReference } from '@/types/quote-request';
 
 export function useAtelierQuoteRequests() {
@@ -57,35 +58,65 @@ export function useAtelierQuotes() {
 }
 
 export function useClientQuotes() {
-  const { user, firebaseUser } = useAuth();
-  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const { firebaseUser } = useAuth();
+  const identity = `${firebaseUser?.uid ?? ''}:${firebaseUser?.email ?? ''}:${firebaseUser?.emailVerified === true}`;
+  const verified = firebaseUser?.emailVerified === true;
+  const [state, setState] = useState<{ identity: string; quotes: Quote[]; cursor: string | null }>({ identity: '', quotes: [], cursor: null });
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState('');
+  const [revision, setRevision] = useState(0);
+  const epoch = useRef(0);
   useEffect(() => {
-    let active = true;
-    if (!user?.email) { setQuotes([]); setLoading(false); return; }
-    if (firebaseUser?.emailVerified !== true) { setQuotes([]); setError('Confirme seu e-mail para consultar os orçamentos associados ao endereço da sua conta.'); setLoading(false); return; }
-    setLoading(true); setError('');
-    listClientQuotes(user.email).then((result) => { if (active) setQuotes(result); })
-      .catch((loadError) => { if (active) setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar seus orçamentos.'); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, [user?.email, firebaseUser?.emailVerified]);
-  return { quotes, loading, error };
+    const current = ++epoch.current;
+    setState({ identity, quotes: [], cursor: null }); setError(''); setLoadingMore(false);
+    if (!firebaseUser?.uid || !verified) { setLoading(false); return; }
+    setLoading(true);
+    listClientQuotes().then((result) => { if (epoch.current === current) setState({ identity, quotes: result.quotes, cursor: result.nextCursor }); })
+      .catch((reason) => { if (epoch.current === current) setError(reason instanceof Error ? reason.message : 'Não foi possível carregar seus orçamentos.'); })
+      .finally(() => { if (epoch.current === current) setLoading(false); });
+    return () => { epoch.current = current + 1; };
+  }, [identity, verified, firebaseUser?.uid, revision]);
+  const loadMore = async () => {
+    if (state.identity !== identity || !state.cursor || loadingMore) return;
+    const current = epoch.current; setLoadingMore(true); setError('');
+    try {
+      const result = await listClientQuotes(state.cursor);
+      if (epoch.current === current) setState((previous) => ({ identity, quotes: [...new Map([...previous.quotes, ...result.quotes].map((quote) => [`${quote.atelierId}/${quote.id}`, quote])).values()], cursor: result.nextCursor }));
+    } catch (reason) { if (epoch.current === current) setError(reason instanceof Error ? reason.message : 'Não foi possível carregar mais propostas.'); }
+    finally { if (epoch.current === current) setLoadingMore(false); }
+  };
+  return { quotes: state.identity === identity ? state.quotes : [], hasMore: state.identity === identity && !!state.cursor, loading, loadingMore, error, loadMore, reload: () => setRevision((value) => value + 1) };
 }
 
-export function useQuoteDetail(atelierId: string, quoteId: string) {
-  const [record, setRecord] = useState<{ quote: Quote; items: QuoteItem[]; responses: QuoteResponse[] } | null>(null);
+export function useQuoteDetail(atelierId: string, quoteId: string, viewer: 'atelier' | 'client' = 'atelier') {
+  const { firebaseUser } = useAuth();
+  const identity = `${firebaseUser?.uid ?? ''}:${firebaseUser?.emailVerified === true}:${atelierId}:${quoteId}:${viewer}`;
+  const [state, setState] = useState<{ identity: string; record: QuoteDetailRecord | null }>({ identity: '', record: null });
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState('');
+  const [revision, setRevision] = useState(0);
+  const epoch = useRef(0);
   useEffect(() => {
-    let active = true;
-    if (!atelierId || !quoteId) { setRecord(null); setError('O ateliê deste orçamento não foi informado.'); setLoading(false); return; }
-    setLoading(true); setError('');
-    getQuote(atelierId, quoteId).then((result) => { if (active) setRecord(result); })
-      .catch((loadError) => { if (active) setError(loadError instanceof Error ? loadError.message : 'Não foi possível abrir o orçamento.'); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, [atelierId, quoteId]);
-  return { record, loading, error };
+    const current = ++epoch.current;
+    setState({ identity, record: null }); setError(''); setLoadingMore(false);
+    if (!firebaseUser?.uid || !atelierId || !quoteId) { setError('O ateliê deste orçamento não foi informado.'); setLoading(false); return; }
+    setLoading(true);
+    (viewer === 'client' ? getClientQuote(atelierId, quoteId) : getQuote(atelierId, quoteId))
+      .then((record) => { if (epoch.current === current) setState({ identity, record }); })
+      .catch((reason) => { if (epoch.current === current) setError(reason instanceof Error ? reason.message : 'Não foi possível abrir o orçamento.'); })
+      .finally(() => { if (epoch.current === current) setLoading(false); });
+    return () => { epoch.current = current + 1; };
+  }, [identity, atelierId, quoteId, viewer, firebaseUser?.uid, revision]);
+  const loadMoreResponses = async () => {
+    if (viewer !== 'client' || state.identity !== identity || !state.record?.nextResponsesCursor || loadingMore) return;
+    const current = epoch.current; setLoadingMore(true); setError('');
+    try {
+      const result = await getClientQuote(atelierId, quoteId, state.record.nextResponsesCursor);
+      if (epoch.current === current) setState((previous) => ({ identity, record: { ...result, responses: [...new Map([...(previous.record?.responses ?? []), ...result.responses].map((response) => [response.id, response])).values()] } }));
+    } catch (reason) { if (epoch.current === current) setError(reason instanceof Error ? reason.message : 'Não foi possível carregar o histórico.'); }
+    finally { if (epoch.current === current) setLoadingMore(false); }
+  };
+  return { record: state.identity === identity ? state.record : null, loading, loadingMore, error, loadMoreResponses, reload: () => setRevision((value) => value + 1) };
 }

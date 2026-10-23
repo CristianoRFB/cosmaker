@@ -18,6 +18,7 @@
     "test:inventory": "npm run functions:build && node scripts/test-commercial-emulator.mjs inventory",
     "test:finance": "npm run functions:build && node scripts/test-commercial-emulator.mjs finance",
     "test:journey": "npm run functions:build && node scripts/test-commercial-emulator.mjs journey",
+    "test:client-quotes": "npm run functions:build && node scripts/test-commercial-emulator.mjs client-quotes",
     "test:quotes": "npm run functions:build && node scripts/test-commercial-emulator.mjs quotes",
     "test:scheduler": "node scripts/test-scheduler-emulator.mjs --http",
     "test:references": "npm run functions:build && node scripts/test-commercial-emulator.mjs references",

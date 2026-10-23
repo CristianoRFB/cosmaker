@@ -14,8 +14,8 @@ export interface QuoteResponse {
   id: string;
   decision: 'approved' | 'rejected' | 'request_changes';
   comment: string;
-  actorId: string;
-  email: string;
+  actorId?: string;
+  email?: string;
   createdAt: unknown;
 }
 

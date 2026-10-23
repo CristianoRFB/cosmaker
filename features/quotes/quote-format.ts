@@ -28,7 +28,7 @@ export function formatDate(value?: string) {
 }
 
 export function formatTimestamp(value: unknown) {
-  let date: Date | null = value instanceof Date ? value : null;
+  let date: Date | null = value instanceof Date ? value : typeof value === 'string' ? new Date(value) : null;
   if (!date && value && typeof value === 'object' && 'toDate' in value && typeof value.toDate === 'function') date = value.toDate();
   return date && Number.isFinite(date.getTime())
     ? new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
