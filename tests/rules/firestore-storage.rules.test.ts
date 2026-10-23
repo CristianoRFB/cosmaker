@@ -120,6 +120,61 @@ beforeEach(async () => {
 });
 
 describe('Firestore and Storage tenant rules', () => {
+  it('validates client profile creation without granting roles, tenant authority or other-user access', async () => {
+    const db = environment.authenticatedContext('new-client', { email: 'new@example.test', email_verified: false }).firestore();
+    const profile = { name: 'Cliente sintético', email: 'new@example.test', accountType: 'client', role: 'client', permissions: [], active: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    const ref = doc(db, 'users/new-client');
+    for (const extra of [{ name: 123 }, { name: 'x'.repeat(257) }, { email: 'other@example.test' }, { phone: ['000'] }, { phone: 'x'.repeat(33) }, { photoURL: 'javascript:alert(1)' }, { photoURL: 'https://' + 'x'.repeat(2048) }, { role: 'owner' }, { accountType: 'platform_admin' }, { platformAdmin: true }, { atelierId: 'atelier-a' }, { permissions: ['finance:write'] }, { id: 'member-a' }, { active: false }, { createdAt: new Date(0) }, { updatedAt: 'invalid' }]) await assertFails(setDoc(ref, { ...profile, ...extra }));
+    const { name: omittedName, ...withoutName } = profile; void omittedName;
+    await assertFails(setDoc(ref, withoutName));
+    await assertSucceeds(setDoc(ref, profile));
+    await assertSucceeds(getDoc(ref));
+    await assertFails(getDoc(doc(db, 'users/member-a')));
+    await assertFails(setDoc(doc(db, 'users/other-client'), profile));
+  });
+
+  it('validates own presentation updates while keeping authority and immutable timestamps unchanged', async () => {
+    await environment.withSecurityRulesDisabled((context) => setDoc(doc(context.firestore(), 'users/client-a'), { name: 'Cliente sintético', email: 'client@example.com', accountType: 'client', role: 'client', permissions: [], active: true, createdAt: new Date(0) }));
+    const db = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore(); const ref = doc(db, 'users/client-a');
+    await assertSucceeds(updateDoc(ref, { name: 'Novo nome sintético', phone: '000000000', photoURL: 'https://example.invalid/avatar.png', updatedAt: serverTimestamp() }));
+    for (const patch of [{ name: {} }, { name: '' }, { name: 'x'.repeat(257) }, { phone: 123 }, { phone: 'x'.repeat(33) }, { photoURL: 'data:private' }, { photoURL: 123 }, { email: 'someone@example.com' }, { updatedAt: new Date(0) }, { createdAt: new Date() }, { role: 'owner' }, { accountType: 'platform_admin' }, { active: false }, { permissions: ['quotes:write'] }, { atelierId: 'atelier-a' }, { extraData: 'pollution' }]) await assertFails(updateDoc(ref, patch));
+    await assertFails(deleteDoc(ref));
+    await assertFails(getDoc(doc(db, 'users/client-b')));
+    // Unchanged legacy presentation cannot become an authority bypass or block a bounded correction.
+    await environment.withSecurityRulesDisabled((context) => updateDoc(doc(context.firestore(), 'users/client-a'), { name: 1 }));
+    await assertSucceeds(updateDoc(ref, { phone: '', updatedAt: serverTimestamp() }));
+    await assertSucceeds(updateDoc(ref, { name: 'Perfil corrigido', updatedAt: serverTimestamp() }));
+  });
+
+  it('validates measurement schema for staff and clients on both create and update', async () => {
+    const staff = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    const client = environment.authenticatedContext('client-a', { email_verified: true }).firestore();
+    const root = 'ateliers/atelier-a/measurementProfiles/profile-a/measurements';
+    const valid = { type: 'circumference', label: 'Tórax sintético', value: 88, unit: 'cm', notes: '', createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    for (const db of [staff, client]) {
+      const ref = doc(db, `${root}/new-measurement`);
+      for (const patch of [{ value: -1 }, { value: 100001 }, { value: '88' }, { value: NaN }, { value: Infinity }, { label: 'x'.repeat(101) }, { notes: 'x'.repeat(501) }, { type: 'x'.repeat(81) }, { unit: 'x'.repeat(21) }, { extraData: 'pollution' }, { createdAt: new Date(0) }, { updatedAt: 'invalid' }]) await assertFails(setDoc(ref, { ...valid, ...patch }));
+      await assertSucceeds(setDoc(ref, valid));
+      for (const patch of [{ value: 'invalid' }, { notes: 'x'.repeat(501) }, { label: 'x'.repeat(101) }, { createdAt: new Date(0) }, { updatedAt: 'invalid' }, { storagePath: 'ateliers/atelier-b/private' }]) await assertFails(updateDoc(ref, patch));
+      await assertSucceeds(updateDoc(ref, { value: 90, notes: 'Correção sintética', updatedAt: serverTimestamp() }));
+      await environment.withSecurityRulesDisabled((context) => deleteDoc(doc(context.firestore(), ref.path)));
+    }
+    await assertFails(setDoc(doc(staff, 'ateliers/atelier-a/measurementProfiles/missing/measurements/orphan'), valid));
+    const other = environment.authenticatedContext('member-b', { email_verified: true }).firestore();
+    await assertFails(setDoc(doc(other, `${root}/other-tenant`), valid));
+    await assertFails(setDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-b/measurements/foreign'), valid));
+  });
+
+  it('keeps measurement profile ownership immutable and validates all staff profile writes', async () => {
+    const staff = environment.authenticatedContext('member-a', { email_verified: true }).firestore(); const ref = doc(staff, 'ateliers/atelier-a/measurementProfiles/new-profile');
+    const valid = { clientId: 'client-a', name: 'Ficha sintética', active: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    for (const patch of [{ clientId: 'missing' }, { clientId: '../client-b' }, { clientId: 123 }, { name: 'x'.repeat(101) }, { name: '' }, { active: 'true' }, { createdAt: new Date(0) }, { extraData: 'pollution' }]) await assertFails(setDoc(ref, { ...valid, ...patch }));
+    await assertSucceeds(setDoc(ref, valid));
+    for (const patch of [{ clientId: 'client-b' }, { name: 'x'.repeat(101) }, { active: 1 }, { createdAt: new Date(0) }, { updatedAt: new Date(0) }, { extraData: 'pollution' }]) await assertFails(updateDoc(ref, patch));
+    await assertSucceeds(updateDoc(ref, { name: 'Ficha revisada', active: false, updatedAt: serverTimestamp() }));
+    await assertFails(deleteDoc(ref));
+  });
+
   it('closes quote collection-group/email grants and subcollections while keeping active staff queries', async () => {
     const root = 'ateliers/atelier-a';
     await environment.withSecurityRulesDisabled(async (context) => {

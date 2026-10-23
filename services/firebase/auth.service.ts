@@ -110,6 +110,7 @@ export async function checkEmailVerification() {
   if (!auth.currentUser) return false;
   try {
     await reload(auth.currentUser);
+    if (auth.currentUser.emailVerified) await auth.currentUser.getIdToken(true);
     return auth.currentUser.emailVerified;
   } catch (error) {
     throw new Error(messageForAuthError(error));

@@ -11,7 +11,7 @@ import { checkEmailVerification, resendVerificationEmail } from '@/services/fire
 import { safeNextPath } from '@/lib/auth/safe-next';
 
 export default function VerifyEmailPage() {
-  const { firebaseUser, firebaseEnabled } = useAuth();
+  const { firebaseUser, firebaseEnabled, refreshUser } = useAuth();
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState('');
@@ -21,6 +21,7 @@ export default function VerifyEmailPage() {
     setPending(true); setMessage(''); setError('');
     try {
       if (await checkEmailVerification()) {
+        await refreshUser();
         setMessage('E-mail confirmado. Você já pode acessar sua conta.');
         router.push(safeNextPath(new URLSearchParams(window.location.search).get('next')));
       }

@@ -58,6 +58,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       if (mode === 'register') {
         const data = parsed.data as { name: string; email: string; password: string };
         await registerWithEmail(data.name, data.email, data.password);
+        await refreshUser();
         setSuccess('Conta criada. Confira sua caixa de entrada para verificar seu e-mail.');
         router.push(`/verificar-email?next=${encodeURIComponent(returnPath)}`);
       } else if (mode === 'login') {

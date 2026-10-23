@@ -1,24 +1,12 @@
 {
   "score": 2,
-  "summary": "Auditoria parcial: leitura de propostas por UID e revogação global Firestore corrigidas e testadas localmente. Permanecem achados maiores em Storage (revogação de perfil/tokens legados e teto de consultas cross-service), além de validações de apresentação/medidas. Não é homologação Firebase real.",
+  "summary": "Auditoria parcial: leitura de propostas por UID, revogação global Firestore e validações de perfis/medidas corrigidas e testadas localmente. Permanecem achados maiores em Storage (revogação de perfil/tokens legados e teto de consultas cross-service), além do transporte scheduler. Não é homologação Firebase real.",
   "findings": [
     {
       "check": "Authority Source",
       "severity": "major",
       "issue": "Firestore agora exige identidade verificada, perfil ativo com accountType/tenant e membership/tenant ativos. O helper de Storage ainda usa apenas tenant/membership; adicionar terceiro documento viola o orçamento cross-service de dois.",
       "recommendation": "Migrar uploads ativos restantes a bytes por servidor e fechar caminhos raw de Storage, com autorização completa e testes de revogação. Não adicionar uma terceira consulta ao helper Storage."
-    },
-    {
-      "check": "The Update Bypass",
-      "severity": "minor",
-      "issue": "Users limita os campos mutáveis e preserva papéis/permissões/tenant, mas não valida tipos e comprimentos dos campos de apresentação em updates próprios.",
-      "recommendation": "Validar name/phone/photoURL/email e timestamps conforme contratos de perfil, sem conceder edição de autoridade ou identidade por campos de apresentação."
-    },
-    {
-      "check": "Type Safety",
-      "severity": "minor",
-      "issue": "Writes de medidas por equipe podem passar pelo ramo de permissão sem validMeasurement/validMeasurementProfile. Dados inválidos gravados por staff podem impedir edição posterior pelo cliente.",
-      "recommendation": "Aplicar schema e limites a todos os ramos de escrita autorizada de medidas e manter ownership do cliente e snapshots imutáveis."
     },
     {
       "check": "Storage Abuse",
@@ -47,6 +35,22 @@
       "recommendation": "Substituir listagem/detalhe do cliente por callables com UID forte, índice CRM, tenant e perfil ativos e projeção allowlisted; bloquear queries raw e testar reuso de e-mail e conflitos.",
       "status": "TESTADO_LOCALMENTE",
       "resolution": "Wildcard e leituras raw removidos; listClientQuotes/getClientQuote por UID/CRM com projeção e paginação, perfil/tenant ativos. Rules 28/28, integração 9/9 (inclui propostas, mutações e jornada) e E2E cliente 1/1 em 320/375/768/1440; aprovação integrada 1/1. Reuso de e-mail, CRM sem índice, conflitos e revogação recusados."
+    },
+    {
+      "check": "The Update Bypass",
+      "severity": "minor",
+      "issue": "Users limita os campos mutáveis e preserva papéis/permissões/tenant, mas não valida tipos e comprimentos dos campos de apresentação em updates próprios.",
+      "recommendation": "Validar name/phone/photoURL/email e timestamps conforme contratos de perfil, sem conceder edição de autoridade ou identidade por campos de apresentação.",
+      "status": "TESTADO_LOCALMENTE",
+      "resolution": "Schemas de perfil/medidas aplicados e testados em create/update para cliente/equipe, campos/ownership/timestamps imutáveis e negativos de tipo, tamanho, payload extra, A/B e órfãos. Rules selecionadas 6/6 PASS; cadastro real no navegador via Emulator 1/1 PASS após corrigir corrida de sessão."
+    },
+    {
+      "check": "Type Safety",
+      "severity": "minor",
+      "issue": "Writes de medidas por equipe podem passar pelo ramo de permissão sem validMeasurement/validMeasurementProfile. Dados inválidos gravados por staff podem impedir edição posterior pelo cliente.",
+      "recommendation": "Aplicar schema e limites a todos os ramos de escrita autorizada de medidas e manter ownership do cliente e snapshots imutáveis.",
+      "status": "TESTADO_LOCALMENTE",
+      "resolution": "Schemas de perfil/medidas aplicados e testados em create/update para cliente/equipe, campos/ownership/timestamps imutáveis e negativos de tipo, tamanho, payload extra, A/B e órfãos. Rules selecionadas 6/6 PASS; cadastro real no navegador via Emulator 1/1 PASS após corrigir corrida de sessão."
     }
   ]
 }

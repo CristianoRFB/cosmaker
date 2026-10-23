@@ -39,7 +39,12 @@ test('cliente consulta e pagina propostas/respostas em quatro larguras; e-mail r
       await expect(page.getByRole('heading', { name: 'Proposta de cosplay' })).toBeVisible();
       await expect(page.getByText('Confecção do projeto')).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+      const historyTop = await page.getByRole('heading', { name: 'Histórico de respostas' }).evaluate((node) => node.getBoundingClientRect().top + window.scrollY);
+      const investmentTop = await page.getByRole('heading', { name: 'Investimento', exact: true }).evaluate((node) => node.getBoundingClientRect().top + window.scrollY);
+      const actionsTop = await page.getByRole('button', { name: 'Aprovar proposta', exact: true }).evaluate((node) => node.getBoundingClientRect().top + window.scrollY);
+      expect(historyTop).toBeGreaterThan(investmentTop); expect(historyTop).toBeGreaterThan(actionsTop);
       await page.screenshot({ path: testInfo.outputPath(`client-quote-${width}.png`), fullPage: true });
+      await page.screenshot({ path: testInfo.outputPath(`client-quote-viewport-${width}.png`) });
     }
     await page.getByRole('button', { name: 'Carregar respostas anteriores' }).click();
     await expect(page.getByText('Registro anterior 50', { exact: true })).toBeVisible();

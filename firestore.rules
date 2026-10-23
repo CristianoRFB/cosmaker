@@ -102,6 +102,27 @@ service cloud.firestore {
         && exists(orderPath) && orderClientLink(atelierId, get(orderPath).data);
     }
 
+    // Self-service changes are presentation only. Unchanged legacy presentation fields
+    // may remain until corrected; new/changed values are bounded and Auth owns email.
+    function validUserPresentation(data, fields) {
+      return (!fields.hasAny(['name']) || (data.get('name', null) is string && data.name.size() >= 1 && data.name.size() <= 256))
+        && (!fields.hasAny(['email']) || (data.get('email', null) is string && data.email.size() <= 254 && data.email == request.auth.token.email))
+        && (!fields.hasAny(['phone']) || (data.get('phone', null) is string && data.phone.size() <= 32))
+        && (!fields.hasAny(['photoURL']) || (data.get('photoURL', null) is string && data.photoURL.size() <= 2048 && (data.photoURL == '' || data.photoURL.matches('https://[^ ]+'))))
+        && (!fields.hasAny(['updatedAt']) || data.get('updatedAt', null) == request.time);
+    }
+
+    function validMeasurementCreateTimes() {
+      let data = request.resource.data;
+      return (!('createdAt' in data) || data.createdAt == request.time)
+        && (!('updatedAt' in data) || data.updatedAt == request.time);
+    }
+
+    function validMeasurementUpdateTimes() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['createdAt'])
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['updatedAt']) || request.resource.data.get('updatedAt', null) == request.time);
+    }
+
     function validMeasurement() {
       let data = request.resource.data;
       return data.keys().hasOnly(['type', 'label', 'value', 'unit', 'notes', 'createdAt', 'updatedAt'])
@@ -110,15 +131,20 @@ service cloud.firestore {
         && data.label is string && data.label.size() >= 1 && data.label.size() <= 100
         && data.value is number && data.value >= 0 && data.value <= 100000
         && data.unit is string && data.unit.size() >= 1 && data.unit.size() <= 20
-        && (!('notes' in data) || (data.notes is string && data.notes.size() <= 500));
+        && (!('notes' in data) || (data.notes is string && data.notes.size() <= 500))
+        && (!('createdAt' in data) || data.createdAt is timestamp)
+        && (!('updatedAt' in data) || data.updatedAt is timestamp);
     }
 
     function validMeasurementProfile() {
       let data = request.resource.data;
       return data.keys().hasOnly(['clientId', 'name', 'active', 'createdAt', 'updatedAt'])
         && data.keys().hasAll(['clientId', 'name', 'active'])
+        && data.clientId is string && data.clientId.size() >= 1 && data.clientId.size() <= 128 && !data.clientId.matches('.*/.*')
         && data.name is string && data.name.size() >= 1 && data.name.size() <= 100
-        && data.active is bool;
+        && data.active is bool
+        && (!('createdAt' in data) || data.createdAt is timestamp)
+        && (!('updatedAt' in data) || data.updatedAt is timestamp);
     }
 
     // Client history is projected by UID-aware callables, never a global email grant.
@@ -136,6 +162,11 @@ service cloud.firestore {
       allow list: if false;
       allow create: if signedIn()
         && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['id', 'name', 'email', 'phone', 'photoURL', 'accountType', 'role', 'permissions', 'active', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasAll(['name', 'email', 'accountType', 'role', 'permissions', 'active', 'createdAt', 'updatedAt'])
+        && request.resource.data.get('id', userId) == userId
+        && validUserPresentation(request.resource.data, request.resource.data.keys())
+        && request.resource.data.createdAt == request.time
         && request.resource.data.accountType == 'client'
         && request.resource.data.role == 'client'
         && request.resource.data.permissions == []
@@ -144,6 +175,7 @@ service cloud.firestore {
       allow update: if signedIn()
         && request.auth.uid == userId
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'email', 'phone', 'photoURL', 'updatedAt'])
+        && validUserPresentation(request.resource.data, request.resource.data.diff(resource.data).affectedKeys())
         && request.resource.data.accountType == resource.data.accountType
         && request.resource.data.role == resource.data.role
         && request.resource.data.permissions == resource.data.permissions
@@ -285,25 +317,28 @@ service cloud.firestore {
       match /measurementProfiles/{profileId} {
         allow get, list: if hasAtelierPermission(atelierId, 'measurements:read')
           || isOwnClient(atelierId, resource.data.clientId);
-        allow create: if hasAtelierPermission(atelierId, 'measurements:write')
-          || (validMeasurementProfile() && request.resource.data.clientId is string
-            && request.resource.data.active == true
-            && isOwnClient(atelierId, request.resource.data.clientId));
-        allow update: if hasAtelierPermission(atelierId, 'measurements:write')
-          || (resource.data.clientId is string && isOwnClient(atelierId, resource.data.clientId)
-            && validMeasurementProfile()
-            && request.resource.data.clientId == resource.data.clientId);
+        allow create: if validMeasurementProfile() && validMeasurementCreateTimes()
+          && exists(/databases/$(database)/documents/ateliers/$(atelierId)/clients/$(request.resource.data.clientId))
+          && (hasAtelierPermission(atelierId, 'measurements:write')
+            || (request.resource.data.active == true && isOwnClient(atelierId, request.resource.data.clientId)));
+        allow update: if validMeasurementProfile() && validMeasurementUpdateTimes()
+          && request.resource.data.clientId == resource.data.clientId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'active', 'updatedAt'])
+          && (hasAtelierPermission(atelierId, 'measurements:write') || isOwnClient(atelierId, resource.data.clientId));
         allow delete: if false;
         match /measurements/{measurementId} {
-          allow read: if hasAtelierPermission(atelierId, 'measurements:read')
-            || isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId)).data.clientId);
-          allow create: if hasAtelierPermission(atelierId, 'measurements:write')
-            || (isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId)).data.clientId)
-              && validMeasurement());
-          allow update: if hasAtelierPermission(atelierId, 'measurements:write')
-            || (isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId)).data.clientId)
-              && validMeasurement()
-              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['value', 'unit', 'notes', 'updatedAt']));
+          function parentExists() {
+            return exists(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId));
+          }
+          function ownProfile() {
+            return parentExists() && isOwnClient(atelierId, get(/databases/$(database)/documents/ateliers/$(atelierId)/measurementProfiles/$(profileId)).data.clientId);
+          }
+          allow read: if hasAtelierPermission(atelierId, 'measurements:read') || ownProfile();
+          allow create: if parentExists() && validMeasurement() && validMeasurementCreateTimes()
+            && (hasAtelierPermission(atelierId, 'measurements:write') || ownProfile());
+          allow update: if parentExists() && validMeasurement() && validMeasurementUpdateTimes()
+            && (hasAtelierPermission(atelierId, 'measurements:write')
+              || (ownProfile() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['value', 'unit', 'notes', 'updatedAt'])));
           allow delete: if hasAtelierPermission(atelierId, 'measurements:write');
         }
       }
