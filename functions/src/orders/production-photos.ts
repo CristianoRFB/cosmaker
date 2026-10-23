@@ -6,9 +6,9 @@ import { requireNonDemoWorkspace } from '../commercial/access';
 import { productionId, readProductionManager } from './production-configuration';
 import { revokeOrderFileTokens } from './order-file-storage';
 
-const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-const maxPhotoBytes = 10 * 1024 * 1024;
-const activeOrderStatuses = ['confirmed', 'scheduled', 'modeling', 'in_production', 'fitting', 'adjustments', 'finishing', 'paused', 'ready_to_ship', 'waiting_final_payment'];
+export const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+export const maxPhotoBytes = 10 * 1024 * 1024;
+export const activeOrderStatuses = ['confirmed', 'scheduled', 'modeling', 'in_production', 'fitting', 'adjustments', 'finishing', 'paused', 'ready_to_ship', 'waiting_final_payment'];
 
 export const createProductionPhotoUpload = onCall(async (call) => {
   requireVerifiedIdentity(call.auth);
@@ -56,7 +56,7 @@ export const createProductionPhotoUpload = onCall(async (call) => {
   return { photoId: photoRef.id, storagePath };
 });
 
-export const completeProductionPhotoUpload = onCall(async (call) => {
+export async function finishProductionPhotoUpload(call: { auth?: { uid: string; token: Record<string, unknown> }; data: unknown }, leaseId?: string) {
   requireVerifiedIdentity(call.auth);
   const data = call.data as { atelierId?: unknown; orderId?: unknown; photoId?: unknown };
   if (!data || typeof data !== 'object' || Array.isArray(data) || Object.keys(data).some((key) => !['atelierId', 'orderId', 'photoId'].includes(key))) throw new HttpsError('invalid-argument', 'Há campos fora do contrato da foto.');
@@ -76,6 +76,7 @@ export const completeProductionPhotoUpload = onCall(async (call) => {
     if (!photoSnapshot.exists) throw new HttpsError('not-found', 'A solicitação de upload não foi encontrada.');
     const current = photoSnapshot.data()!;
     if (current.uploadedBy !== call.auth!.uid) throw new HttpsError('permission-denied', 'Somente quem iniciou este upload pode finalizá-lo.');
+    if (current.uploadStatus === 'pending' && current.uploadLeaseId !== undefined && current.uploadLeaseId !== leaseId) throw new HttpsError('aborted', 'A tentativa de envio está em andamento. Aguarde a conclusão.');
     if (current.uploadStatus !== 'ready' && (!order.exists || !activeOrderStatuses.includes(String(order.get('status'))))) throw new HttpsError('failed-precondition', 'O pedido não está ativo para finalizar este upload.');
     if (current.storagePath !== `ateliers/${data.atelierId}/orders/${data.orderId}/production/${data.photoId}`) throw new HttpsError('failed-precondition', 'O arquivo não pertence ao pedido.');
     return current;
@@ -129,6 +130,7 @@ export const completeProductionPhotoUpload = onCall(async (call) => {
     if (!order.exists || !activeOrderStatuses.includes(String(order.get('status')))) throw new HttpsError('failed-precondition', 'O pedido não está ativo para finalizar este upload.');
     const stage = await transaction.get(orderRef.collection('productionStages').doc(productionId(current.get('stageId'), 'Etapa')));
     if (!stage.exists || !['in_progress', 'completed', 'approved', 'blocked'].includes(String(stage.get('status')))) throw new HttpsError('failed-precondition', 'Fotos novas não podem mudar a evidência de uma aprovação pendente. Aguarde a resposta do cliente.');
+    if (current.get('uploadLeaseId') !== undefined && current.get('uploadLeaseId') !== leaseId) throw new HttpsError('aborted', 'A tentativa de envio mudou. Atualize o pedido.');
     if (!current.exists || current.data()?.uploadStatus !== 'pending' || current.data()?.uploadedBy !== call.auth!.uid) {
       throw new HttpsError('failed-precondition', 'O estado do upload foi alterado; recarregue o pedido.');
     }
@@ -141,4 +143,6 @@ export const completeProductionPhotoUpload = onCall(async (call) => {
     });
   });
   return { photoId: data.photoId, status: 'ready' as const };
-});
+}
+
+export const completeProductionPhotoUpload = onCall((call) => finishProductionPhotoUpload(call));

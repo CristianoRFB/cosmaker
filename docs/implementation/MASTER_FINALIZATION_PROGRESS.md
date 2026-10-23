@@ -1,5 +1,12 @@
 # Cosmaker Master Finalization — Progress
 
+## Next 15.5.28 validado; F5 bytes de produção iniciados — 2026-10-23
+
+- Patch enviado `da45041906e6598787995712e3101ac639b76782`, CI **PASS** [39953612113](https://github.com/CristianoRFB/cosmaker/actions/runs/39953612113). Gate local sobre Next15.5.28: **6/6 E2E PASS**, exit 0, 44,6s (`/tmp/cosmaker-next-smoke.log`), cadastro/claim verificado, resolver público A/B e estados indisponíveis, navegação owner/staff/cliente/platform em 320/375/768/1440. Somam-se build81, 120 unitários, native sharp e auditoria produção0 já registrados. Patch tecnicamente validado, sem promoção comercial/produção.
+- Próximo módulo F5 iniciado e preservado como **WIP**: novo `uploadProductionPhotoBytes`, reutilizando conclusão e autorização de produção existentes, validação de tipo/tamanho/assinatura, hash, lease transacional, geração imutável, retry e rechecagem após I/O. O frontend e Storage Rules ainda não foram migrados; testes negativos/concorrrência e smoke do novo transporte **não executados neste WIP**. Não marcar o upload como concluído ou PASS.
+- F1.1–F1.9/F4 seguem aceitos localmente; F2 integração comprovada com aceite global pendente; F3/F5/F6 parciais; F7/F8 pendentes. Índice **10/16 = 62,5%** permanece conservador, sem contar trabalho parcial. Próximo passo: conectar upload de fotos do painel ao endpoint, bloquear create raw de produção, testar negações/retry/concorrência/aprovações e smoke. Depois referências públicas/Storage legado e demais pendências canônicas.
+
+
 ## F5/F6 — patch Next 15 após reauditoria atualizada — WIP dos gates — 2026-10-23
 
 - Recuperado fechamento `851d084cefa1932291a65eeef1ed2ed3ba4b03a0`, CI **PASS** [39952929504](https://github.com/CristianoRFB/cosmaker/actions/runs/39952929504). Nenhuma alteração de domínio desde esse gate.
