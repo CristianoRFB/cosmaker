@@ -71,6 +71,8 @@ export const respondToQuote = onCall(async (call) => {
     } else if (matchingClients.docs.length > 1) {
       throw new HttpsError('already-exists', 'Há cadastros duplicados para este e-mail e o vínculo precisa ser revisado.');
     }
+    // Preserve an existing CRM link even if its contact email was edited separately.
+    if (typeof quote.clientId === 'string' && quote.clientId) matchingClient = await transaction.get(clientCollection.doc(quote.clientId));
     const matchingClientData = matchingClient?.data() ?? {};
     if (typeof matchingClientData.userId === 'string' && matchingClientData.userId !== call.auth!.uid) {
       throw new HttpsError('permission-denied', 'Este cadastro de cliente já está vinculado a outra conta.');

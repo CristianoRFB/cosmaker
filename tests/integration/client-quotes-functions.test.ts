@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { initializeApp, deleteApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
@@ -69,12 +69,31 @@ beforeAll(async () => {
   await adminDb.doc(`users/${customer.uid}`).set({ active: true, accountType: 'client' });
 });
 afterAll(async () => {
-  for (const id of atelierIds) await adminDb.recursiveDelete(adminDb.doc(`ateliers/${id}`));
+  for (const id of atelierIds) { await adminDb.recursiveDelete(adminDb.doc(`ateliers/${id}`)); const logs = await adminDb.collection('auditLogs').where('atelierId', '==', id).get(); await Promise.all(logs.docs.map((row: { ref: { delete(): Promise<unknown> } }) => row.ref.delete())); }
   await adminDb.recursiveDelete(adminDb.doc(`foreign/${nonce}`));
   for (const uid of createdUids) { await adminAuth.deleteUser(uid); await adminDb.doc(`users/${uid}`).delete(); }
   await deleteApp(clientApp); await deleteApp(adminApp);
 });
 describe('Client quote projection, UID isolation and revocation', () => {
+  it('preserves a quoted CRM link with an edited contact email and rejects corrupt projected values', async () => {
+    const crm = root().collection('clients').doc('quoted-crm');
+    await crm.set({ userId: customer.uid, email: `contact-${nonce}@cosmaker.test`, phone: '000000000' });
+    const quote = await makeQuote('quoted-link', { clientId: crm.id });
+    await root().collection('quoteRequests').doc('request-quoted-link').set({ name: 'Cliente sintético', email: customer.email, status: 'quoted', activeQuoteId: quote.id });
+    await signIn(customer);
+    await call('respondToQuote', { atelierId: atelierIds[0], quoteId: quote.id, decision: 'request_changes', comment: 'Manter o cadastro vinculado' });
+    expect((await quote.get()).get('clientId')).toBe(crm.id);
+    expect((await quote.get()).get('clientUserId')).toBe(customer.uid);
+    expect((await crm.get()).get('phone')).toBe('000000000');
+    expect((await root().collection('clients').doc(customer.uid).get()).exists).toBe(false);
+    for (const fields of [{ total: 'invalid' }, { validUntil: '2027-02-30' }, { expectedStartDate: { private: 'PRIVATE' } }]) {
+      const corrupt = await makeQuote(`corrupt-${Object.keys(fields)[0]}`, fields);
+      await expect(detail(corrupt.id)).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+      await corrupt.delete();
+    }
+    await quote.delete(); await crm.delete(); await root().collection('clientEmailIndex').doc(createHash('sha256').update(customer.email.trim().toLowerCase()).digest('hex')).delete();
+  }, 60_000);
+
   it('projects only public fields and accepts a verified, truly unbound invitation', async () => {
     const quote = await makeQuote('unbound');
     await quote.collection('items').doc('item').set({ description: 'Confecção', category: 'labor', quantity: 1, unitPrice: 300, total: 300, internalCostCents: 1, actorId: ownerA.uid });
@@ -101,9 +120,9 @@ describe('Client quote projection, UID isolation and revocation', () => {
     await makeQuote('conflict', { clientId: 'legacy-crm', clientUserId: ownerB.uid });
     await makeQuote('malformed', { clientUserId: '' });
     const changedEmail = `changed-${nonce}@cosmaker.test`;
-    await adminAuth.updateUser(customer.uid, { email: changedEmail }); customer.email = changedEmail;
+    await adminAuth.updateUser(customer.uid, { email: changedEmail, emailVerified: true }); customer.email = changedEmail;
     recycled = await createIdentity('replacement');
-    await adminAuth.updateUser(recycled.uid, { email: previousEmail }); recycled.email = previousEmail;
+    await adminAuth.updateUser(recycled.uid, { email: previousEmail, emailVerified: true }); recycled.email = previousEmail;
     await adminDb.doc(`users/${recycled.uid}`).set({ active: true, accountType: 'client' });
     await signIn(recycled);
     expect((await list()).quotes).toHaveLength(0);

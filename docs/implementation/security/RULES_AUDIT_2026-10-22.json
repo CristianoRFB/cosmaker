@@ -1,18 +1,12 @@
 {
-  "score": 1,
-  "summary": "Auditoria parcial após os gates locais. Isolamento e mutações dos módulos recentes possuem testes negativos, mas a leitura legada de propostas por e-mail e a revogação de perfil em helpers globais ainda impedem aceite global de segurança. Não representa homologação Firebase real.",
+  "score": 2,
+  "summary": "Auditoria parcial: leitura de propostas por UID e revogação global Firestore corrigidas e testadas localmente. Permanecem achados maiores em Storage (revogação de perfil/tokens legados e teto de consultas cross-service), além de validações de apresentação/medidas. Não é homologação Firebase real.",
   "findings": [
-    {
-      "check": "Field-Level vs. Identity-Level Security",
-      "severity": "critical",
-      "issue": "O wildcard collection-group de quotes autoriza leitura por e-mail verificado, sem priorizar UID/CRM já vinculado. Reutilização de e-mail pode expor propostas históricas de outra conta.",
-      "recommendation": "Substituir listagem/detalhe do cliente por callables com UID forte, índice CRM, tenant e perfil ativos e projeção allowlisted; bloquear queries raw e testar reuso de e-mail e conflitos."
-    },
     {
       "check": "Authority Source",
       "severity": "major",
-      "issue": "isAtelierMember de Firestore/Storage confirma tenant e membership, mas não perfil ativo, accountType/atelierId e e-mail verificado. Caminhos raw dependentes desse helper não revogam o acesso apenas ao inativar o perfil.",
-      "recommendation": "Exigir identidade verificada e perfil ativo no mesmo tenant nos helpers globais; manter upload público pendente independente; executar positivos e negativos por domínio."
+      "issue": "Firestore agora exige identidade verificada, perfil ativo com accountType/tenant e membership/tenant ativos. O helper de Storage ainda usa apenas tenant/membership; adicionar terceiro documento viola o orçamento cross-service de dois.",
+      "recommendation": "Migrar uploads ativos restantes a bytes por servidor e fechar caminhos raw de Storage, com autorização completa e testes de revogação. Não adicionar uma terceira consulta ao helper Storage."
     },
     {
       "check": "The Update Bypass",
@@ -43,6 +37,16 @@
       "severity": "major",
       "issue": "Alguns uploads Storage combinam consultas a mais de dois documentos Firestore distintos. A documentação oficial limita avaliações Storage a dois; PASS do Emulator não comprova esse limite no Firebase real. Adicionar perfil como terceiro documento agravaria o problema.",
       "recommendation": "Migrar os uploads ativos restantes para transferências por servidor com validação completa e negar Storage raw privado; validar orçamento de chamadas na futura homologação. Fonte: https://firebase.google.com/docs/rules/rules-behavior e https://firebase.blog/posts/2022/09/announcing-cross-service-security-rules/"
+    }
+  ],
+  "resolved_findings": [
+    {
+      "check": "Field-Level vs. Identity-Level Security",
+      "severity": "critical",
+      "issue": "O wildcard collection-group de quotes autoriza leitura por e-mail verificado, sem priorizar UID/CRM já vinculado. Reutilização de e-mail pode expor propostas históricas de outra conta.",
+      "recommendation": "Substituir listagem/detalhe do cliente por callables com UID forte, índice CRM, tenant e perfil ativos e projeção allowlisted; bloquear queries raw e testar reuso de e-mail e conflitos.",
+      "status": "TESTADO_LOCALMENTE",
+      "resolution": "Wildcard e leituras raw removidos; listClientQuotes/getClientQuote por UID/CRM com projeção e paginação, perfil/tenant ativos. Rules 28/28, integração 9/9 (inclui propostas, mutações e jornada) e E2E cliente 1/1 em 320/375/768/1440; aprovação integrada 1/1. Reuso de e-mail, CRM sem índice, conflitos e revogação recusados."
     }
   ]
 }
