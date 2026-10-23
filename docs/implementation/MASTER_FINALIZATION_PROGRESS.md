@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## F5/F6 — patch Next 15 após reauditoria atualizada — WIP dos gates — 2026-10-23
+
+- Recuperado fechamento `851d084cefa1932291a65eeef1ed2ed3ba4b03a0`, CI **PASS** [39952929504](https://github.com/CristianoRFB/cosmaker/actions/runs/39952929504). Nenhuma alteração de domínio desde esse gate.
+- Nova auditoria do registro npm encontrou Next 15.5.27: GHSA-2464-fhr4-w9xw crítica (upstream de otimização de imagens em glibc) e GHSA-p3m5-59mp-jv5r alta (Server Actions DoS). A advisory oficial e o registro npm confirmaram patch **15.5.28**, compatível com Node 22/React 19. Corrigido prioritariamente antes de iniciar outro módulo; não foi demonstrada exploração na configuração do app.
+- IMPLEMENTADO: Next/eslint-config-next **15.5.28**, sharp **0.35.5**, seis pacotes alterados no lockfile, mesma major da stack aprovada; sem force/downgrade de Firebase. Auditoria produção raiz **0 alertas**; processamento nativo PNG fictício 2×2 **PASS**. Functions mantêm **9 moderados**. Auditoria integral raiz **22 (2 críticos, 13 altos, 7 moderados)**, cadeias dev pendentes. [Revisão](DEPENDENCY_SECURITY_REVIEW.md).
+- TESTADO_LOCALMENTE: unitários **120/120 PASS**, 23 arquivos, exit 0, 22,95s (`/tmp/cosmaker-next-unit.log`); build local final **PASS**, exit 0, 81 páginas (`/tmp/cosmaker-next-build.log`). Smoke com runtime compilado e CI deste patch **pendentes neste WIP**; não declarar aceite antes deles.
+- F1.1–F1.9/F4 mantêm aceite local; F2/F3/F5/F6 parciais, F7/F8 pendentes; índice **10/16 = 62,5%** inalterado. Publicação e Firebase real continuam não autorizados. Próximo passo imediato: smoke de cadastro, navegação de quatro papéis e resolver público A/B sobre Next15.5.28; após gate, retomar **F5 bytes de fotos de produção por servidor**.
+
+
 ## F3/F5 — cadastro funcional, medidas validadas e ações antes do histórico — 2026-10-23
 
 - Remoto anterior `dadaf3b4382e3391a41cbb8bed83a4630c4a4884`, CI **PASS** [39951501546](https://github.com/CristianoRFB/cosmaker/actions/runs/39951501546). Novo fechamento registra reforços de schema e um defeito real encontrado ao validar a compatibilidade da aplicação.
