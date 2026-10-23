@@ -35,7 +35,7 @@ async function signInAsAtelier(page: Page) {
   await expect(page).toHaveURL(/\/atelier\/pedidos$/);
 }
 
-test('cliente aprova orçamento e o backend cria pedido com valores imutáveis', async ({ page }) => {
+test('cliente aprova orçamento e o backend cria pedido com valores imutáveis', async ({ page }, testInfo) => {
   // This journey crosses client/staff sessions and many cold Next development routes.
   // Per-action and assertion timeouts still bound individual failures.
   test.setTimeout(600_000);
@@ -114,6 +114,7 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   }
   await expect(page.locator('section').getByRole('heading', { name: 'Prova e ajustes' })).toBeVisible();
   await page.getByRole('button', { name: 'Iniciar etapa' }).click();
+  await page.setViewportSize({ width: 375, height: 900 });
   await page.locator('#production-photo-stage-fitting').setInputFiles({
     name: 'prova.png', mimeType: 'image/png',
     buffer: await readFile(resolve(process.cwd(), 'tests/fixtures/production-progress.png')),
@@ -141,12 +142,20 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
       photoRequests.push(`failed ${describePhotoRequest(request)}: ${request.failure()?.errorText ?? 'request failed'}`);
     }
   });
+  const uploadedBytes = page.waitForResponse((response) => response.url().includes('/uploadProductionPhotoBytes') && response.request().method() === 'POST');
   await page.getByRole('button', { name: 'Enviar foto' }).click();
+  expect((await uploadedBytes).status()).toBe(200);
   try {
     await expect(page.getByText('Foto de progresso enviada.')).toBeVisible();
   } catch (error) {
     const message = error instanceof Error ? error.message : 'O envio da foto não foi confirmado.';
     throw new Error(`${message}\nChamadas do Storage Emulator: ${JSON.stringify(photoRequests)}`);
+  }
+  expect(photoRequests).toEqual([]);
+  for (const width of [375, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath(`production-upload-${width}.png`) });
   }
   await page.getByRole('button', { name: 'Solicitar aprovação do cliente' }).click();
   await expect(page.getByText('Etapa enviada para aprovação do cliente.')).toBeVisible();
@@ -160,6 +169,12 @@ test('cliente aprova orçamento e o backend cria pedido com valores imutáveis',
   await expect(approvalPhoto).toBeVisible();
   await expect(approvalPhoto).toHaveAttribute('src', /^blob:/);
   await expect.poll(() => approvalPhoto.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  for (const width of [375, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await approvalPhoto.scrollIntoViewIfNeeded();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath(`production-client-${width}.png`) });
+  }
   await page.getByRole('button', { name: 'Aprovar etapa' }).click();
   await expect(page.getByText('Etapa aprovada. A equipe já pode continuar.')).toBeVisible();
 

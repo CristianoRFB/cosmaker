@@ -1,11 +1,10 @@
 import { collection, doc, getDoc, getDocs, limit, orderBy, query, startAfter, where, type QueryConstraint } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
-import { ref, uploadBytes } from 'firebase/storage';
 import { requireFirebase } from '@/services/firebase/firebase.client';
 import type { Order, OrderFile, OrderHistoryEntry, OrderLineItem, OrderRecord } from '@/types/order';
 import type { Measurement } from '@/types/measurement';
 import type { ProductionStageAction } from '@/types/production';
-import { listOrderFiles } from './order-files.repository';
+import { authenticatedFileRequest, listOrderFiles } from './order-files.repository';
 
 function orderFromSnapshot(snapshot: { id: string; ref: { path: string }; data: () => Record<string, unknown> }, atelierId?: string) {
   const pathParts = snapshot.ref.path.split('/');
@@ -98,7 +97,7 @@ export async function respondToProductionApproval(input: {
 export async function uploadProductionPhoto(input: {
   atelierId: string; orderId: string; stageId: string; file: File; caption: string; visibleToClient: boolean;
 }) {
-  const { functions, storage } = requireFirebase();
+  const { functions } = requireFirebase();
   const create = httpsCallable<{
     atelierId: string; orderId: string; stageId: string; originalName: string; contentType: string; caption: string; visibleToClient: boolean;
   }, { photoId: string; storagePath: string }>(functions, 'createProductionPhotoUpload');
@@ -107,12 +106,10 @@ export async function uploadProductionPhoto(input: {
     originalName: input.file.name, contentType: input.file.type,
     caption: input.caption, visibleToClient: input.visibleToClient,
   });
-  await uploadBytes(ref(storage, request.data.storagePath), input.file, {
-    contentType: input.file.type,
-    customMetadata: { photoId: request.data.photoId, orderId: input.orderId },
-  });
-  const complete = httpsCallable<{ atelierId: string; orderId: string; photoId: string }, { photoId: string; status: 'ready' }>(functions, 'completeProductionPhotoUpload');
-  return (await complete({ atelierId: input.atelierId, orderId: input.orderId, photoId: request.data.photoId })).data;
+  const response = await authenticatedFileRequest('uploadProductionPhotoBytes', input.atelierId, input.orderId, request.data.photoId, {
+    method: 'POST', body: input.file, headers: { 'Content-Type': input.file.type },
+  }, 'photoId');
+  return response.json() as Promise<{ photoId: string; status: 'ready'; alreadyApplied: boolean }>;
 }
 
 export async function getProductionBoard(atelierId: string) {

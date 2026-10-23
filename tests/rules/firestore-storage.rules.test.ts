@@ -566,15 +566,22 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(updateDoc(doc(member, 'ateliers/atelier-a'), { ownerId: 'finance-reader' }));
   });
 
-  it('restricts production image uploads to staff and requires server byte reads for private evidence', async () => {
-    const member = environment.authenticatedContext('member-a').storage();
+  it('requires server upload and download for all production photo bytes', async () => {
+    const member = environment.authenticatedContext('member-a', { email_verified: true }).storage();
     const client = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).storage();
     const visiblePath = 'ateliers/atelier-a/orders/order-a/production/photo-visible';
     const privatePath = 'ateliers/atelier-a/orders/order-a/production/photo-internal';
     const pendingPath = 'ateliers/atelier-a/orders/order-a/production/photo-upload';
-    await assertSucceeds(uploadBytes(ref(member, pendingPath), new Uint8Array([1, 2, 3]), {
+    await assertFails(uploadBytes(ref(member, pendingPath), new Uint8Array([1, 2, 3]), {
       contentType: 'image/png', customMetadata: { photoId: 'photo-upload', orderId: 'order-a' },
     }));
+    for (const context of [environment.unauthenticatedContext(), environment.authenticatedContext('member-b', { email_verified: true }), environment.authenticatedContext('member-a', { email_verified: false })]) {
+      await assertFails(uploadBytes(ref(context.storage(), pendingPath), new Uint8Array([1, 2, 3]), { contentType: 'image/png', customMetadata: { photoId: 'photo-upload', orderId: 'order-a' } }));
+      await assertFails(getBytes(ref(context.storage(), visiblePath)));
+      await assertFails(deleteObject(ref(context.storage(), visiblePath)));
+    }
+    await assertFails(deleteObject(ref(member, visiblePath)));
+    await assertFails(uploadBytes(ref(member, visiblePath), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
     await assertFails(getBytes(ref(client, visiblePath)));
     await assertFails(getBytes(ref(member, visiblePath)));
     await assertFails(getBytes(ref(member, privatePath)));

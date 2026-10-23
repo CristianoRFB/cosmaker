@@ -125,8 +125,10 @@ describe('Integrated visitor to completed order journey', () => {
     await call('recordFinanceEntry', { requestId: newId(), orderId, kind: 'expense', basis: 'actual', category: 'materials', amountCents: 5000, description: 'Materiais consumidos na jornada', effectiveDate: today });
     await stage('stage-fitting', 'start');
     const photo = await call<{ photoId: string; storagePath: string }>('createProductionPhotoUpload', { atelierId: atelierIds[0], orderId, stageId: 'stage-fitting', originalName: 'fitting.png', contentType: 'image/png', caption: 'Prova sintética da jornada', visibleToClient: true });
-    await uploadBytes(ref(storage, photo.storagePath), png, { contentType: 'image/png', customMetadata: { photoId: photo.photoId, orderId } });
-    await call('completeProductionPhotoUpload', { atelierId: atelierIds[0], orderId, photoId: photo.photoId });
+    const photoEndpoint = new URL(`http://${emulatorHost}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || 15001}/${projectId}/us-central1/uploadProductionPhotoBytes`);
+    for (const [key, value] of Object.entries({ atelierId: atelierIds[0], orderId, photoId: photo.photoId })) photoEndpoint.searchParams.set(key, value);
+    const uploadedPhoto = await fetch(photoEndpoint, { method: 'POST', body: new Uint8Array(png), headers: { Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`, 'Content-Type': 'image/png' } });
+    expect(uploadedPhoto.status).toBe(200); expect(await uploadedPhoto.json()).toMatchObject({ photoId: photo.photoId, status: 'ready' });
     await stage('stage-fitting', 'complete'); const approval = (await order.collection('approvals').get()).docs[0];
     await signIn(customer); await call('respondToProductionApproval', { atelierId: atelierIds[0], orderId, approvalId: approval.id, decision: 'approved', comment: '' });
     await signIn(ownerA); await stage('stage-finishing', 'start'); await stage('stage-finishing', 'complete');

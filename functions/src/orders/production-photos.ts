@@ -4,7 +4,7 @@ import { adminDb, adminStorage } from '../admin';
 import { requireOrderManager, requireVerifiedIdentity } from './access';
 import { requireNonDemoWorkspace } from '../commercial/access';
 import { productionId, readProductionManager } from './production-configuration';
-import { revokeOrderFileTokens } from './order-file-storage';
+import { orderFileHash, revokeOrderFileTokens } from './order-file-storage';
 
 export const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 export const maxPhotoBytes = 10 * 1024 * 1024;
@@ -100,17 +100,24 @@ export async function finishProductionPhotoUpload(call: { auth?: { uid: string; 
   const size = Number(objectMetadata.size);
   const contentType = String(objectMetadata.contentType ?? '').toLowerCase();
   const customMetadata = objectMetadata.metadata ?? {};
+  // A legacy completion call cannot bypass the digest bound by the HTTP upload.
+  let hashMatches = photo.sha256 === undefined;
+  if (!hashMatches && typeof photo.sha256 === 'string' && /^[a-f0-9]{64}$/.test(photo.sha256) && Number.isSafeInteger(size) && size > 0 && size <= maxPhotoBytes) {
+    try { const [content] = await file.download(); hashMatches = content.length === size && orderFileHash(content) === photo.sha256; }
+    catch { throw new HttpsError('failed-precondition', 'Não foi possível conferir o conteúdo da foto. Tente novamente.'); }
+  }
   const isPng = bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
   const isJpeg = bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
   const isWebp = bytes.length >= 12 && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP';
-  if (!Number.isFinite(size) || size <= 0 || size > maxPhotoBytes
+  if (!hashMatches || !Number.isFinite(size) || size <= 0 || size > maxPhotoBytes
+    || (photo.size !== undefined && photo.size !== null && photo.size !== size)
     || contentType !== photo.contentType || !acceptedTypes.includes(contentType)
     || customMetadata.photoId !== data.photoId || customMetadata.orderId !== data.orderId
     || !((contentType === 'image/png' && isPng) || (contentType === 'image/jpeg' && isJpeg) || (contentType === 'image/webp' && isWebp))) {
     await adminDb.runTransaction(async (transaction) => {
       const [actor, current, order] = await Promise.all([readProductionManager(transaction, data.atelierId as string, call.auth!.uid), transaction.get(photoRef), transaction.get(orderRef)]);
       if (actor.atelier.demoWorkspace === true) throw new HttpsError('failed-precondition', 'Fotos de produção não são gravadas no espaço demonstrativo.');
-      if (!activeOrderStatuses.includes(String(order.get('status'))) || current.get('uploadStatus') !== 'pending' || current.get('uploadedBy') !== call.auth!.uid) throw new HttpsError('failed-precondition', 'O pedido ou o upload mudou. Atualize a tela.');
+      if (!activeOrderStatuses.includes(String(order.get('status'))) || current.get('uploadStatus') !== 'pending' || current.get('uploadedBy') !== call.auth!.uid || (current.get('uploadLeaseId') !== undefined && current.get('uploadLeaseId') !== leaseId)) throw new HttpsError('failed-precondition', 'O pedido ou o upload mudou. Atualize a tela.');
       transaction.update(photoRef, { uploadStatus: 'rejected', rejectedAt: Timestamp.now() });
     });
     await file.delete({ ignoreNotFound: true }).catch(() => undefined);

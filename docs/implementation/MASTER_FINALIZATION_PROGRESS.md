@@ -1,5 +1,15 @@
 # Cosmaker Master Finalization — Progress
 
+## F5 — transporte de fotos conectado, fechamento em validação — WIP — 2026-10-23
+
+- Continuidade de `4064b0437eeab02ddb9f6c2cbc74545b955d7110`: frontend passou a enviar fotos via `uploadProductionPhotoBytes`, sem SDK Storage; create/read/update/delete raw de produção ficam negados para todos. Referências públicas e caminhos legados ainda não foram migrados.
+- Rules selecionadas **3/3 PASS**, 29 não selecionadas, 13,32s (`/tmp/cosmaker-production-photo-rules.log`), bloqueio raw de produção/attachments e preservação do intake existente. Build81/Functions/TypeScript/lint passaram; um erro de tipo na união dos payloads da fixture foi corrigido sem mudar o contrato.
+- Primeiro lote de backend: **4 PASS + 2 FAIL + 9 não selecionados**, 65,02s (`/tmp/cosmaker-production-bytes-integration.log`). Dois legados de bytes/URLs/aprovação e jornada completa passaram. Uma falha era assert da fixture (DTO retornava status do pedido, não da etapa); outra revelou que `generation=0` não impediu sobrescrever objeto existente no Emulator. Acrescentados lease + verificação explícita dos bytes existentes, mantendo precondition GCS.
+- Após essa correção: backend **4/4 PASS**, 94,39s (`/tmp/cosmaker-production-bytes-final-integration.log`), novas negações/retry/concorrência e jornada contínua; navegador **1/1 PASS**, 1,4min (`/tmp/cosmaker-production-bytes-e2e.log`), upload HTTP real sem chamadas raw Storage, aprovação e imagem blob privada em 375/1440, métricas/CRM preservados. Captura cliente375 inspecionada.
+- Revisão adversarial adicional comprovou bypass pelo callable legado de conclusão: ele aceitava assinatura sem conferir o novo hash já vinculado. Teste vermelho **1 FAIL** (`/tmp/cosmaker-production-legacy-hash-red.log`). Corrigida conclusão compartilhada para conferir bytes completos quando houver hash (leitura limitada a 10MB), tamanho e lease; retry ready também confere hash real. Functions/TypeScript/lint desse último reforço passaram (`/tmp/cosmaker-production-hash-*.log`), mas **regressão final após esse reforço ainda pendente neste WIP**. Gates anteriores mantêm suas versões e não aprovam retroativamente o código modificado.
+- Próximo passo imediato: repetir somente os casos afetados de fotos/conclusão/jornada e um E2E integrado com a versão final, registrar resultado, CI e fechar o módulo. Depois F5 upload público de referências por servidor/Storage legado. Índice formal permanece **10/16 = 62,5%**; F1/F4 aceitos localmente, F2/F3/F5/F6 parciais, F7/F8 pendentes.
+
+
 ## Next 15.5.28 validado; F5 bytes de produção iniciados — 2026-10-23
 
 - Patch enviado `da45041906e6598787995712e3101ac639b76782`, CI **PASS** [39953612113](https://github.com/CristianoRFB/cosmaker/actions/runs/39953612113). Gate local sobre Next15.5.28: **6/6 E2E PASS**, exit 0, 44,6s (`/tmp/cosmaker-next-smoke.log`), cadastro/claim verificado, resolver público A/B e estados indisponíveis, navegação owner/staff/cliente/platform em 320/375/768/1440. Somam-se build81, 120 unitários, native sharp e auditoria produção0 já registrados. Patch tecnicamente validado, sem promoção comercial/produção.

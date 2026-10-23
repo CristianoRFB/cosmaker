@@ -50,17 +50,28 @@ export const uploadProductionPhotoBytes = onRequest({ cors: true, timeoutSeconds
     if (current.uploadStatus === 'ready') {
       const [metadata] = await object.getMetadata();
       if (String(metadata.generation) !== current.storageGeneration || metadata.contentType !== contentType || Number(metadata.size) !== bytes.length) throw new HttpsError('failed-precondition', 'A foto armazenada precisa de conferência.');
+      const [stored] = await object.download();
+      if (orderFileHash(stored) !== sha256) throw new HttpsError('failed-precondition', 'O conteúdo da foto armazenada precisa de conferência.');
       await finishProductionPhotoUpload({ auth: { uid: token.uid, token }, data: { atelierId, orderId, photoId } });
       response.json({ photoId, status: 'ready', alreadyApplied: true }); return;
     }
-    try {
-      await object.save(bytes, { resumable: false, preconditionOpts: { ifGenerationMatch: 0 }, metadata: { contentType, cacheControl: 'private, no-store', metadata: { photoId, orderId, sha256 } } });
-    } catch (error) {
-      if (!(error && typeof error === 'object' && 'code' in error && [409, 412].includes(Number(error.code)))) throw error;
+    const verifyExisting = async () => {
       const [metadata] = await object.getMetadata();
       if (Number(metadata.size) !== bytes.length || metadata.contentType !== contentType) throw new HttpsError('already-exists', 'Outro conteúdo já ocupa este envio.');
       const [stored] = await object.download();
       if (orderFileHash(stored) !== sha256) throw new HttpsError('already-exists', 'Outro conteúdo já ocupa este envio.');
+    };
+    // The Emulator does not reliably enforce generation=0. The lease plus this
+    // explicit read also preserves legacy objects; the GCS precondition stays in place.
+    const [exists] = await object.exists();
+    if (exists) await verifyExisting();
+    else {
+      try {
+        await object.save(bytes, { resumable: false, preconditionOpts: { ifGenerationMatch: 0 }, metadata: { contentType, cacheControl: 'private, no-store', metadata: { photoId, orderId, sha256 } } });
+      } catch (error) {
+        if (!(error && typeof error === 'object' && 'code' in error && [409, 412].includes(Number(error.code)))) throw error;
+        await verifyExisting();
+      }
     }
     await revokeOrderFileTokens(path);
     // Completion rechecks current profile, membership, tenant, order and approval state after I/O.

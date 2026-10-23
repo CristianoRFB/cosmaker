@@ -29,6 +29,7 @@
     "test:showcase": "npm run functions:build && node scripts/test-commercial-emulator.mjs showcase",
     "test:order-files": "npm run functions:build && node scripts/test-commercial-emulator.mjs order-files",
     "test:order-changes": "npm run functions:build && node scripts/test-commercial-emulator.mjs order-changes",
+    "test:production-photo-bytes": "npm run functions:build && node scripts/test-commercial-emulator.mjs production-photo-bytes",
     "test:production-configuration": "npm run functions:build && node scripts/test-commercial-emulator.mjs production-configuration",
     "test:orders": "npm run functions:build && node scripts/test-commercial-emulator.mjs orders",
     "test:watch": "vitest",

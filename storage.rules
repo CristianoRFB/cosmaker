@@ -123,22 +123,8 @@ service firebase.storage {
     }
 
     match /ateliers/{atelierId}/orders/{orderId}/production/{photoId} {
-      function photoPath() {
-        return /databases/(default)/documents/ateliers/$(atelierId)/orders/$(orderId)/photos/$(photoId);
-      }
-      // Private evidence is read through the authenticated byte endpoint.
-      allow read: if false;
-      allow create: if hasAtelierPermission(atelierId, 'orders:manage')
-        && !isDemoWorkspace(atelierId)
-        && firestore.get(/databases/(default)/documents/ateliers/$(atelierId)/orders/$(orderId)).data.status in ['confirmed', 'scheduled', 'modeling', 'in_production', 'fitting', 'adjustments', 'finishing', 'paused', 'ready_to_ship', 'waiting_final_payment']
-        && firestore.exists(photoPath())
-        && firestore.get(photoPath()).data.uploadedBy == request.auth.uid
-        && firestore.get(photoPath()).data.uploadStatus == 'pending'
-        && firestore.get(photoPath()).data.contentType == request.resource.contentType
-        && request.resource.metadata.photoId == photoId && request.resource.metadata.orderId == orderId
-        && request.resource.size <= 10 * 1024 * 1024
-        && isReferenceImage();
-      allow update, delete: if false;
+      // Upload and download require server authorization, outside the cross-service Rules budget.
+      allow read, write: if false;
     }
 
     match /ateliers/{atelierId}/orders/{orderId}/attachments/{fileId} {

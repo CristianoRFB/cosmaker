@@ -23,6 +23,7 @@ const suites = {
   journey: 'tests/integration/integrated-journey-functions.test.ts',
   'order-files': 'tests/integration/order-files-functions.test.ts',
   'order-changes': 'tests/integration/order-change-functions.test.ts',
+  'production-photo-bytes': 'tests/integration/production-photo-bytes-functions.test.ts',
   'production-configuration': 'tests/integration/production-configuration-functions.test.ts',
   orders: 'tests/integration/order-files-functions.test.ts tests/integration/order-change-functions.test.ts tests/integration/production-configuration-functions.test.ts tests/integration/scheduling-functions.test.ts',
 };
@@ -33,7 +34,7 @@ if (!testFile) {
   process.exit(2);
 }
 const testCommand = `"${process.execPath}" "${vitestCli}" run ${testFile}${suiteName === 'orders' ? ' --no-file-parallelism --maxWorkers=1' : ''}`;
-const withStorage = ['order-files', 'production-configuration', 'orders', 'showcase', 'references', 'journey'].includes(suiteName);
+const withStorage = ['order-files', 'production-configuration', 'orders', 'showcase', 'references', 'journey', 'production-photo-bytes'].includes(suiteName);
 // These callable/HTTP suites do not invoke scheduled handlers. Scheduler gates opt in explicitly.
 const withPubsub = process.env.COSMAKER_TEST_PUBSUB === 'true';
 
