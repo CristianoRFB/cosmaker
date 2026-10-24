@@ -1,5 +1,15 @@
 # Cosmaker Master Finalization — Progress
 
+## Consolidação local fechada; GOAL global incompleto — 2026-10-24
+
+- Código enviado em6b4ac11f1412d33c0f7ffea8b678ed26d5ac2d9c; CI [40098118834](https://github.com/CristianoRFB/cosmaker/actions/runs/40098118834) SUCCESS, log remoto confirma **124/124unitários/25arquivos**, instalação limpa e buildsFunctions/Next81. O CI do checkpoint documental posterior deve ser consultado após push; não inferir resultado de HEAD diferente.
+- **Agenda final1/1 E2E PASS**,31,3s (`/tmp/cosmaker-timezone-display-e2e.log`): navegadorUTC/responsávelSãoPaulo, rejeição fora do expediente sem apagar formulário/sem gravar slot, retry09→12UTC persistido e exibição09–11comfuso;320/375/768/1440, cancelamento, bloqueios e eventos. Backend3/3 e unitários3/3 já aprovados. Nenhuma Rule alterada; negativos de backend/permissões/A×B incluídos. As repetições anteriores continuam descritas abaixo.
+- Métricas/configurações globais e dois administrativos passaram no lote complementar4PASS/1FAIL; a falha de agenda foi resolvida isoladamente. Capturas reais sintéticas `/tmp/cosmaker-metrics-fixed-{320,1440}.png` geradas/inspecionadas: conteúdo legível semoverflow/clipping. O conjunto de16cenários distintos do lote inicial tem evidências complementares, não uma execução integral16/16.
+- Inventário fechado em [FUNCTIONAL_COMPLETION.md](FUNCTIONAL_COMPLETION.md), dados emFUNCTIONAL_INVENTORY.json e evidências sanitizadas emsecurity/EVIDENCE_LEDGER.json. **47operações congeladas;182/184critérios=98,91% local**,45operações implementadas/testadas e2com critério obrigatório bloqueado. Quatro critérios de peso1; quatroNA justificados; crédito parcial preservado. Código/configuração/testes relevantes têm hashes verificados; conjunto congelado comparado ao inventário anterior ao cálculo. Não mede esforço, cobertura exaustiva ou homologação comercial.
+- `npm run docs:functional` valida fontes/evidências/estados/cálculo/relatório e passa a integrar oCI. Não executa testes nem promove bloqueios. Lint integral, TypeScript, docs:check e diff:check PASS. Sem repetir104integrações/Rules/recuperação já aprovadas sem mudança pertinente; agenda3 substitui seus mesmos3casos dentro deorders33.
+- [Matriz formal](FORMAL_ACCEPTANCE.md) **10/16=62,5%**: F1.1–F1.9/F4 PASS LOCAL; F2/F3/F5/F6 PARCIAIS/TESTADO_LOCALMENTE; F7 BLOCKED/NÃO EXECUTADO; F8 NÃO ACEITO. Produto NÃO HOMOLOGADO para clientes reais. Handoff reescrito com estado, comandos e próxima ação; documentos de segurança corrigem referências obsoletas a raw/consultas Storage. v0.2.0 continua canônica.
+- Bloqueios mantidos: publicação mínima deapis.google.com para popupGoogle local; transporte scheduler v2 rejeitado peloCLI15.34.1; cinco moderados upstream/warning stream sem patch oficial na consulta; serviços/tokens/backup/Auth/jurídico/release reais sem homologação/autorização. Não há pendência de implementação local identificada nas47operações além dos dois gates bloqueados. Não afirmar ausência de bugs ou READY_FOR_PRODUCTION. Runtime encerrado; nenhuma operação Firebase real/deploy/IAM/billing/rede/merge/force executada.
+
 ## RETOMADA — fuso da agenda e métricas mobile corrigidos — 2026-10-24
 
 - Fetch confirmou5fe1f495b91b2bb1e4e2925236725f8df40c0f43/árvore limpa; CI40060408944 SUCCESS. Node22.23.4/Java21 e lint das últimas alterações de testes/inventário sintético PASS. Nenhum Firebase real ou mudança de rede/credenciais.
@@ -448,12 +458,12 @@ O proprietário autorizou explicitamente commit e push da branch de trabalho. Es
 | F1.7 Serviços e portfólio | PASS | Catálogo/admin/branding/imagens/publicação/origem do orçamento; integração 5/5, Rules 23/23, unitários 7/7, desktop 1/1, mobile 1/1; build e CI 39709281488 verdes. |
 | F1.8 Mensagens e notificações internas | PASS LOCAL | Backend 5/5, produção 11/11, Rules 24/24, desktop/mobile 1/1 cada, build e CI final verdes; detalhes nos checkpoints posteriores. |
 | F1.9 Relatórios e configurações | PASS LOCAL | Backend 5/5, Rules 25/25, build, filtros/persistência 320/375/768/1440, métricas globais e CI 39789058086 aprovados. |
-| Checkpoint F1 — completude funcional | TODO | Cada módulo operacional precisa criar→ler→alterar/ação→persistir e provar denial em outra fronteira. |
-| F2 — jornada integrada A×B | TESTADO_LOCALMENTE / ACEITE GLOBAL PENDENTE | Jornada contínua visitor→conclusão 1/1 e regressões por domínio; falta ownership/ACL de legado de propostas para fechar o gate global. |
-| F3 — UX/UI e white-label | WIP | Relatórios/configurações/referências e menu por papel em 320/375/768/1440; stubs do portal e rotas secundárias ainda pendentes. |
+| Checkpoint F1 — completude funcional | TESTADO_LOCALMENTE | Nove módulos com aceites locais e regressões proporcionais; inventário funcional e matriz formal separados nos documentos atuais. Não é marco adicional aos16. |
+| F2 — jornada integrada A×B | PARCIAL / TESTADO_LOCALMENTE | Jornada contínua e104cenários SDK; ownership/ACL/projeções corrigidos. Acionamento automático da expiração ainda sem comprovação de transporte. |
+| F3 — UX/UI e white-label | PARCIAL / TESTADO_LOCALMENTE | Portal e rotas essenciais conectados, navegação por papel e quatro larguras; métricas320 e fuso da agenda corrigidos. Google local bloqueado antes do popup. |
 | F4 — coerência comercial | PASS LOCAL | Global Standard v01 preservado; backend 11/11, E2E 5/5 e CI 39796587744 verdes, sem cotas/benefícios inventados. |
-| F5 — segurança e privacidade (GOAL II) | WIP | Correções de bytes/autorizações/scheduler comprovadas; ownership legado, revogação global e achados da auditoria pendentes. Integrações externas permanecem desativadas. |
-| F6 — estabilidade, CI e backup/restore | WIP | Restore fictício Auth/Firestore/Storage e ACL PASS, produção raiz audit 0 após gRPC; Functions/dev tools e transporte PubSub do scheduler pendentes. |
+| F5 — segurança e privacidade (GOAL II) | PARCIAL / TESTADO_LOCALMENTE | Bytes/UID/CRM/projeções e raw Storage fechado/zero cross-service; negativos e inventário sintético aprovados. Tokens reais/serviços reais e achados upstream sem aceite global. |
+| F6 — estabilidade, CI e backup/restore | PARCIAL / TESTADO_LOCALMENTE | Restore sintético/ACL, limpeza Linux/CI e regressão SDK aprovados; últimas auditorias prod raiz/Functions0, root completo5moderados upstream. Transporte scheduler e recuperação operacional real não homologados. |
 | F7 — staging e preparação de produção | TODO | Preflight, backup/dry-run/rollback/runbooks; staging real só com acesso e autorização explícitos. |
 | F8 — documentação e evidências v0.3.0 | TODO | Preservar v0.1/v0.2; atualizar CURRENT só após documentação, capturas, diagramas e docs:check verdes. |
 

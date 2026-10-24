@@ -50,3 +50,9 @@ Vitest4 executou120/120 unitários e os SDKs novos passaram10/10 integrações d
 Com --trace-warnings, o aviso MaxListenersExceededWarning de error/close foi localizado em teeny-request/build/src/index.js:461, chamada de stream.pipeline via @google-cloud/storage. Instalados Storage8.4.0/teeny-request11.1.1; npm view confirmou ambos como latest nesta consulta. O ramo Firestore também usa teeny-request10.1.4 transitivo. Não houve override entre majors, edição de node_modules, setMaxListeners ou supressão de warning.
 
 O aviso ocorre também no processo de fixtures Admin durante downloads. Sozinho não comprova vazamento de heap; os testes de bytes/hash/concorrência continuaram passando. A memória voltou a ficar controlada com runtimes por domínio e limpeza correta de processos. Acompanhamento upstream permanece registrado como limitação conhecida, sem patch oficial disponível nesta consulta. Não é novo achado de npm audit nem promessa de ausência de vazamentos.
+
+## Consolidação dos gates locais — 24/10
+
+A migração dos SDKs agora tem104cenários integrados distintos aprovados por domínio, Rules35casos cobertos por execuções complementares, recuperação Auth/Firestore/Storage em instâncias novas e jornadas de navegador proporcionais. A nova regressão de agenda3/3 substitui os mesmos3casos anteriores; não aumenta o total104. CI do código6b4ac11 SUCCESS com124/124unitários/25arquivos, instalação limpa e builds Functions/Next81. Lint/TypeScript/docs atuais PASS. Resultados específicos e falhas/repetições em security/EVIDENCE_LEDGER.json e no progresso canônico; não houve nova auditoria npm nesta consolidação.
+
+Esses gates fecham a regressão local dos consumidores modificados; não encerram os cinco moderados upstream, o aviso de stream, o transporte scheduler bloqueado ou a homologação real. Não há alteração forçada de dependências para fabricar zero alertas.

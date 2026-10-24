@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "assessment": "DRAFT_EVIDENCE_ASSIGNMENT_PENDING",
+  "assessment": "EVIDENCE_REVIEWED_LOCAL",
   "operationSetFrozenAt": "2026-10-24T03:15:56.183245+00:00",
   "method": "FUNCTIONAL_INVENTORY_METHOD.md",
   "unitWeight": 1,
@@ -21,25 +21,37 @@
       ],
       "backendSuite": "rules",
       "uiEvidenceSource": "tests/e2e/client-profile-registration.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "BLOCKED_EXTERNAMENTE",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:services/firebase/auth.service.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#rules",
+            "EVIDENCE_LEDGER.json#rules-final-case"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "BLOCKED_EXTERNAMENTE",
+          "reason": "E-mail/senha/cadastro/verificação/saída exercitados; popup Google obrigatório ainda bloqueado pela política de rede. O critério inteiro não recebe PASS.",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation",
+            "EVIDENCE_LEDGER.json#ui-google",
+            "CLOUD_NETWORK_REVIEW.md"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#rules",
+            "EVIDENCE_LEDGER.json#rules-final-case"
+          ]
         }
       }
     },
@@ -51,26 +63,33 @@
         "app/(auth)/recuperar-senha/page.tsx"
       ],
       "backendSuite": "auth-recovery",
-      "uiEvidenceSource": "PENDING",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "uiEvidenceSource": "tests/e2e/password-recovery.spec.ts",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:app/(auth)/recuperar-senha/page.tsx"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-auth-recovery"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-auth-recovery"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-auth-recovery"
+          ]
         }
       }
     },
@@ -83,25 +102,32 @@
       ],
       "backendSuite": "commercial",
       "uiEvidenceSource": "tests/e2e/client-crm.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/clients/clients.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         }
       }
     },
@@ -114,25 +140,32 @@
       ],
       "backendSuite": "commercial",
       "uiEvidenceSource": "tests/e2e/client-crm.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/clients/clients.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         }
       }
     },
@@ -145,25 +178,32 @@
       ],
       "backendSuite": "team",
       "uiEvidenceSource": "tests/e2e/team-invitation.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/team/members.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-team"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-team"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-team"
+          ]
         }
       }
     },
@@ -176,25 +216,32 @@
       ],
       "backendSuite": "team",
       "uiEvidenceSource": "tests/e2e/team-invitation.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/team/invitations.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-team"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-team"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-team"
+          ]
         }
       }
     },
@@ -207,25 +254,32 @@
       ],
       "backendSuite": "team",
       "uiEvidenceSource": "tests/e2e/team-invitation.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/team/members.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-team"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-team"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-team"
+          ]
         }
       }
     },
@@ -238,25 +292,32 @@
       ],
       "backendSuite": "references",
       "uiEvidenceSource": "tests/e2e/public-tenants.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/public/tenant.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-references"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-public-references"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-references"
+          ]
         }
       }
     },
@@ -269,25 +330,32 @@
       ],
       "backendSuite": "references",
       "uiEvidenceSource": "tests/e2e/public-tenants.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/public/tenant.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-references"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-public-references"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-references"
+          ]
         }
       }
     },
@@ -300,25 +368,32 @@
       ],
       "backendSuite": "references",
       "uiEvidenceSource": "tests/e2e/public-tenants.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/public/quote-reference-upload.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-references"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-public-references"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-references"
+          ]
         }
       }
     },
@@ -331,25 +406,32 @@
       ],
       "backendSuite": "quotes",
       "uiEvidenceSource": "tests/e2e/measurement-quote-revision.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/quotes/create-quote-draft.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-quotes"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-measurement-quote"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-quotes"
+          ]
         }
       }
     },
@@ -362,25 +444,32 @@
       ],
       "backendSuite": "client-quotes",
       "uiEvidenceSource": "tests/e2e/client-quote-privacy.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/quotes/client-quotes.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-quotes"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-client-quotes"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-quotes"
+          ]
         }
       }
     },
@@ -393,25 +482,32 @@
       ],
       "backendSuite": "journey",
       "uiEvidenceSource": "tests/e2e/quote-approval.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/create-order.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-journey"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-production-journey"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-journey"
+          ]
         }
       }
     },
@@ -424,25 +520,33 @@
       ],
       "backendSuite": "scheduler",
       "uiEvidenceSource": "NA",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "BLOCKED_EXTERNAMENTE",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/quotes/expire-quotes.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "BLOCKED_EXTERNAMENTE",
+          "reason": "Lógica persistente via HTTP passou, mas acionamento agendado/PubSub não comprovado. Não contar alternativa HTTP como transporte aprovado.",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#scheduler-http",
+            "EVIDENCE_LEDGER.json#scheduler-pubsub",
+            "SCHEDULER_EMULATOR.md"
+          ]
         },
         "interface": {
           "state": "NA",
           "reason": "Operação automática ou ferramenta CLI; não há formulário/tela própria prometida."
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#scheduler-http"
+          ]
         }
       }
     },
@@ -455,25 +559,32 @@
       ],
       "backendSuite": "client-payments",
       "uiEvidenceSource": "tests/e2e/measurement-quote-revision.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/list-client-measurement-profiles.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-measurement-quote"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments"
+          ]
         }
       }
     },
@@ -486,25 +597,32 @@
       ],
       "backendSuite": "client-payments",
       "uiEvidenceSource": "tests/e2e/measurement-quote-revision.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:repositories/measurements.repository.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-measurement-quote"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments"
+          ]
         }
       }
     },
@@ -517,25 +635,35 @@
       ],
       "backendSuite": "client-payments",
       "uiEvidenceSource": "tests/e2e/client-portal.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/get-client-order.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-portal"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments",
+            "EVIDENCE_LEDGER.json#detail-extra-negatives",
+            "EVIDENCE_LEDGER.json#rules",
+            "EVIDENCE_LEDGER.json#rules-final-case"
+          ]
         }
       }
     },
@@ -548,25 +676,32 @@
       ],
       "backendSuite": "orders",
       "uiEvidenceSource": "tests/e2e/order-change-production.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/production-configuration.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-order-revisions"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders"
+          ]
         }
       }
     },
@@ -579,25 +714,32 @@
       ],
       "backendSuite": "orders",
       "uiEvidenceSource": "tests/e2e/order-change-production.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/respond-to-production-approval.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-order-revisions"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders"
+          ]
         }
       }
     },
@@ -610,25 +752,32 @@
       ],
       "backendSuite": "production-photo-bytes",
       "uiEvidenceSource": "tests/e2e/quote-approval.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/production-photo-upload.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-production-photo-bytes"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-production-journey"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-production-photo-bytes"
+          ]
         }
       }
     },
@@ -641,25 +790,32 @@
       ],
       "backendSuite": "orders",
       "uiEvidenceSource": "tests/e2e/order-change-production.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/change-requests.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-order-revisions"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders"
+          ]
         }
       }
     },
@@ -672,25 +828,32 @@
       ],
       "backendSuite": "orders",
       "uiEvidenceSource": "tests/e2e/order-files-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/order-files.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-portal"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders"
+          ]
         }
       }
     },
@@ -703,25 +866,36 @@
       ],
       "backendSuite": "orders",
       "uiEvidenceSource": "tests/e2e/scheduling-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/scheduling/planning.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders",
+            "EVIDENCE_LEDGER.json#backend-scheduling-final",
+            "EVIDENCE_LEDGER.json#unit-schedule"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-scheduling-final"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders",
+            "EVIDENCE_LEDGER.json#backend-scheduling-final",
+            "EVIDENCE_LEDGER.json#unit-schedule"
+          ]
         }
       }
     },
@@ -734,25 +908,36 @@
       ],
       "backendSuite": "orders",
       "uiEvidenceSource": "tests/e2e/scheduling-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/scheduling/events.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders",
+            "EVIDENCE_LEDGER.json#backend-scheduling-final",
+            "EVIDENCE_LEDGER.json#unit-schedule"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-scheduling-final"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-orders",
+            "EVIDENCE_LEDGER.json#backend-scheduling-final",
+            "EVIDENCE_LEDGER.json#unit-schedule"
+          ]
         }
       }
     },
@@ -765,25 +950,32 @@
       ],
       "backendSuite": "inventory",
       "uiEvidenceSource": "tests/e2e/inventory-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/inventory/inventory.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-inventory"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-inventory"
+          ]
         }
       }
     },
@@ -796,25 +988,32 @@
       ],
       "backendSuite": "inventory",
       "uiEvidenceSource": "tests/e2e/inventory-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/inventory/inventory.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-inventory"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-inventory"
+          ]
         }
       }
     },
@@ -827,25 +1026,32 @@
       ],
       "backendSuite": "finance",
       "uiEvidenceSource": "tests/e2e/finance-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/finance/finance.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-finance"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-finance"
+          ]
         }
       }
     },
@@ -858,25 +1064,32 @@
       ],
       "backendSuite": "finance",
       "uiEvidenceSource": "tests/e2e/finance-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/finance/finance.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-finance"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-finance"
+          ]
         }
       }
     },
@@ -889,25 +1102,32 @@
       ],
       "backendSuite": "finance",
       "uiEvidenceSource": "tests/e2e/finance-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/finance/finance.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-finance"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-finance"
+          ]
         }
       }
     },
@@ -920,25 +1140,32 @@
       ],
       "backendSuite": "showcase",
       "uiEvidenceSource": "tests/e2e/showcase-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/showcase/showcase.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-showcase"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-showcase"
+          ]
         }
       }
     },
@@ -951,25 +1178,32 @@
       ],
       "backendSuite": "showcase",
       "uiEvidenceSource": "tests/e2e/showcase-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/showcase/images.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-showcase"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-showcase"
+          ]
         }
       }
     },
@@ -982,25 +1216,32 @@
       ],
       "backendSuite": "messages",
       "uiEvidenceSource": "tests/e2e/messages-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/messages/conversations.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-messages"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-private-navigation-messages"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-messages"
+          ]
         }
       }
     },
@@ -1013,25 +1254,32 @@
       ],
       "backendSuite": "messages",
       "uiEvidenceSource": "tests/e2e/messages-workflow.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/notifications/internal-notifications.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-messages"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-private-navigation-messages"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-messages"
+          ]
         }
       }
     },
@@ -1044,25 +1292,32 @@
       ],
       "backendSuite": "reports",
       "uiEvidenceSource": "tests/e2e/reports-settings.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/reports/reports.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-reports"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-reports"
+          ]
         }
       }
     },
@@ -1075,25 +1330,32 @@
       ],
       "backendSuite": "reports",
       "uiEvidenceSource": "tests/e2e/reports-settings.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/reports/reports.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-reports"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-reports"
+          ]
         }
       }
     },
@@ -1106,25 +1368,32 @@
       ],
       "backendSuite": "delivery",
       "uiEvidenceSource": "tests/e2e/order-delivery.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/finalize-order.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-delivery"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-delivery"
+          ]
         }
       }
     },
@@ -1137,25 +1406,33 @@
       ],
       "backendSuite": "commercial",
       "uiEvidenceSource": "tests/e2e/admin-workspace.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/platform/get-platform-overview.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-admin-retry",
+            "EVIDENCE_LEDGER.json#ui-admin-retry"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         }
       }
     },
@@ -1168,25 +1445,32 @@
       ],
       "backendSuite": "commercial",
       "uiEvidenceSource": "tests/e2e/final-settings-directory.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/platform/list-platform-users.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-directory-settings"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         }
       }
     },
@@ -1199,25 +1483,32 @@
       ],
       "backendSuite": "commercial",
       "uiEvidenceSource": "tests/e2e/commercial-standard.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/commercial/platform-management.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         }
       }
     },
@@ -1230,25 +1521,32 @@
       ],
       "backendSuite": "commercial",
       "uiEvidenceSource": "tests/e2e/commercial-standard.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/commercial/platform-management.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-consolidation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-commercial"
+          ]
         }
       }
     },
@@ -1261,25 +1559,35 @@
       ],
       "backendSuite": "client-payments",
       "uiEvidenceSource": "tests/e2e/client-portal.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:app/cliente/page.tsx"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-portal"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments",
+            "EVIDENCE_LEDGER.json#detail-extra-negatives",
+            "EVIDENCE_LEDGER.json#rules",
+            "EVIDENCE_LEDGER.json#rules-final-case"
+          ]
         }
       }
     },
@@ -1292,25 +1600,34 @@
       ],
       "backendSuite": "rules",
       "uiEvidenceSource": "tests/e2e/client-portal.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:app/cliente/perfil/page.tsx"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#rules",
+            "EVIDENCE_LEDGER.json#rules-final-case"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-portal"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#rules",
+            "EVIDENCE_LEDGER.json#rules-final-case"
+          ]
         }
       }
     },
@@ -1323,25 +1640,35 @@
       ],
       "backendSuite": "client-payments",
       "uiEvidenceSource": "tests/e2e/client-portal.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/client-payments.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-portal"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-client-payments",
+            "EVIDENCE_LEDGER.json#detail-extra-negatives",
+            "EVIDENCE_LEDGER.json#rules",
+            "EVIDENCE_LEDGER.json#rules-final-case"
+          ]
         }
       }
     },
@@ -1354,25 +1681,32 @@
       ],
       "backendSuite": "public-navigation",
       "uiEvidenceSource": "tests/e2e/public-navigation.spec.ts",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:components/public/tenant-entry.tsx"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-public-navigation"
+          ]
         },
         "interface": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-public-navigation"
+          ]
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#ui-public-navigation"
+          ]
         }
       }
     },
@@ -1385,25 +1719,32 @@
       ],
       "backendSuite": "runtime",
       "uiEvidenceSource": "NA",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:scripts/cloud-start.mjs"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#runtime",
+            "EVIDENCE_LEDGER.json#unit"
+          ]
         },
         "interface": {
           "state": "NA",
           "reason": "Operação automática ou ferramenta CLI; não há formulário/tela própria prometida."
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#runtime",
+            "EVIDENCE_LEDGER.json#unit"
+          ]
         }
       }
     },
@@ -1416,25 +1757,30 @@
       ],
       "backendSuite": "recovery",
       "uiEvidenceSource": "NA",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:scripts/emulator-recovery-fixture.mjs"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#recovery"
+          ]
         },
         "interface": {
           "state": "NA",
           "reason": "Operação automática ou ferramenta CLI; não há formulário/tela própria prometida."
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#recovery"
+          ]
         }
       }
     },
@@ -1447,25 +1793,33 @@
       ],
       "backendSuite": "references",
       "uiEvidenceSource": "NA",
-      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "status": "IMPLEMENTADA_E_TESTADA",
       "checks": {
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/legacy-file-bytes.ts"
+            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#build-ui-fix",
+            "EVIDENCE_LEDGER.json#tokens"
           ]
         },
         "persistence": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-references",
+            "EVIDENCE_LEDGER.json#tokens"
+          ]
         },
         "interface": {
           "state": "NA",
           "reason": "Operação automática ou ferramenta CLI; não há formulário/tela própria prometida."
         },
         "negative": {
-          "state": "PENDING",
-          "evidence": []
+          "state": "PASS",
+          "evidence": [
+            "EVIDENCE_LEDGER.json#backend-references",
+            "EVIDENCE_LEDGER.json#tokens"
+          ]
         }
       }
     }
@@ -1491,11 +1845,486 @@
       ]
     }
   ],
-  "functionalPercent": null,
+  "functionalPercent": 98.91,
   "formalMilestones": {
     "passed": 10,
     "total": 16,
     "percent": 62.5
   },
-  "commercialReadiness": "NAO_HOMOLOGADO"
+  "commercialReadiness": "NAO_HOMOLOGADO",
+  "reviewedAt": "2026-10-24",
+  "codeCheckpoint": "6b4ac11f1412d33c0f7ffea8b678ed26d5ac2d9c",
+  "evidenceContext": {
+    "app/(auth)/cadastro/page.tsx": "703e0e16044da714896eb2cc34f5a21175f52d7375eb88edc238d691a3b3a504",
+    "app/(auth)/convite/page.tsx": "30a4d04a99bbe342a40ad9e9cfda632e01d74244f0f89a4b1552fe2609f0ab17",
+    "app/(auth)/layout.tsx": "fa65f4b6d075ac28b35f45ece273aacd287adea94e8a1d2bde7307f0e21317a5",
+    "app/(auth)/login/page.tsx": "72941d1cb530aca19b5839db18174f9536e88a08389e2f6a790327ee4cb1f881",
+    "app/(auth)/logout/page.tsx": "e5bebac0c1cd5dacd0d89f123f50222436dde0734ac939590ddbe8eba213758e",
+    "app/(auth)/recuperar-senha/page.tsx": "841235c0962792cab34908a22fd3cf3546a95609793d218bff98f65e0645729e",
+    "app/(auth)/verificar-email/page.tsx": "6115392b897090033edd200b9975bf66b93b23654b88742a3b4987b32e9bd008",
+    "app/(public)/agenda/page.tsx": "879b04d915c697fd1087ba1943ca75919c8ced213c003c0046c0cce8df745a17",
+    "app/(public)/contato/page.tsx": "a28e84a5c1c5fb3db222482b425c87c2d0636f0daa752f594f22e12f94e32be6",
+    "app/(public)/layout.tsx": "7642794cc9260d21507275d99db89abcb7cd7d33929ef71fa19db6e680ec0131",
+    "app/(public)/orcamento/page.tsx": "e89cfeed8a29150f8ab124107781e39c91a7a7b8174bc3f0fdbbe109c41d06cb",
+    "app/(public)/orcamento/sucesso/page.tsx": "399dcff434508d0f5555c89323ceea7152aae5fab253506064fa16a7ff7c58b6",
+    "app/(public)/page.tsx": "9b2bd64420e107a95fad3fdc986fc8159ec417c7cca5eff2ddbb8ba576a5f3f0",
+    "app/(public)/portfolio/[projectId]/page.tsx": "6ccb054f3fb6b68fc6c36397858dc5179e55aa1f0c57146ec3acab832642b799",
+    "app/(public)/portfolio/page.tsx": "26505d4bb5fbfb73c95661bb508e2bcf2296f14164ec03b94f91e24c7d184bf9",
+    "app/(public)/privacidade/page.tsx": "7dd6c212794752cf34c66a08cce7857e1feb88ffe3baa3379d09ae6c657b1cd9",
+    "app/(public)/servicos/page.tsx": "38943ee9142c9d7795ff9e3be59e94bb350111080b955bc4d86ad48f3ba4c933",
+    "app/(public)/sobre/page.tsx": "22e96267b82986e5a2e393dddd7cad5bf59861bdf69cb9848e3559c39257176f",
+    "app/(public)/termos/page.tsx": "d8cbcc39b22d8342ce8e4ff3191c9818bf66283c2c540572fda3888bd0fd7f7e",
+    "app/(tenant-public)/[tenantSlug]/layout.tsx": "7d5993f9afda1c38e2e09469ab88d75fc058a18c3dc057afd289dabf6e10c6f9",
+    "app/(tenant-public)/[tenantSlug]/orcamento/page.tsx": "1a0b3b2dd7f16476fcc9dd046e5eed6f07bb3805cdffa875673792cd7e408c34",
+    "app/(tenant-public)/[tenantSlug]/orcamento/sucesso/page.tsx": "7665c8456090ab1c16e3ac7a31d86b71a79df14115ff7b03e36ac0ebc82881a8",
+    "app/(tenant-public)/[tenantSlug]/page.tsx": "c54267ee074970b2cd3f0a947f822b8fd34ad0f2624f23f2bf08976898467a11",
+    "app/admin/assinaturas/page.tsx": "3dc856a972a4b31876a1ccc206c865bcb456a26e85d43db107b4746168f255d2",
+    "app/admin/ateliers/[atelierId]/page.tsx": "21637f676b3793ee836f114c32428c2503f163450087ad5c35d5c934d0220227",
+    "app/admin/ateliers/page.tsx": "5ea898dc0f0c2b272e70b0e2d4612af6ee7cbe40d5ff972ade6703b6df276fed",
+    "app/admin/configuracoes/page.tsx": "f203e9e3699e364231d8ac5f2391e23f144251e61c7ea8f3c8e28478e1f4e4c4",
+    "app/admin/layout.tsx": "60469383394ba2a9965caecc59f7f5e71e77e38e53b431d34a8eb4f0af568b74",
+    "app/admin/logs/page.tsx": "b733e2245388d42e4ad34f7e3b505976e9abb59e8c8227fcb600ff08ffe8b781",
+    "app/admin/metricas/page.tsx": "4765c3327f19183c5cb3f28fd563f8dfb3677f4ad36b46323b69cfeafd0d8a02",
+    "app/admin/page.tsx": "51bf941e2242771d2eac53500d7869be78bcf3a03838945f37bc90a9ff46db20",
+    "app/admin/planos/page.tsx": "2ea0ec1e7afa35856ec5c9617a7db05272c22997bfe08a79acf99ce90ba7f1f6",
+    "app/admin/usuarios/page.tsx": "62ad25f24940661e5a8d31d1f88f4f3446068e51474b6d8e508d4eb1f812eb45",
+    "app/api/health/route.ts": "ba1af783776ce0a2001b2ace5ba1cd22d4df0a91a75a3d2714ae60c4fb29d35d",
+    "app/api/integrations/email/route.ts": "982fc9064d3f8895fc0fb9207cfe162d19f7bac79e3fec4488e4b3e8d20e1add",
+    "app/api/integrations/shipping/route.ts": "1b2468dc4949ed40a4b9fe6b2e739d93932755d81b05baecf8e21bc5fe497708",
+    "app/api/integrations/whatsapp/route.ts": "c048cddc21598ed5495366dc017a5e88d34fc32225696ea516e401f88ba7ba39",
+    "app/api/notificacoes/enviar/route.ts": "6e5dcd24c7aa16044833741d87f476c8d11db11824ac22e3c5ea346c5c24b7c1",
+    "app/api/pagamentos/criar/route.ts": "bcf01cabfebd908113372be83c3900e4a996491c19f1bfd3085c03aaa42d4928",
+    "app/api/pagamentos/reembolso/route.ts": "787cd6547957f8bfc69e5c81d72965d677336d8e1108f88ac9f482978484d710",
+    "app/api/upload/assinar/route.ts": "b901ea41a6d4660d26fbc0e84af1dc316b0921da365cccaf331aa8af3ecf1f2c",
+    "app/api/webhooks/pagamento/route.ts": "c02bc5691c8c2825ec63356e06439c505c7354e1dcd93af504af2dd11570d04a",
+    "app/atelier/agenda/bloqueios/page.tsx": "da6ea3d8387cead670309beacb0e4ed7426598076f8ef53e4109b9a1c9c03242",
+    "app/atelier/agenda/capacidade/page.tsx": "5a60a958d8a1692f1d9275d875f7aec09d369c39156bb1508865c5fcd4863f9c",
+    "app/atelier/agenda/page.tsx": "62cd5eb0ef4582e79399a259145793bab84c3f3725b9644a739d6f5cffbbf1db",
+    "app/atelier/clientes/[clienteId]/medidas/page.tsx": "ea7c31936f526f257759dc0418d9cf67c5bb84c034cc78f753ccba7ff4cf1c0c",
+    "app/atelier/clientes/[clienteId]/page.tsx": "1214675e90acc70d989c36e18afa96ca6cd773a60b4476fec0d5dd1264505397",
+    "app/atelier/clientes/page.tsx": "b8121c84f8dcf14426fc95a055c63a2a5e53ffbbb9527c5f5a3503d2a25a61f6",
+    "app/atelier/configuracoes/assinatura/page.tsx": "a4db1d7f6cc4884a05144d3a2ecd929db283c747d423940db0a094249a532036",
+    "app/atelier/configuracoes/geral/page.tsx": "b3af4ed90a48cd9bcde4332e16d95895ec0f5d59a46cd7c59801c621082cb375",
+    "app/atelier/configuracoes/integracoes/page.tsx": "e2200b3d7358b8e1ff01ca3383df17016c5c0f4bd84da84a02f9d891f0686ba2",
+    "app/atelier/configuracoes/notificacoes/page.tsx": "1d2e4a12c7f81c78c98b904e30f590fb2cd13de921f22e017b14c8e7a97e9366",
+    "app/atelier/configuracoes/page.tsx": "b3af4ed90a48cd9bcde4332e16d95895ec0f5d59a46cd7c59801c621082cb375",
+    "app/atelier/configuracoes/permissoes/page.tsx": "b65959736971675ea87b79949c5c5b7e44989e4a7a1a20e73200a916f4025e1e",
+    "app/atelier/equipe/convites/page.tsx": "6172c013323293dd94a68ab352a8b077e517f4751f06fc109e0c1c14b60c5b15",
+    "app/atelier/equipe/page.tsx": "2ba1cac7cd444124fe0b1bbe30eb989245b986710992ff8058ccd62bd8d4d04a",
+    "app/atelier/estoque/fornecedores/page.tsx": "0799054ceb5e68cb8b2fe65a357e976cbd1ddcdf5d4d8248a8133d494cf82f95",
+    "app/atelier/estoque/materiais/[materialId]/page.tsx": "ba07dd6e725b1dd0f24ee503561e7b25b40e93b50c9a137d0477368c63280a98",
+    "app/atelier/estoque/materiais/page.tsx": "675cadc6b0204b4510eb19bbf8a2eff267cba48e5079e3a061cdf8fb1c2b7cbb",
+    "app/atelier/estoque/movimentacoes/page.tsx": "dae87a8f0ac478041a25d0e359feadf3a05b9d95801079c7f108fa0e9bae17e6",
+    "app/atelier/estoque/page.tsx": "c446a50d07b989678dcf851ea40a38e6fdc5291a79a0dc45054ffafa26ab187c",
+    "app/atelier/eventos/page.tsx": "bf511fb79068a0c5a22e12fd851b390c4a49bbde14d5f2488f676a5fd480d836",
+    "app/atelier/financeiro/despesas/page.tsx": "fe0c7b60f9df04efb83f73487a885af92e71dba892f780fc3367c9c48be44d1a",
+    "app/atelier/financeiro/pagamentos/page.tsx": "a987b2fccf740df57712e531e94b5fa31739eaadc1cccbddac3c8bda0e22e7b6",
+    "app/atelier/financeiro/page.tsx": "da7c9e50c27480a5b2d194b1a93ae261661f9b56575b9d5c65b5369b8147acd8",
+    "app/atelier/financeiro/receitas/page.tsx": "6d33e0b9f632b246b14e539ed74eb2a1f88e9792b4dcd2a09e320897f41014d7",
+    "app/atelier/financeiro/relatorios/page.tsx": "188d0b02746284d397c4473b245e38372e98705420e10a2583e886bb14972677",
+    "app/atelier/layout.tsx": "31cb270f0ba4bac7ffefa3abed691818c90ebe1e7f585d258143875f746aa201",
+    "app/atelier/mensagens/page.tsx": "2190cec8f4fe59555e63369cf38de6ef39c406b2ab72783452b2c00abbf8fa54",
+    "app/atelier/orcamentos/[orcamentoId]/editar/page.tsx": "0f7fe3ce8e3863c05556f3e7da62987badc10ecc785ef6b52b98f4ed99a30301",
+    "app/atelier/orcamentos/[orcamentoId]/page.tsx": "165f3f67b771f6e28420556e5241224fe5534cff578d978c53a0adfd392df587",
+    "app/atelier/orcamentos/novo/page.tsx": "a704d050463d5ff212ed02a8f840758423769830a1444a7ed66c4d070116901b",
+    "app/atelier/orcamentos/page.tsx": "5076eb6d9b0f5d60b03cceecff2d015d5934708fe44ce64d1d3fe08705635ac2",
+    "app/atelier/page.tsx": "e05dc231388f23e6ffd6a88c62359a2ac01b43c4a3ea53a8fcd983562d993130",
+    "app/atelier/pedidos/[pedidoId]/arquivos/page.tsx": "0fddc0565c1b33a528fedf2ae223e90ea05f5290681360961ab2e4239c55d2d5",
+    "app/atelier/pedidos/[pedidoId]/financeiro/page.tsx": "4a62be4234a9407509df740e30282b59b39d93c8fa55188bc1d361eb5294c005",
+    "app/atelier/pedidos/[pedidoId]/historico/page.tsx": "088459b752fc54f300c68ba5d30ce85563f9afeea6e1bb484c68bb4d3a36086d",
+    "app/atelier/pedidos/[pedidoId]/page.tsx": "31003b9cb15e2b0d5aa221860536d74ecf37acb0e4f374a882e59b131a937c7c",
+    "app/atelier/pedidos/[pedidoId]/producao/page.tsx": "f69dcfae357870243f69e9184eda4679c86e3e593735f6deac70be08fa1ca3e4",
+    "app/atelier/pedidos/page.tsx": "d2762729956a696eb1e6e661c73d331587bf70f23338feb2e1aed3d7c189b589",
+    "app/atelier/portfolio/[projectId]/page.tsx": "bb87fd7220839d912a788fce48cfea46dd60b0bc889d72b6fe0ae5375fe1434b",
+    "app/atelier/portfolio/novo/page.tsx": "5d5a0a232f04df9a1d8dac35304bbceeb103e50e5eb3d532def47deb4e7170a1",
+    "app/atelier/portfolio/page.tsx": "d00c5ba9847fccec9f0164ac9bcd05a384328eee65382ec67108fcc3e77875fb",
+    "app/atelier/producao/cronograma/page.tsx": "2b640337c6d83df5a585ffacb58f04768eb78c9876359ed55c98574f4f9d91e1",
+    "app/atelier/producao/kanban/page.tsx": "9259ba47137bc6df430e1b3534dfd89db683e4df6e3c90d969882f30a5863664",
+    "app/atelier/producao/page.tsx": "deef4d7e88cc5c4023eff550f6e569c84d679a0c223561aa578903f389145d4f",
+    "app/atelier/relatorios/page.tsx": "70877e68e496465f6bf31b71afc6bde473edd251eed6cbd518f9e7a197a7ffd8",
+    "app/atelier/servicos/page.tsx": "e9354f74c8642b86782f1f19591860726f275ae9a0574f77d873f5272bddc049",
+    "app/atelier/solicitacoes/[solicitacaoId]/page.tsx": "e8f2c0d5b544ed96d2138fc40e8fd5ae5cc77e2a61e0facdd2b58000eb474191",
+    "app/atelier/solicitacoes/page.tsx": "fced31e443793ddb68649e76f2d68d63f74654197b7a1ad82b632f2bb95c4c55",
+    "app/cliente/enderecos/page.tsx": "f6b45de151ea9e61e68405aec6b12a6f808f232aef772c61fc327bb9332af8af",
+    "app/cliente/layout.tsx": "56be0df99673d6d47b2e88bc74948e58886174910d38245f1a40dcf05a95b390",
+    "app/cliente/medidas/[profileId]/page.tsx": "a79f5a44ec618f05dd32da51ad6ccc2013acca4030d8e58ca7958258b5599936",
+    "app/cliente/medidas/nova/page.tsx": "ac5cf822835ef3cbeed4b23c40ea882aeab04eb28df5675fd377c17f20a4a6a6",
+    "app/cliente/medidas/page.tsx": "2faa0a8050a2996e8001882f61482e8196eb256c48ab9612d20f6b29f0d12dc6",
+    "app/cliente/mensagens/[conversationId]/page.tsx": "8669b93851dd6f1702a402410787c394a16d27809de29cdbdf6b6bf152f466dd",
+    "app/cliente/mensagens/page.tsx": "4c46af5582aac78e7c5505e6bfd32be1bf72a167c4b29b70addd8f7dc1754782",
+    "app/cliente/notificacoes/page.tsx": "a2a0a4e64e5519d52f5592fbd6f3fbc85d3d26d2729e62028ffae7d80769e24c",
+    "app/cliente/orcamentos/[orcamentoId]/page.tsx": "d9e1a66b5316cabd634c01d44cc14404d92d518d84ef985b6ff8a3fedd0cd52f",
+    "app/cliente/orcamentos/page.tsx": "5d47130535c77e413c45083ceca9c521f3fc7df8d0a72c503854097e830c41fc",
+    "app/cliente/pagamentos/[paymentId]/page.tsx": "2def4cddeb91280cc960ac1e1405b6b541df45344635ffbce35177c58535d9bb",
+    "app/cliente/pagamentos/page.tsx": "7f578b856dff679e729368e29f835a6510fdf3859b7cc005d40862226f93b452",
+    "app/cliente/page.tsx": "23e3c2ae2efc222a1f924e9fe7a52d0eff8c55193cdc266c0a7d8c6da0d00786",
+    "app/cliente/pedidos/[pedidoId]/page.tsx": "1e5031aa76ed3f7b216bbdfb02724d9510baa265adfc0406fed4614ac700c576",
+    "app/cliente/pedidos/page.tsx": "abf006b140666ed24079138436ee88d7429cfbf2275b23b85448d074483ba870",
+    "app/cliente/perfil/page.tsx": "e87ef4c2aa1f315f59cfa2536279b80cd716d587244e43b91cfdceb04e2da43a",
+    "app/error.tsx": "fd56e49a3d3d3256ec34cd264c10482a5573f5f24ce5c888d5dc1636339be5e3",
+    "app/layout.tsx": "2b690e1de4f54df45f6ea2579d08369017bfce518cf8312ac319a6048541d648",
+    "app/loading.tsx": "f75341d74053723d502061ac8df1a5b5b7f977e2b910fe70b53fcdb83ba44330",
+    "app/not-found.tsx": "517861aa7350fca1c5f23f2c199d70394d430a5e9108ec53eb7b53612fbe8377",
+    "components/admin/admin-feedback.tsx": "545a0a884fcfd80f5c7d923bc5c4215cb76cf2c29afd728fe59faaef9426e160",
+    "components/admin/commercial-state-manager.tsx": "e4544d2e3ded8849f421368ed61d3b383f4c782a0f8443e1350fcb47560cadd5",
+    "components/admin/platform-overview.tsx": "2d8bd69d3945b7845c6b5b028b32488c051bbf888ebae5c8902099cb7de9fa5e",
+    "components/auth/auth-form.tsx": "abd697c8e1f0a04ce2b2b672dbccc58fefba854b77ec8b52b5e0e1b309231e32",
+    "components/commercial/feature-gating.tsx": "815b53ef4b32a022bef91aa73e3f1e2aa6e4d501256a745a026b9420ef9dd733",
+    "components/commercial/tenant-commercial-banner.tsx": "94f7303e3e07c521d5cb105b0f5506038e238f44649e586140440b4bb6e30f0b",
+    "components/commercial/test-only-commercial-probe.tsx": "53352d210cdea9c52cc2a04a481f681dad7bb638c2d990c98a2aa924a10d891b",
+    "components/common/empty-state.tsx": "027273314c241ae8da99c1f110c94c446a4f3840efa66488796cc3ab08fcc2cb",
+    "components/financeiro/finance-workspace.tsx": "c7ba149c0c272d4a9dceb2885679b4b20cfff9c80b8b6ebda1e5076a81b83373",
+    "components/inventory/inventory-workspace.tsx": "cb1b082bb80a7ab7cf8e22e02ef03f909cc6c91f78da577ad7634c68523b11c5",
+    "components/layout/app-sidebar.tsx": "66ec63d032c5353dca7cd18047255a1d43ef12f8b7faae15ed19122b79b35419",
+    "components/layout/auth-guard.tsx": "79ef439468cd08d21f08bd3900ff43046082e4a1d327cf97f9ebee2582250758",
+    "components/layout/public-site-menu.tsx": "3574fbaf11adc222ffc464a4ed75590dab8a9a4d884d5332f4e8d1a83ee5f751",
+    "components/layout/site-layout.tsx": "1cdd970601e6785250cc1cee8c96ca88eab26ba25e068452bec8e99315671286",
+    "components/layout/topbar.tsx": "d9cee49ccfb7a978515a63f9cbaa3fe2e2b96a00a1654dfd95ac87c894bb32ed",
+    "components/layout/workspace-layout.tsx": "a550066c1b42d986fff91f04b7e624634338ec21f8e8970d7b84eb8177be6cba",
+    "components/medidas/measurement-profile-editor.tsx": "57244b987eff71ac8c773f1439ef3721b1ad7e26e231aa6a22d3ca8cfac000ba",
+    "components/messages/messages-workspace.tsx": "f3e833186132c42d01cc05d49d0a6a519e46ea8739ebda208ba8bb2aacbfa91d",
+    "components/notifications/internal-notifications.tsx": "cb227869aa07b22ff7daddd96b56fd13246ee75efc9b2b471129e75b3c899887",
+    "components/orders/order-change-requests.tsx": "faf17b31a898cf2bf14e06f65c55aab67f90fcacabc269e44a7733968dcc58c9",
+    "components/orders/order-completion.tsx": "72a1f93ad532d8051f798ebb8e674c3075918d0937642cb40d9c628f55e585cc",
+    "components/orders/order-detail.tsx": "367e7d85204103d12f88c596cd779ad91931921c161b5af6ebe5aac3ac47c523",
+    "components/orders/order-files.tsx": "03fb0b62d69a9195659b77a083ea05fc8efbe9e38dd8a422bd72f14757af35b8",
+    "components/orders/order-financial-records.tsx": "aaecce1053755b7c2f465a1e02dcfca94ce39a66ea3a831a944742339842c9e3",
+    "components/orders/order-history.tsx": "dab4c34069a28ba9d1316e711fef5e9349de0153e3e6c60938edac25725a5664",
+    "components/orders/order-list.tsx": "3f380b317e7d01ad5ad2fa8b497cef0ce2da23b71af6fbbbe2acb37372080dd8",
+    "components/payments/client-payments.tsx": "a2b973e86ce4c134df67e55863041126ac5becc867758012758ab95f4c212784",
+    "components/portfolio/public-showcase.tsx": "435bf9a5ac502be1c7f4f6594e1f3bc4ec67a9e06fc33fc1ad61eb4e2ee2e132",
+    "components/portfolio/showcase-admin.tsx": "718c566489a33560ddc8c5986d8791ce6fbdd37ece2830738ab25105dcca760d",
+    "components/portfolio/showcase-image.tsx": "128c88793d81a8160277fff9a1fa758552986a1fa9dd67018ba397cbdc27cfa2",
+    "components/production/client-production-approvals.tsx": "ac2e98d24bbc2538ca2365b1a9d58293179575b02a2535c6b86531b0597e91b6",
+    "components/production/order-deposit-confirmation.tsx": "c0e802753ccd9c0f159ba855ffe980cd514fdad834ff9b1082ad1c912be53864",
+    "components/production/production-configuration-editor.tsx": "466ef85eaf96fafbfe076b9899a2781a4790ef2c9dd271a1c8895cdeb2655bb3",
+    "components/production/production-kanban.tsx": "a336d84c2b64adf8ef973fc425d9f7b71e86da0e8dd94180428dd6eefc51167b",
+    "components/production/production-photo-image.tsx": "d9b0e5bc3bb842e7588ca14dffb5dc6927738ad3322b58b5796b1e8242c6ad1f",
+    "components/production/production-stage-controls.tsx": "9066bf24782ce68071d8eb250448c16a26beae7368dd2ce24fbd29b70189783e",
+    "components/production/production-timeline.tsx": "3011a0cec8c5c3768005caac00f8425479e572f7e6a67340eb23a6675d84ae97",
+    "components/public/quote-request-form.tsx": "f4909639c922d5751eb5669dabf9ecbb6ac9ef1f6107a20cca0a33f5c3e39405",
+    "components/public/tenant-entry.tsx": "d5bb95d7fbe3d989e3d81e8bdfd840555920952e66ea232d59181e0f646dde1d",
+    "components/public/tenant-layout.tsx": "709e4bf2b8fb174ec6c3a57f1ac39a434782b704c06c3760bd55ecc7f3df6870",
+    "components/quote-requests/reference-download.tsx": "33a3202d8ea427d3541a8183c624ab9503539bf9212b0a5f7e475d24ba570100",
+    "components/quotes/quote-editor.tsx": "f50b4b476970c75b2e919b95e7dd922c85c91955de12a21cdf5d2973f89837e4",
+    "components/reports/operational-report.tsx": "36c1639eb5908d5081f8360677e7a8810627d8790790b98679cbc620077e4465",
+    "components/scheduling/scheduling-workspace.tsx": "a983c9e477da0ed43dfe4ab5104ed6237bfb1d98238bf7bfdd8021b176c8fbf1",
+    "components/settings/operational-settings.tsx": "e0b866f82c477efdc0b23b78bef16e2ed421e4e544d05564e7acca06dbe6f729",
+    "components/team/permission-picker.tsx": "8c71b4d856eabea26d669c621007d6b14e9f985de31994a55331fe2ba227259f",
+    "components/team/team-workspace.tsx": "cf313bf95d9a6e594900fb3f99f4a14d0f070f35049640e8d5cc6f7b2992c2b4",
+    "components/ui/avatar.tsx": "a1616f5f8a8dfa1d6b9d61c7e2d3b574ef683e0325e1c7729c09811d4bbd581f",
+    "components/ui/badge.tsx": "0f5b74acf14a40cbb43ff0f8af8b9f9cd2109069c860a59f07b78ea381106189",
+    "components/ui/button.tsx": "57668e3c213d9c639fd627b367f15eac718bbe0bb16d02963974be59f5c4995d",
+    "components/ui/card.tsx": "421289a85751e4cafb71a76043b3b930d74107cb353b0ffb1c995d15bb36743c",
+    "components/ui/confirm-dialog.tsx": "d544d6b8d2b09ed7514965f3776b68f2d8b339987578972897e40b669d6d446f",
+    "components/ui/dialog.tsx": "a18fe415590c40647544cd1eddfb4b7b555ab6578cd7eda301d9408ff2f8255c",
+    "components/ui/drawer.tsx": "dd044977bd45d510bcff6a1232c7ca04ce73930696285de6f58d9824d131256e",
+    "components/ui/dropdown.tsx": "97ba4aa2705dc3fe1ebab6aa5fc4d6d5399c2e7e6b194599230ac1ef587d5ce7",
+    "components/ui/empty-state.tsx": "7fd1aa99a83aa37d38ef92aa04ced9cafd4409dc0147b8fa662cc38738bc6e05",
+    "components/ui/input.tsx": "eb408623bb63b6a915e630dc43f4366c313a362e792871d935403654f6dc55bd",
+    "components/ui/select.tsx": "64e3c5fe3c064fa38b026b1e9713f1492a1048eb27b5481283365d06e742c354",
+    "components/ui/skeleton.tsx": "03be2a57b35909275f5902d1e128d83815d361d65bb3e855b2d19a793b28d387",
+    "components/ui/status-badge.tsx": "886059d22d1a2f92368534db53fe8a61208f601f31cd082c443b02e60f89302b",
+    "components/ui/table.tsx": "24a11842508a3497daa2a50cc2afbb70515701c3ca7147336bd6b44c1325cc67",
+    "components/ui/tabs.tsx": "b5babe4e94411b249bcd4d898f5d1300cccd82a8db9f054ab3852d3cb71f05f2",
+    "components/ui/textarea.tsx": "d8bbd63ba17b02e78be29c9fdd783014f9b55608523b0cb6022cce5c901dc8d5",
+    "components/ui/toast.tsx": "a7d161f021cf77a46545e4a34806a28dd16fca1b739e43461d4952d3d1c0b59e",
+    "firebase.commercial-test.json": "93c2c87f572550067fe7296fd8abd69f9a670ebf06917b1f9fadd75e7f893935",
+    "firebase.json": "2eba73dfeabce474a21841f3705502863b784766410e05d24b89bed58d8aad21",
+    "firebase.local-emulator.json": "49c7ceef9d18e4b98eeb25a10e354e256cab842377307c7377b841a9798e1c1b",
+    "firebase.rules-test.json": "83e0ad2ece5438bbbf4373e4a6a92271e4aa0d124b88427711adba42f0419921",
+    "firestore.indexes.json": "59542643201b81fb9d7165a70cb62c8b14a76fa8800877465cd9adc186b275fa",
+    "firestore.rules": "ed1856540718965303ab10d526449b4cf82c0bf5415f1f86517996b202d99279",
+    "functions/package-lock.json": "e28ae5e2f8223d2cb863573fd8d1e58253c223d0daf9cb45af160e7e7ef1f70d",
+    "functions/package.json": "6c2a4b5d6aed422b6679fbd918afa00a634b26351349adedb4b5b777a1822afc",
+    "functions/src/admin.ts": "6ed45316760b2bcb5e03438b18ea3fc6cdeee50a8e65996030b74ecdbf329776",
+    "functions/src/audit/write-audit-log.ts": "642e2c70528d48e447aa15c658b28d513d6108388f7bb64a95713b730c96e231",
+    "functions/src/auth/on-user-created.ts": "e7d305dd0d70712a0bb04fbcdcac77ca51280373e80e9fc40c0d8c9ef53ef842",
+    "functions/src/auth/set-custom-claims.ts": "1540c215ecb2bb2d43b9710035c87cf89306975e693220102aa68f26b55cfdc0",
+    "functions/src/clients/client-data.ts": "9ad5b21909e1409415dbcc1ddedbf0df9a8b0aa956e65c75f4c5be4ab7394447",
+    "functions/src/clients/client-visibility.ts": "c16757ec55959a276553c5c5b5d77fba58b5846cced769b069ab08ca4dd40ea6",
+    "functions/src/clients/clients.ts": "64c29684becc30d8410e8e633b140f548cf4daae0dcfa76ba18b553c8e6dc379",
+    "functions/src/commercial/access.ts": "9ea2b4d57e8177b0ae1bb849de7d4aec6df5b3a769ed02de7d04958781762b9a",
+    "functions/src/commercial/catalog.ts": "025ed7218a447378d1ef88bb512133ed2b386e9578d6716fcc653834abe9113a",
+    "functions/src/commercial/data.ts": "1aac7027314aadad0f1bf01de260ebfd7c5eabcf0422239253697cc134e57c65",
+    "functions/src/commercial/entitlements.ts": "e96e48b23961e5edde3b8b7dd7bd4c5d4c703b3d604783735ceacc0848bad0ae",
+    "functions/src/commercial/platform-management.ts": "0714f6ef80e8388a5b8f790b63f4489e8e87d66f2405aba9615d73f8ceb8337e",
+    "functions/src/commercial/tenant-context.ts": "60e23efbe60db6ad755080f470e8da1b7faa311e668032485684f293db64ed5c",
+    "functions/src/commercial/test-only-probe.ts": "00e1b8487e7877b77b77ffccfdb3fdc9b28e3ed362bd08dc49a5a460112da3aa",
+    "functions/src/commercial/types.ts": "73f03d3950338338c450a26082930be5bef384f07e3c0de6fd06761ab0798658",
+    "functions/src/finance/finance.ts": "a025f280fa3b7507ad11b681f4532d43460e035c83474438e354a4213a90217c",
+    "functions/src/finance/policy.ts": "a9d95581a28077a14bb1334026b2a2cb66cd63f0016245808c1df45bf470746b",
+    "functions/src/index.ts": "47f74d08ff6d198cb2fd7760ed298aaff5107c37ca049ac72f39b0ae2d28e7ff",
+    "functions/src/inventory/access.ts": "c06e7c153671823720b22a075b278c95f1a84864a0f9e84dfcbd14cebf1eb94b",
+    "functions/src/inventory/apply-movement.ts": "061057328e0d868c14bbfa072b8de293a7dd1c8b42c9e090dad4aa2697cd91ce",
+    "functions/src/inventory/inventory.ts": "13cdb57706fdde9928c8905322a4e30f613117bf2e7ee07d2d379662e41dafcb",
+    "functions/src/maintenance/archive-old-data.ts": "06e7c5e2372e249453594c2c835f874ce8e191b74bca60a01c64406d600f788c",
+    "functions/src/maintenance/cleanup-files.ts": "af1ed54c518dfd73100473b46be6831fdf4188dbf745f21c1f18e8000c1b9151",
+    "functions/src/messages/access.ts": "babad7525f3a1337aaf3b71d2f39ff2d2f8fff6b5c61a21c47e5d5681208487b",
+    "functions/src/messages/conversations.ts": "6044574cfbb75cca78a7a0f45cda78377215b27cd226794852049132e2f7c987",
+    "functions/src/notifications/create-notification.ts": "aedcdd7ae369737d57390ad4cafdf20c20d5216b4268a73ada608fdb721ff350",
+    "functions/src/notifications/internal-notifications.ts": "f061e959c914694b4be76dfcaf50f4c85ece5443a42423d67e7fba03b989680f",
+    "functions/src/notifications/send-email.ts": "5b93dbac75adc4ae653dbbef99a9df4a8219b34071d151866248229e026855f4",
+    "functions/src/notifications/send-whatsapp.ts": "2c2566c4f5e773210318b57693aa1691ca816f8f2dfc842d9871b01fc8b6c899",
+    "functions/src/orders/access.ts": "89be92c83ad7cab6b50c80f4ce4e9001c49d3db6b161aca667eb2a002f7e1757",
+    "functions/src/orders/change-policy.ts": "44b6b707e607823e973d7b5a668aa07b86eeb622c91f99ca4c09a1efc93d70b9",
+    "functions/src/orders/change-requests.ts": "4ea280e26368516a6c6bd6884cfad5d8e53d8f91695544f6440881c01bdfc933",
+    "functions/src/orders/client-order-view.ts": "cb5e8aa68b87987f64249ce6299671db81b83dfabd43eea9c522467cfeab098b",
+    "functions/src/orders/client-ownership.ts": "9802dc3700d4e5500c281a2e44458202487da1414da79419b727e485a6dcdd03",
+    "functions/src/orders/client-payments.ts": "906400c8917c71805e7beeef80df5181bb46bf79d9664e882a19e676cad99582",
+    "functions/src/orders/confirm-order-deposit.ts": "3aca84754e913d87f7da7e962a98392c7fcdf95435b12628e90336a399bd4f28",
+    "functions/src/orders/create-order.ts": "7ba39a1b75a1dc4c56440339f2067b5b954876c81be2bebb82b680197c650626",
+    "functions/src/orders/finalize-order.ts": "783bb7afdb2fdae726150ec2c20096beabe2495b74daaaee321e7915e79f4dea",
+    "functions/src/orders/get-client-order.ts": "2943036ddce625dba81fc839dc1d81c6151d85e4678d483d71ed0e93f9051f07",
+    "functions/src/orders/legacy-file-bytes.ts": "4b810e53cc08bb150c90a840834410d0a619fb4311eb9446784ddce5cf096d40",
+    "functions/src/orders/list-client-measurement-profiles.ts": "595ddca794dc13dac2a354f81573bc427c6c2262ba87a5b7bf5ac984e67484f8",
+    "functions/src/orders/list-client-orders.ts": "2c00109586b0de19a24535010d2c0f5ecabdb4c70a5538f82f28de08728e89c9",
+    "functions/src/orders/list-production-board.ts": "99a681bb9cb65eb490dd39a0d445d580ab485e944507a820f4bffb098c5afbeb",
+    "functions/src/orders/order-file-bytes.ts": "07fa0ef7e0978c0d5054c04f914d71d35fe78c2469e0703059451886bf7bd99f",
+    "functions/src/orders/order-file-storage.ts": "baba14db72949412e703d65dacef95823fd252b254fa9bc5135035f852a22d30",
+    "functions/src/orders/order-files.ts": "f9d58aa601dfd99defad15817eb765337eca6a3985b38e7c398833b0a68b0f63",
+    "functions/src/orders/production-configuration.ts": "93bdeb3e12c2bf9df3397bd95ed1b8fdf57e3fcef8a24995b2b89d2f52697f8e",
+    "functions/src/orders/production-evidence.ts": "954f668e144c3aac65820454cd4478023fd78cb6d5748989e4d6dd6d6252622a",
+    "functions/src/orders/production-photo-bytes.ts": "ccb08ef01fd7fc01230abf23676a0a4c28881cb687ff4ed4ecf41654dabaf48f",
+    "functions/src/orders/production-photo-upload.ts": "9b5285c524915c078fc4e970a56f834813e600c4caae21cc804c7bf7aa41b7b2",
+    "functions/src/orders/production-photos.ts": "b51c8e6b22921f290c8205152862838c3f2c802867978df0442f18f77c517822",
+    "functions/src/orders/production-template.ts": "43a75877e0eaa6ad6104c822cda1adec4f1f1c964f05b436f2a912b9934a358b",
+    "functions/src/orders/respond-to-production-approval.ts": "646dca932cf9c6fab5d44d106edc2f7835541d946f75aac10fb79049d52621e2",
+    "functions/src/orders/risk-calculation.ts": "aaf36a084a2e7112ea5913fb56ba6972b2d705866ad3d87a4866dc93eb7255ac",
+    "functions/src/orders/update-production-stage.ts": "8e572fb696d7af654ec6e28bc86bd6f0537b4807e9ef1fc6682d74d0fd4bdd3c",
+    "functions/src/orders/update-progress.ts": "7811cd3ff9f1502efdfd39f739d550fafeb630292983dee61660c6f2d592e64f",
+    "functions/src/payments/create-payment.ts": "c84d6763bdd676ba8abd4509ab910942c9f81907bfc2103e7beb83077f8602b2",
+    "functions/src/payments/payment-webhook.ts": "e282ec8f7d6218b786b9e41acf3ebc4d5e77e9ce943fd41966cf5db42d0db295",
+    "functions/src/payments/refund-payment.ts": "ccdcfd57134602cd3233cdea80925752ed56cce359b2479540385158f5033021",
+    "functions/src/platform/access-policy.ts": "08a3d9f7ae4897096276ca8fbc4456a01753740e56b2a51161d7ad086c9accd0",
+    "functions/src/platform/get-platform-atelier.ts": "7327c727ea453d6f431c7d0abd392d60e05a767727cdfe3e1d6ab287a556811d",
+    "functions/src/platform/get-platform-overview.ts": "ce956f0907f61c2779044355b32b6d360b0c5f75e3c0f44b5e1f888778a91642",
+    "functions/src/platform/list-platform-ateliers.ts": "63b241da535d693fe2be427914dae3d1f7d78fdb5fcc26cc2dd48ab77f19c9ac",
+    "functions/src/platform/list-platform-audit-logs.ts": "3d097a75606f94db996535504c7912279b937e8dc9356e682bad29ab1dbccec4",
+    "functions/src/platform/list-platform-users.ts": "aa1c8343d6483f2341b086232dd9ad67caf97a7103f290c6e7f040bf3d103336",
+    "functions/src/platform/platform-admin.ts": "e48d2a223c49d7f01c5c20d180a108d4e32c3a03ba34bd9f8243a9f34fbedbdc",
+    "functions/src/platform/set-platform-atelier-status.ts": "98f7f64b733af343018f8ea73b6f3dd2980dbf9b8b01dd303d983704ccf6b596",
+    "functions/src/public/quote-reference-bytes.ts": "a0e83e2d076df62989917db155143ddde831f798a9765cd7eeefba34efda4254",
+    "functions/src/public/quote-reference-upload.ts": "bf87e70a1de24eb7636f6371ce29ea3e33d477ecadbf21f71c80a11bad3c3bc0",
+    "functions/src/public/tenant.ts": "937a067e72e354557f35828d9255639a0d7c1cf211651318ddb4e68d8633d9bf",
+    "functions/src/quotes/access.ts": "6dd6e8536e41177409db282efbe7c5c0b3b1f60137b2e8f7253aac3f5ce44047",
+    "functions/src/quotes/client-quotes.ts": "73325a1693421f26c126175ed31a2f96076cc794b0af1f140c76f51d495f7c8b",
+    "functions/src/quotes/create-quote-draft.ts": "1b9d374b4a90a54382b24bf6f9a94a044daa57c74873993998551e81c2b0dfc4",
+    "functions/src/quotes/expire-quotes.ts": "d6b4a9ad4eb00a8f5437e591e7d1fde02b208b94e2d28d256b70d05d2076afb8",
+    "functions/src/quotes/publish-quote.ts": "7674c366f10e914ea0c11da5005b63ec7556a22c56e90219e3973fcd03da76a8",
+    "functions/src/quotes/respond-to-quote.ts": "ffab6252fb9a268ad9b5907d569cedf9b40b45592866995ac8b8305eee1b641f",
+    "functions/src/reports/policy.ts": "fe5807cfa176053f3b69c22909bc39ffe05b2bd859631987d85c2a95d3e628a0",
+    "functions/src/reports/reports.ts": "1a9d943e3156125b5b9badbf6d74412338cc1abb7bec7b96482d1569c15f681e",
+    "functions/src/scheduling/access.ts": "7f8e3963af891ce352f3f4065c3e18414580bb3093acc83314c783038975b91b",
+    "functions/src/scheduling/allocate-capacity.ts": "cdcca4942eb1a34f2d4c60f8b6bbe41ddad7f223e53bf6b4fc8a8572841191e3",
+    "functions/src/scheduling/events.ts": "6d9a73a7f13b7a0344d9ad2b3b177b10e193c9dcdeadab6846cfc909005ac4fc",
+    "functions/src/scheduling/planning.ts": "55312e898875f5ce44a8e8f9f068e6163ca0b1a00acd3679c85093274e457af0",
+    "functions/src/scheduling/recalculate-capacity.ts": "32446e96dcec9cf656382023861946c41bb55720fce4869a646ada69e81bd4be",
+    "functions/src/showcase/images.ts": "da669e61de1f76843db9779952381667a5d2a18fc439a77c220754ace831b510",
+    "functions/src/showcase/policy.ts": "41f13d366ce2e40d9df618c2a5e93cb15060714cfcb75fee0d315b382e82215e",
+    "functions/src/showcase/showcase.ts": "18964c658e1c3146f464f02b0fce5928ca31e8104294ca560035fd87a61924bd",
+    "functions/src/team/access.ts": "c0e2ffeac103dd47a4c98eea2e55375f6fe2878f92b3e8f2ce0ae34facf7f1aa",
+    "functions/src/team/invitations.ts": "0aeda86b0c4e1f5e09c708dfdad20d7cf1516d23f42b21e7c1e7beaa0b2639e2",
+    "functions/src/team/members.ts": "e8f9eb77710c71f2563eedbb4d6fa2a43c6bcd1562336f1e71900d474c3e9033",
+    "functions/src/team/policy.ts": "6a610d552007abfcf5e788a23c6e363f76ac7c61a4a67c39fe62fc03aceb768e",
+    "functions/tsconfig.json": "6dacec20e3a98b4fd2ce7f078f0aea2bbb853eac4d68eac34a0413cb01c5abc5",
+    "hooks/use-auth.ts": "d7d7055e38b072798fca7a3d52647d97dfb53093e89abeeb63f885c9f4a78e73",
+    "hooks/use-capacity.ts": "288e43606c77e972023f7804c29f91627567548e9ec4dfe30d812189cbff4fd3",
+    "hooks/use-messages.ts": "265ba1b2198269c9a418d1d61c204154166a4b957c74680f53dd75bf0a49366a",
+    "hooks/use-notifications.ts": "b1a60881767a3960a4a4c6fbaca0de84b54e7d3a116747d7fc59bcd25b8b4745",
+    "hooks/use-orders.ts": "b1188cc6287d58474ba8293c7aab5d2fad4a4e03690e1b6f42e5a573163fcba0",
+    "hooks/use-permissions.ts": "38e4726e04fd74e84fc9ae82df724b8033b5fe9ea4d2fb9fcd5dd80fc0c2c287",
+    "hooks/use-production.ts": "d44d0ed366d7f6a3b0efb725a903e42f135f7c8cd40c8dfe3ed0df19bb57aa64",
+    "hooks/use-quotes.ts": "7ccb099b2dba18dae0b0958e2696a267a2f6cc085529372d73a50ddeb1e0190a",
+    "hooks/use-tenant.ts": "7a9d80b8e576d2ded5a18dcfdaff1d222f26726138307c62a0cd2510df7b83ea",
+    "lib/admin/format-admin.ts": "d37e60d4d1ca0349633ff50086a5d7480322319c30ea08f0776f51ab705b7cc8",
+    "lib/auth/safe-next.ts": "623ec043d86a9c2e2068685d3ae351c85590120ec7200b8e61907361cf1f69a7",
+    "lib/calculations/capacity.ts": "6e041c14a186b3990ed061284cda959450a4e948500df34170981e088292556b",
+    "lib/calculations/finance.ts": "76b3f7280c64287c0737b59169e9c23b3f762633ab3435a53c82f0ebdfb79eed",
+    "lib/calculations/order-progress.ts": "54ed589b52fbd4c4e5af43617100936c59bff046f6bf7808e56ca2c3658c02d2",
+    "lib/calculations/quote-total.ts": "ee2a3e35832d27117b9eeb693936f41defb90047119e96ec6cbfcc36f395156a",
+    "lib/commercial/catalog.ts": "26c14e6ae677b63149b1d513cc73517e87e4477dbc7bd484691bd8abe93eef8d",
+    "lib/commercial/entitlements.ts": "f181cee3ba85b02631f368b707fcebddda55a2e235ac1a9aae39fcfa6de55042",
+    "lib/dates/index.ts": "57ada2e4e0e28158f29b9905d1ff90be7ed96c85a7ac474e1386e1da544bd44c",
+    "lib/errors/api.ts": "f419ebd8899e6a2c3536cf46aaeee5226d743d294a4ca91167d8b9eafdd1818a",
+    "lib/errors/index.ts": "c08ada21dabc38bdd04fe66e13f545865cac7faa2cb6b9f304dd5e54b669d23f",
+    "lib/logger/index.ts": "d4c07d0b738ba2226f66f1c1fde377d070b18cfd80370a7c67bf7fe5e94e8190",
+    "lib/money/index.ts": "251edd46cce407d35e0441bb2901159537c874d97add8419939be89ae17e8f6a",
+    "lib/permissions/guards.ts": "577ef0b9836cdafe3b7d78cda686848c15c89e39e2567419e2e93a0ef279e9d9",
+    "lib/permissions/roles.ts": "28ef5ff14f570d959026ef856d2dd160680d98a1fab591f8964c888592a58e15",
+    "lib/team/presentation.ts": "6ca41a919744c93791f315139ca71a7029b99edc7fe6e088d97f48b9938c6c84",
+    "lib/utils.ts": "c57157f95db180db9a91d35723b46086b9d3c95cb91913f78233a4c3ea3030d7",
+    "lib/utils/schedule-time.ts": "cb7a38ec1602dbf32ab6884130d3a3870a5b400cf7dc4ba18eda8fe365da465f",
+    "lib/validators/common.ts": "72ec647789fdbed4332b2fa61920b6b0c6856132fb8daf796e1417de3b5066df",
+    "next.config.mjs": "c756de99cd5b24fe69b4f51a23a2529415eb5aed745fd66653928338a88a2349",
+    "package-lock.json": "32e669d9b3e609f82ed9d722daffc63dde72dc24d746158b73282977bb796cb6",
+    "package.json": "e6336e6526d439afc6ea0f70bab8b61adce92285a64d79b383c38801fa936b9f",
+    "playwright.config.ts": "9d8a9fc5c2278ca58af251abd9caa4adc88dc202ca5c835fb554604be4a6e4c6",
+    "providers/auth-provider.tsx": "5a98d5ecdf06119d149a6dab0fac2c4fa58b868a37cbffd7f93fe4706aca9299",
+    "providers/notification-provider.tsx": "863dbb6fb87c3f4fab2455708d8970e636f819d4b6fd63ebc5107b033a972e97",
+    "providers/public-tenant-provider.tsx": "f6de1cb73553ee1a37682330aa6465966aa7cff94fa5df13edad82012f5aa72b",
+    "providers/tenant-provider.tsx": "17c18054f52cf9fbf1803fb4e09d509a5c6e2fa735e5935a11aaba635f221c6c",
+    "providers/theme-provider.tsx": "863dbb6fb87c3f4fab2455708d8970e636f819d4b6fd63ebc5107b033a972e97",
+    "repositories/admin.repository.ts": "bd306c80f1796d87c19860b435bb7bc8ed1f5e683bf8028ace8d25dce61711b6",
+    "repositories/ateliers.repository.ts": "424de54191b6e5d81b43f8383e8fc5042382c77bde21de948c381e7e75987134",
+    "repositories/audit.repository.ts": "758427cedfe9f643f42b99b45c06bc47435f35783eba63a8617faab186894ad3",
+    "repositories/clients.repository.ts": "bfa2ca0f7ab2a5d9222164f9376be0f84b82075a98ac9c6aba8ea416d4974ff5",
+    "repositories/commercial.repository.ts": "11b0e5fdf8d632ceff15422c07262d2bf7cd4a0e401ab255a5e11f96ef6c2f26",
+    "repositories/conversations.repository.ts": "a1f3615eca6ed4b1fd7b9b045e5a3a3c766b67acc698f43a8bea9a243e60dc13",
+    "repositories/events.repository.ts": "8aa59165dcfd8aa67a3f67b388696385b5c787a5ae198fa312b288c2ec74f4e1",
+    "repositories/finance.repository.ts": "e4eb7664f35b5781c583c0a04a15f921e80d43b8580340ff5f9f2bf913275b67",
+    "repositories/inventory.repository.ts": "b25b53a5f7ae8c2bb3abf85cca4ee9aba37dae148644334e4e7dfae4e6da318e",
+    "repositories/measurements.repository.ts": "1ee8e4ee3771b0243203e6b6ec175c4e9ef4cc50301d1161f0ca8eae9b819e07",
+    "repositories/members.repository.ts": "7037b6388facbc16b540f35a5418bd2a65a305697df8aa2d69441fb880bbde63",
+    "repositories/notifications.repository.ts": "07c58e786ee774d250ff2cf426ff40a348318d6c357d2813ee9f3e2ac5d64ed4",
+    "repositories/order-change.repository.ts": "fda26a069f604820beed2d3b32afdb909eeafae766cd68433440a5f6cde24a93",
+    "repositories/order-files.repository.ts": "687583a7c249a267e33892b5136aca34894e74902d25605b63ca1bf62d025424",
+    "repositories/orders.repository.ts": "b13df7f069132e5eb63f7740f09853cbb9a9244ec34f1a40933a04a1a55b56d6",
+    "repositories/payments.repository.ts": "5bb085cef2c7ed68b9cb07d365076700f0b6b7fbcf77d6475b4bc98e5b82e733",
+    "repositories/portfolio.repository.ts": "5666ff2505b855e0e697a4024537ff1c69e4d0f08a9962ebf22bb460d068d167",
+    "repositories/production.repository.ts": "ef31af2495fec5a770848dbbb509a1d19b31cf2c446a047c680d5216ba0040d7",
+    "repositories/quote-requests.repository.ts": "e94a7469e1339dfcfe911939c0e049b0868e99bfd6987e6e8c7ed8af7ce7f76c",
+    "repositories/quotes.repository.ts": "66bbf3151d737d683c5d60cd7b70fb8b3aea933746bc0070a88044af4988fa17",
+    "repositories/reports.repository.ts": "5209b6f1623c57c3224e477bf84a92288613a036d2bd2baff1c04c04dcf849e5",
+    "repositories/schedule.repository.ts": "1656784320aa7ffa464749f1cf8a41708014203c5e2bb753bebc40a7094a67a4",
+    "repositories/team.repository.ts": "102e0676e0db7d5f3e6c695ec268637fde2efb9838e39a1000ec6b7fd5258a3a",
+    "repositories/transactions.repository.ts": "4702a9dd32dc093f3a83b70db99ef7fbff742252bab3b5f52a3f34869e09965e",
+    "repositories/users.repository.ts": "bea4c810cf6e530395dbe80526bc778a8a5a0e6b7e011f852289a59f6c2e7f6f",
+    "schemas/auth.schema.ts": "af60498c5b684f448540674d98f1106cfe1faaf61330d2e9d6cb8223af183837",
+    "schemas/client.schema.ts": "faf6fa838bea11850d77838d5a99d18cd27978cbd7d8d15407d993af2d431694",
+    "schemas/event.schema.ts": "0ac94383b1a6aa5c6eec160805e748167c5ec011d245e5849be544c9b273a6fe",
+    "schemas/material.schema.ts": "7533a201a4a2f2b6971486aeb8f160979bfc794fefd3dbc3a342b527e1cbcc75",
+    "schemas/measurement.schema.ts": "49b4aed5eceeaad3f528dd75a435fd4258017c49995e7625b19e598846e750b5",
+    "schemas/order-change.schema.ts": "9fd3c4fa0b47890d8a3431eacb070b8d4e8ecee698a8471cd6a81862520e66b9",
+    "schemas/order.schema.ts": "37d7556117cf4fd3767c1bd306cd884a1f9c3713866cc99d6cc761c71730c274",
+    "schemas/payment.schema.ts": "f0698dc63e0978fe66f52f9d1c484bf2bc386ff4f5581934af66fe00966eaca4",
+    "schemas/portfolio.schema.ts": "84cfbb9aeba5fac10a1476d885faa5facad436e2ac0af22c320ea965de7cd4e7",
+    "schemas/quote-request.schema.ts": "93a1d91127c3067f9ccc1858b87de4511443c8a498dac191bac622bfd3e02e90",
+    "schemas/quote.schema.ts": "2c5c2d903cb8be816dab2fb9d438388dc9f8b4890e765a156d41c4cbf0c36d36",
+    "schemas/schedule.schema.ts": "a08ca7e05a9940a3c60c1fae1bb0abf6e31a33059d43d668acd3f7d3da5f2c5a",
+    "schemas/team.schema.ts": "f21813951465e90e54772258ff3374b0f01c22f03e0e9a7a0cf12c1153754cd0",
+    "scripts/backfill-client-search-emulator.mjs": "012b00f8fe6cf88f7240b9cf81fa7621f9d4eee6ec18b352753e15e24e298c30",
+    "scripts/capture-commercial-screenshots.mjs": "ccb12cc6443c4559ee15dc6a05e4fb9aa4bf1c9ab00ba8cf810775577a1be87e",
+    "scripts/capture-public-tenant-screenshots.mjs": "37f7fceb9662c62e839b482f0fb6117843b68f5677efe6f5548ddaac86fcb32f",
+    "scripts/capture-screenshots.mjs": "2338301ddc81d494590d1179183ae549ccce592d0ff18b5e188d46a84bca8355",
+    "scripts/check-firestore-indexes.ts": "4010a5874eaf8a9529688f909259ed690c16b30d07fee46a2ade6b8a0f9947bc",
+    "scripts/cloud-env.sh": "3c4947e82987196f730cb073d79e39cffc97721fda1cef20186bc07892561d6b",
+    "scripts/cloud-process-tree.mjs": "016c653b83e7957c8165047c6500f78c09449279b19347073dd9470a021e60e0",
+    "scripts/cloud-run.sh": "f507eba0c8f26a3a6cc38ebca1a721d8c4f1f4f6c27ebefc316cce810cd1a7d6",
+    "scripts/cloud-setup.sh": "16d5e95693ab876229e2d70ca45c9d138cf180ffabcedc7effc748ca9adc1d4c",
+    "scripts/cloud-start.mjs": "d5116f13e373f7b74b54d285b19e16b573e546dbc03c19589f5f3852191c4a9a",
+    "scripts/cloud-start.sh": "c426b0c4cffb2088b494ee78122cbc45c4180abbe0f2e17cb3ea9da40e314809",
+    "scripts/create-platform-admin.ts": "4d2421a00f4de11b9205547936d23cf68e0b94df1688f3f3d06ba1a8146abffe",
+    "scripts/dev-local.mjs": "b1ec92380ddf804aa01e5cc008287f83686666ed40e9372afef4a1182e61e221",
+    "scripts/docs-check.mjs": "993698f5b7c2869039a4574b0f9594a684cf72e09bf8131658038e4b94043130",
+    "scripts/docs-diagrams.mjs": "b195052bd7c90ab146aa5017301ba3253eaa446db18aff6bf025f9440cecbe6d",
+    "scripts/emulator-recovery-fixture.mjs": "ef3a8198374fbc6157376ffaf4bfe61777b0ec1e65fe701fad8b14133f3092e7",
+    "scripts/firebase-local-cli.mjs": "2d7f3344b56bdea829d7053e8df0bdd328fd0bbc391f63d83091c187d3b7f741",
+    "scripts/firebase-loopback-proxy.cjs": "48255c15a3203da4edca738cdc3e770b0ed8e61f4138c2cc9cc41d96e9983627",
+    "scripts/functional-inventory.mjs": "ffe9ecfa00e383faf6a7e15c7ad103af590abb94071c77849ab1a5dabea306a9",
+    "scripts/inventory-emulator-storage-tokens.mjs": "54a44d62c4d651c5f9146281b3b3c1b5a64e98b4dae3ec40869ec508140af3ca",
+    "scripts/migrate-commercial-state.mjs": "bf8a343920014f26d2bba4d437e43db3eee467c2557437e553bf8af88b6eae32",
+    "scripts/migrate-public-tenant-slug.mjs": "133b8375949070812f6a7f3a0fcc755dfefcd18e5965f9fa7eb645e306107963",
+    "scripts/migrate.ts": "79e691faa604ba5464e32e9906a94398384cfd8e9bedc9b81858de7994b83eec",
+    "scripts/provision-platform-admin.mjs": "295cf6dd37f73d482e6a04ff1e7df29ab7f4082d2ec5007a9ae2330f182dcffd",
+    "scripts/seed-demo-atelier.ts": "cabd1c301607e6d15a3ab24f3196b82c9ebe4218d2e114824bce1f4087cd7f02",
+    "scripts/seed-emulator.mjs": "2f75993fe3b0696e0a3665819e789f97e8abbf0174fffdce1f31081a200d8578",
+    "scripts/seed.ts": "086fb54c80b08202fdb3bf8997fc6671c9fd50fc0a5261a687b9eb0c4da0607b",
+    "scripts/test-commercial-emulator.mjs": "048be938551ebc4d2fee3835be401cf0f77408d35aa7b3f00273c0eee195d110",
+    "scripts/test-emulator-recovery.mjs": "e44c6ba0cbf9e53e81ba9d7e17fc0bc57c31d55d22968d9c8466456a4baea317",
+    "scripts/test-scheduler-emulator.mjs": "970534212cb8ba0a080a93605599497daead1c7ebf30f5ddb3c069b55c973394",
+    "scripts/test-storage-token-inventory.mjs": "0f03561ab57fc9784d864cd6509d5c8e90edc13cf008ed1aca64d3599d051b8c",
+    "services/email/index.ts": "d89029ed027009994bd9e51e4ad53564d080d6e24933f4a0620107358e65bbfa",
+    "services/firebase/auth.service.ts": "0bf2a30b5a8c67f889cf847c5767156079cca0a6f5f83fa2d5c07eedb75ea532",
+    "services/firebase/firebase.admin.ts": "90956be29d94f195cbe34ecd3b7d94a3518d18b5a452b0a36e0ec8d6d447309b",
+    "services/firebase/firebase.client.ts": "1455c971d5367e3216ddd8923bd1b30c88a7a2593680de1dbebc3859a3cdc6b2",
+    "services/firebase/firestore.service.ts": "38f8ba8e0915c44ede03c9a94b3debeb3f33236240cf50d06a5e391a3663d6cd",
+    "services/firebase/public-tenant.ts": "6c75f9a9419a8ceea537cc233b69aa67214e4316081c0b85fffbfa7e83530e5f",
+    "services/firebase/storage.service.ts": "75099882be69f2ae4270de070301981b938277087b65b504f67015a3b114238a",
+    "services/payment/index.ts": "c35a2e41fae1d707536b5d7f93a724e66c1e5e7088f57aabf8d8a3cb75b9958a",
+    "services/shipping/index.ts": "e9a46796c7d47498dbdd2d624f89728b73139175017ba16fc2be3dd69f7b7d99",
+    "services/whatsapp/index.ts": "5e7f88568356def83efda01c662d42d31959e5446b6cbe1d0bee5eb505d44e10",
+    "storage.rules": "448d5566d8818dcb7f61f175eca95a39be70034f83c844d4dfbd0a8d312edfb9",
+    "tests/e2e/admin-workspace.spec.ts": "9ac01381f316dfa7ecf1f1716a721843b82bba5bfb338056ab6f861569c2faf1",
+    "tests/e2e/client-crm.spec.ts": "d902d238497645f863540895c3fdd9e37c830b93c51ac01647b2ec3422c3e36b",
+    "tests/e2e/client-portal.spec.ts": "2c27736eaaca66332aacf7fb1e9bb6d0a1a00299204fd13aa480dfc16e48e21d",
+    "tests/e2e/client-profile-registration.spec.ts": "341aefae19d45adc74e902d05d44c431c718a2b790659531b80538a521a9ee7f",
+    "tests/e2e/client-quote-privacy.spec.ts": "edcce456a01420d033229b8a9b5a5a20833629110dcd9fab6019ae42b38d3599",
+    "tests/e2e/commercial-standard.spec.ts": "3164c0fa8b735f4ddc8ba9754d32ef3243902643107358c4890c53d3b577e7bc",
+    "tests/e2e/final-settings-directory.spec.ts": "99e35f4bbb9c213a4392b71a825220befcfbd0588911eb6ea5853726b7e36c80",
+    "tests/e2e/finance-workflow.spec.ts": "def04f9457453bd7c1b6184045fe887cd35f2a698268faa7df57feacfa5af218",
+    "tests/e2e/google-emulator.spec.ts": "f80b9723fe7775be536d629ef4ef8d09667ae2ae7c4f7077827edd1a1919d535",
+    "tests/e2e/inventory-workflow.spec.ts": "ece89edbce1267f7475f0d73a2b4b3d09ea1f385b50675b37d8c4e0781354884",
+    "tests/e2e/measurement-quote-revision.spec.ts": "0203f55ff71a54410db72612f662f00a50b52a8020b4b2fd939179a114f75e15",
+    "tests/e2e/messages-workflow.spec.ts": "6c411db709c3fb06e2558e8d8b6460f38797b877176005769b022416382599a0",
+    "tests/e2e/order-change-production.spec.ts": "a20365f1da15b3490a2e24eda377dc60fcfae7abc2a78541ed0e7331b29e6a9c",
+    "tests/e2e/order-delivery.spec.ts": "26006f8a4742974ee662b55982eac88ac73249b67d3e0c230ca6680d247af053",
+    "tests/e2e/order-files-workflow.spec.ts": "96948d2c97f159b4e29d6898abf94d0550dfb4bfd805e15b1f9fa5a8a1263e1e",
+    "tests/e2e/password-recovery.spec.ts": "ab1d9ff3a0e7638f69971f8c04665cb3afc1a9b76f00ea7aae6e86bc868c95db",
+    "tests/e2e/public-navigation.spec.ts": "9717b7e2952e056dcc3f3fe7179044c13adb5ad436d5c4c8a5f5fe5c914de509",
+    "tests/e2e/public-tenants.spec.ts": "440c7598d1a0af0185df932aa580ecc5dba5950cfbf5c8ee998ec1742a47aadb",
+    "tests/e2e/quote-approval.spec.ts": "698bda9f282b5eb44927f9aa07d62f054aeae2e1a3f275fbd32b3d94a680a3aa",
+    "tests/e2e/quote-reference-download.spec.ts": "27c557032b21402f5a0f5c0fa391af8a28ae8eb055cf992c82acb65f2f67f49b",
+    "tests/e2e/reports-settings.spec.ts": "1e162e7c95a57cb6a8f2adc8a6ed87e449ad6df09bbd2d0699c70fd102fcbf1c",
+    "tests/e2e/scheduling-workflow.spec.ts": "f34deeca51038c696a2dcc0074abcf140eaab1384763e95772f102ae9a710bae",
+    "tests/e2e/showcase-workflow.spec.ts": "16039f9ae90bc506438c760896b5ae7590d83dd3859b7fb45b57cd329232c505",
+    "tests/e2e/team-invitation.spec.ts": "6c11453894b7d69adb1f468b0788ceb70067ef023ad5faa8dc9ff9dd4c585611",
+    "tests/e2e/workspace-navigation.spec.ts": "10d76527b18b852523b48c92fbb4eea381915c8814e14370187565fe440513ee",
+    "tests/integration/client-payments-functions.test.ts": "0314de207e16ac23b25e3b286ce80c6dc8f68b6bf7a44150b2046348ec59a3b6",
+    "tests/integration/client-quotes-functions.test.ts": "778b9681a56d3b00efc0db06445a1fa9d6199df343ccad2a253b7d3a72019550",
+    "tests/integration/commercial-functions.test.ts": "71795e47410a6c92146ff60629147214bfc958781006a0d0008e819ab92d9565",
+    "tests/integration/finance-functions.test.ts": "c815123fe9fa3255ed1f2a6e871c45d9abab7ae575089c276ed723054c1983ae",
+    "tests/integration/integrated-journey-functions.test.ts": "fe9cbbebca5f39df3cd3013fff5f85a5248ab7293bbdb6c325e5934c4f8bd003",
+    "tests/integration/inventory-functions.test.ts": "bd52f0b8b57298823349e30e0e5364207dc61609dc00df14fc3a86004dbf432a",
+    "tests/integration/messages-functions.test.ts": "9397445cd8f3490362f3f28d8dc1daa9732b23167752603748d25fd2550affb9",
+    "tests/integration/order-change-functions.test.ts": "26e9454d4a1dd7d9d9a3c423e674771c2f9aa0a190cbe75dce9ebb57311f42a8",
+    "tests/integration/order-files-functions.test.ts": "d8866ad3726a4ad1e39ce44e501c38d1ccfc548762af82fb4af7771878566f5f",
+    "tests/integration/order-finalization-functions.test.ts": "fe56df502e0c70cc048ab1e82f343fb09a9a4dda9f2c57024650e8f64d95a245",
+    "tests/integration/production-configuration-functions.test.ts": "1ec3b6ca3a389a421334442d8657d68a3b88c534b8c4856c344cba7c9f999a3f",
+    "tests/integration/production-photo-bytes-functions.test.ts": "a2f6b36ff68a31f61b2f1955998509d6f7197b7cc1d1b00bc83e3225f65b0887",
+    "tests/integration/quote-reference-functions.test.ts": "b42846e117f433566a15bd1d75a6c7ef0f67475fe03e351a355b692a2ded1f84",
+    "tests/integration/quote-security-functions.test.ts": "8d87b6d492edf541b1693ced89cf969a428ff534544236a1032e0d280e8d6666",
+    "tests/integration/reports-functions.test.ts": "42dffaec54ee451335f1a438f91abee6f66ab0c7c71668a0999401137505ac23",
+    "tests/integration/scheduling-functions.test.ts": "3fb446f899c01b7bed32e676569cd0bb3bf76e19a4380896eb55968ac21b0832",
+    "tests/integration/showcase-functions.test.ts": "e394b080c9c2fbcf3b2a7be2ff7ed4ec5b36459cb02ebaf3e28f4ad6d90c2692",
+    "tests/integration/team-functions.test.ts": "4766602b54ba724b2e8b48b471cbd41b5613aa520d9088cf74cd3f9cccb55bab",
+    "tests/rules/firestore-storage.rules.test.ts": "5d808b53fe3045321e44c2629455392554130a29f947a4b16da4d281aca5c88c",
+    "tests/unit/cloud-process-tree.test.mjs": "d427319e85c383bb5b112fe229b8fc2029b47abc2e3b6eca17266e44eb75bb69",
+    "tests/unit/schedule-time.test.ts": "36c5a491745140230ebe1f18a4cd6f4fda9ed03550bf4a66c36a1756ad6f9056",
+    "tsconfig.json": "126aeb8fb551f71dfa9435802184c5ded5eb37adb32a5cc9b7dc607b54b74ab7",
+    "types/atelier.ts": "bff7317e3d726bdfa7dc80f0d09ed1a7e32f586a538be76319a317e67671df7e",
+    "types/audit.ts": "77a9b8d6176c12d141d1c741745adc38620519fe6282a1bbef0aba4e5a1f226b",
+    "types/client.ts": "7f447a6c1a192bc4a9b60c5213f2203ca9b91289afb2c785f883476a07a6b274",
+    "types/commercial.ts": "d8793fae4aa34e157585f254895ecb609be70c8a648fe59fa80c6c5c2fda99e3",
+    "types/conversation.ts": "f3ebef6f408b8ef157a44c4fc2d8ae5a7c9102fefe434a108c7ae60e514f6c5f",
+    "types/event.ts": "7b117eebc7d1ddadcf17a2cb37def6282c7c3eef521b42408888b9dcd846a408",
+    "types/finance.ts": "32b4ea53d62a749780f2a213269e98f82521cd2f25fe3d83c4c50dac4cfc0daf",
+    "types/index.ts": "54c0759a9d84bc8fa66abca8d4a14fe47851086d3eb11c6d56c9e65cac82320c",
+    "types/inventory.ts": "c26ced5415acf08f58360998d1d32f6f4263a573e68a46986e2b7b048574e2bf",
+    "types/measurement.ts": "cf4ded1eb3a51bd2d917ca2b8b10d1f7e952dd596532731a5620242efec909f4",
+    "types/member.ts": "2b520c95596b62d46a28d4591011167e27678bd905dd0019769cc0aedc0d11c3",
+    "types/notification.ts": "82267d2e5e392c248de6265c473f6acc6d888deca4db832aceefffc312672360",
+    "types/order-change.ts": "1a199bb943901f3270adeb35e84ed8219c2e9fbd8030259e11ada92f024218ed",
+    "types/order.ts": "24cfdf2dfbdd97a59f40f3f6807a39ea2ee3139b4ce8e56e4f159d15da94c2dc",
+    "types/payment.ts": "f60f40c147698c11c290da7876f1fafe02e82f0d5bde24037fc3db3827b22448",
+    "types/portfolio.ts": "607a2ceb5099c8f91e8dda817236fcb491a11142afd788d05dc621548dd069fb",
+    "types/production.ts": "5b57fc88087f43e16f1333cc890b38bd0654a21a3b49a4ba4aed7dad6f034425",
+    "types/quote-request.ts": "c8333996a35140f6ac41551780a3f3dc60a59ad2fe1268c658055e28ad517c90",
+    "types/quote.ts": "7793c22c6a6d76374dcc1313129672add096e69c894abdd39ee4bb43696b0227",
+    "types/report.ts": "407a700c59184717914c49b8421966efa6af175a81697ec6d7fc137ecf00d753",
+    "types/schedule.ts": "7dc3ab9046c62caabe74a01f00996f54ebb8bd270f6a5b2b5add89f2e08fd537",
+    "types/shipping.ts": "26d06a62146a6483e87929a2563f0674af1f72bd3635ca01583ac4d09734f708",
+    "types/team.ts": "6d0f58d118d79dcc108703d2c125e508931452d60d440319199d427a6e21d512",
+    "types/user.ts": "44484ee2f05ba4b66ed9580a272d111e302f29e84b66166de0078587ac1bcace",
+    "vitest.config.ts": "dce58161dccbee1272ac942a40be3d70d62ef6aca6cbf872a0ab4e4ddb930798"
+  },
+  "units": {
+    "passed": 182,
+    "applicable": 184,
+    "blocked": 2,
+    "pending": 0,
+    "notImplemented": 0,
+    "notApplicable": 4
+  },
+  "frozenOperationSetSha256": "d259095a4a98e647a1f5c5af496d0b1d321fbfb2a0f2e537f5f98b6b1b19f5d9"
 }

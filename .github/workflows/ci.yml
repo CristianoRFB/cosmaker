@@ -14,3 +14,4 @@ jobs:
       - run: npm run functions:build
       - run: npm run build
       - run: npm test -- --run
+      - run: npm run docs:functional

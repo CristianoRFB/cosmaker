@@ -1,0 +1,437 @@
+{
+  "schemaVersion": 1,
+  "codeCheckpoint": "6b4ac11f1412d33c0f7ffea8b678ed26d5ac2d9c",
+  "reviewedAt": "2026-10-24",
+  "scope": "Somente Emulator demo-cosmaker. Hashes preservam identidade dos logs temporários; os conteúdos brutos não são publicados. O registro é uma revisão de evidências observadas, não substitui reexecução quando código/configuração relevante muda.",
+  "records": {
+    "backend-commercial": {
+      "logName": "cosmaker-resume-commercial-backend.log",
+      "logSha256": "141d0f294f641464240559a2321c19399dad4054e3a5617a60bb4d5bdf4d34dd",
+      "outcome": "PASS 12/12",
+      "sources": [
+        "tests/integration/commercial-functions.test.ts"
+      ],
+      "detail": "Diretório Auth, CRM/histórico, autoridade global, plano/trial/demo, concorrência e negações."
+    },
+    "backend-client-payments": {
+      "logName": "cosmaker-order-projection-backend.log",
+      "logSha256": "1005f9d8718cfef06c6ef183dd77a7e78e13d713ef62c9288bc5e1365d9117fb",
+      "outcome": "PASS 7/7",
+      "sources": [
+        "tests/integration/client-payments-functions.test.ts"
+      ],
+      "detail": "DTO/pagamentos, paginação55pedidos, medidas/CRM distinto do UID, centavos e negações."
+    },
+    "backend-client-quotes": {
+      "logName": "cosmaker-identity-client-quotes.log",
+      "logSha256": "3143d161ee5bb8e066b4fbca3ff671037923086d5cabb5a0382b227fd68a435f",
+      "outcome": "PASS 5/5",
+      "sources": [
+        "tests/integration/client-quotes-functions.test.ts"
+      ],
+      "detail": "UID/CRM durável, convites, projeção, paginação e negativos de e-mail reutilizado."
+    },
+    "backend-orders": {
+      "logName": "cosmaker-identity-orders.log",
+      "logSha256": "526b61ae579e61fc61a01f8dab73b3671bb6f35937e231cdf8ab63e7a68cbeb6",
+      "outcome": "PASS 33/33",
+      "sources": [
+        "tests/integration/production-configuration-functions.test.ts",
+        "tests/integration/order-change-functions.test.ts",
+        "tests/integration/order-files-functions.test.ts",
+        "tests/integration/scheduling-functions.test.ts"
+      ],
+      "detail": "Quatro arquivos: configuração, revisões, anexos e agenda; soma conforme log33, incluindo concorrência e isolamento. Os mesmos3cenários de agenda foram substituídos pelo backend-scheduling-final após projeção de fuso; total distinto continua104."
+    },
+    "backend-production-photo-bytes": {
+      "logName": "cosmaker-identity-production-photo-bytes.log",
+      "logSha256": "14870832ff5cc748bdb8df4207be6a5240a130d72d99216d833536c7025a7143",
+      "outcome": "PASS 4/4",
+      "sources": [
+        "tests/integration/production-photo-bytes-functions.test.ts"
+      ],
+      "detail": "Bytes/hash/assinatura/lease, retry, perfis/ownership e acesso negado."
+    },
+    "backend-messages": {
+      "logName": "cosmaker-identity-messages.log",
+      "logSha256": "8079c7fb416024ad51a7376273cae860f79e4e98a26148dd338711986ad64b39",
+      "outcome": "PASS 5/5",
+      "sources": [
+        "tests/integration/messages-functions.test.ts"
+      ],
+      "detail": "Mensagens/notificações por UID, histórico, concorrência, anexos e revogação."
+    },
+    "backend-journey": {
+      "logName": "cosmaker-identity-journey.log",
+      "logSha256": "3632e5f38cd15df1afe14337633df2324cd01bf9e3f32080d0fed18a31dbecd4",
+      "outcome": "PASS 1/1",
+      "sources": [
+        "tests/integration/integrated-journey-functions.test.ts"
+      ],
+      "detail": "Jornada contínua orçamento→conclusão, financeiro/material/medidas/CRM/relatórios/A×B."
+    },
+    "backend-references": {
+      "logName": "cosmaker-identity-references.log",
+      "logSha256": "23b46aa1bf0a45192b8768aad18e243fc13358763b96bcdf17ed742a55295307",
+      "outcome": "PASS 5/5",
+      "sources": [
+        "tests/integration/quote-reference-functions.test.ts"
+      ],
+      "detail": "Capabilities/slug/hash/MIME/assinatura/expiração/replay/concorrência e leitores legados."
+    },
+    "backend-quotes": {
+      "logName": "cosmaker-identity-quotes.log",
+      "logSha256": "c54cfb1e810fb607e7fb9764d2aebe6e734b1b8507cea5ca77832d53d51428ea",
+      "outcome": "PASS 4/4",
+      "sources": [
+        "tests/integration/quote-security-functions.test.ts"
+      ],
+      "detail": "Validação de mutações, versões, sessão/perfil e criação do pedido."
+    },
+    "backend-finance": {
+      "logName": "cosmaker-final-finance.log",
+      "logSha256": "443dc254f9b0ac0e3bfc6156300a66e7727d7dfef621d5ae930a78a5c22d37a2",
+      "outcome": "PASS 7/7",
+      "sources": [
+        "tests/integration/finance-functions.test.ts"
+      ],
+      "detail": "Ledger, saldos em centavos, compensação, conciliação legada, concorrência e negações."
+    },
+    "backend-showcase": {
+      "logName": "cosmaker-final-showcase.log",
+      "logSha256": "73a34e50cb87a309278c319d4b614fcc729e399782a5eaacde1f7b2c12cf9b9e",
+      "outcome": "PASS 5/5",
+      "sources": [
+        "tests/integration/showcase-functions.test.ts"
+      ],
+      "detail": "Catálogo, bytes, publicação/despublicação, branding e isolamento."
+    },
+    "backend-reports": {
+      "logName": "cosmaker-final-reports.log",
+      "logSha256": "336cd035d9054f8e3c5d1a66120c70d39ce2abd2a2c1b8f33195e69b298ab631",
+      "outcome": "PASS 5/5",
+      "sources": [
+        "tests/integration/reports-functions.test.ts"
+      ],
+      "detail": "Métricas reais/período/fuso/permissões, preferências versionadas e inconsistências."
+    },
+    "backend-delivery": {
+      "logName": "cosmaker-final-delivery.log",
+      "logSha256": "6a0d02d96019e0bee30e0eecf94ba4357cf6e58298ac19962ce4c50d63bae772",
+      "outcome": "PASS 4/4",
+      "sources": [
+        "tests/integration/order-finalization-functions.test.ts"
+      ],
+      "detail": "Entrega/conclusão, gates, retries/histórico/notificações e negações."
+    },
+    "backend-team": {
+      "logName": "cosmaker-final-team.log",
+      "logSha256": "020e6e1fb70acc58b2278001723dd5d81e198f7eb240442747cc43c74f4a013f",
+      "outcome": "PASS 4/4",
+      "sources": [
+        "tests/integration/team-functions.test.ts"
+      ],
+      "detail": "Convite de uso único/expiração, revogação, permissões, único titular e concorrência."
+    },
+    "backend-inventory": {
+      "logName": "cosmaker-final-inventory.log",
+      "logSha256": "75fb53c7c36aaffb996a77e51c5d93f835ebfb422f22ef38b76bda7e4c51f25b",
+      "outcome": "PASS 3/3",
+      "sources": [
+        "tests/integration/inventory-functions.test.ts"
+      ],
+      "detail": "SKU, fornecedores, movimentos/reservas/consumo, saldo não negativo/concorrência e A×B."
+    },
+    "rules": {
+      "logName": "cosmaker-order-projection-rules.log",
+      "logSha256": "e85b13cc48beeaffc344b10cd6a1794d70b73b8bf14d4ebdd1a8680f5e936c26",
+      "outcome": "34 PASS / 1 FAIL fixture",
+      "sources": [
+        "tests/rules/firestore-storage.rules.test.ts"
+      ],
+      "detail": "Mesmas Rules finais. Falha foi ID reservado da fixture; não é lote35/35. Usar com rules-final-case, sem somar como36casos."
+    },
+    "rules-final-case": {
+      "logName": "cosmaker-order-projection-rules-final-case.log",
+      "logSha256": "a55050afc45ea86730d4993020c75074d7ff2b5a96aa10b539e4d99cbf0d8360",
+      "outcome": "1 PASS / 34 skipped",
+      "sources": [
+        "tests/rules/firestore-storage.rules.test.ts"
+      ],
+      "detail": "Fixture corrigida: CRM ausente/UID malformado, negações dos filhos e positivos UID/CRM. Conjunto35casos coberto complementarmente."
+    },
+    "detail-extra-negatives": {
+      "logName": "cosmaker-order-projection-extra-negatives.log",
+      "logSha256": "fd2bb626d77cac56a4b35285d99c3f852fca67a6322af8372f959b151e63017b",
+      "outcome": "1 PASS / 6 skipped",
+      "sources": [
+        "tests/integration/client-payments-functions.test.ts"
+      ],
+      "detail": "Ampliação final do mesmo cenário de detalhe: sessão/perfil/tenant/papel revogados. Não é cenário adicional aos7."
+    },
+    "ui-portal": {
+      "logName": "cosmaker-private-projection-ui.log",
+      "logSha256": "12269598eb19cb5ccfc35731d1ebfa66bfb7793abbf2fd6dcf6ed902400f4b57",
+      "outcome": "PASS 2/2",
+      "sources": [
+        "tests/e2e/client-portal.spec.ts",
+        "tests/e2e/order-files-workflow.spec.ts"
+      ],
+      "detail": "Portal/detalhe/pagamentos/perfil em4larguras; DTO sem custos/UID/atores; anexos e revogação."
+    },
+    "ui-private-navigation-messages": {
+      "logName": "cosmaker-private-regression-ui.log",
+      "logSha256": "93aba92929fb92c8fbd9a48e0aefa4fd8d177005601004865fec1acf4dc0b383",
+      "outcome": "5 PASS / 1 FAIL seletor financeiro antigo",
+      "sources": [
+        "tests/e2e/workspace-navigation.spec.ts",
+        "tests/e2e/messages-workflow.spec.ts"
+      ],
+      "detail": "Navegação quatro papéis/4larguras e mensagens passaram. Revisão falhou por expectativa financeira antiga; repetição isolada abaixo."
+    },
+    "ui-order-revisions": {
+      "logName": "cosmaker-order-change-current-finance-e2e.log",
+      "logSha256": "f68a0cd807dd079f916dc12d8c499d2d26e61c27749b095115bff79b5d1945f8",
+      "outcome": "PASS 1/1",
+      "sources": [
+        "tests/e2e/order-change-production.spec.ts"
+      ],
+      "detail": "Configuração/etapas próprias/aprovação/revisão/histórico e valores reais em tela; seletor atualizado."
+    },
+    "ui-production-journey": {
+      "logName": "cosmaker-final-production-journey-e2e.log",
+      "logSha256": "e3546d4430c980eaaee108d93f58fe1633b69abb274899884ae6860a17aae1bf",
+      "outcome": "PASS 1/1",
+      "sources": [
+        "tests/e2e/quote-approval.spec.ts"
+      ],
+      "detail": "Proposta→pedido→medidas→entrada→foto protegida→aprovação/CRM, quatro larguras."
+    },
+    "ui-measurement-quote": {
+      "logName": "cosmaker-measures-isolated-e2e.log",
+      "logSha256": "14339038b430764aa0b6162acd068517b9c1904e4519caf971777ce160b601b1",
+      "outcome": "PASS 1/1",
+      "sources": [
+        "tests/e2e/measurement-quote-revision.spec.ts"
+      ],
+      "detail": "Persistência/reload, medida CRM≠UID, arquivo/ficha e revisão preenchida4larguras/snapshot anterior."
+    },
+    "ui-directory-settings": {
+      "logName": "cosmaker-resume-ui.log",
+      "logSha256": "cd93ec7061f5944387ac331fd813e1cccfec18c55a2d1d268244ca8c9f392b20",
+      "outcome": "3 PASS / 1 FAIL corrida da asserção de medidas",
+      "sources": [
+        "tests/e2e/client-portal.spec.ts",
+        "tests/e2e/final-settings-directory.spec.ts"
+      ],
+      "detail": "Portal/diretório/assinatura-comunicação-entrega passaram em4larguras; medidas repetidas isoladamente acima."
+    },
+    "ui-public-navigation": {
+      "logName": "cosmaker-public-navigation-e2e.log",
+      "logSha256": "64bbace4223e3e679f4083ca2b789e04d9c37d1c5d3215011ccc13f0f5237222",
+      "outcome": "PASS 2/2",
+      "sources": [
+        "tests/e2e/public-navigation.spec.ts"
+      ],
+      "detail": "Oito rotas4larguras, menu/Escape/foco/404, A/B, publicação/suspensão/intake/rede/retry."
+    },
+    "ui-public-references": {
+      "logName": "cosmaker-reference-iv-final-e2e.log",
+      "logSha256": "88997a7a7c9ce74415204e4d1012fba10d0174ed04bdc2266769c93e5bb889e3",
+      "outcome": "PASS 2/2",
+      "sources": [
+        "tests/e2e/public-tenants.spec.ts",
+        "tests/e2e/quote-reference-download.spec.ts"
+      ],
+      "detail": "Intake/upload protegido e bytes privados da equipe;4larguras. Código relevante preservado, SDKs server revalidados embackend-references."
+    },
+    "ui-team": {
+      "logName": "cosmaker-team-transfer-accepted-e2e.log",
+      "logSha256": "b38e92d905e118a4783f281d2d792eaf23e4aebf49c0d0aacedd106de90fd9ce",
+      "outcome": "PASS 1/1",
+      "sources": [
+        "tests/e2e/team-invitation.spec.ts"
+      ],
+      "detail": "Convite/aceite, papéis, membership inativa com conta preservada, acesso negado, reativação e único titular/toast4larguras."
+    },
+    "ui-auth-recovery": {
+      "logName": "cosmaker-auth-team-final-e2e.log",
+      "logSha256": "4044a1524e50f2ab64d7007f817af08fc36533726eb4a7a847fb55d2bce919e1",
+      "outcome": "1 PASS / 1 FAIL teste equipe intermediário",
+      "sources": [
+        "tests/e2e/password-recovery.spec.ts"
+      ],
+      "detail": "Somente recuperação passou15,1s: OOB único, inválido/replay, senha antiga, conta ausente, erro de rede/retry, UID/perfil/4larguras. Equipe passou emrepetição própria."
+    },
+    "ui-google": {
+      "logName": "cosmaker-final-feedback-e2e.log",
+      "logSha256": "90b8ce61e7bdb85f452fc425a66d2f8e98e717bf045567b1b31d976dce8288f3",
+      "outcome": "BLOCKED_EXTERNAMENTE / 1 skipped",
+      "sources": [
+        "tests/e2e/google-emulator.spec.ts"
+      ],
+      "detail": "Apis.google.com/js/api.js recusado pelo proxy antes do popup; não PASS. Outro cenário no lote falhou por seletor do toast, repetido emteam."
+    },
+    "scheduler-http": {
+      "logName": "cosmaker-scheduler-new-sdk-http.log",
+      "logSha256": "915760db7ae811faf9547b239a04cfa40ba9c894c383b7ce9dacb72747ebaf7f",
+      "outcome": "PASS lógica via wrapper HTTP",
+      "sources": [
+        "scripts/test-scheduler-emulator.mjs"
+      ],
+      "detail": "Expiração UTC, fronteiras, namespace, versões, replay/idempotência/auditoria. NÃO prova timer/transporte."
+    },
+    "scheduler-pubsub": {
+      "logName": "cosmaker-scheduler-new-sdk-pubsub.log",
+      "logSha256": "df0a719d9eeb4e24bafdccfca51fe4b9ab3a1bd0b5c11457ce3fb4ac6bdddcfd",
+      "outcome": "BLOCKED_EXTERNAMENTE",
+      "sources": [
+        "scripts/test-scheduler-emulator.mjs"
+      ],
+      "detail": "CLI15.34.1 aceita publish/entrega/ack, mas rejeita Unsupported trigger signature:http. Sem patch emnode_modules."
+    },
+    "recovery": {
+      "logName": "cosmaker-order-projection-recovery.log",
+      "logSha256": "84ea827a7c1d9300df0113bc011a69b5b2754416436a9410ff73b6b7712d9d57",
+      "outcome": "PASS sintético",
+      "sources": [
+        "scripts/emulator-recovery-fixture.mjs",
+        "scripts/test-emulator-recovery.mjs"
+      ],
+      "detail": "Export/import eminstâncias novas, Auth/senha/claims, FS/centavos/histórico/Storage/bytes/hash, ACLroot privado/filhos/A×B após restore; semFunctions/replay/RPO real."
+    },
+    "unit": {
+      "logName": "cosmaker-order-identity-unit.log",
+      "logSha256": "5ad50bae9f79442fa92462531598a72432f6c8b5d009720c97fdbf73a09f6e25",
+      "outcome": "PASS 121/121",
+      "sources": [
+        "tests/unit/cloud-process-tree.test.mjs"
+      ],
+      "detail": "Unitários da stack atual, incluindo PID+startTime/descendentes destacados/resistente aTERM e processo de controle preservado."
+    },
+    "ui-client-quotes": {
+      "outcome": "PASS 1/1 histórico relevante preservado",
+      "sources": [
+        "tests/e2e/client-quote-privacy.spec.ts",
+        "docs/implementation/MASTER_FINALIZATION_PROGRESS.md"
+      ],
+      "detail": "Checkpoint23/10:1/1 PASS19,6s em320/375/768/1440; propostas/respostas paginadas, ajuste persistido, ações antes do histórico e reuso de e-mail negado. Log temporário original não disponível nesta retomada; resultado canônico preservado. UI/contrato relevante não mudou; SDK/projeções/UID revalidados embackend-client-quotes5/5."
+    },
+    "ui-consolidation": {
+      "logName": "cosmaker-consolidation-browser.log",
+      "logSha256": "6ba102befaca7715f88af7122f72b0078c032855647cbad8032d642779145395",
+      "outcome": "12 PASS / 4 FAIL",
+      "sources": [
+        "tests/e2e/client-crm.spec.ts",
+        "tests/e2e/client-profile-registration.spec.ts",
+        "tests/e2e/commercial-standard.spec.ts",
+        "tests/e2e/finance-workflow.spec.ts",
+        "tests/e2e/inventory-workflow.spec.ts",
+        "tests/e2e/order-delivery.spec.ts",
+        "tests/e2e/reports-settings.spec.ts",
+        "tests/e2e/showcase-workflow.spec.ts"
+      ],
+      "detail": "PassaramCRM/cadastro/comercial5/financeiro/estoque/entrega/preferências/portfólio. Dois administrativos falharam por prontidão web; métricas320/agenda falharam por defeitos reais, corrigidos e repetidos abaixo. Não é16/16."
+    },
+    "ui-admin-retry": {
+      "logName": "cosmaker-scheduling-metrics-e2e.log",
+      "logSha256": "f8fe79e1432c5a17fecc08081b86f1e8eb474f95a0a5d64e6b71355acdbd2fc5",
+      "outcome": "4 PASS / 1 FAIL",
+      "sources": [
+        "tests/e2e/admin-workspace.spec.ts",
+        "tests/e2e/reports-settings.spec.ts",
+        "tests/e2e/scheduling-workflow.spec.ts"
+      ],
+      "detail": "Administrativo2 e relatórios2 PASS, incluindo métricas/configurações4larguras semoverflow. Agenda1FAIL por cenário negativo de teste2h em intervalo1h; não usar este registro para aprovar agenda."
+    },
+    "backend-scheduling-final": {
+      "logName": "cosmaker-scheduling-timezone-backend.log",
+      "logSha256": "c958a30ed936b027895837920e8c7249425b8727eede1955c1bc1578f817b9b3",
+      "outcome": "PASS 3/3",
+      "sources": [
+        "tests/integration/scheduling-functions.test.ts"
+      ],
+      "detail": "Fuso gravado/legado UTC explícito; permissões/A×B/concorrência. Substitui os mesmos3casos de agenda dentro deorders33; não somar3novos aos104."
+    },
+    "ui-scheduling-final": {
+      "logName": "cosmaker-timezone-display-e2e.log",
+      "logSha256": "418f3b4a00ec30cbcef8471a5787e6d2237d1a98be500d77cfd8993bfddd8f62",
+      "outcome": "PASS 1/1",
+      "sources": [
+        "tests/e2e/scheduling-workflow.spec.ts"
+      ],
+      "detail": "NavegadorUTC/responsávelSãoPaulo: rejeição fora do expediente mantém dados/sem slot, retry09→12UTC persistido, lista09–11comfuso, quatro larguras, cancelamento/bloqueios/eventos."
+    },
+    "unit-schedule": {
+      "logName": "cosmaker-schedule-time-unit.log",
+      "logSha256": "a72b464ea0e4833770ff6e5ffe301b72d8d031680c9ab212070070817d9066ee",
+      "outcome": "PASS 3/3",
+      "sources": [
+        "tests/unit/schedule-time.test.ts"
+      ],
+      "detail": "ConversãoSãoPaulo/offset45min/UTC, calendário inválido/DST inexistente e ambíguo, formatação pelo fuso gravado."
+    },
+    "build-ui-fix": {
+      "logName": "cosmaker-scheduling-metrics-final-build.log",
+      "logSha256": "bca4b3c7cda1ef738fd5a77d6bd17a0ddb5c9833c117f38f81af1a6e34a4e088",
+      "outcome": "PASS Next81",
+      "sources": [
+        "lib/utils/schedule-time.ts",
+        "components/admin/platform-overview.tsx",
+        "components/scheduling/scheduling-workspace.tsx"
+      ],
+      "detail": "Build final após conversão e exibição dos slots; checa compilação/tipos/lint e81páginas. Functionsbuild também exit0 no comando da integração de agenda."
+    },
+    "tokens": {
+      "outcome": "PASS sintético",
+      "sources": [
+        "scripts/test-storage-token-inventory.mjs",
+        "scripts/inventory-emulator-storage-tokens.mjs",
+        "docs/implementation/security/SYNTHETIC_TOKEN_INVENTORY_2026-10-24.json"
+      ],
+      "detail": "Objeto próprio novo/delta1, saída sanitizada, metadata/bytes/geração preservados, guardas projeto/loopback negativas. Inventário e revogação reais NOT_RUN."
+    },
+    "runtime": {
+      "outcome": "PASS local",
+      "sources": [
+        "docs/implementation/LOCAL_EMULATOR_RUNTIME.md",
+        "tests/unit/cloud-process-tree.test.mjs"
+      ],
+      "detail": "Instalação/build/início/seed/HTTP200 reutilizáveis, recusa porta ocupada, encerramento9portas livres; Node22/Java21/proxyCA preservados. Histórico no progresso24/10."
+    },
+    "ci-baseline": {
+      "outcome": "SUCCESS",
+      "url": "https://github.com/CristianoRFB/cosmaker/actions/runs/40060408944",
+      "headSha": "5fe1f495b91b2bb1e4e2925236725f8df40c0f43",
+      "detail": "npmci raiz/Functions, buildsFunctions/Next81, unitários121 anteriores ao fuso. Não executa Rules, SDK ou E2E; código de fuso tem build-ui-fix/unit-schedule/gates próprios."
+    },
+    "ci-code": {
+      "outcome": "SUCCESS",
+      "url": "https://github.com/CristianoRFB/cosmaker/actions/runs/40098118834",
+      "headSha": "6b4ac11f1412d33c0f7ffea8b678ed26d5ac2d9c",
+      "jobId": 120884531156,
+      "detail": "Instalação limpa raiz/Functions, buildsFunctions/Next81 e124/124 unitários em25arquivos, confirmados pelo log remoto do job. Não executa Rules/SDK/E2E. Verificar CI do checkpoint documental posterior separadamente."
+    },
+    "static-lint": {
+      "logName": "cosmaker-consolidation-final-lint.log",
+      "logSha256": "dc012cdd2ecf923b3fd08e4de958fc5ded9c0095f7faf4f3646e16c604d0defd",
+      "outcome": "PASS",
+      "sources": [],
+      "detail": "Lint integral atual exit0."
+    },
+    "static-typescript": {
+      "logName": "cosmaker-consolidation-final-typescript.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "PASS",
+      "sources": [],
+      "detail": "TypeScript --noEmit atual exit0."
+    },
+    "static-docs": {
+      "logName": "cosmaker-consolidation-final-docs.log",
+      "logSha256": "c8bc00682b9deda2c2350b4bc2628f5736c6b229d9920894e40b6b81dff1eb19",
+      "outcome": "PASS",
+      "sources": [],
+      "detail": "docs:check exit0:CURRENT/v0.2 e links; não é aceite de releasev0.3."
+    }
+  }
+}

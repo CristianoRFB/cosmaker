@@ -2,6 +2,8 @@
 
 A versão documental atual do Cosmaker OS é **v0.2.0 — Global Standard v01**, correspondente à mecânica comercial validada localmente no Firebase Emulator.
 
+As implementações posteriores e seus gates estão no [checkpoint de finalização](implementation/MASTER_FINALIZATION_PROGRESS.md). O [inventário funcional local](implementation/FUNCTIONAL_COMPLETION.md), a [matriz formal](implementation/FORMAL_ACCEPTANCE.md) e o [handoff](implementation/GOAL_MASTER_IV_HANDOFF.md) distinguem implementação, teste local, bloqueios e homologação. Este acompanhamento não publica nova versão comercial ou resultado de produção.
+
 - Índice da versão: [docs/versions/v0.2.0/README.md](versions/v0.2.0/README.md)
 - Status: [docs/versions/v0.2.0/STATUS.md](versions/v0.2.0/STATUS.md)
 - Diagramas: [manifesto](DIAGRAMS_MANIFEST.md)

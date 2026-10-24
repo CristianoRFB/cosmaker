@@ -16,6 +16,6 @@ Rules bloqueiam o wildcard por e-mail e todos os documentos raw de proposta/iten
 
 O frontend troca por UID, não pelo e-mail salvo no perfil, limpa dados ao trocar sessão e descarta respostas atrasadas. Há botões explícitos de paginação e feedback de erro; pedido de ajuste atualiza o histórico persistido.
 
-Limites: o inventário/revogação de URLs antigas e os uploads Storage com excesso de consultas ainda impedem aceite global F5. Estas correções locais não significam homologação global de privacidade. Rascunhos intencionalmente versionados continuam criando nova versão; idempotência de criação do rascunho por chave de intenção precisa de contrato próprio antes de alterar a UX existente.
+Atualização24/10: uploads ativos foram migrados para bytes por servidor e todos os caminhos Storage raw estão negados, com zero consultas cross-service; ver QUOTE_REFERENCE_BYTES.md e o progresso canônico. O excesso de consultas foi corrigido e não é bloqueio atual. Inventário/revogação autorizados de tokens reais antigos e homologação dos serviços reais continuam pendentes. Estas correções locais não significam homologação global de privacidade. Rascunhos intencionalmente versionados continuam criando nova versão; idempotência de criação do rascunho por chave de intenção precisa de contrato próprio antes de alterar a UX existente.
 
 Gates reais em [MASTER_FINALIZATION_PROGRESS.md](MASTER_FINALIZATION_PROGRESS.md). Sem deploy ou mutação de Firebase real.

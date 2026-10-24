@@ -4,6 +4,8 @@ SaaS multi-tenant para gestão de ateliês de cosplay. A aplicação compartilha
 
 O estado técnico mais recente, os commits e os gates reais ficam em [MASTER_FINALIZATION_PROGRESS.md](docs/implementation/MASTER_FINALIZATION_PROGRESS.md). A documentação canônica permanece em [docs/CURRENT.md](docs/CURRENT.md), atualmente v0.2.0; versões históricas foram preservadas.
 
+O [inventário funcional local](docs/implementation/FUNCTIONAL_COMPLETION.md) registra47operações, evidências e cálculo reproduzível. A [matriz dos16marcos](docs/implementation/FORMAL_ACCEPTANCE.md) mede aceite formal separadamente. Nenhum desses indicadores homologa produção ou autoriza receber dados/clientes reais. Consulte o [handoff atual](docs/implementation/GOAL_MASTER_IV_HANDOFF.md) para continuar.
+
 ## Execução Linux somente local
 
 No ambiente Cloud `cosmaker`, use `bash scripts/cloud-setup.sh` na instalação e `bash scripts/cloud-start.sh` na inicialização. As entradas selecionam Node 22 automaticamente, reaproveitam os lançadores abaixo e não usam credenciais reais. Consulte a configuração publicável em [LOCAL_EMULATOR_RUNTIME.md](docs/implementation/LOCAL_EMULATOR_RUNTIME.md).

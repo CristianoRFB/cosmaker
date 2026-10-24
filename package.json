@@ -39,6 +39,7 @@
     "screenshots:commercial": "node scripts/capture-commercial-screenshots.mjs",
     "docs:diagrams": "node scripts/docs-diagrams.mjs",
     "docs:check": "node scripts/docs-check.mjs",
+    "docs:functional": "node scripts/functional-inventory.mjs",
     "firebase:emulators": "firebase emulators:start",
     "firebase:emulators:local": "npm run functions:build && node scripts/firebase-local-cli.mjs emulators:start --config firebase.local-emulator.json --project demo-cosmaker --only auth,firestore,storage,functions,pubsub",
     "seed:emulator": "node scripts/seed-emulator.mjs",
