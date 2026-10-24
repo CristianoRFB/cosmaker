@@ -1,5 +1,19 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL IV — upload público e legado Storage testados localmente — 2026-10-24
+
+- Checkpoint inicial WIP enviado: `3a3137018f00a7eb2de206ab072900179390ae5c`. Transporte de produção anterior preservado. Implementação/contratos em [PUBLIC_REFERENCE_TRANSFER.md](PUBLIC_REFERENCE_TRANSFER.md).
+- TESTADO_LOCALMENTE: referências públicas com capability 256 bits/hash persistido, expiração 15 min, slug canônico, SHA-256 declarado/calculado, assinatura/MIME/tamanho, lease, concorrência, retry imutável, proteção contra sobrescrita/capability cruzada e conclusão/replay indevidos. Callables antigos não concluem nem apagam objetos.
+- Caminhos raw legados auditados: não restam chamadas Storage SDK nos fontes app/components/repositories/services. Storage raw agora integralmente negado (**zero** consultas cross-service). Leitor legado servidor mantém compatibilidade de leitura para equipe autorizada, revalida perfil/tenant/membership/permissão e vínculo após I/O, preserva bytes e revoga apenas token do objeto acessado. Contratos/imagens/medidas legados não são apagados. Publicação real e tokens já distribuídos continuam sem homologação/revogação global.
+- Corrigida integração pedido: somente ready/legado válido vira evidência; pendentes e campos de capability/lease não são copiados. Nome de arquivo limitado aos mesmos 180 caracteres aceitos pelo leitor, sem caracteres de controle.
+- Backend final **6/6 PASS**, 2 arquivos, 131,68s: referências/capabilities/legado 5 e jornada completa 1; confirma snapshot sem pendentes/segredos, financeiro, estoque, produção, revisão, entrega, histórico e A/B (`/tmp/cosmaker-reference-iv-final-backend.log`). Backend inicial 4/4 PASS foi anterior ao leitor legado, não substitui esse gate.
+- Rules finais Storage server-only **32/32 PASS**, 27,56s (`/tmp/cosmaker-storage-server-only-rules.log`). Primeiro lote 32/32 de 69,36s era anterior ao bloqueio legado e fica histórico.
+- E2E público **2/2 PASS**, 22,3s (`/tmp/cosmaker-reference-iv-final-e2e.log`): A/B, slug indisponível, upload HTTP real, nenhum raw Storage no navegador e overflow 320/375/768/1440. Primeiro ensaio falhou 2/2 por harness apontando a porta 5001; corrigido `cloud-env.sh` para exportar Functions 15001, sem relaxar Rules.
+- `cloud-setup.sh` exit 0: npm ci raiz 1025/Functions 253, Node22.23.4/Java21, artefatos e build81. `cloud-start.sh start` confirmou os cinco emuladores, seed e HTTP local. Functions build/lint/TypeScript iniciais PASS; fechamento estático atual deve ser repetido com o portal ainda em implementação.
+- Inventário somente leitura Emulator executado: 5 objetos referências e 1 produção, 0 com metadata de token no instante sintético; guard de projeto diferente recusou antes do SDK. Contagens incluem fixtures transitórias da jornada, não inventário real nem revogação global. Não são exportados tokens/paths/URLs/dados pessoais.
+- Auditoria Rules parcial passa a score4/5; **F5 global ainda parcial** por dependências/futuro aceite de legado real, sem confundir com o gate local desta implementação. F2 jornada atual PASS com aceite global pendente; F3 portal em implementação; F6 ferramentas/recuperação/trigger pendentes. Formal10/16, indicador funcional ainda sem cálculo até inventário verificável.
+- Próxima ação: finalizar Home/Perfil/Pagamentos do cliente por projeções autorizadas, com negações UID/A×B, estados e quatro viewports; depois regressões F2/F6 e inventário funcional.
+
 ## GOAL MASTER IV — referências públicas por servidor WIP — 2026-10-24
 
 - Recuperado remoto/checkout limpo `3339fa1ee6795a8bb885232452434064c1d11462`; CI anterior 39956690546 PASS. Não há fast-forward posterior. Node 22.23.4/Java 21 confirmados; `cloud-setup.sh` em execução com dependências existentes.

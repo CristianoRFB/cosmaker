@@ -1,13 +1,7 @@
 {
-  "score": 2,
-  "summary": "Auditoria parcial: leitura de propostas por UID, revogação global Firestore e validações de perfis/medidas corrigidas e testadas localmente. Permanecem achados maiores em Storage (revogação de perfil/tokens legados e teto de consultas cross-service), além do transporte scheduler. Não é homologação Firebase real.",
+  "score": 4,
+  "summary": "Auditoria Rules direcionada corrigida e testada localmente: nenhum acesso Storage raw/cross-service, propostas por UID e perfis/medidas validados. Permanecem inventário/revogação real de tokens já distribuídos, homologação externa e transporte scheduler; dependências têm revisão separada. Não é aprovação de produção nem auditoria exaustiva de todas as Functions.",
   "findings": [
-    {
-      "check": "Authority Source",
-      "severity": "major",
-      "issue": "Firestore agora exige identidade verificada, perfil ativo com accountType/tenant e membership/tenant ativos. O helper de Storage ainda usa apenas tenant/membership; adicionar terceiro documento viola o orçamento cross-service de dois.",
-      "recommendation": "Migrar uploads ativos restantes a bytes por servidor e fechar caminhos raw de Storage, com autorização completa e testes de revogação. Não adicionar uma terceira consulta ao helper Storage."
-    },
     {
       "check": "Storage Abuse",
       "severity": "major",
@@ -19,12 +13,6 @@
       "severity": "minor",
       "issue": "A auditoria permanece parcial; o transporte Pub/Sub do scheduler v2 é incompatível com o CLI atual, enquanto a lógica foi validada via wrapper HTTP local.",
       "recommendation": "Preservar distinção entre lógica testada e transporte bloqueado; homologar trigger, IAM, relógio e replay em ambiente real autorizado antes de prontidão comercial."
-    },
-    {
-      "check": "Business Logic vs. Rules",
-      "severity": "major",
-      "issue": "Fotos de produção foram migradas para HTTP autenticado com transações, hash/lease e conclusão compartilhada; raw de produção está bloqueado e testado. O upload público de referências ainda consulta mais de dois documentos Firestore nas Storage Rules, acima do teto oficial. Caminhos legados ainda dependem de helpers sem perfil ativo.",
-      "recommendation": "Migrar upload público restante para servidor com slug/capability, estado/publicação e validação completa; revisar e fechar caminhos raw legados sem exceder o limite de dois documentos. Homologar limites e preconditions GCS futuramente em ambiente autorizado."
     }
   ],
   "resolved_findings": [
@@ -58,6 +46,22 @@
       "status": "TESTADO_LOCALMENTE",
       "issue": "No novo transporte o Emulator não impedia sobrescrita só por generation=0; conclusão legada podia ignorar hash vinculado.",
       "resolution": "Lease + verificação explícita de objeto existente sem sobrescrita, hash real em retry/conclusão inclusive callable legado, raw de produção fechado. Gate final 6/6 backend (9 não selecionados), E2E atual 1/1 em375/1440 e Rules selecionadas3/3. Firebase real ainda não homologado."
+    },
+    {
+      "check": "Authority Source",
+      "severity": "major",
+      "issue": "Firestore agora exige identidade verificada, perfil ativo com accountType/tenant e membership/tenant ativos. O helper de Storage ainda usa apenas tenant/membership; adicionar terceiro documento viola o orçamento cross-service de dois.",
+      "recommendation": "Migrar uploads ativos restantes a bytes por servidor e fechar caminhos raw de Storage, com autorização completa e testes de revogação. Não adicionar uma terceira consulta ao helper Storage.",
+      "status": "TESTADO_LOCALMENTE",
+      "resolution": "Todos os caminhos Storage raw bloqueados, zero consultas cross-service. Referências públicas por HTTP/capability expiráveis e hash/lease; legado por leitor servidor com perfil/membership/tenant/permissão antes/depois do I/O. Integração atual 6/6 incluindo jornada, Rules 32/32, E2E público 2/2 em 320/375/768/1440. Sem exclusão ou revogação global real."
+    },
+    {
+      "check": "Business Logic vs. Rules",
+      "severity": "major",
+      "issue": "Fotos de produção foram migradas para HTTP autenticado com transações, hash/lease e conclusão compartilhada; raw de produção está bloqueado e testado. O upload público de referências ainda consulta mais de dois documentos Firestore nas Storage Rules, acima do teto oficial. Caminhos legados ainda dependem de helpers sem perfil ativo.",
+      "recommendation": "Migrar upload público restante para servidor com slug/capability, estado/publicação e validação completa; revisar e fechar caminhos raw legados sem exceder o limite de dois documentos. Homologar limites e preconditions GCS futuramente em ambiente autorizado.",
+      "status": "TESTADO_LOCALMENTE",
+      "resolution": "Todos os caminhos Storage raw bloqueados, zero consultas cross-service. Referências públicas por HTTP/capability expiráveis e hash/lease; legado por leitor servidor com perfil/membership/tenant/permissão antes/depois do I/O. Integração atual 6/6 incluindo jornada, Rules 32/32, E2E público 2/2 em 320/375/768/1440. Sem exclusão ou revogação global real."
     }
   ]
 }

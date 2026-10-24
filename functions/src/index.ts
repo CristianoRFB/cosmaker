@@ -50,3 +50,5 @@ export { listClientQuotes, getClientQuote } from './quotes/client-quotes';
 export { uploadProductionPhotoBytes } from './orders/production-photo-upload';
 
 export { uploadPublicQuoteReferenceBytes } from './public/quote-reference-upload';
+
+export { downloadLegacyAtelierFileBytes } from './orders/legacy-file-bytes';

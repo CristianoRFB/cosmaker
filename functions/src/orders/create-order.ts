@@ -67,9 +67,14 @@ export const createOrderFromApprovedQuote = onDocumentUpdated('ateliers/{atelier
       updatedAt: now,
     });
     itemSnapshots.docs.forEach((item) => transaction.set(orderRef.collection('items').doc(item.id), { ...item.data(), sourceQuoteItemId: item.id }));
-    referenceSnapshots.docs.forEach((reference) => transaction.set(orderRef.collection('files').doc(reference.id), {
-      ...reference.data(), source: 'quote_request', createdAt: now,
-    }));
+    referenceSnapshots.docs.forEach((reference) => {
+      const value = reference.data();
+      if (value.uploadStatus !== undefined && value.uploadStatus !== 'ready') return;
+      // Upload authority never becomes part of the order's historical attachment snapshot.
+      const fields = ['storagePath', 'originalName', 'contentType', 'size', 'uploadStatus', 'storageGeneration', 'sha256', 'validatedAt'];
+      const snapshot = Object.fromEntries(fields.filter(key => value[key] !== undefined).map(key => [key, value[key]]));
+      transaction.set(orderRef.collection('files').doc(reference.id), { ...snapshot, source: 'quote_request', createdAt: now });
+    });
     measurementSnapshots?.docs.forEach((measurement) => transaction.create(orderRef.collection('measurementSnapshot').doc(measurement.id), {
       ...measurement.data(),
       sourceProfileId: measurementProfile!.id,

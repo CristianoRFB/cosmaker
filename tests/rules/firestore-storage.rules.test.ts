@@ -595,24 +595,24 @@ describe('Firestore and Storage tenant rules', () => {
     }));
   });
 
-  it('preserves demo file reads while denying create, update and deletion of sensitive files', async () => {
+  it('blocks raw legacy demo files while preserving objects for the protected compatibility reader', async () => {
     const storage = environment.authenticatedContext('demo-owner').storage();
     for (const [path, contentType] of demoProtectedFiles) {
       const existing = ref(storage, `ateliers/atelier-demo/${path}`);
-      await assertSucceeds(getBytes(existing));
+      await assertFails(getBytes(existing));
       await assertFails(uploadBytes(existing, new Uint8Array([4, 5, 6]), { contentType }));
       await assertFails(uploadBytes(ref(storage, `ateliers/atelier-demo/${path}-new`), new Uint8Array([4, 5, 6]), { contentType }));
       await assertFails(deleteObject(existing));
-      await assertSucceeds(getBytes(existing));
+      await assertFails(getBytes(existing));
     }
   });
 
-  it('keeps non-demo contracts and invoices writable and denies generic order file writes', async () => {
+  it('denies raw contracts, invoices and generic order file mutations', async () => {
     const storage = environment.authenticatedContext('member-a').storage();
     for (const path of ['contracts/new.pdf', 'invoices/new.pdf']) {
       const ownFile = ref(storage, `ateliers/atelier-a/${path}`);
-      await assertSucceeds(uploadBytes(ownFile, new Uint8Array([1, 2, 3]), { contentType: 'application/pdf' }));
-      await assertSucceeds(deleteObject(ownFile));
+      await assertFails(uploadBytes(ownFile, new Uint8Array([1, 2, 3]), { contentType: 'application/pdf' }));
+      await assertFails(deleteObject(ownFile));
       await assertFails(uploadBytes(ref(storage, `ateliers/atelier-b/${path}`), new Uint8Array([1, 2, 3]), { contentType: 'application/pdf' }));
     }
     for (const area of ['shipping', 'documents', 'references', 'approvals', 'attachments']) {

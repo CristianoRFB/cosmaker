@@ -14,6 +14,7 @@ export function validateReferenceFiles(files: File[]) {
   const issues: ReferenceUploadIssue[] = [];
   if (files.length > MAX_REFERENCE_FILES) issues.push({ fileName: '', message: `Anexe no máximo ${MAX_REFERENCE_FILES} imagens.` });
   for (const file of files.slice(0, MAX_REFERENCE_FILES)) {
+    if (file.name.trim().length > 180 || !file.name.trim() || /[\x00-\x1f\x7f]/.test(file.name)) issues.push({ fileName: file.name, message: 'Use um nome de arquivo válido de até 180 caracteres.' });
     if (!(ALLOWED_REFERENCE_TYPES as readonly string[]).includes(file.type)) issues.push({ fileName: file.name, message: 'Use imagens JPEG, PNG ou WebP.' });
     if (file.size > MAX_REFERENCE_FILE_SIZE) issues.push({ fileName: file.name, message: 'Cada imagem pode ter até 10 MB.' });
     if (file.size === 0) issues.push({ fileName: file.name, message: 'O arquivo está vazio.' });

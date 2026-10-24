@@ -89,6 +89,9 @@ describe('Integrated visitor to completed order journey', () => {
     const created = await call<{ requestId: string; references: Array<{ uploadId: string; storagePath: string; capability: string }> }>('createPublicQuoteRequest', { tenantSlug: slugs[0], input: { name: 'Cliente da jornada', email: customer.email, character: 'Armadura da jornada', franchise: 'Obra sintética', category: 'full_cosplay', description: 'Projeto totalmente fictício para a jornada integrada.', desiredDeliveryDate: '2027-12-31', urgency: 'normal', serviceId: service.id }, references: [{ name: 'reference.png', contentType: 'image/png', size: png.length, sha256: (await import('node:crypto')).createHash('sha256').update(png).digest('hex') }] });
     const referenceUpload = await fetch(`http://${emulatorHost}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || '15001'}/${projectId}/us-central1/uploadPublicQuoteReferenceBytes?${new URLSearchParams({ tenantSlug: slugs[0], requestId: created.requestId, uploadId: created.references[0].uploadId })}`, { method: 'POST', body: png, headers: { 'Content-Type': 'image/png', Authorization: `Bearer ${created.references[0].capability}` } });
     expect(referenceUpload.status).toBe(200);
+    // Pending uploads are not historical evidence; capability internals never reach order snapshots.
+    const pendingReference = 'pending-upload-do-not-copy';
+    await adminDb.doc(`ateliers/${atelierIds[0]}/quoteRequests/${created.requestId}/references/${pendingReference}`).set({ uploadStatus: 'pending', storagePath: 'not-ready' });
     expect((await root().collection('quoteRequests').doc(created.requestId).get()).get('showcaseContext.service.title')).toBe('Armaduras sob medida');
     expect((await call<{ services: unknown[] }>('listPublicShowcase', { tenantSlug: slugs[1] })).services).toEqual([]);
     console.log('JOURNEY: visitante → serviço → solicitação e imagem persistidos.');
@@ -102,6 +105,12 @@ describe('Integrated visitor to completed order journey', () => {
     await signIn(customer); await call('respondToQuote', { atelierId: atelierIds[0], quoteId: quote.quoteId, decision: 'approved', comment: '' });
     const orderId = quote.quoteId; const order = root().collection('orders').doc(orderId); await waitFor(async () => (await order.get()).exists);
     expect((await order.get()).data()).toMatchObject({ status: 'waiting_deposit', clientId: crm.clientId, clientUserId: customer.uid, approvedQuoteSnapshot: { total: 1000 } });
+    const evidence = await order.collection('files').get();
+    expect(evidence.size).toBe(1);
+    expect(evidence.docs[0].id).toBe(created.references[0].uploadId);
+    expect(evidence.docs[0].data()).not.toHaveProperty('uploadCapabilityHash');
+    expect(evidence.docs[0].data()).not.toHaveProperty('uploadExpiresAtMs');
+    expect((await order.collection('files').doc(pendingReference).get()).exists).toBe(false);
     expect((await order.collection('measurementSnapshot').doc(measure.id).get()).get('value')).toBe(88);
     await updateDoc(doc(clientDb, 'ateliers', atelierIds[0], 'measurementProfiles', profile.id, 'measurements', measure.id), { value: 101, unit: 'cm', notes: '', updatedAt: serverTimestamp() });
     expect((await order.collection('measurementSnapshot').doc(measure.id).get()).get('value')).toBe(88);

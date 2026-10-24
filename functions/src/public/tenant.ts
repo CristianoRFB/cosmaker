@@ -147,7 +147,9 @@ function validateReferenceDescriptors(value: unknown): ReferenceDescriptor[] {
   return value.map((entry) => {
     if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new HttpsError('invalid-argument', 'Uma referência é inválida.');
     const data = entry as Record<string, unknown>;
-    const name = readText(data, 'name', 1, 255);
+    if (Object.keys(data).some(key => !['name', 'contentType', 'size', 'sha256'].includes(key))) throw new HttpsError('invalid-argument', 'A referência contém campos inválidos.');
+    const name = readText(data, 'name', 1, 180);
+    if (/[\x00-\x1f\x7f]/.test(name)) throw new HttpsError('invalid-argument', 'O nome da referência é inválido.');
     const contentType = data.contentType;
     const size = data.size;
     if (typeof contentType !== 'string' || !allowedImageTypes.has(contentType)) throw new HttpsError('invalid-argument', 'Use imagens JPEG, PNG ou WebP.');

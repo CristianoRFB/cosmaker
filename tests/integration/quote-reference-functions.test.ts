@@ -116,6 +116,8 @@ describe('Protected quote reference bytes', () => {
       tenantSlug: slug, input: { name: 'Cliente sintético', email: customer.email, character: 'Armadura', franchise: 'Obra sintética', category: 'full_cosplay', description: 'Solicitação fictícia para validar capabilities públicas.', desiredDeliveryDate: '2027-12-31', urgency: 'normal' },
       references: [{ name: 'reference.png', contentType: 'image/png', size, sha256 }],
     });
+    await expect(create('invalid')).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    await expect(create(hash, 10 * 1024 * 1024 + 1)).rejects.toMatchObject({ code: 'functions/invalid-argument' });
     const item = await create(); const target = item.references[0];
     const record = adminDb.doc(target.storagePath);
     const send = (options: { query?: Record<string, string>; capability?: string; body?: Buffer; type?: string; method?: string } = {}) => {
@@ -161,6 +163,36 @@ describe('Protected quote reference bytes', () => {
     await bucket.file(collisionRef.storagePath).save(different, { metadata: { contentType: 'image/png', metadata: { sha256: hash } } });
     const response = await send({ query: { requestId: collision.requestId, uploadId: collisionRef.uploadId }, capability: collisionRef.capability });
     expect(response.status).toBe(409); expect((await bucket.file(collisionRef.storagePath).download())[0]).toEqual(different);
+  }, 120_000);
+
+  it('mantém leitura legada somente pelo servidor, com revogação e isolamento sem apagar objetos', async () => {
+    await signIn(ownerA);
+    await adminDb.doc(`ateliers/${atelierIds[0]}/clients/legacy-client`).set({ name: 'Cliente sintético' });
+    await adminDb.doc(`ateliers/${atelierIds[0]}/portfolio/legacy-project`).set({ title: 'Projeto sintético' });
+    await adminDb.doc(`ateliers/${atelierIds[0]}/orders/legacy-order`).set({ status: 'completed' });
+    const endpoint = `http://${emulatorHost}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || '15001'}/${projectId}/us-central1/downloadLegacyAtelierFileBytes`;
+    const read = async (path: string, anonymous = false) => fetch(`${endpoint}?${new URLSearchParams({ path })}`, { headers: !anonymous && auth.currentUser ? { Authorization: `Bearer ${await auth.currentUser.getIdToken()}` } : {} });
+    const paths = ['branding/legacy.png', 'portfolio/legacy-project/legacy.png', 'clients/legacy-client/measurements/legacy.png', 'contracts/legacy.pdf', 'invoices/legacy.pdf', 'orders/legacy-order/shipping/legacy.pdf'];
+    for (const path of paths) {
+      const bytes = path.endsWith('.pdf') ? Buffer.from('%PDF-1.4\nsynthetic') : png;
+      const type = path.endsWith('.pdf') ? 'application/pdf' : 'image/png';
+      const fullPath = `ateliers/${atelierIds[0]}/${path}`; const oldToken = randomUUID();
+      await bucket.file(fullPath).save(bytes, { metadata: { contentType: type, metadata: { firebaseStorageDownloadTokens: oldToken } } });
+      expect((await read(path, true)).status).toBe(401);
+      const allowed = await read(path); expect(allowed.status).toBe(200); expect(Buffer.from(await allowed.arrayBuffer())).toEqual(bytes);
+      expect(allowed.headers.get('cache-control')).toContain('no-store'); expect(allowed.headers.get('x-content-sha256')).toMatch(/^[a-f0-9]{64}$/);
+      expect((await fetch(tokenUrl(fullPath, oldToken))).status).not.toBe(200);
+      await expect(getDownloadURL(ref(storage, fullPath))).rejects.toMatchObject({ code: 'storage/unauthorized' });
+      expect((await bucket.file(fullPath).exists())[0]).toBe(true);
+      await signIn(ownerB); expect((await read(path)).status).toBe(404); await signIn(ownerA);
+    }
+    for (const path of ['../other/secret', 'ateliers/other/contracts/secret.pdf', 'orders/legacy-order/production/photo', 'orders/legacy-order/attachments/file', 'quoteRequests/request/references/ref']) expect((await read(path)).status).toBe(400);
+    await signIn(customer); expect((await read(paths[0])).status).toBe(403);
+    await signIn(quotesReader); expect((await read(paths[0])).status).toBe(403);
+    await signIn(ownerA);
+    for (const target of [adminDb.doc(`users/${ownerA.uid}`), adminDb.doc(`ateliers/${atelierIds[0]}/members/${ownerA.uid}`), adminDb.doc(`ateliers/${atelierIds[0]}`)]) {
+      await target.update({ active: false }); try { expect((await read(paths[0])).status).toBe(403); } finally { await target.update({ active: true }); }
+    }
   }, 120_000);
 
   it('nega permissões, perfis e tenant revogados e parâmetros adulterados sem fornecer URLs privadas', async () => {
