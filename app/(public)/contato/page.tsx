@@ -1,8 +1,2 @@
-export default function Contato() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Contato</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
-}
+import { TenantEntry } from '@/components/public/tenant-entry';
+export default function PublicEntryPage() { return <TenantEntry title="Fale com o seu ateliê" description="Envie uma solicitação pelo endereço público do cosmaker. Se você já tem um pedido, use as mensagens da sua conta para manter o histórico do atendimento." destination="orcamento" />; }

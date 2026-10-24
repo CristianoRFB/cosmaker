@@ -1,8 +1,4 @@
+import Link from 'next/link';
 export default function Privacidade() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Privacidade</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
+  return <main className="mx-auto grid max-w-3xl gap-6 px-4 py-12 sm:px-8"><h1 className="text-3xl font-bold">Informações de privacidade</h1><p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">Versão em homologação. A identidade e os canais do responsável, as condições de retenção e a política jurídica precisam ser formalizados antes da abertura comercial.</p><section className="grid gap-4 rounded-2xl border border-violet-100 bg-white p-5 sm:p-8"><h2 className="text-xl font-semibold">Dados usados no atendimento</h2><p className="text-sm leading-7 text-slate-600">Solicitações podem conter nome, e-mail, telefone, descrição do projeto, referências e datas desejadas. Na conta e nos pedidos também podem existir medidas, fotografias, mensagens, aprovações e registros de recebimentos declarados pelo ateliê.</p><h2 className="text-xl font-semibold">Acesso e compartilhamento</h2><p className="text-sm leading-7 text-slate-600">A aplicação usa vínculos de conta, ateliê e pedido para limitar o acesso. Serviços e trabalhos escolhidos para publicação aparecem na página pública do respectivo ateliê. Dados de atendimento e arquivos privados seguem as permissões do projeto.</p><h2 className="text-xl font-semibold">Seu perfil e seus projetos</h2><p className="text-sm leading-7 text-slate-600">Você pode consultar e atualizar os campos disponíveis no seu perfil e conversar com o ateliê sobre os dados do seu projeto. Os históricos de propostas, revisões e recebimentos fazem parte do acompanhamento da encomenda.</p><Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href="/cliente/perfil">Consultar meu perfil</Link><Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href="/contato">Localizar meu ateliê</Link></section></main>;
 }

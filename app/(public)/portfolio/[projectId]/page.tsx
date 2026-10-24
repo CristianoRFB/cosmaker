@@ -1,8 +1,2 @@
-export default function ProjetoDoPortfólio() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Projeto do portfólio</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
-}
+import { TenantEntry } from '@/components/public/tenant-entry';
+export default function PublicEntryPage() { return <TenantEntry title="Abra o portfólio do ateliê" description="Este link antigo não identifica o ateliê do projeto. Informe o endereço do cosmaker para consultar seus trabalhos publicados e selecionar o projeto." destination="portfolio" />; }

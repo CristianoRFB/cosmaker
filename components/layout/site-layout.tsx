@@ -1,25 +1,26 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { PublicSiteMenu } from './public-site-menu';
 
 function Brand() {
-  return <Link aria-label="Cosmaker OS, início" className="inline-flex items-center gap-2.5 text-lg font-bold tracking-tight text-slate-950" href="/"><span className="grid size-9 place-items-center rounded-xl bg-violet-700 text-white"><Sparkles aria-hidden="true" size={19} /></span>Cosmaker<span className="-ml-2 text-violet-700">OS</span></Link>;
+  return <Link aria-label="Cosmaker OS, início" className="inline-flex items-center gap-2 text-lg font-bold sm:gap-2.5 tracking-tight text-slate-950" href="/"><span className="grid size-8 place-items-center rounded-xl sm:size-9 bg-violet-700 text-white"><Sparkles aria-hidden="true" size={19} /></span>Cosmaker<span className="-ml-2 text-violet-700">OS</span></Link>;
 }
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   return <div className="min-h-screen bg-[#fcfbff] text-slate-950">
     <header className="sticky top-0 z-40 border-b border-violet-100/80 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
+      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-2 px-4 sm:px-8 lg:gap-6">
         <Brand />
-        <nav aria-label="Navegação principal" className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex">
+        <nav aria-label="Navegação principal" className="hidden items-center gap-7 text-sm font-medium text-slate-600 lg:flex">
           <Link className="transition hover:text-violet-700" href="/portfolio">Portfólio</Link>
           <Link className="transition hover:text-violet-700" href="/servicos">Serviços</Link>
           <Link className="transition hover:text-violet-700" href="/agenda">Agenda</Link>
           <Link className="transition hover:text-violet-700" href="/sobre">Sobre</Link>
         </nav>
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3"><PublicSiteMenu />
           <Link className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 sm:inline-flex" href="/login">Entrar</Link>
-          <Link className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-violet-700 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800" href="/login">Acessar o sistema<ArrowRight aria-hidden="true" size={16} /></Link>
+          <Link className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-violet-700 px-3 sm:px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800" href="/login"><span className="hidden sm:inline">Acessar o sistema</span><span className="sm:hidden">Entrar</span><ArrowRight aria-hidden="true" className="hidden sm:block" size={16} /></Link>
         </div>
       </div>
     </header>
@@ -27,7 +28,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     <footer className="border-t border-violet-100 bg-white">
       <div className="mx-auto grid max-w-7xl gap-8 px-5 py-10 sm:px-8 md:grid-cols-[1fr_auto] md:items-center">
         <div><Brand /><p className="mt-3 text-sm text-slate-500">Organização para o ateliê. Mais tempo para criar.</p></div>
-        <div className="flex flex-wrap gap-x-5 gap-y-3 text-sm text-slate-600"><Link href="/portfolio">Portfólio</Link><Link href="/servicos">Serviços</Link><Link href="/sobre">Sobre</Link><Link href="/login">Entrar</Link></div>
+        <div className="flex flex-wrap gap-x-5 gap-y-3 text-sm text-slate-600"><Link href="/portfolio">Portfólio</Link><Link href="/servicos">Serviços</Link><Link href="/sobre">Sobre</Link><Link href="/login">Entrar</Link><Link href="/privacidade">Privacidade</Link><Link href="/termos">Informações de uso</Link></div>
         <p className="text-xs text-slate-400 md:col-span-2">© {new Date().getFullYear()} Cosmaker OS</p>
       </div>
     </footer>

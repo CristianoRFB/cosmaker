@@ -1,8 +1,2 @@
-export default function Disponibilidade() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Disponibilidade</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
-}
+import { TenantEntry } from '@/components/public/tenant-entry';
+export default function PublicEntryPage() { return <TenantEntry title="Consulte a disponibilidade do ateliê" description="Informe o endereço do seu ateliê para enviar o projeto e a data desejada no formulário de orçamento. A confirmação do prazo é combinada na proposta." destination="orcamento" />; }

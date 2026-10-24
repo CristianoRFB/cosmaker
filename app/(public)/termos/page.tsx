@@ -1,8 +1,4 @@
+import Link from 'next/link';
 export default function Termos() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Termos</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
+  return <main className="mx-auto grid max-w-3xl gap-6 px-4 py-12 sm:px-8"><h1 className="text-3xl font-bold">Informações de uso</h1><p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">Versão em homologação. Os termos contratuais definitivos dependem de revisão jurídica e identificação do responsável antes da abertura comercial.</p><section className="grid gap-4 rounded-2xl border border-violet-100 bg-white p-5 sm:p-8"><h2 className="text-xl font-semibold">Projetos e propostas</h2><p className="text-sm leading-7 text-slate-600">As condições de cada encomenda são combinadas com o ateliê na proposta e no acordo vigente. Analise escopo, valores e prazos antes de aprovar. Alterações posteriores são registradas nas revisões do pedido.</p><h2 className="text-xl font-semibold">Conta e referências</h2><p className="text-sm leading-7 text-slate-600">Mantenha seus dados de contato atualizados e compartilhe somente referências e arquivos que você pode usar no atendimento. O acesso à conta é pessoal; a equipe trabalha conforme as permissões atribuídas pelo ateliê.</p><h2 className="text-xl font-semibold">Recebimentos e comunicação</h2><p className="text-sm leading-7 text-slate-600">Os registros financeiros exibidos são declarações internas do ateliê. Combine pagamentos e entrega diretamente com ele. Use a conversa do pedido para manter o histórico das decisões e do acompanhamento.</p><Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href="/privacidade">Consultar informações de privacidade</Link><Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href="/login">Acessar minha conta</Link></section></main>;
 }

@@ -1,8 +1,4 @@
+import Link from 'next/link';
 export default function SobreOAteliê() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Sobre o ateliê</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
+  return <main className="mx-auto grid max-w-3xl gap-6 px-4 py-12 sm:px-8"><h1 className="text-3xl font-bold">Sobre o Cosmaker OS</h1><section className="grid gap-4 rounded-2xl border border-violet-100 bg-white p-5 sm:p-8"><h2 className="text-xl font-semibold">Organização para ateliês de cosplay</h2><p className="text-sm leading-7 text-slate-600">O Cosmaker OS reúne solicitações, propostas, pedidos, medidas, produção, materiais e registros financeiros internos. Cada ateliê mantém sua identidade e compartilha um endereço público próprio.</p><p className="text-sm leading-7 text-slate-600">Clientes acompanham seus projetos, analisam propostas e revisões, mantêm suas medidas e conversam com a equipe. Os recebimentos são registrados manualmente pelo ateliê.</p><p className="text-sm leading-7 text-slate-600">Os serviços e trabalhos publicados pertencem ao ateliê que aparece no endereço. Para solicitar um projeto, abra o link enviado pelo seu cosmaker.</p><Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href="/servicos">Encontrar o endereço do meu ateliê</Link><Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href="/login">Acessar minha conta</Link></section></main>;
 }

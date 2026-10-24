@@ -1,5 +1,15 @@
 # Cosmaker Master Finalization — Progress
 
+## RETOMADA — interfaces privadas aceitas, fechamento público WIP — 2026-10-24
+
+- Recuperado `e63977b57fda3893c9db7d52faf7e9f39158dfd6`, árvore limpa e CI40048864282 PASS. Node22.23.4/Java21 confirmados; runtime local reutilizado, sem reinstalação redundante.
+- Backend comercial atual **12/12 PASS**,89,44s (`/tmp/cosmaker-resume-commercial-backend.log`): inclui diretório global com paginação, situação Auth, projeção, sessão/perfil revogados, ausência de autoridade e payload/cursor inválidos. Não repetir esse domínio sem alteração pertinente.
+- Build local81 e TypeScript PASS. E2E inicial **3 PASS/1 FAIL**,2,9min: portal/paginação52pedidos, diretório global e assinatura/comunicação/entrega passaram em320/375/768/1440 (`/tmp/cosmaker-resume-ui.log`). A falha de medidas comparava o banco antes da gravação concluir; teste agora aguarda persistência real e recarrega a tela.
+- Repetição isolada medidas/revisão **1/1 PASS**,53,7s (`/tmp/cosmaker-measures-isolated-e2e.log`): staff cria/arquiva ficha e medida88,5; cliente localiza pelo CRM diferente do UID, altera para90,5 com persistência/reload e cria ficha canônica; formulário de revisão preenchido em quatro larguras salva nova proposta e preserva itens anteriores. Não converter o lote inicial em4/4 retroativamente.
+- Tentativa de regressão17arquivos simultânea com navegador pressionou memória do Cloud (8,7/9,9GiB) e foi interrompida; **não é PASS**. Próximos lotes serão por domínio com runtime isolado, mantendo concorrência real onde exigida. Confirmado Pub/Sub Java em grupo próprio, sobrevivendo ao encerramento antigo; correção de limpeza do lançador ainda pendente.
+- WIP público: serviços/portfólio/agenda/contato globais agora pedem slug e consultam o resolver existente, sem tenant padrão/catálogo global/agenda privada; 404/sobre/privacidade/termos ganharam conteúdo e links funcionais, com homologação jurídica explicitamente pendente e sem inventar responsável/condições. Menu público móvel e ajuste do header320/tablet preservam a identidade. **Build/smoke dessas alterações ainda pendentes**.
+- F2/F3/F5/F6 seguem parciais; formal10/16, inventário funcional ainda não fechado. Próximos gates: limpar corretamente descendentes do runtime, build/smoke público, regressões SDK por domínio, Rules/recuperação/scheduler e inventário final.
+
 ## ENCERRAMENTO SOLICITADO — GOAL MASTER IV INCOMPLETO — 2026-10-24
 
 - O usuário solicitou parar e enviar imediatamente o trabalho ao GitHub. Este checkpoint é **WIP / INCOMPLETO**, sem aceite global de F2/F3/F5/F6 e sem prontidão comercial.
