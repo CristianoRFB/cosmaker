@@ -43,3 +43,10 @@ Auditorias atuais: aplicação de produção0, Functions de produção0; auditor
 npm10.9.9 apresentou TypeError edgesOut ao construir peers da atualização. O defeito repetiu sem node_modules; o resolvedor npm11.13.0 gerou o lockfile válido, sem --force/--legacy-peer-deps. A instalação limpa npm ci do Node22 funcionou depois. O node_modules anterior ficou temporariamente preservado em /tmp; nenhum código do usuário ou dado Firebase foi removido. Os lançadores continuam Node22 e npm ci; não há nova configuração manual recorrente de credenciais.
 
 Vitest4 executou120/120 unitários e os SDKs novos passaram10/10 integrações de propostas/pedidos/pagamentos/medidas. Functions e TypeScript atuais passaram. Regressões amplas, Rules, recuperação, build/UI e CI do checkpoint final ainda devem fechar a atualização. Não tratar este WIP como aprovação de F5/F6 ou produção.
+
+
+## Aviso de stream Storage observado em24/10
+
+Com --trace-warnings, o aviso MaxListenersExceededWarning de error/close foi localizado em teeny-request/build/src/index.js:461, chamada de stream.pipeline via @google-cloud/storage. Instalados Storage8.4.0/teeny-request11.1.1; npm view confirmou ambos como latest nesta consulta. O ramo Firestore também usa teeny-request10.1.4 transitivo. Não houve override entre majors, edição de node_modules, setMaxListeners ou supressão de warning.
+
+O aviso ocorre também no processo de fixtures Admin durante downloads. Sozinho não comprova vazamento de heap; os testes de bytes/hash/concorrência continuaram passando. A memória voltou a ficar controlada com runtimes por domínio e limpeza correta de processos. Acompanhamento upstream permanece registrado como limitação conhecida, sem patch oficial disponível nesta consulta. Não é novo achado de npm audit nem promessa de ausência de vazamentos.

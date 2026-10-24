@@ -165,10 +165,11 @@ test('equipe configura produção e aplica mudança somente após aprovação ex
     await expect(clientPage.getByRole('button', { name: 'Aprovar revisão v1', exact: true })).toHaveCount(0);
 
     await staffPage.getByRole('link', { name: 'Consultar registros financeiros do pedido', exact: true }).click();
-    await expect(staffPage.getByRole('heading', { name: 'Registros financeiros do pedido', exact: true })).toBeVisible();
-    await expect(staffPage.getByText('Saldo registrado', { exact: true })).toBeVisible();
-    await expect(staffPage.getByText(/475,25/, { exact: false })).toBeVisible();
-    await staffPage.getByRole('link', { name: 'Voltar ao pedido', exact: true }).click();
+    await expect(staffPage.getByRole('heading', { name: 'Financeiro do pedido', exact: true })).toBeVisible();
+    const margin = staffPage.getByRole('article').filter({ has: staffPage.getByRole('link', { name: `Projeto de cosplay ${nonce}`, exact: true }) });
+    await expect(margin.getByText('Saldo', { exact: true })).toBeVisible();
+    await expect(margin.getByRole('definition').filter({ hasText: /475,25/ })).toBeVisible();
+    await staffPage.getByRole('link', { name: '← Voltar ao pedido e à confirmação da entrada', exact: true }).click();
     await staffPage.getByRole('link', { name: 'Consultar histórico completo do pedido', exact: true }).click();
     await expect(staffPage.getByRole('heading', { name: 'Histórico do pedido', exact: true })).toBeVisible();
     await expect(staffPage.getByText('Acordo aprovado aplicado', { exact: true })).toBeVisible();

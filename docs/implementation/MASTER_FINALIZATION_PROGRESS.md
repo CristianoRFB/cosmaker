@@ -1,5 +1,12 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL IV — regressão de UI após projeção privada — 2026-10-24
+
+- Remoto88a7959f9d597ce3c9ec5c60366ff290223a715a preserva projeção/Rules/recuperação. Lote E2E adicional **5 PASS/1 FAIL**,2,9min (`/tmp/cosmaker-private-regression-ui.log`): mensagens/anexos/notificações e quatro papéis de navegação em320/375/768/1440 passaram. Falha de revisão/produção esperava títulos da tela financeira anterior à F1.6, apesar de UI/banco exibirem acordo575,25/recebido100/saldo475,25 corretos.
+- Teste alinhado à interface atual Financeiro do pedido, card de saldo e link de retorno; aplicação e permissões não alteradas. Repetição apenas desse cenário **1/1 PASS**,32,7s,29,6s de teste (`/tmp/cosmaker-order-change-current-finance-e2e.log`), com aprovação explícita, aplicação/histórico e isolamento. Não transformar lote inicial em6/6 retroativamente.
+- Npm view confirma Storage8.4.0/teeny-request11.1.1 já latest; nenhum patch oficial para aplicar ao warning de pipeline observado. Sem supressão/override/monkey patch. Revisão de dependências registra limite da evidência e memória controlada por lotes.
+- Runtime interativo encerrado; iniciar lote SDK finance/showcase/reports/delivery/team/inventory sequencialmente, sem navegador. Esses seis domínios ainda sem regressão atual neste checkpoint; não herdar PASS automático. Inventário funcional/CI final permanecem pendentes; fases formais inalteradas.
+
 ## GOAL IV — detalhe privado projetado e recuperação atual comprovados — 2026-10-24
 
 - Remoto anterior67e94ea5ca3c6ea894ce318233cd0a2db7dc964b. Implementado getClientOrder com sessão/revogação, perfil/tenant/UID/CRM, payload estrito e allowlist compartilhada com listClientOrders. Repositório cliente migrou ao servidor; root raw agora somente staff com orders:read/manage. Custos/notas/atores não saem no DTO e snapshot integral permanece no banco. Sem migração/exclusão.

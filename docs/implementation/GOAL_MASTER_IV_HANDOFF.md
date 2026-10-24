@@ -19,11 +19,11 @@ Lançador Linux acompanha sua árvore por PID+startTime e encerra PubSub destaca
 - E2Es retomada: portal/paginação, diretório/configurações/entrega e medidas/revisão aprovados em quatro larguras; público2/2. Mais recente portal/anexos2/2 PASS1,6min inclui detalhe projetado320/375/768/1440, resposta sem custos internos e bytes/revogação/A×B. Capturas inspecionadas. Execuções novas em andamento abaixo.
 - Recuperação com stack atual PASS: Auth/Firestore/Storage export/import em instâncias novas, bytes/hash, centavos/histórico, ACL A/B e raw privado. Artefatos sintéticos97a2222e ignorados no Git. Não valida restore real ou replay de Functions.
 - Scheduler CLI15.34.1: publicação/entrega/ack PubSub confirmados, mas Unsupported trigger signature:http; timeout25s, não PASS. Wrapper HTTP atual PASS; não é homologação do agendamento real.
-- Trace de MaxListeners em teeny-request:461/pipeline via Storage8.4.0. Não foi suprimido nem diagnosticado como vazamento comprovado. Examinar patch compatível proporcionalmente.
+- Trace de MaxListeners em teeny-request:461/pipeline via Storage8.4.0. Não foi suprimido nem diagnosticado como vazamento comprovado. Consulta npm view confirmou Storage8.4.0/teeny-request11.1.1 já latest; nenhum patch oficial disponível. Acompanhamento upstream documentado, sem supressão ou diagnóstico de heap comprovado.
 
 ## Próxima ação exata
 
-1. Conferir execução Playwright59094, log /tmp/cosmaker-private-regression-ui.log: revisões/produção, mensagens e navegação owner/staff/client/platform em quatro larguras (seis testes). Runtime atual cloud-start PID31134, sessão49956; encerrar por TERM antes de SDK/Rules/recuperação. Não rodar outro .next ou runtime sobre o existente. Esses resultados ainda NÃO são PASS neste checkpoint.
+1. UI adicional fechou5PASS/1FAIL (teste esperava financeiro pré-F1.6); mensagens e quatro papéis320/375/768/1440 PASS. Teste de revisão alinhado à tela financeira atual e repetido sozinho1/1 PASS32,7s. Runtime31134 encerrado. Não repetir esses seis cenários sem mudança pertinente. Conferir lote SDK novo se ativo e preservar logs/resultados.
 2. Executar SDKs independentes ainda pendentes após majors: finance,showcase,reports,delivery,team,inventory. Harness por domínio sequencial, sem navegador simultâneo. Lote único17arquivos anterior foi interrompido por memória8,7/9,9GiB e nunca foi aprovado. Preservar concorrência interna dos testes.
 3. Fechar inventário funcional verificável conforme FUNCTIONAL_INVENTORY_METHOD.md, auditar ações/rotas restantes, verificar dependência upstream e CI do HEAD final. Não inventar módulos/quotas e não repetir gates inalterados.
 
