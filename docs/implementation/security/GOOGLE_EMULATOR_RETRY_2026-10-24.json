@@ -1,0 +1,41 @@
+{
+  "observedAt": "2026-10-24T14:22:42.190492+00:00",
+  "projectId": "demo-cosmaker",
+  "syntheticOnly": true,
+  "runtime": {
+    "phase": "running",
+    "connectivity": "connected",
+    "observationsCurrent": true,
+    "specRevision": "35",
+    "observedSpecRevision": "35",
+    "policyState": "enforced",
+    "customAllowedHosts": [
+      "storage.googleapis.com"
+    ],
+    "presets": [
+      "package_managers"
+    ],
+    "apisGoogleComAllowed": false,
+    "initialSpecRevision": "34"
+  },
+  "probe": {
+    "url": "https://apis.google.com/js/api.js",
+    "proxyConnectStatus": 403,
+    "curlExitCode": 56,
+    "httpStatus": null
+  },
+  "test": {
+    "command": "bash scripts/cloud-run.sh npx playwright test tests/e2e/google-emulator.spec.ts",
+    "outcome": "BLOCKED_EXTERNAMENTE",
+    "passed": 0,
+    "skipped": 1,
+    "exitCode": 0,
+    "skipCondition": "net::ERR_TUNNEL_CONNECTION_FAILED somente em apis.google.com/js/api.js",
+    "logName": "cosmaker-google-network-retry-e2e.log",
+    "logSha256": "990a5a911fba14231dbdc084a90ae2385af60b385524f5af687cfd1556480ce5"
+  },
+  "realFirebaseUsed": false,
+  "realGoogleAccountUsed": false,
+  "networkConfigurationChanged": false,
+  "conclusion": "Publicação informada pelo usuário não refletida na política efetiva observada desta máquina; causa do vínculo/aplicação da configuração não determinada pelo conector somente leitura."
+}

@@ -1,5 +1,15 @@
 # Revisão mínima de rede do ambiente cosmaker
 
+## Retomada após publicação informada — 24/10/2026, 14:22UTC
+
+O usuário informou que publicou a liberação de apis.google.com. A máquina desta retomada está **running/connected**, com observações atuais; o bloqueio anterior de provisionamento starting não se repetiu. Contudo, tanto o manifesto local quanto o conector de runtime (política enforced, revisões34/35) continuam sem apis.google.com, com somente storage.googleapis.com nos hosts customizados e o preset package_managers.
+
+O acesso pelo proxy a https://apis.google.com/js/api.js recebeu CONNECT403 (curl56). Após iniciar exclusivamente demo-cosmaker pelos lançadores existentes, foi executado somente `bash scripts/cloud-run.sh npx playwright test tests/e2e/google-emulator.spec.ts`: **1skipped/0PASS**, pela condição exata ERR_TUNNEL_CONNECTION_FAILED desse recurso. Exit0 do Playwright não significa aprovação. Não abriu popup, não usou conta Google/Firebase real e não ampliou a lista de domínios. Runtime encerrado ao final.
+
+Evidência sanitizada em [GOOGLE_EMULATOR_RETRY_2026-10-24.json](security/GOOGLE_EMULATOR_RETRY_2026-10-24.json). A publicação informada não está refletida na política efetiva observada desta máquina; o conector somente leitura não permite determinar/corrigir o vínculo com a configuração publicada. **Próxima ação: reconciliar a revisão publicada com a instância vinculada a esta execução e confirmar o host na política aplicada; então repetir somente o mesmo teste.** Nenhum novo domínio foi identificado como necessário. Conclusão funcional permanece182/184=98,91%; Google continua BLOCKED_EXTERNAMENTE.
+
+## Histórico da proposta anterior
+
 Proposta para publicação pelo responsável do ambiente; **não publicada nesta execução**. O conector disponível nesta sessão consulta runtime/diagnósticos, sem ferramenta de edição/publicação de configuração. Não foram alterados o proxy, os certificados ou /etc/codex/network-policy.json.
 
 ## Evidência e alteração necessária

@@ -44,7 +44,14 @@
             "EVIDENCE_LEDGER.json#ui-consolidation",
             "EVIDENCE_LEDGER.json#ui-google",
             "CLOUD_NETWORK_REVIEW.md"
-          ]
+          ],
+          "lastTargetedAttempt": {
+            "observedAt": "2026-10-24T14:22:42.190492+00:00",
+            "outcome": "BLOCKED_EXTERNAMENTE",
+            "passed": 0,
+            "skipped": 1,
+            "evidence": "security/GOOGLE_EMULATOR_RETRY_2026-10-24.json"
+          }
         },
         "negative": {
           "state": "PASS",

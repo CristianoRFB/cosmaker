@@ -264,13 +264,14 @@
       "detail": "Somente recuperação passou15,1s: OOB único, inválido/replay, senha antiga, conta ausente, erro de rede/retry, UID/perfil/4larguras. Equipe passou emrepetição própria."
     },
     "ui-google": {
-      "logName": "cosmaker-final-feedback-e2e.log",
-      "logSha256": "90b8ce61e7bdb85f452fc425a66d2f8e98e717bf045567b1b31d976dce8288f3",
-      "outcome": "BLOCKED_EXTERNAMENTE / 1 skipped",
+      "logName": "cosmaker-google-network-retry-e2e.log",
+      "logSha256": "990a5a911fba14231dbdc084a90ae2385af60b385524f5af687cfd1556480ce5",
+      "outcome": "BLOCKED_EXTERNAMENTE / 1 skipped / 0 passed",
       "sources": [
-        "tests/e2e/google-emulator.spec.ts"
+        "tests/e2e/google-emulator.spec.ts",
+        "docs/implementation/security/GOOGLE_EMULATOR_RETRY_2026-10-24.json"
       ],
-      "detail": "Apis.google.com/js/api.js recusado pelo proxy antes do popup; não PASS. Outro cenário no lote falhou por seletor do toast, repetido emteam."
+      "detail": "Retomada solicitada após publicação informada de apis.google.com. Máquina running/connected, política enforced revisões34 e35 ainda sem host. Probe CONNECT403; somente o teste Google executado, skip pela falha exata de túnel. Exit0 não é PASS. Sem conta Google/Firebase reais, sem ampliação de domínios; publicação não refletida na instância atual."
     },
     "scheduler-http": {
       "logName": "cosmaker-scheduler-new-sdk-http.log",
@@ -432,6 +433,15 @@
       "outcome": "PASS",
       "sources": [],
       "detail": "docs:check exit0:CURRENT/v0.2 e links; não é aceite de releasev0.3."
+    },
+    "ui-google-previous": {
+      "logName": "cosmaker-final-feedback-e2e.log",
+      "logSha256": "90b8ce61e7bdb85f452fc425a66d2f8e98e717bf045567b1b31d976dce8288f3",
+      "outcome": "BLOCKED_EXTERNAMENTE / 1 skipped",
+      "sources": [
+        "tests/e2e/google-emulator.spec.ts"
+      ],
+      "detail": "Apis.google.com/js/api.js recusado pelo proxy antes do popup; não PASS. Outro cenário no lote falhou por seletor do toast, repetido emteam."
     }
   }
 }

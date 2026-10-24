@@ -1,5 +1,13 @@
 # Cosmaker Master Finalization — Progress
 
+## Google local — máquina disponível, configuração publicada não refletida — 2026-10-24,14:22UTC
+
+- Fetch confirmou HEAD remoto/local fefcb5593cade146d0950b49e118145fae70da24 e árvore limpa; commits preservados. Ambiente running/connected, observações atuais; não ficou emstarting nesta retomada. Node22.23.4/Java21 e runtime/cache/build existentes reutilizados, exclusivamente demo-cosmaker.
+- Usuário informou publicação deapis.google.com. Política local e conector enforced revisões34/35 continuam sem esse host; apenas storage.googleapis.com customizado e preset package_managers. Consulta única ao recurso exato https://apis.google.com/js/api.js recebeu CONNECT403/curl56. Isso comprova divergência na política efetiva desta instância, sem determinar a causa do vínculo/aplicação da configuração publicada.
+- Executado **somente** `bash scripts/cloud-run.sh npx playwright test tests/e2e/google-emulator.spec.ts`, com emuladores/aplicação locais prontos. Resultado **1skipped/0PASS**, exit0: condição exata ERR_TUNNEL_CONNECTION_FAILED emapis.google.com/js/api.js. Não houve popup/conta Google real, nem PASS. Sem ampliar domínios, bypass de proxy/CA ou Firebase real; runtime encerrado.
+- Evidência sanitizada versionada emsecurity/GOOGLE_EMULATOR_RETRY_2026-10-24.json; ledger mantém registro anterior e atualiza ui-google. Inventário conserva BLOCKED_EXTERNAMENTE e182/184=98,91%; formal10/16=62,5%, sem novo aceite. Não foram repetidas104integrações/Rules/recuperação ou outros E2Es.
+- Próxima ação: reconciliar a configuração publicada com a máquina vinculada e confirmar o host na política efetiva, depois repetir apenas o mesmo teste. Conector de ambiente disponível é somente leitura. Scheduler v2 permanece bloqueio posterior. Handoff e revisão de rede atualizados; nenhuma alteração de aplicação/teste foi necessária.
+
 ## Consolidação local fechada; GOAL global incompleto — 2026-10-24
 
 - Código enviado em6b4ac11f1412d33c0f7ffea8b678ed26d5ac2d9c; CI [40098118834](https://github.com/CristianoRFB/cosmaker/actions/runs/40098118834) SUCCESS, log remoto confirma **124/124unitários/25arquivos**, instalação limpa e buildsFunctions/Next81. O CI do checkpoint documental posterior deve ser consultado após push; não inferir resultado de HEAD diferente.
