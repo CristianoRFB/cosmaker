@@ -1,4 +1,16 @@
-# GOAL MASTER IV — handoff de interrupção
+# GOAL MASTER IV — handoff de continuidade
+
+## Atualização de retomada — 2026-10-24 (prevalece sobre o registro de interrupção abaixo)
+
+Missão retomada; checkpoint anterior25606cd/CI40054282918 SUCCESS. Diretório global backend12/12 e E2E portal/paginação52pedidos, diretório, assinatura/comunicação/entrega e medidas/revisão foram aprovados na retomada (três E2Es iniciais verdes e repetição isolada1/1 das medidas após corrigir espera de persistência do teste). Páginas públicas antes WIP agora têm build81/TypeScript PASS e E2E2/2 em quatro larguras; menu e resolver por slug funcionais. Ver progresso canônico para comandos/limites históricos.
+
+Lançador corrigido/testado para encerrar descendentes Pub/Sub em grupos próprios: unitário1/1 e runtime completo com nove portas liberadas. Usar lotes de integração isolados por domínio, sem navegador simultâneo: tentativa antiga de17arquivos pressionou memória e foi interrompida, sem PASS. CLI15.34.1 ainda recusa trigger scheduler HTTP via transporte Pub/Sub; publicação/entrega/ack confirmados em debug. Wrapper HTTP atual passou; não equivale ao agendamento real.
+
+**Próxima ação exata:** corrigir falha comprovada de consulta direta de pagamentos em pedido legado sem UID com e-mail ligado no CRM a outro UID. Novo teste negativo em client-payments-functions.test.ts confirmou exposição sintética; revisar autorização comum de mensagens/arquivos/fotos e fallback das Rules. Sem aceites globais F2/F3/F5/F6 até essa correção e regressões obrigatórias.
+
+Depois: regressões SDK em harnesses isolados (references, production-photo-bytes, orders, journey, finance, showcase, messages, reports, delivery, team, inventory, quotes); reutilizar commercial12/12 e gates de UI sem mudanças pertinentes. Rules/recuperação devem executar com runtime completo parado. Fechar inventário funcional verificável e consultar CI de cada checkpoint. Método definido; percentual funcional ainda não calculado. Formal10/16 e comercial não homologado permanecem.
+
+O restante abaixo é o registro histórico de parada e contém pendências que foram superadas; não repetir seus gates já aprovados sem mudança relevante.
 
 **INCOMPLETO / WIP. Encerramento solicitado pelo usuário em 2026-10-24.**
 

@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import { mkdirSync, createWriteStream } from 'node:fs';
 import { createServer } from 'node:net';
 import { stripVTControlCharacters } from 'node:util';
+import { captureProcessTree, processIdentity, signalProcessTree } from './cloud-process-tree.mjs';
 const mode = process.argv[2] || 'dev';
 if (!['dev', 'start'].includes(mode)) throw new Error('Use dev ou start. Build separado: bash scripts/cloud-run.sh npm run build:local.');
 // Fail before spawning anything if another runtime owns any required port.
@@ -14,23 +15,29 @@ for (const port of [19099, 18080, 19199, 15001, 8085, 14403, 14404, 3000]) {
 }
 mkdirSync('.firebase', { recursive: true });
 const log = createWriteStream('.firebase/cloud-emulators.log', { flags: 'w' });
-const children = new Set();
+const launcher = processIdentity(process.pid);
+if (!launcher) throw new Error('Não foi possível identificar o lançador Linux em /proc.');
+let owned = [launcher];
+function snapshot() { owned = captureProcessTree(owned); }
+const monitor = setInterval(snapshot, 1000);
+monitor.unref();
 let stopping = false;
 function stop(code = 0) {
   if (stopping) return;
   stopping = true;
-  for (const child of children) { try { process.kill(-child.pid, 'SIGTERM'); } catch { /* Already exited. */ } }
+  snapshot();
+  signalProcessTree(owned.filter(({ pid }) => pid !== process.pid), 'SIGTERM');
   setTimeout(() => {
-    for (const child of children) { try { process.kill(-child.pid, 'SIGKILL'); } catch { /* Already exited. */ } }
+    snapshot();
+    signalProcessTree(owned.filter(({ pid }) => pid !== process.pid), 'SIGKILL');
+    clearInterval(monitor);
     process.exit(code);
   }, 5000);
 }
 for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, () => stop());
 function run(script, stdio = 'inherit') {
   const child = spawn('npm', ['run', script], { stdio, env: process.env, detached: true });
-  children.add(child);
   child.once('error', (error) => { console.error(error.message); stop(1); });
-  child.once('exit', () => children.delete(child));
   return child;
 }
 const emulators = run('firebase:emulators:local', ['ignore', 'pipe', 'pipe']);

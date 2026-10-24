@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL IV — navegação pública e encerramento Linux testados — 2026-10-24
+
+- Retomado HEAD25606cd85752fc6d9a708b2265866442a961067e, fetch idêntico/árvore limpa; CI40054282918 SUCCESS. Build Next81/TypeScript finais PASS (`/tmp/cosmaker-public-final-build.log`, `/tmp/cosmaker-public-final-tsc.log`).
+- Páginas públicas novas **2/2 E2E PASS**,34,7s (`/tmp/cosmaker-public-navigation-e2e.log`): oito rotas em320/375/768/1440, menu móvel/Escape/foco/navegação, 404, slugs A/B, slug inválido/inexistente/suspenso/não publicado, intake fechado, falha temporária e retry. Capturas320/1440 inspecionadas. Não há catálogo global/tenant padrão/agenda privada nem dados estáticos fingindo persistência. Textos jurídicos explicitamente em homologação; revisão jurídica externa permanece pendente.
+- Corrigido lançador Linux: árvore de processos própria em /proc com PID+instante de criação, snapshots retidos após pais encerrarem, TERM/KILL também para descendentes em grupos separados. Unitário real **1/1 PASS**,333ms, preserva processo independente e ignora identidade de PID divergente. Encerramento do runtime completo **PASS**,nove portas livres incluindo8085, sem kill por nome/porta ou outros projetos.
+- Scheduler CLI15.34.1/SDK7.4 retestado uma vez: Pub/Sub entrega/ack registrados, mas CLI recusa `Unsupported trigger signature: http`; teste timeout25s, **NÃO PASS** (`/tmp/cosmaker-scheduler-new-sdk-pubsub.log`, firebase-debug.log). Invocação HTTP do wrapper atual **PASS** (`/tmp/cosmaker-scheduler-new-sdk-http.log`): expiração A/B, UTC, versão ativa, namespace externo e auditoria/retry. Isso não homologa agendamento real. Não alterar dependência instalada para fingir aceite.
+- Nova falha concreta de segurança confirmada em teste vermelho **1 FAIL/5 skipped**,3,17s (`/tmp/cosmaker-direct-payment-red.log`): consulta direta de pagamentos ainda aceita e-mail de pedido legado sem UID mesmo quando CRM liga esse e-mail a outro UID. O teste está sendo preservado para correção; auditoria/leitores/Rules relacionados são a próxima tarefa imediata. **F5 não está encerrada.**
+- F2/F3/F5/F6 continuam parciais; formal10/16=62,5%, inventário funcional ainda incompleto. Próximo gate: fechar autorização direta de pedidos/arquivos/recebimentos com negativos, regressões por domínio isoladas e recuperação sintética; depois inventário/CI final. Nenhum Firebase real usado.
+
 ## RETOMADA — interfaces privadas aceitas, fechamento público WIP — 2026-10-24
 
 - Recuperado `e63977b57fda3893c9db7d52faf7e9f39158dfd6`, árvore limpa e CI40048864282 PASS. Node22.23.4/Java21 confirmados; runtime local reutilizado, sem reinstalação redundante.
