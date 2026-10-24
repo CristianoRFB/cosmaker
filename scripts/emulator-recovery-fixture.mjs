@@ -41,9 +41,11 @@ try {
     const [restored] = await bucket.file(path).download(); assert.deepEqual(restored, bytes); const [metadata] = await bucket.file(path).getMetadata(); assert.equal(metadata.metadata.sha256, hash(bytes));
     const response = await fetch(`http://${process.env.FIREBASE_AUTH_EMULATOR_HOST}/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=demo-key`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, returnSecureToken: true }) });
     assert.equal(response.status, 200); const token = (await response.json()).idToken;
-    for (const [document, expectedStatus] of [[`ateliers/${a}/orders/order-a`, 200], [`ateliers/${b}/orders/order-b`, 403], [`ateliers/${a}/financeEntries/entry-a`, 403]]) {
+    for (const [document, expectedStatus] of [[`ateliers/${a}/orders/order-a/statusHistory/delivery`, 200], [`ateliers/${a}/orders/order-a`, 403], [`ateliers/${b}/orders/order-b`, 403], [`ateliers/${a}/financeEntries/entry-a`, 403]]) {
       const result = await fetch(`http://${process.env.FIRESTORE_EMULATOR_HOST}/v1/projects/demo-cosmaker/databases/(default)/documents/${document}`, { headers: { Authorization: `Bearer ${token}` } }); assert.equal(result.status, expectedStatus, `ACL restaurada: ${document}`);
     }
+    const privateObject = await fetch(`http://${process.env.FIREBASE_STORAGE_EMULATOR_HOST}/v0/b/demo-cosmaker.appspot.com/o/${encodeURIComponent(path)}?alt=media`, { headers: { Authorization: `Bearer ${token}` } });
+    assert.equal(privateObject.status, 403, 'Storage raw restaurado continua privado para o cliente.');
     console.log('RECOVERY VERIFY PASS: Auth/senha/claims, centavos/timestamp/histórico A/B, bytes/SHA-256 e Rules após restore.');
   }
 } finally { await app.delete(); }

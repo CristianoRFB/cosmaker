@@ -55,3 +55,4 @@ export { downloadLegacyAtelierFileBytes } from './orders/legacy-file-bytes';
 
 export { listClientOrderPayments, getClientPayment } from './orders/client-payments';
 export { listPlatformUsers } from './platform/list-platform-users';
+export { getClientOrder } from './orders/get-client-order';

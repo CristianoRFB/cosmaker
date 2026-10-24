@@ -43,8 +43,15 @@ export async function listClientOrders(email: string) {
 export async function getOrder(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier', includePayments = true): Promise<OrderRecord | null> {
   const { db } = requireFirebase();
   const orderRef = doc(db, 'ateliers', atelierId, 'orders', orderId);
-  const orderSnapshot = await getDoc(orderRef);
-  if (!orderSnapshot.exists()) return null;
+  let order: Order;
+  if (viewer === 'client') {
+    const { functions } = requireFirebase();
+    order = (await httpsCallable<{ atelierId: string; orderId: string }, { order: Order }>(functions, 'getClientOrder')({ atelierId, orderId })).data.order;
+  } else {
+    const snapshot = await getDoc(orderRef);
+    if (!snapshot.exists()) return null;
+    order = { id: snapshot.id, atelierId, ...snapshot.data() } as Order;
+  }
   const [itemSnapshots, fileSnapshots, historySnapshots, measurementSnapshots] = await Promise.all([
     getDocs(collection(orderRef, 'items')),
     viewer === 'client' ? listOrderFiles(atelierId, orderId) : getDocs(collection(orderRef, 'files')),
@@ -61,7 +68,7 @@ export async function getOrder(atelierId: string, orderId: string, viewer: 'atel
   ]);
   const productionPhotos = photoSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data(), downloadUrl: null }) as import('@/types/production').ProductionPhoto);
   return {
-    order: { id: orderSnapshot.id, atelierId, ...orderSnapshot.data() } as Order,
+    order,
     items: itemSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as OrderLineItem),
     files: Array.isArray(fileSnapshots) ? fileSnapshots : fileSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as OrderFile),
     history: historySnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }) as OrderHistoryEntry),

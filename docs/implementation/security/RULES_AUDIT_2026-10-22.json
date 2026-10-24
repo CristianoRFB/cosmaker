@@ -1,21 +1,7 @@
 {
-  "score": 1,
-  "summary": "Auditoria parcial em continuidade (24/10): confirmada consulta direta por e-mail reutilizado em pedido sem UID e corrigida a política de vínculo durável, com regressões em execução. Encontrado também acesso raw ao snapshot de custos internos do próprio pedido; projeção de detalhe e fechamento do root raw ainda pendentes. Não é aprovação de segurança ou produção.",
+  "score": 4,
+  "summary": "Auditoria local direcionada atualizada em24/10: corrigidos reuso de e-mail em leitores de pedidos e exposição de custos no root raw, com evidências negativas, projeções e UI. Storage continua raw negado/zero cross-service. Permanecem tokens reais legados, homologação externa, dependências upstream e limitação de scheduler do CLI; não é garantia exaustiva ou aceite de produção.",
   "findings": [
-    {
-      "check": "Field-Level vs. Identity-Level Security",
-      "severity": "critical",
-      "issue": "O detalhe cliente ainda lê o documento completo do pedido. approvedQuoteSnapshot preserva materialsCost/laborCost/otherCost do orçamento para histórico interno; uma leitura raw não permite ocultar esses campos.",
-      "recommendation": "Criar getClientOrder com sessão/UID/CRM e projeção allowlisted; migrar o detalhe antes de negar a leitura raw do root ao cliente. Preservar snapshot integral para staff e testar negativos mais jornada.",
-      "status": "PENDENTE_LOCAL"
-    },
-    {
-      "check": "Identity-Level Security",
-      "severity": "critical",
-      "issue": "Teste vermelho confirmou recebimento exposto por consulta direta de pedido legado sem UID quando o e-mail possui CRM de outro UID; Rules raw também aceitaram o acesso.",
-      "recommendation": "Exigir UID durável no pedido/CRM em todos os leitores, preservar legado para reconciliação pela equipe, validar malformed UID/conflitos e casos positivos.",
-      "status": "IMPLEMENTADO_REGRESSAO_EM_CURSO"
-    },
     {
       "check": "Storage Abuse",
       "severity": "major",
@@ -25,11 +11,27 @@
     {
       "check": "Business Logic vs. Rules",
       "severity": "minor",
-      "issue": "A auditoria permanece parcial; o transporte Pub/Sub do scheduler v2 é incompatível com o CLI atual, enquanto a lógica foi validada via wrapper HTTP local.",
+      "issue": "CLI15.34.1 ainda entrega/ack PubSub de scheduler v2 mas rejeita Unsupported trigger signature:http; o wrapper HTTP atual passou novamente. Isso é limitação do transporte do Emulator, sem concluir incompatibilidade ou homologação do Cloud Scheduler real.",
       "recommendation": "Preservar distinção entre lógica testada e transporte bloqueado; homologar trigger, IAM, relógio e replay em ambiente real autorizado antes de prontidão comercial."
     }
   ],
   "resolved_findings": [
+    {
+      "check": "Field-Level vs. Identity-Level Security",
+      "severity": "critical",
+      "issue": "O detalhe cliente ainda lê o documento completo do pedido. approvedQuoteSnapshot preserva materialsCost/laborCost/otherCost do orçamento para histórico interno; uma leitura raw não permite ocultar esses campos.",
+      "recommendation": "Criar getClientOrder com sessão/UID/CRM e projeção allowlisted; migrar o detalhe antes de negar a leitura raw do root ao cliente. Preservar snapshot integral para staff e testar negativos mais jornada.",
+      "status": "TESTADO_LOCALMENTE",
+      "resolution": "getClientOrder/listClientOrders usam projeção compartilhada e snapshot integral permanece staff-only; cliente deixou de ler root raw. Vermelho1FAIL/34skipped antes da correção; backend7/7, extra de revogação/perfil/tenant/papel1/1, Rules34verdes+direcionado final1verde e E2E portal/anexos2/2 com detalhe320/375/768/1440, custos ausentes no payload e capturas inspecionadas. O lote integral Rules teve1falha de fixture reservada, corrigida e repetida isoladamente; não foi35/35 numa única execução."
+    },
+    {
+      "check": "Identity-Level Security",
+      "severity": "critical",
+      "issue": "Teste vermelho confirmou recebimento exposto por consulta direta de pedido legado sem UID quando o e-mail possui CRM de outro UID; Rules raw também aceitaram o acesso.",
+      "recommendation": "Exigir UID durável no pedido/CRM em todos os leitores, preservar legado para reconciliação pela equipe, validar malformed UID/conflitos e casos positivos.",
+      "status": "TESTADO_LOCALMENTE",
+      "resolution": "Helper de UID/CRM durável em pagamentos, mensagens, arquivos, fotos, revisões e aprovações; sem autorização histórica por e-mail. Vermelhos de endpoint e Rules comprovados; backend8lotes63/63 antes da projeção do detalhe (pagamentos passou depois a7/7), incluindo bytes, UID malformado/foreign, CRM antigo, A/B, concorrência e retries. Legados sem vínculo preservados para revisão staff."
+    },
     {
       "check": "Field-Level vs. Identity-Level Security",
       "severity": "critical",

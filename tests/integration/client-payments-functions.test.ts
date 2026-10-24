@@ -60,6 +60,27 @@ describe('Client payment projections', () => {
     await adminAuth.updateUser(customer.uid, { disabled: true }); await expect(call()).rejects.toMatchObject({ code: 'functions/unauthenticated' }); await adminAuth.updateUser(customer.uid, { disabled: false });
     await adminAuth.updateUser(customer.uid, { emailVerified: false }); await auth.currentUser!.getIdToken(true); await expect(call()).rejects.toMatchObject({ code: 'functions/failed-precondition' }); await adminAuth.updateUser(customer.uid, { emailVerified: true }); await auth.currentUser!.getIdToken(true);
   }, 60_000);
+  it('projects order details without internal costs, notes, actors or raw snapshots', async () => {
+    await signIn(customer.email); const previous = (await order.get()).data();
+    try {
+      await order.update({ internalNotes: 'PRIVATE-NOTE', approvedQuoteSnapshot: { ...previous.approvedQuoteSnapshot, laborCost: 18, materialsCost: 22, otherCost: 4, approvedBy: 'PRIVATE-ACTOR' } });
+      const detail = await call<{ order: Record<string, unknown> }>('getClientOrder');
+      expect(detail.order).toMatchObject({ id: 'order', atelierId: tenants[0], character: 'Armadura sintética', approvedQuoteSnapshot: { total: 100, depositAmount: 30 } });
+      expect(JSON.stringify(detail)).not.toMatch(/PRIVATE|laborCost|materialsCost|otherCost|clientUserId|approvedBy|internalNotes/);
+      await expect(call('getClientOrder', { uid: customer.uid })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+      await expect(call('getClientOrder', { atelierId: tenants[1] })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      for (const target of [db.doc(`users/${customer.uid}`), db.doc(`ateliers/${tenants[0]}`)]) {
+        try { await target.update({ active: false }); await expect(call('getClientOrder')).rejects.toMatchObject({ code: 'functions/permission-denied' }); }
+        finally { await target.update({ active: true }); }
+      }
+      try { await db.doc(`users/${customer.uid}`).update({ accountType: 'atelier_member' }); await expect(call('getClientOrder')).rejects.toMatchObject({ code: 'functions/permission-denied' }); }
+      finally { await db.doc(`users/${customer.uid}`).update({ accountType: 'client' }); }
+      await order.update({ clientUserId: other.uid }); await expect(call('getClientOrder')).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      await order.update({ clientUserId: customer.uid });
+      await adminAuth.updateUser(customer.uid, { disabled: true }); await expect(call('getClientOrder')).rejects.toMatchObject({ code: 'functions/unauthenticated' });
+    } finally { await order.set(previous); await adminAuth.updateUser(customer.uid, { disabled: false }); }
+  }, 60_000);
+
   it('denies direct payment lookup when a reused email belongs to another CRM UID', async () => {
     await signIn(customer.email);
     const legacy = order.parent.doc('reused-email-direct');

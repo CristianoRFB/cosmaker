@@ -24,7 +24,7 @@ Entradas anteriores ao ledger continuam nos saldos e histórico do pedido. A aç
 
 ## Segurança e limites técnicos
 
-Rules negam leitura/escrita bruta de ledger, operações, referências e travas. Coleções financeiras legadas `transactions` e `expenses` mantêm leitura por permissão e passam a negar escrita direta. Acesso do cliente aos próprios pagamentos continua nas regras de pedidos existentes; custos e lançamentos internos não são expostos no portal.
+Rules negam leitura/escrita bruta de ledger, operações, referências e travas. Coleções financeiras legadas `transactions` e `expenses` mantêm leitura por permissão e passam a negar escrita direta. Cliente consulta seus pagamentos por listClientOrderPayments/getClientPayment; raw financeiro permanece staff-only. Detalhe de pedido usa projeção getClientOrder para não expor custos do snapshot interno. Custos e lançamentos internos não são concedidos ao portal.
 
 A listagem devolve projeção explícita, sem UIDs de atores, com histórico de 50 registros por página e compensações identificadas independentemente da página/período. Agregação local tem teto técnico explícito de 5.000 lançamentos e 500 pedidos; exceder esse volume falha com `resource-exhausted`, sem devolver métricas truncadas. Esses tetos não são direitos/limites comerciais e a paginação analítica escalável fica no refinamento F3/F6.
 

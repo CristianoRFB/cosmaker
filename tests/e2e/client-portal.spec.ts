@@ -23,7 +23,7 @@ test('portal persiste perfil e consulta home/pagamentos reais em quatro larguras
     await root.set({ active: true, name: 'Ateliê sintético' });
     await profile.set({ name: 'Cliente portal', email, phone: '', accountType: 'client', role: 'client', permissions: [], active: true, createdAt: now, updatedAt: now });
     const value = { quoteId: 'original', requestId: 'request', clientUserId: customer.uid, clientId: null, email, clientName: 'Cliente portal', character: 'Armadura do portal', franchise: 'Obra sintética', category: 'armor', description: 'Projeto fictício', expectedDeliveryDate: '2027-12-31', status: 'in_production', progress: 41, approvedQuoteSnapshot: { total: 100, depositAmount: 30, depositPercentage: 30 }, amountPaid: 30, amountPaidCents: 3000, amountRemaining: 70, amountRemainingCents: 7000, createdAt: now, updatedAt: now };
-    await order.set(value);
+    await order.set({ ...value, internalNotes: 'PRIVATE ORDER NOTE', approvedQuoteSnapshot: { ...value.approvedQuoteSnapshot, laborCost: 18, materialsCost: 22 } });
     await root.collection('orders').doc('foreign-order').set({ ...value, clientUserId: 'ANOTHER-CLIENT-UID', character: 'PRIVATE FOREIGN PROJECT' });
     await order.collection('payments').doc('deposit').set({ type: 'deposit', status: 'paid', amount: 30, amountCents: 3000, method: 'cash', reference: 'PRIVATE REFERENCE', confirmedBy: 'PRIVATE STAFF UID', createdAt: now, paidAt: now });
     await quote.set({ clientUserId: customer.uid, requestId: 'pending-request', email, clientId: null, status: 'sent', materialsCost: 0, laborCost: 200, otherCost: 0, urgencyFee: 0, shipping: 0, discount: 0, subtotal: 200, total: 200, depositAmount: 60, depositPercentage: 30, validUntil: '2027-12-31', createdAt: now });
@@ -42,6 +42,12 @@ test('portal persiste perfil e consulta home/pagamentos reais em quatro larguras
       await expect(page.getByLabel('Nome', { exact: true })).toHaveValue('Cliente portal');
       await expect(page.getByLabel('E-mail da conta')).toHaveAttribute('readonly', '');
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      const projection = page.waitForResponse(response => response.url().includes('/getClientOrder'));
+      await page.goto(`/cliente/pedidos/${order.id}?atelierId=${root.id}`);
+      await expect(page.getByRole('heading', { name: 'Armadura do portal', exact: true })).toBeVisible();
+      expect(JSON.stringify(await (await projection).json())).not.toMatch(/PRIVATE ORDER NOTE|laborCost|materialsCost|clientUserId/);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await page.screenshot({ path: testInfo.outputPath(`order-${width}.png`), fullPage: true });
       await page.goto(`/cliente/pagamentos?${query}`);
       await expect(page.getByRole('heading', { name: 'Entrada', exact: true })).toBeVisible();
       await expect(page.getByText('Recebimento confirmado', { exact: true })).toBeVisible();

@@ -2,14 +2,7 @@ import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb } from '../admin';
 import { requireVerifiedIdentity } from './access';
 import { visibleClientRecords } from '../clients/client-visibility';
-
-const publicFields = ['quoteId', 'requestId', 'clientId', 'clientName', 'email', 'character', 'franchise', 'category', 'description', 'status', 'priority', 'progress', 'amountPaid', 'amountRemaining', 'amountPaidCents', 'amountRemainingCents', 'totalAmountCents', 'agreementVersion', 'planningNeedsReview', 'expectedDeliveryDate', 'eventDate'];
-const agreementFields = ['version', 'sourceQuoteId', 'scope', 'materials', 'expectedDeliveryDate', 'totalCents', 'depositAmountCents'];
-function pick(value: unknown, fields: string[]) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-  const record = value as Record<string, unknown>;
-  return Object.fromEntries(fields.filter((key) => record[key] !== undefined).map((key) => [key, record[key]]));
-}
+import { clientOrderView } from './client-order-view';
 const safeId = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,150}$/.test(value);
 
 /** The verified email finds legacy candidates; an existing UID always determines ownership. */
@@ -43,13 +36,9 @@ export const listClientOrders = onCall(async (call) => {
     if (candidates.length > 1000) throw new HttpsError('resource-exhausted', 'O histórico precisa de uma consulta assistida pelo ateliê.');
     const visible = await visibleClientRecords(transaction, { uid, email }, candidates, 'orders');
     const orders = visible.map(snapshot => {
-      const atelierId = snapshot.ref.path.split('/')[1]; const data = snapshot.data()!;
+      const data = snapshot.data()!;
       const createdAt = data.createdAt && typeof data.createdAt.toMillis === 'function' ? data.createdAt.toMillis() : 0;
-      return { path: snapshot.ref.path, sortTime: createdAt, value: { ...pick(data, publicFields), id: snapshot.id, atelierId,
-        approvedQuoteSnapshot: pick(data.approvedQuoteSnapshot, ['total', 'depositAmount', 'depositPercentage', 'expectedStartDate', 'expectedCompletionDate']),
-        ...(data.currentAgreement ? { currentAgreement: pick(data.currentAgreement, agreementFields) } : {}),
-        createdAt: createdAt ? new Date(createdAt).toISOString() : null,
-      } };
+      return { path: snapshot.ref.path, sortTime: createdAt, value: clientOrderView(snapshot) };
     }).sort((first, second) => second.sortTime - first.sortTime || first.path.localeCompare(second.path));
     const index = cursorPath ? orders.findIndex(order => order.path === cursorPath) : -1;
     if (cursorPath && index < 0) throw new HttpsError('failed-precondition', 'A página de pedidos mudou. Atualize a lista.');

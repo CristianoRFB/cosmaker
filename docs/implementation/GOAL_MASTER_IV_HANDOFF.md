@@ -1,63 +1,36 @@
-# GOAL MASTER IV — handoff de continuidade
+# GOAL MASTER IV — continuidade técnica
 
-## Checkpoint de segurança em curso — 24/10/2026 (prioridade atual)
+**INCOMPLETO / WIP global.** Branch exclusiva codex/cosmaker-master-finalizacao, repositório CristianoRFB/cosmaker. Último remoto anterior a este checkpoint:67e94ea5ca3c6ea894ce318233cd0a2db7dc964b. Fazer fetch/confirmar HEAD e CI na retomada, preservar WIP. Somente demo-cosmaker, Node22/Java21, dados sintéticos; nenhuma operação Firebase real/deploy/IAM/billing/merge/force foi feita ou autorizada.
 
-Vínculo durável implementado/testado em53cenários backend (pagamentos6/propostas5/orders33/fotos4/mensagens5); Functions/TypeScript/lint e unitários121 PASS. Ver PRIVATE_ORDER_SECURITY.md. Reuso de e-mail sem UID foi reproduzido em dois testes vermelhos, inclusive Rules raw. Legado sem vínculo preservado para staff, sem migração automática.
+## Implementação atual
 
-**Próxima ação exata:** fechar exposição de custos internos no root raw do pedido: criar getClientOrder com projeção allowlisted, migrar getOrder(viewer=client), então negar root raw ao cliente. O snapshot integral deve continuar para staff. Auditoria score1 enquanto pendente; não declarar F5 concluída. Executar Rules finais/negativos e E2Es de detalhe/anexos/produção após o frontend migrar.
+Upload público com capabilities/hash/expiração/bytes por servidor, Storage deny-all e leitores legados protegidos; transporte de produção anterior preservado. Portal Home/Perfil/Pagamentos, paginação52pedidos, medidas CRM≠UID, revisão de proposta, diretório global/Auth e assinatura conectados. Rotas públicas globais usam slug explícito; menu móvel e conteúdo informativo funcionais, textos jurídicos em homologação.
 
-Batch atual de jornada/referências/quotes é sequencial (sessão53557; resultados em /tmp/cosmaker-identity-suite-results.tsv); confirmar conclusões e não interromper/duplicar sem necessidade. Runtime interativo parado. Rules34 passaram, mas um ajuste final durante a execução e novo caso __unlinked__ exigem direcionado final. Recuperação e demais domínios SDK/inventário permanecem. CI do remoto6c4586a=40055355937 SUCCESS.
+Corrigido reuso de e-mail nos leitores de pedidos: UID durável/CRM consistente obrigatório, incluindo arquivos/fotos/mensagens/pagamentos/revisões/aprovações. Legados sem vínculo são preservados para revisão deliberada staff, sem backfill automático por e-mail. Detalhe cliente migrou a getClientOrder; lista/detalhe compartilham allowlist. Root raw privado somente staff; snapshot completo de custos permanece no banco. PRIVATE_ORDER_SECURITY.md e auditoria JSON têm evidências dos dois achados críticos resolvidos localmente.
 
-## Atualização de retomada — 2026-10-24 (prevalece sobre o registro de interrupção abaixo)
+Lançador Linux acompanha sua árvore por PID+startTime e encerra PubSub destacado. Unitário e nove portas liberadas após runtime completo passaram. Dependências atuais Vitest4.1.12/CLI15.34.1/Admin14.5/Functions7.4/Next15.5.28; root prod0/Functions prod0 e root completo5moderados na última revisão. Sem force ou peers ignorados.
 
-Missão retomada; checkpoint anterior25606cd/CI40054282918 SUCCESS. Diretório global backend12/12 e E2E portal/paginação52pedidos, diretório, assinatura/comunicação/entrega e medidas/revisão foram aprovados na retomada (três E2Es iniciais verdes e repetição isolada1/1 das medidas após corrigir espera de persistência do teste). Páginas públicas antes WIP agora têm build81/TypeScript PASS e E2E2/2 em quatro larguras; menu e resolver por slug funcionais. Ver progresso canônico para comandos/limites históricos.
+## Evidências e limites atuais
 
-Lançador corrigido/testado para encerrar descendentes Pub/Sub em grupos próprios: unitário1/1 e runtime completo com nove portas liberadas. Usar lotes de integração isolados por domínio, sem navegador simultâneo: tentativa antiga de17arquivos pressionou memória e foi interrompida, sem PASS. CLI15.34.1 ainda recusa trigger scheduler HTTP via transporte Pub/Sub; publicação/entrega/ack confirmados em debug. Wrapper HTTP atual passou; não equivale ao agendamento real.
+- Commercial12/12 na retomada (inclui CRM/diretório/RBAC/Auth/paginação), logs cosmaker-resume-commercial-backend. Não repetir sem alteração pertinente.
+- SDKs: oito lotes isolados63/63 PASS (pagamentos6, client-quotes5, orders33/quatro arquivos, fotos4, mensagens5, jornada1, referências5, quotes4). Após projeção do detalhe, pagamentos/detalhe7/7 PASS mais repetição dirigida1/1 da mesma operação com negativos adicionais; não somar repetições como testes únicos.
+- Rules finais:34PASS/1FAIL por fixture reservada; fixture corrigida e teste final direcionado1PASS/34skipped. Mesmas Rules finais,35casos cobertos em execuções complementares; não afirmar lote integral35/35.
+- Unitários121/121 no marco de ownership; Functions/Next81/TypeScript e lint passaram. Build/TypeScript novos da projeção também passaram; CI do novo HEAD ainda precisa consulta.
+- E2Es retomada: portal/paginação, diretório/configurações/entrega e medidas/revisão aprovados em quatro larguras; público2/2. Mais recente portal/anexos2/2 PASS1,6min inclui detalhe projetado320/375/768/1440, resposta sem custos internos e bytes/revogação/A×B. Capturas inspecionadas. Execuções novas em andamento abaixo.
+- Recuperação com stack atual PASS: Auth/Firestore/Storage export/import em instâncias novas, bytes/hash, centavos/histórico, ACL A/B e raw privado. Artefatos sintéticos97a2222e ignorados no Git. Não valida restore real ou replay de Functions.
+- Scheduler CLI15.34.1: publicação/entrega/ack PubSub confirmados, mas Unsupported trigger signature:http; timeout25s, não PASS. Wrapper HTTP atual PASS; não é homologação do agendamento real.
+- Trace de MaxListeners em teeny-request:461/pipeline via Storage8.4.0. Não foi suprimido nem diagnosticado como vazamento comprovado. Examinar patch compatível proporcionalmente.
 
-**Próxima ação exata:** corrigir falha comprovada de consulta direta de pagamentos em pedido legado sem UID com e-mail ligado no CRM a outro UID. Novo teste negativo em client-payments-functions.test.ts confirmou exposição sintética; revisar autorização comum de mensagens/arquivos/fotos e fallback das Rules. Sem aceites globais F2/F3/F5/F6 até essa correção e regressões obrigatórias.
+## Próxima ação exata
 
-Depois: regressões SDK em harnesses isolados (references, production-photo-bytes, orders, journey, finance, showcase, messages, reports, delivery, team, inventory, quotes); reutilizar commercial12/12 e gates de UI sem mudanças pertinentes. Rules/recuperação devem executar com runtime completo parado. Fechar inventário funcional verificável e consultar CI de cada checkpoint. Método definido; percentual funcional ainda não calculado. Formal10/16 e comercial não homologado permanecem.
+1. Conferir execução Playwright59094, log /tmp/cosmaker-private-regression-ui.log: revisões/produção, mensagens e navegação owner/staff/client/platform em quatro larguras (seis testes). Runtime atual cloud-start PID31134, sessão49956; encerrar por TERM antes de SDK/Rules/recuperação. Não rodar outro .next ou runtime sobre o existente. Esses resultados ainda NÃO são PASS neste checkpoint.
+2. Executar SDKs independentes ainda pendentes após majors: finance,showcase,reports,delivery,team,inventory. Harness por domínio sequencial, sem navegador simultâneo. Lote único17arquivos anterior foi interrompido por memória8,7/9,9GiB e nunca foi aprovado. Preservar concorrência interna dos testes.
+3. Fechar inventário funcional verificável conforme FUNCTIONAL_INVENTORY_METHOD.md, auditar ações/rotas restantes, verificar dependência upstream e CI do HEAD final. Não inventar módulos/quotas e não repetir gates inalterados.
 
-O restante abaixo é o registro histórico de parada e contém pendências que foram superadas; não repetir seus gates já aprovados sem mudança relevante.
+## Estado e restrições
 
-**INCOMPLETO / WIP. Encerramento solicitado pelo usuário em 2026-10-24.**
+F1.1–F1.9 e F4 aceitos localmente em marcos históricos; regressões relevantes acima. F2/F3/F5/F6 parciais até fechamento dos critérios; F7/F8 pendentes. Formal10/16=62,5%; percentual funcional ainda sem inventário fechado. Há tarefas locais executáveis. Produto não homologado para clientes reais.
 
-Repositório CristianoRFB/cosmaker; branch exclusiva codex/cosmaker-master-finalizacao. Este documento acompanha o checkpoint final da interrupção. O último remoto anterior é f9f23376f8eba3c4ed3e4b3890faa4ec559ad5a0. Nenhum deploy, Firebase real, credencial, billing, IAM, merge ou force push foi usado.
+Externos: Firebase/GCS/IAM/índices/scheduler reais, inventário e revogação autorizados de tokens reais já distribuídos, operação/recuperação real/RPO/RTO, jurídico e release. Pagamentos bancários/gateway/canais pagos ficam fora do escopo.
 
-## Preservado nesta execução
-
-- Upload público de referências por servidor: slug canônico, capability aleatória/hash persistido, expiração, MIME/assinatura/tamanho/SHA-256, lease, retry imutável e proteção contra sobrescrita. Complete/discard antigos não contornam o fluxo nem apagam arquivos. Storage raw integralmente bloqueado, zero consultas cross-service. Leitura legada autenticada mantém objetos; inventário somente sintético e sem tokens/URLs exportados. Snapshot do pedido não copia pendentes/capabilities. Transporte anterior de produção preservado.
-- Home/Perfil/Pagamentos do cliente conectados: dados reais, perfil restrito, recibos manuais por projeção autorizada e centavos validados, lista/detalhe/paginação, estados de erro/ausência e isolamento. Sem gateway.
-- Histórico de pedidos ganhou cursor, registros sem data e vínculos CRM após troca de e-mail. Ownership de pedidos/propostas compartilha a política conservadora por UID/CRM. Hooks descartam respostas de contextos anteriores.
-- Medidas deixaram de presumir clientId=UID: listagem e criação idempotente por vínculo CRM, auditoria e validação servidor. Editor existente compartilhado com a rota staff, manutenção de fichas e decimais. Revisão de orçamento reutiliza o formulário preenchido e preserva versões anteriores; aprovado encaminha ao pedido.
-- Dependências atualizadas: Vitest4.1.12, CLI15.34.1, Admin14.5/Functions7.4, patches compatíveis. Next15.5.28/React19/Firebase12.19 e preços/contratos v01 preservados. npm10 edgesOut resolvido gerando lock com npm11.13, sem forçar peers; npm ci limpo funcionou. Root produção0, Functions produção0; auditoria completa5moderados/0altos/0críticos na última medição, cadeias upstream CLI/OpenTelemetry/uuid ainda documentadas.
-- WIP final: listPlatformUsers e UI global somente leitura, com perfil/RBAC/sessão, consulta real de situação Auth e paginação; assinatura lendo contexto comercial e catálogo aprovado; integrações informam canais desabilitados; rota de endereços encaminha aos fluxos reais. Novo teste global escrito, ainda não executado.
-
-## Evidências reais e seus limites
-
-- Upload/legado antes das últimas dependências: backend6/6 (inclui jornada contínua), Rules32/32, E2E público2/2 em320/375/768/1440.
-- Portal antes da paginação posterior: backend pagamentos3/3, Rules33/33, E2E1/1 em quatro larguras com persistência, erro/retry, ausência, acesso negado e e-mail reutilizado; capturas320/1440 inspecionadas.
-- Paginação/ownership: teste vermelho confirmou ausência de cursor; depois9/9 integrações passaram. Com os novos SDKs e medidas CRM, o subconjunto atual passou10/10,46,44s. Não inclui o diretório global final nem a regressão ampla de uploads/legado após os novos SDKs.
-- Vitest4:120/120 unitários. Functions e TypeScript passaram nos checkpoints anteriores às oito alterações finais desta interrupção. Lint anterior tinha três avisos de cleanup que foram corrigidos; não inferir aprovação estática final sem conferir os processos/logs.
-- Último CI remoto confirmado nesta sessão: ee7b195, execução40046515677 PASS. CI dos checkpoints posteriores precisa consulta; não foi declarado PASS automaticamente.
-- Logs/capturas /tmp são temporários; o histórico versionado em MASTER_FINALIZATION_PROGRESS.md registra comandos, contagens, falhas anteriores e limites. Não transformar resultados históricos em aprovação do WIP novo.
-
-## Pendências concretas, em ordem de retomada
-
-1. Fetch/confirmar HEAD, preservar WIP e consultar CI do commit final. Reutilizar Node22/Java21, cloud-setup/cloud-start; somente demo-cosmaker. Verificar logs /tmp/cosmaker-secondary-functions-build.log e /tmp/cosmaker-secondary-lint.log; rodar TypeScript/build finais e corrigir falhas reais.
-2. Executar o teste novo de listPlatformUsers em commercial-functions.test.ts: autenticação/RBAC/revogação, projeção sem campos privados, situação Auth e paginação. Validar UI global e assinatura/integrações/entrega em quatro larguras. Nenhuma destas telas finais está aceita.
-3. Completar E2E da paginação de52pedidos já acrescentado em client-portal.spec.ts. Escrever/executar E2E de medidas staff↔cliente com CRM ID diferente do UID, criação/edição/arquivo/decimais e isolamento; testar revisão de orçamento preenchida/versão preservada. Esses gates ainda não foram executados.
-4. Regressão proporcional ampla após as majors dos SDKs: integrações dos domínios, Rules, jornada e transportes de bytes. Refinamento final do leitor legado aceita Unicode e exige measurements:read para imagens de medidas; teste ampliado está escrito, regressão pendente. Não relaxar autorização nem introduzir quotas comerciais.
-5. Encerrar páginas públicas globais ainda estruturais e not-found sem inventar tenant padrão, catálogo global ou dados demo como reais. Serviços/portfólio publicados são os do slug legítimo, na Home do tenant (#servicos/#portfolio). Contato/agenda devem encaminhar ao fluxo aprovado, preservando agenda privada. Políticas jurídicas dependem de definição/homologação externa, sem inventar identidade ou condições comerciais.
-6. F6: repetir backup/restauração sintéticos com SDKs novos e avaliar sessões/revogação/retries. Investigar uma vez o transporte scheduler com CLI15.34.1/SDK7.4; a limitação conhecida era Unsupported trigger signature:http no CLI15.32. O wrapper HTTP antigo comprovou lógica, não agendamento real. Não declarar o transporte novo aprovado ou definitivamente bloqueado sem ensaio.
-7. Fechar inventário funcional conforme FUNCTIONAL_INVENTORY_METHOD.md, com critérios/evidências por domínio, e calcular indicador reproduzível separado dos16marcos. Atualizar matriz/handoff e CI final. Não inventar percentuais.
-
-## Estado formal e comercial
-
-F1.1–F1.9 e F4 possuem aceites locais históricos; a stack/contratos alterados exigem as regressões citadas. F2/F3/F5/F6 **PARCIAIS / WIP**. F7/F8 pendentes. Formal10/16=62,5%; conclusão funcional **não calculada**, método definido e inventário incompleto. Produto **não homologado para clientes reais/produção**.
-
-Há pendências locais executáveis além das externas. Externas: homologação Firebase/GCS/IAM/índices/agendamento reais, inventário/revogação de tokens legados reais com autorização futura, validação operacional/recuperação real e requisitos jurídicos/release. Nenhuma dessas operações foi autorizada/executada aqui.
-
-## Transporte GitHub
-
-Terminal usa uma identidade sem permissão de push; utilizar o conector CristianoRFB (link_6ad2df3229d48191bd0ef1a65deeb821), árvore/commit/ref com expected_sha e force:false. Comparar árvore remota/local; preservar commit local em branch local/cloud-checkpoint-* e realinhar por fetch/rebase que reconhece o patch. Não usar reset/force. Checkpoints desta execução:3a31370,9acde8c,18f4102,dd0ca74,ee7b195,f9f2337 e o commit que contém este handoff.
+Publicação GitHub: terminal tem identidade sem push; usar conector CristianoRFB link_6ad2df3229d48191bd0ef1a65deeb821, árvore idêntica/commit/ref expected_sha e force:false. Guardar commit local em local/cloud-checkpoint-* e fetch/rebase que reconhece patch; sem reset. Progresso canônico e histórico completo em MASTER_FINALIZATION_PROGRESS.md; /tmp é temporário.
