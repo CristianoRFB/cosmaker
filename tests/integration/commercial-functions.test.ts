@@ -27,6 +27,7 @@ const emulatorHost = process.env.FIREBASE_EMULATOR_HOST || '127.0.0.1';
 connectAuthEmulator(auth, `http://${emulatorHost}:${process.env.COSMAKER_AUTH_EMULATOR_PORT || '19099'}`, { disableWarnings: true });
 connectFunctionsEmulator(functions, emulatorHost, Number(process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || 15001));
 
+const directoryProfiles: string[] = [];
 const createdUids: string[] = [];
 const createdAteliers: string[] = [];
 let adminCredentials = { email: '', password: '', uid: '' };
@@ -94,6 +95,7 @@ beforeAll(async () => {
 }, 60000);
 
 afterAll(async () => {
+  await Promise.all(directoryProfiles.map(id => adminDb.doc(`users/${id}`).delete()));
   await signOut(auth).catch(() => undefined);
   await Promise.all(createdAteliers.map((id) => adminDb.recursiveDelete(adminDb.doc(`ateliers/${id}`)).catch(() => undefined)));
   await Promise.all(createdUids.map((uid) => adminDb.doc(`users/${uid}`).delete().catch(() => undefined)));
@@ -103,6 +105,24 @@ afterAll(async () => {
 });
 
 describe('Commercial Functions em Firebase Emulator', () => {
+  it('protects the global profile directory, projects Auth status and paginates without private claims', async () => {
+    for (let index = 0; index < 51; index++) { const id = `directory-${nonce}-${String(index).padStart(2, '0')}`; directoryProfiles.push(id); await adminDb.doc(`users/${id}`).set({ name: 'Perfil sintético', email: `${id}@cosmaker.test`, active: true, accountType: 'client', phone: 'SECRET-PHONE', privateSecret: 'AUTHSECRET', permissions: ['SECRET'] }); }
+    const disabled = await createIdentity('directory-disabled'); await adminAuth.updateUser(disabled.uid, { disabled: true, emailVerified: false }); await adminDb.doc(`users/${disabled.uid}`).set({ name: 'Conta desabilitada', email: disabled.email, active: true, accountType: 'client' });
+    await signOut(auth); await expect(call('listPlatformUsers')).rejects.toMatchObject({ code: 'functions/unauthenticated' });
+    await signIn(ownerCredentials); await expect(call('listPlatformUsers')).rejects.toMatchObject({ code: 'functions/permission-denied' });
+    await signIn(adminCredentials);
+    const values: Array<{ id: string; authStatus: string; emailVerified: boolean | null }> = []; let cursor: string | null = null;
+    for (let index = 0; index < 10; index++) { const page: { users: typeof values; nextCursor: string | null } = await call('listPlatformUsers', cursor ? { cursor } : {}); expect(page.users.length).toBeLessThanOrEqual(50); expect(JSON.stringify(page)).not.toMatch(/AUTHSECRET|SECRET-PHONE|permissions|customClaims/); values.push(...page.users); cursor = page.nextCursor; if (!cursor) break; }
+    expect(cursor).toBeNull(); expect(new Set(values.map(value => value.id)).size).toBe(values.length);
+    for (const id of directoryProfiles) expect(values).toContainEqual(expect.objectContaining({ id, authStatus: 'missing' }));
+    expect(values).toContainEqual(expect.objectContaining({ id: disabled.uid, authStatus: 'disabled', emailVerified: false }));
+    expect(values).toContainEqual(expect.objectContaining({ id: adminCredentials.uid, authStatus: 'enabled', emailVerified: true }));
+    await expect(call('listPlatformUsers', { atelierId: 'foreign' })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    await expect(call('listPlatformUsers', { cursor: '../cursor' })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    await adminDb.doc(`users/${adminCredentials.uid}`).update({ active: false }); await expect(call('listPlatformUsers')).rejects.toMatchObject({ code: 'functions/permission-denied' }); await adminDb.doc(`users/${adminCredentials.uid}`).update({ active: true });
+    await adminAuth.updateUser(adminCredentials.uid, { disabled: true }); await expect(call('listPlatformUsers')).rejects.toMatchObject({ code: 'functions/unauthenticated' }); await adminAuth.updateUser(adminCredentials.uid, { disabled: false });
+  }, 60_000);
+
   it('mantém o CRM restrito ao tenant, aplica permissões e registra ações de forma idempotente', async () => {
     const first = await createTenant({ label: 'client-crm-a' });
     const second = await createTenant({ label: 'client-crm-b' });

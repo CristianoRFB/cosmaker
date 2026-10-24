@@ -1,5 +1,12 @@
 # Cosmaker Master Finalization — Progress
 
+## ENCERRAMENTO SOLICITADO — GOAL MASTER IV INCOMPLETO — 2026-10-24
+
+- O usuário solicitou parar e enviar imediatamente o trabalho ao GitHub. Este checkpoint é **WIP / INCOMPLETO**, sem aceite global de F2/F3/F5/F6 e sem prontidão comercial.
+- Último remoto anterior: `f9f23376f8eba3c4ed3e4b3890faa4ec559ad5a0`. Este commit preserva também as alterações finais ainda não homologadas: diretório global de perfis por servidor/Auth, tela administrativa paginada, consulta de assinatura pelo contrato comercial existente, informação verdadeira sobre integrações externas desabilitadas e encaminhamento da rota legada de endereços aos fluxos existentes de entrega/mensagens. Não foi implementado um cadastro estruturado de endereços.
+- O teste novo do diretório global foi escrito, **NÃO EXECUTADO**. As telas finais, a paginação de pedidos, medidas da equipe/cliente e revisão de orçamento ainda precisam de build/TypeScript/E2E do conjunto final. Não reaproveitar os E2Es anteriores como aceite dessas alterações.
+- Handoff completo e próxima ação em [GOAL_MASTER_IV_HANDOFF.md](GOAL_MASTER_IV_HANDOFF.md). O índice formal continua **10/16 = 62,5%**; conclusão funcional não foi calculada, pois o inventário verificável ainda não foi fechado. Não há READY_FOR_PRODUCTION.
+
 ## GOAL IV — dependências e medidas CRM preservadas WIP — 2026-10-24
 
 - Remoto anterior `ee7b1957c9a003ce9c34f5a63fbecc6e8e09d568`; CI40046515677 PASS. Reinicialização do ambiente preservou filesystem/WIP; nenhum trabalho de domínio foi perdido.

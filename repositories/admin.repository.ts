@@ -137,3 +137,11 @@ export async function listPlatformAuditLogs(cursor: string | null = null) {
   const call = httpsCallable<{ cursor?: string; limit: number }, { entries: PlatformAuditEntry[]; nextCursor: string | null }>(functionsClient(), 'listPlatformAuditLogs');
   return (await call({ ...(cursor ? { cursor } : {}), limit: 25 })).data;
 }
+
+export interface PlatformUser {
+  id: string; name: string | null; email: string | null; accountType: string; role: string | null;
+  active: boolean; atelierId: string | null; authStatus: 'enabled' | 'disabled' | 'missing'; emailVerified: boolean | null;
+}
+export async function listPlatformUsers(cursor?: string) {
+  return (await httpsCallable<{ cursor?: string }, { users: PlatformUser[]; nextCursor: string | null }>(requireFirebase().functions, 'listPlatformUsers')(cursor ? { cursor } : {})).data;
+}

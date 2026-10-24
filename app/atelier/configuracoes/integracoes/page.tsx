@@ -1,8 +1,5 @@
+import Link from 'next/link';
+import { Card } from '@/components/ui/card';
 export default function Integrações() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Integrações</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
+  return <section className="grid gap-5"><h1 className="text-2xl font-semibold">Comunicação e integrações</h1><Card className="grid gap-3 p-5"><h2 className="text-lg font-semibold">Comunicação interna por pedido</h2><p className="text-sm leading-6 text-slate-600">Converse com os clientes, acompanhe leituras e compartilhe referências autorizadas nas mensagens do pedido.</p><Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href="/atelier/mensagens">Abrir mensagens internas</Link><Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href="/atelier/notificacoes">Abrir notificações</Link></Card><Card className="p-5"><h2 className="font-semibold">Canais externos</h2><p className="mt-3 text-sm leading-6 text-slate-600">WhatsApp, e-mail transacional, gateways e notificações externas não estão habilitados. Os recebimentos são declarados manualmente no financeiro do ateliê.</p></Card></section>;
 }
