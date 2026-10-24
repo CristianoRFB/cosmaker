@@ -274,13 +274,14 @@
       "detail": "Retomada solicitada após publicação informada de apis.google.com. Máquina running/connected, política enforced revisões34 e35 ainda sem host. Probe CONNECT403; somente o teste Google executado, skip pela falha exata de túnel. Exit0 não é PASS. Sem conta Google/Firebase reais, sem ampliação de domínios; publicação não refletida na instância atual."
     },
     "scheduler-http": {
-      "logName": "cosmaker-scheduler-new-sdk-http.log",
-      "logSha256": "915760db7ae811faf9547b239a04cfa40ba9c894c383b7ce9dacb72747ebaf7f",
-      "outcome": "PASS lógica via wrapper HTTP",
+      "logName": "cosmaker-goal-v-scheduler-pagination-final.log",
+      "logSha256": "b6ee313cd77232a01af6922b8069515f6c539843662090ac7449f8c07aa2a4ce",
+      "outcome": "PASS lógica HTTP / transporte BLOCKED",
       "sources": [
-        "scripts/test-scheduler-emulator.mjs"
+        "scripts/test-scheduler-emulator.mjs",
+        "functions/src/quotes/expire-quotes.ts"
       ],
-      "detail": "Expiração UTC, fronteiras, namespace, versões, replay/idempotência/auditoria. NÃO prova timer/transporte."
+      "detail": "Paginação por snapshot avança após100legados inválidos; duas invocações concorrentes e replay sem auditoria duplicada. UTC/A×B/namespace externo/versão ativa/inválidos preservados. Não comprova relógio ou transporte real."
     },
     "scheduler-pubsub": {
       "logName": "cosmaker-scheduler-new-sdk-pubsub.log",
@@ -445,15 +446,40 @@
     },
     "goal-v-operations": {
       "outcome": "PASS sintético",
-      "logName": "cosmaker-goal-v-operations-final.log",
-      "logSha256": "37a3a1274f84f418145ad583b453fc3fe75f6e8c17ebe6285bce4e56f4ef5cc6",
-      "detail": "10/10 testes operacionais, incluindo PowerShell7.6.8 real no Linux com fixtures sintéticas, identidades/projetos/custos/checkout/serviços/bucket alheio recusados, dry-run sem SDK, adulteração/UIDs/checksums e nenhuma execução remota."
+      "logName": "cosmaker-goal-v-operations-closure.log",
+      "logSha256": "db4217b76b23458fdeab152296d23d18963e19ab6296c279081f5adc5be0400f",
+      "detail": "11/11 testes operacionais finais no Linux/PowerShell7: guards/fixtures, corrupção/completude/UIDs, manifesto e parser/links de runbooks. Nenhum comando real de runbook executado. Job Windows do checkpoint anterior aprovou preflight; parser dos runbooks será validado no novoCI."
     },
     "goal-v-recovery": {
       "outcome": "PASS sintético",
       "logName": "cosmaker-goal-v-recovery.log",
       "logSha256": "c4389b4dcdfbc0c35e917855c00607122df15857308649b441fc39969ad628a4",
       "detail": "Export/import em instâncias novas PASS; manifesto completo/hash antes do import, UID inventory/claims preservados, manutenção --apply somente Emulator provada (admin sintético e slug não publicado), centavos/histórico/bytes e ACL A/B/raw após restore. Sem Functions/restore real."
+    },
+    "goal-v-scheduler-red": {
+      "logName": "cosmaker-goal-v-scheduler-starvation-red.log",
+      "logSha256": "cd6d8da18fa2283e56e5eaa007de95452a958a836dccb44790c063356fdced34",
+      "outcome": "FAIL reproduzido (lógica HTTP)",
+      "sources": [
+        "scripts/test-scheduler-emulator.mjs",
+        "functions/src/quotes/expire-quotes.ts"
+      ],
+      "detail": "100legados inválidos ocupavam primeira página; handlerHTTP terminava sem expirar válidas. Não é falha do transportePubSub."
+    },
+    "scheduler-http-before-goal-v": {
+      "logName": "cosmaker-scheduler-new-sdk-http.log",
+      "logSha256": "915760db7ae811faf9547b239a04cfa40ba9c894c383b7ce9dacb72747ebaf7f",
+      "outcome": "PASS lógica via wrapper HTTP",
+      "sources": [
+        "scripts/test-scheduler-emulator.mjs"
+      ],
+      "detail": "Expiração UTC, fronteiras, namespace, versões, replay/idempotência/auditoria. NÃO prova timer/transporte."
+    },
+    "goal-v-scheduler-build": {
+      "outcome": "PASS Functions build",
+      "logName": "cosmaker-goal-v-scheduler-functions-build.log",
+      "logSha256": "25f11d5a032a40e24aa473de50af7e0b37b3a865d6cdcb93ed0c453e392b27f7",
+      "detail": "Node22, compile final da paginação; lógica HTTP concorrente tem registro próprio, transporte continua bloqueado."
     }
   }
 }

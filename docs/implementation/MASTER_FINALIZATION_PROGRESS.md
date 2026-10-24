@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL V — defeito de expiração corrigido e roteiros preparados — 2026-10-24
+
+- Primeiro código operacional enviado em1ec68b32d896fd9234e174b164b7cb98d0d464eb, CI40118304144 SUCCESS nas jobsLinux/Windows (preflightPS7 nativo). Não confundir esseCI com a correção posterior abaixo.
+- Achado concreto no último exame do scheduler:100legados com data inválida ocupavam a primeira página e impediam expiração válida. REDHTTP comprovado (`/tmp/cosmaker-goal-v-scheduler-starvation-red.log`): handler terminou1,25s, mas teste expirou após25s sem efeito nas válidas. Não foi reensaio do transportePubSub.
+- Corrigido com paginação por snapshot em lotes100, mantendo revalidação/transação UTC/status/namespace/solicitação ativa. Teste final **HTTP PASS** (`/tmp/cosmaker-goal-v-scheduler-pagination-final.log`):100legados preservados sem bloquear próximas páginas, duas invocações concorrentes e nova repetição, A/B/hoje/futuro/inválidos/namespace externo preservados, versão ativa e auditoria idempotentes. Functionsbuild/lint aprovados. Transporte agendado continua BLOCKED, sem novo crédito no inventário.
+- Roteiros operacionais preparados em docs/operations/pre-homologation: Windows, matriz de configuração/teste/ferramenta/retorno, custo, Auth→interface/jornada/scheduler reais, backup/restore/UID/gerações/tokens e publicação/rollback. Comandos mutáveis são futuros/comentados e exigem autorização; preflight só lê, preparador nunca publica. Syntax PowerShell7 e links dos runbooks validados por teste novo, sem executar comandos reais.
+- Fontes oficiais confirmam incompatibilidade entre ZERO_BILLING e produto completo: Functions/Storage/Scheduler, host/backup conforme provedor, exigem billing/consumo. Nenhum Blaze/serviço pago ou mudança de arquitetura ativado. Cotas gratuitas não significam garantia de despesa zero. GCScopy não preserva generation: restore real exige conferir todos os vínculos e tokens, sem prometer recuperação por simples cópia.
+- Next81 final, TypeScript/lint e recuperação nova já aprovados. Contexto de hashes atualizado só para mudanças operacionais/scheduler com evidências próprias;104SDK/Rules não repetidos sem mudança de contrato. Pacote/candidata/hash final eCI do novo HEAD ainda em fechamento.182/184=98,91%; formal10/16=62,5%; NOT_READY.
+
 ## GOAL V — ferramentas operacionais testadas; pacote documental WIP — 2026-10-24
 
 - HEAD inicial8ad4a981f4d97f0a868ada10f0a1e3fa934c1385, origin/branch corretos e árvore limpa; CI40102360796 SUCCESS. Node22.23.4/Java21 e Emulator/cache existentes. Política atual semapis.google.com; Google não foi repetido. CLI instalado/latest15.34.1 e assinatura http ainda rejeitada no dispatcher PubSub: sem novo ensaio idêntico ou monkey patch.

@@ -533,7 +533,8 @@
           "state": "PASS",
           "evidence": [
             "EVIDENCE_LEDGER.json#ci-code",
-            "EVIDENCE_LEDGER.json#build-ui-fix"
+            "EVIDENCE_LEDGER.json#build-ui-fix",
+            "EVIDENCE_LEDGER.json#goal-v-scheduler-build"
           ]
         },
         "persistence": {
@@ -1732,14 +1733,16 @@
           "state": "PASS",
           "evidence": [
             "EVIDENCE_LEDGER.json#ci-code",
-            "EVIDENCE_LEDGER.json#build-ui-fix"
+            "EVIDENCE_LEDGER.json#build-ui-fix",
+            "EVIDENCE_LEDGER.json#goal-v-operations"
           ]
         },
         "persistence": {
           "state": "PASS",
           "evidence": [
             "EVIDENCE_LEDGER.json#runtime",
-            "EVIDENCE_LEDGER.json#unit"
+            "EVIDENCE_LEDGER.json#unit",
+            "EVIDENCE_LEDGER.json#goal-v-operations"
           ]
         },
         "interface": {
@@ -1750,7 +1753,8 @@
           "state": "PASS",
           "evidence": [
             "EVIDENCE_LEDGER.json#runtime",
-            "EVIDENCE_LEDGER.json#unit"
+            "EVIDENCE_LEDGER.json#unit",
+            "EVIDENCE_LEDGER.json#goal-v-operations"
           ]
         }
       }
@@ -1770,13 +1774,15 @@
           "state": "PASS",
           "evidence": [
             "EVIDENCE_LEDGER.json#ci-code",
-            "EVIDENCE_LEDGER.json#build-ui-fix"
+            "EVIDENCE_LEDGER.json#build-ui-fix",
+            "EVIDENCE_LEDGER.json#goal-v-recovery"
           ]
         },
         "persistence": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#recovery"
+            "EVIDENCE_LEDGER.json#recovery",
+            "EVIDENCE_LEDGER.json#goal-v-recovery"
           ]
         },
         "interface": {
@@ -1786,7 +1792,8 @@
         "negative": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#recovery"
+            "EVIDENCE_LEDGER.json#recovery",
+            "EVIDENCE_LEDGER.json#goal-v-recovery"
           ]
         }
       }
@@ -2118,7 +2125,7 @@
     "functions/src/quotes/access.ts": "6dd6e8536e41177409db282efbe7c5c0b3b1f60137b2e8f7253aac3f5ce44047",
     "functions/src/quotes/client-quotes.ts": "73325a1693421f26c126175ed31a2f96076cc794b0af1f140c76f51d495f7c8b",
     "functions/src/quotes/create-quote-draft.ts": "1b9d374b4a90a54382b24bf6f9a94a044daa57c74873993998551e81c2b0dfc4",
-    "functions/src/quotes/expire-quotes.ts": "d6b4a9ad4eb00a8f5437e591e7d1fde02b208b94e2d28d256b70d05d2076afb8",
+    "functions/src/quotes/expire-quotes.ts": "02492d6c646389c2260a99ac9c138eacc46c48600e45992859f21ce51e0e5dc4",
     "functions/src/quotes/publish-quote.ts": "7674c366f10e914ea0c11da5005b63ec7556a22c56e90219e3973fcd03da76a8",
     "functions/src/quotes/respond-to-quote.ts": "ffab6252fb9a268ad9b5907d569cedf9b40b45592866995ac8b8305eee1b641f",
     "functions/src/reports/policy.ts": "fe5807cfa176053f3b69c22909bc39ffe05b2bd859631987d85c2a95d3e628a0",
@@ -2166,7 +2173,7 @@
     "lib/validators/common.ts": "72ec647789fdbed4332b2fa61920b6b0c6856132fb8daf796e1417de3b5066df",
     "next.config.mjs": "c756de99cd5b24fe69b4f51a23a2529415eb5aed745fd66653928338a88a2349",
     "package-lock.json": "32e669d9b3e609f82ed9d722daffc63dde72dc24d746158b73282977bb796cb6",
-    "package.json": "697956224d57f18190ece8f8b9670810b8b3b4b53c21482ca1b81e9ed1bb3985",
+    "package.json": "55ad47a496f74b8dac1e8ab7ecaa4ef3f3e4e6cdc611482f6f56fb40f2e528d7",
     "playwright.config.ts": "9d8a9fc5c2278ca58af251abd9caa4adc88dc202ca5c835fb554604be4a6e4c6",
     "providers/auth-provider.tsx": "5a98d5ecdf06119d149a6dab0fac2c4fa58b868a37cbffd7f93fe4706aca9299",
     "providers/notification-provider.tsx": "863dbb6fb87c3f4fab2455708d8970e636f819d4b6fd63ebc5107b033a972e97",
@@ -2236,7 +2243,7 @@
     "scripts/migrate.ts": "79e691faa604ba5464e32e9906a94398384cfd8e9bedc9b81858de7994b83eec",
     "scripts/operations/maintenance-safety.mjs": "8bbbceb563d189829ce81b262299769c358969ede31c4afdfd5f4d84807b3155",
     "scripts/operations/preflight.ps1": "11bcd76323f9afdea955e7a92f4dcbf3b57df7a9a5d4e4828280524d01c7703a",
-    "scripts/operations/prepare-release.mjs": "516f694ef719c91e2f1e403de2265501e1036639833c24fc44f9058ec4aa48f7",
+    "scripts/operations/prepare-release.mjs": "4eef623c9ebb9faee5889a92ed824c2033f17a2b5fa1bebde4e2be8f3ec95c41",
     "scripts/operations/synthetic-snapshot.mjs": "d693d3dbf4b0671df1a7fac2097002ee3e97311c2ceb2d16998cc8ec3247b8a0",
     "scripts/provision-platform-admin.mjs": "f2b34d54e3049c43dd1413c68c4343f8fbb030374807194cf599c62d79f25131",
     "scripts/seed-demo-atelier.ts": "cabd1c301607e6d15a3ab24f3196b82c9ebe4218d2e114824bce1f4087cd7f02",
@@ -2244,7 +2251,7 @@
     "scripts/seed.ts": "086fb54c80b08202fdb3bf8997fc6671c9fd50fc0a5261a687b9eb0c4da0607b",
     "scripts/test-commercial-emulator.mjs": "048be938551ebc4d2fee3835be401cf0f77408d35aa7b3f00273c0eee195d110",
     "scripts/test-emulator-recovery.mjs": "16f52a77cb4591cab00b56b80242932afad9e285c43e10a9928ff6b62e590135",
-    "scripts/test-scheduler-emulator.mjs": "970534212cb8ba0a080a93605599497daead1c7ebf30f5ddb3c069b55c973394",
+    "scripts/test-scheduler-emulator.mjs": "2777ec454d271436fd4330f5be0b35cd690cb4820054721e27d44a3697d87792",
     "scripts/test-storage-token-inventory.mjs": "0f03561ab57fc9784d864cd6509d5c8e90edc13cf008ed1aca64d3599d051b8c",
     "services/email/index.ts": "d89029ed027009994bd9e51e4ad53564d080d6e24933f4a0620107358e65bbfa",
     "services/firebase/auth.service.ts": "0bf2a30b5a8c67f889cf847c5767156079cca0a6f5f83fa2d5c07eedb75ea532",
@@ -2303,6 +2310,7 @@
     "tests/operations/maintenance.test.mjs": "ea82967cab2c2d96e22e1c6e7269b9144616f744134b3e95b278bc4b6f44fd4e",
     "tests/operations/preflight.test.mjs": "c6e68d811f8af00d98ab2f69b7d1e2547155ae72921c2060669eeb8e0a2eda1e",
     "tests/operations/release.test.mjs": "cb4707d3e5b59fb78f5d6b2472077b034e7bb8f4691e73745f2b23ae39ef0d1e",
+    "tests/operations/runbooks.test.mjs": "75209301232d9291ed31bdf1d9dd77cb3a3d1858d110675310af6e7f665bc200",
     "tests/operations/snapshot.test.mjs": "a59d9d3578596dce3a451c347329c23a40cfe3973b009a8e74b5d06a2aee34b4",
     "tests/rules/firestore-storage.rules.test.ts": "5d808b53fe3045321e44c2629455392554130a29f947a4b16da4d281aca5c88c",
     "tests/unit/cloud-process-tree.test.mjs": "d427319e85c383bb5b112fe229b8fc2029b47abc2e3b6eca17266e44eb75bb69",

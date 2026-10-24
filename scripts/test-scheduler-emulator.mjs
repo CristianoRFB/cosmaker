@@ -30,13 +30,16 @@ try {
   batch.set(db.doc(`ateliers/${a}/quotes/old`), { requestId: 'replacement', status: 'sent', validUntil: yesterday, total: 100 });
   batch.set(db.doc(`ateliers/${a}/quoteRequests/replacement`), { status: 'quoted', activeQuoteId: 'newer' });
   batch.set(foreign, { requestId: 'foreign', status: 'sent', validUntil: yesterday, total: 100 });
-  await batch.commit(); await publish();
-  await waitFor(async () => (await db.doc(`ateliers/${a}/quotes/expired`).get()).get('status') === 'expired' && (await db.doc(`ateliers/${b}/quotes/expired`).get()).get('status') === 'expired', 'evento Pub/Sub e expiração A/B');
+  // Legacy malformed rows must not occupy the whole first page forever.
+  for (let index = 0; index < 100; index++) batch.set(db.doc(`ateliers/${a}/quotes/invalid-legacy-${index}`), { requestId: 'invalid', status: 'sent', validUntil: '2000-02-30', total: 100 });
+  await batch.commit(); await Promise.all([publish(), publish()]);
+  await waitFor(async () => (await db.doc(`ateliers/${a}/quotes/expired`).get()).get('status') === 'expired' && (await db.doc(`ateliers/${b}/quotes/expired`).get()).get('status') === 'expired', `invocação ${mode} e expiração A/B`);
   await new Promise((resolve) => setTimeout(resolve, 1500));
   for (const tenant of [a, b]) {
     for (const id of ['today', 'future', 'invalid']) assert.equal((await db.doc(`ateliers/${tenant}/quotes/${id}`).get()).get('status'), 'sent', `${tenant}/${id}`);
     assert.equal((await db.doc(`ateliers/${tenant}/quoteRequests/expired`).get()).get('status'), 'expired');
   }
+  for (let index = 0; index < 100; index++) assert.equal((await db.doc(`ateliers/${a}/quotes/invalid-legacy-${index}`).get()).get('status'), 'sent', 'Data inválida preservada, sem bloquear páginas seguintes.');
   assert.equal((await foreign.get()).get('status'), 'sent', 'namespace externo não pode ser alterado');
   assert.equal((await db.doc(`ateliers/${a}/quoteRequests/replacement`).get()).get('activeQuoteId'), 'newer');
   const logs = async () => {
@@ -44,7 +47,7 @@ try {
   };
   assert.equal((await logs()).length, 3);
   await publish(); await new Promise((resolve) => setTimeout(resolve, 1500)); assert.equal((await logs()).length, 3, 'redelivery não duplica auditoria');
-  console.log(`SCHEDULER ${mode.toUpperCase()} PASS: invocação local real, expiração A/B após dia UTC, hoje/futuro/data inválida/namespace externo preservados, versão ativa e auditoria idempotentes.`);
+  console.log(`SCHEDULER ${mode.toUpperCase()} PASS: invocações concorrentes, paginação após100legados inválidos, expiração A/B após dia UTC, hoje/futuro/inválidos/namespace externo preservados, versão ativa e auditoria idempotentes.`);
 } finally {
   for (const tenant of [a, b]) await db.recursiveDelete(db.doc(`ateliers/${tenant}`)); await db.recursiveDelete(foreignRoot);
   const logs = await db.collection('auditLogs').where('action', '==', 'quote.expired').get(); await Promise.all(logs.docs.filter((doc) => [a, b, nonce].includes(doc.get('atelierId'))).map((doc) => doc.ref.delete())); await app.delete();

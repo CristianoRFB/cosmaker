@@ -41,7 +41,7 @@
     "docs:check": "node scripts/docs-check.mjs",
     "docs:functional": "node scripts/functional-inventory.mjs",
     "release:prepare": "node scripts/operations/prepare-release.mjs",
-    "test:operations": "node --test tests/operations/preflight.test.mjs tests/operations/maintenance.test.mjs tests/operations/snapshot.test.mjs tests/operations/release.test.mjs",
+    "test:operations": "node --test tests/operations/preflight.test.mjs tests/operations/maintenance.test.mjs tests/operations/snapshot.test.mjs tests/operations/release.test.mjs tests/operations/runbooks.test.mjs",
     "firebase:emulators": "firebase emulators:start",
     "firebase:emulators:local": "npm run functions:build && node scripts/firebase-local-cli.mjs emulators:start --config firebase.local-emulator.json --project demo-cosmaker --only auth,firestore,storage,functions,pubsub",
     "seed:emulator": "node scripts/seed-emulator.mjs",

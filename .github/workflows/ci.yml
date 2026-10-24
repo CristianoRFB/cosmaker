@@ -25,4 +25,4 @@ jobs:
           node-version: 22
       - name: Validate PowerShell preflight with synthetic fixtures only
         shell: pwsh
-        run: node --test tests/operations/preflight.test.mjs
+        run: node --test tests/operations/preflight.test.mjs tests/operations/runbooks.test.mjs

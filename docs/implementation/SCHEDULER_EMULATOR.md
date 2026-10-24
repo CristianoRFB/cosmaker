@@ -1,5 +1,13 @@
 # Scheduler de expiração no ambiente local
 
+## GOAL V — avaliação final e correção dirigida
+
+Consulta npm24/10/2026: instalado/latest15.34.1. Dispatcher PubSub continua rejeitando assinaturahttp; nenhuma correção oficial compatível identificada. Não foi repetido o transporte bloqueado nem aplicado monkey patch. Scheduler v2 real é job+HTTP/OIDC, conforme [contrato oficial](https://firebase.google.com/docs/functions/schedule-functions); não substituí-lo por cron público. O default de SA/IAM deve ser comprovado no projeto real, não presumido.
+
+Defeito local reproduzido via wrapper HTTP:100propostas legadas com data inválida ocupavam o primeiro lote, preservadas corretamente mas impedindo expirar as válidas seguintes. Vermelho por timeout após handlerHTTP concluído em1,25s, não falha de PubSub. Corrigido com paginação por snapshot em lotes100, mantendo filtro/revalidação UTC/namespace/estado e transações. Não remove registros inválidos nem altera preço/histórico.
+
+Roteiro real/IAM/OIDC/relógio/concorrência/ledger/retorno em [REAL_ACCEPTANCE](../operations/pre-homologation/REAL_ACCEPTANCE.md). O transporte continua BLOCKED_EXTERNAMENTE; PASSHTTP não aumenta182/184.
+
 Com o runtime completo de `cloud-start.sh` ativo e Functions compiladas:
 
 ```bash
