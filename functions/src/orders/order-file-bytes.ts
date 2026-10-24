@@ -4,6 +4,7 @@ import { HttpsError, onRequest, type Request } from 'firebase-functions/v2/https
 import { adminAuth, adminDb, adminStorage } from '../admin';
 import { ids, manager } from './order-files';
 import { orderFileHash, orderFileMaxBytes, orderFilePath, revokeOrderFileTokens, validOrderFileBytes } from './order-file-storage';
+import { orderClientUid } from './client-ownership';
 
 export async function identity(request: Request) {
   const bearer = request.get('authorization')?.match(/^Bearer (\S+)$/)?.[1];
@@ -119,13 +120,7 @@ export const downloadOrderFileBytes = onRequest({ cors: true, timeoutSeconds: 12
         && (['owner', 'admin'].includes(String(membership.role)) || permissions.includes('orders:read') || permissions.includes('orders:manage'));
       const value = fileSnapshot.data()!;
       const orderValue = order.data()!;
-      const clientId = typeof orderValue.clientId === 'string' && /^[A-Za-z0-9_-]{1,150}$/.test(orderValue.clientId) ? orderValue.clientId : null;
-      const client = clientId ? await transaction.get(adminDb.doc(`ateliers/${atelierId}/clients/${clientId}`)) : null;
-      const orderUid = typeof orderValue.clientUserId === 'string' ? orderValue.clientUserId : null;
-      const profileUid = typeof client?.data()?.userId === 'string' ? String(client.data()!.userId) : null;
-      const linkedUid = orderUid ?? profileUid;
-      const conflictingLink = orderUid && profileUid && orderUid !== profileUid;
-      const owns = profile.data()?.accountType === 'client' && !conflictingLink && (linkedUid ? linkedUid === token.uid : typeof token.email === 'string' && typeof orderValue.email === 'string' && token.email.toLowerCase() === orderValue.email.toLowerCase());
+      const owns = !staff && profile.data()?.accountType === 'client' && await orderClientUid(transaction, atelierId, orderValue) === token.uid;
       const ready = value.uploadStatus === 'ready' || (value.source === 'quote_request' && value.uploadStatus === undefined);
       if (!ready || (!staff && !(owns && value.archived !== true && (value.visibleToClient === true || value.source === 'quote_request')))) throw new HttpsError('permission-denied', 'Arquivo indisponível para esta conta.');
       const expected = orderFilePath(atelierId, orderId, fileId);

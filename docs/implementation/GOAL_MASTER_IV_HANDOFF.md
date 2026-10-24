@@ -1,5 +1,13 @@
 # GOAL MASTER IV — handoff de continuidade
 
+## Checkpoint de segurança em curso — 24/10/2026 (prioridade atual)
+
+Vínculo durável implementado/testado em53cenários backend (pagamentos6/propostas5/orders33/fotos4/mensagens5); Functions/TypeScript/lint e unitários121 PASS. Ver PRIVATE_ORDER_SECURITY.md. Reuso de e-mail sem UID foi reproduzido em dois testes vermelhos, inclusive Rules raw. Legado sem vínculo preservado para staff, sem migração automática.
+
+**Próxima ação exata:** fechar exposição de custos internos no root raw do pedido: criar getClientOrder com projeção allowlisted, migrar getOrder(viewer=client), então negar root raw ao cliente. O snapshot integral deve continuar para staff. Auditoria score1 enquanto pendente; não declarar F5 concluída. Executar Rules finais/negativos e E2Es de detalhe/anexos/produção após o frontend migrar.
+
+Batch atual de jornada/referências/quotes é sequencial (sessão53557; resultados em /tmp/cosmaker-identity-suite-results.tsv); confirmar conclusões e não interromper/duplicar sem necessidade. Runtime interativo parado. Rules34 passaram, mas um ajuste final durante a execução e novo caso __unlinked__ exigem direcionado final. Recuperação e demais domínios SDK/inventário permanecem. CI do remoto6c4586a=40055355937 SUCCESS.
+
 ## Atualização de retomada — 2026-10-24 (prevalece sobre o registro de interrupção abaixo)
 
 Missão retomada; checkpoint anterior25606cd/CI40054282918 SUCCESS. Diretório global backend12/12 e E2E portal/paginação52pedidos, diretório, assinatura/comunicação/entrega e medidas/revisão foram aprovados na retomada (três E2Es iniciais verdes e repetição isolada1/1 das medidas após corrigir espera de persistência do teste). Páginas públicas antes WIP agora têm build81/TypeScript PASS e E2E2/2 em quatro larguras; menu e resolver por slug funcionais. Ver progresso canônico para comandos/limites históricos.

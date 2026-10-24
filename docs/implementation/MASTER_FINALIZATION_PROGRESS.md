@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL IV — vínculo durável de pedidos corrigido; projeção privada ainda pendente — 2026-10-24
+
+- Checkpoint anterior6c4586a259bf018532975f0f14d968af99fab5b7, CI40055355937 SUCCESS. Corrigida exposição concreta: fallback por e-mail em consultas diretas de pagamentos/mensagens/anexos/fotos e Rules de pedidos. Helper comum exige UID durável e CRM/caminho/tenant consistentes; listagem não oferece pedido unbound. Legado guardado para reconciliação deliberada staff; sem backfill por e-mail ou exclusão. [Contrato/limites](PRIVATE_ORDER_SECURITY.md).
+- Vermelhos reais: pagamento **1 FAIL/5 skipped**,3,17s; Rules **1 FAIL/33 skipped**,6,41s. Primeiro lançamento do Rules red falhou por PATH do vitest, corrigido com binário local, sem alteração permissiva. A exposição foi reproduzida antes da correção.
+- Backend atual **53/53 PASS** em cinco lotes isolados: client-payments6 (16,50s), client-quotes5 (10,87s), orders33 (98,59s; quatro arquivos), production-photo-bytes4 (16,25s), messages5 (31,50s). Logs `/tmp/cosmaker-identity-<domínio>.log`. Incluem consulta direta/bytes, ausência total de vínculo, UID malformado/estrangeiro, CRM e e-mail anterior, concorrência/retry e histórico; não equivalem a aceite UI da nova política.
+- Functions/TypeScript/lint PASS; unitários **121/121 PASS**,24arquivos6,66s. Rules **34/34 PASS**,36,10s; houve reforço do helper durante execução, portanto o teste direcionado final deve ser confirmado após o conjunto estabilizar. Ampliação do caso do namespace reservado __unlinked__ também aguarda esse gate final. Storage segue deny-all/zero consultas cross-service.
+- **Novo achado crítico ainda não corrigido:** root raw do pedido conserva custos internos em approvedQuoteSnapshot e pode ser lido pelo próprio cliente. Auditoria JSON temporariamente score1/PENDENTE_LOCAL. Próxima ação: getClientOrder allowlisted com UID/sessão, migrar detalhe/repositório e fechar root raw para cliente sem remover snapshot staff. Não declarar F5 segura enquanto isso não passar.
+- Jornada/referências/segurança de propostas ainda executando em lotes sequenciais, sem resultado inferido. Avisos PassThrough/MaxListeners do SDK Storage observados; não foram suprimidos nem diagnosticados como resolvidos. Recuperação sintética, outros domínios SDK, E2E afetados e inventário funcional seguem pendentes. F2/F3/F5/F6 parciais; formal10/16, sem prontidão comercial.
+
 ## GOAL IV — navegação pública e encerramento Linux testados — 2026-10-24
 
 - Retomado HEAD25606cd85752fc6d9a708b2265866442a961067e, fetch idêntico/árvore limpa; CI40054282918 SUCCESS. Build Next81/TypeScript finais PASS (`/tmp/cosmaker-public-final-build.log`, `/tmp/cosmaker-public-final-tsc.log`).

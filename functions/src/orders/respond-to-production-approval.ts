@@ -6,6 +6,7 @@ import { calculateWeightedProductionProgress, statusAfterProductionCompletion } 
 import { productionId, productionVersion } from './production-configuration';
 import { orderRemainingCents } from './change-policy';
 import { captureProductionPhotoEvidence, photoExistedBeforeProductionApproval, type ProductionPhotoEvidence } from './production-evidence';
+import { orderClientUid } from './client-ownership';
 
 export const respondToProductionApproval = onCall(async (call) => {
   const identity = requireVerifiedIdentity(call.auth);
@@ -31,15 +32,7 @@ export const respondToProductionApproval = onCall(async (call) => {
     const order = orderSnapshot.data()!;
     const approval = approvalSnapshot.data()!;
     const email = typeof identity.email === 'string' ? identity.email.trim().toLowerCase() : '';
-    if (!email || (typeof order.clientUserId === 'string' && order.clientUserId !== call.auth!.uid)) throw new HttpsError('permission-denied', 'Este pedido não pertence à sua conta verificada.');
-    let linked = order.clientUserId === call.auth!.uid;
-    if (typeof order.clientId === 'string' && order.clientId) {
-      const clientRecord = await transaction.get(adminDb.doc(`ateliers/${atelierId}/clients/${productionId(order.clientId, 'Cliente vinculado')}`));
-      const clientUid = clientRecord.get('userId');
-      if (typeof clientUid === 'string' && clientUid !== call.auth!.uid) throw new HttpsError('permission-denied', 'O cadastro do cliente está vinculado a outra conta.');
-      linked = linked || clientUid === call.auth!.uid;
-    }
-    if (!linked) throw new HttpsError('permission-denied', 'O pedido precisa estar vinculado à sua conta para registrar a aprovação.');
+    if (!email || await orderClientUid(transaction, atelierId, order) !== call.auth!.uid) throw new HttpsError('permission-denied', 'O pedido precisa estar vinculado à sua conta para registrar a aprovação.');
     if (approval.status !== 'pending') {
       if (approval.status === data.decision && approval.respondedBy === call.auth!.uid && (approval.responseComment ?? '') === comment) return {
         orderId, approvalId, status: data.decision, progress: approval.responseProgress ?? order.progress, replayed: true,

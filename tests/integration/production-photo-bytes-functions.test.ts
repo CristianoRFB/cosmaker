@@ -115,6 +115,26 @@ async function send(orderId: string, photo: Photo, bytes = png, query: Record<st
   return fetch(endpoint, { method: 'POST', body: new Uint8Array(bytes), headers: { 'Content-Type': 'image/png', ...(authenticated ? { Authorization: `Bearer ${await auth.currentUser!.getIdToken()}` } : {}) }, signal: AbortSignal.timeout(120_000) });
 }
 describe('Production photo bytes', () => {
+  it('requires a durable client UID for photo reads and preserves CRM-linked historical photos', async () => {
+    const { orderId, order } = await prepare('private-reader'); const photo = await createPhoto(orderId);
+    expect((await send(orderId, photo)).status).toBe(200);
+    const original = (await order.get()).data();
+    const endpoint = new URL(`http://${emulatorHost}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || 15001}/${projectId}/us-central1/downloadProductionPhotoBytes`);
+    for (const [key, value] of Object.entries({ atelierId: atelierA, orderId, photoId: photo.photoId })) endpoint.searchParams.set(key, value);
+    // Resolve the live token on every request, including after account switches.
+    const authorizedRead = async () => fetch(endpoint, { headers: { Authorization: `Bearer ${await auth.currentUser!.getIdToken()}` } });
+    await signIn(client); expect((await authorizedRead()).status).toBe(200);
+    for (const clientUserId of [null, 42, '', foreignClient.uid]) {
+      await order.update({ clientUserId, clientId: null });
+      expect((await authorizedRead()).status).toBe(403);
+    }
+    await order.set({ ...original, clientUserId: null, email: 'previous-contact@cosmaker.test' });
+    expect((await authorizedRead()).status).toBe(200); // CRM UID survives contact-email changes.
+    await signIn(foreignClient); expect((await authorizedRead()).status).toBe(403);
+    expect((await fetch(endpoint)).status).toBe(401);
+    expect((await bucket.file(photo.storagePath).exists())[0]).toBe(true);
+  }, 90_000);
+
   it('checks current UID, profile, membership, tenant, payload and content before storing bytes', async () => {
     const { orderId, order } = await prepare('http-identity'); const photo = await createPhoto(orderId); const file = bucket.file(photo.storagePath);
     expect((await send(orderId, photo, png, {}, false)).status).toBe(401);

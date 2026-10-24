@@ -138,6 +138,21 @@ afterAll(async () => {
 }, 30_000);
 
 describe('Order file Functions and Storage in Firebase Emulator', () => {
+  it('denies file metadata and bytes through an unbound or malformed order identity', async () => {
+    await signIn(ownerA); const upload = await createReady({ visibleToClient: true });
+    const orderRef = adminDb.doc(`ateliers/${atelierA}/orders/${orderId}`); const previous = (await orderRef.get()).data();
+    try {
+      await signIn(clientA); expect((await downloadHttp(upload)).equals(pngBytes)).toBe(true);
+      for (const clientUserId of [null, 42, '', stranger.uid]) {
+        await orderRef.update({ clientUserId });
+        await expect(call('listOrderFiles', { atelierId: atelierA, orderId })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+        await expect(downloadHttp(upload)).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      }
+      await signIn(ownerA); expect((await downloadHttp(upload)).equals(pngBytes)).toBe(true);
+      expect((await bucket.file(upload.storagePath).exists())[0]).toBe(true);
+    } finally { await orderRef.set(previous); }
+  }, 60_000);
+
   it('serializes simultaneous byte uploads and keeps the ready generation readable on retries', async () => {
     await signIn(ownerA);
     const upload = await call<Upload>('createOrderFileUpload', request());

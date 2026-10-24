@@ -41,6 +41,8 @@ export async function visibleClientRecords(tx: Transaction, identity: { uid: str
     const uids = [uid(value.clientUserId), uid(value.approvedBy), uid(value.rejectedBy), ...links.map((link) => uid(link!.get('userId')))];
     if (uids.includes(invalidUid)) return false;
     const strong = [...new Set(uids.filter((value): value is string => typeof value === 'string'))];
-    return strong.length ? strong.length === 1 && strong[0] === identity.uid : address === identity.email;
+    if (kind === 'orders' && uid(value.clientUserId) !== identity.uid
+      && (!messageId(value.clientId) || uid(records.get(`${tenant.path}/clients/${value.clientId}`)?.get('userId')) !== identity.uid)) return false;
+    return strong.length ? strong.length === 1 && strong[0] === identity.uid : kind === 'quotes' && address === identity.email;
   });
 }

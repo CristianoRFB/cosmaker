@@ -5,6 +5,7 @@ import { adminDb } from '../admin';
 import { requireVerifiedIdentity } from './access';
 import { agreementFingerprint, changeApplicationFinancials, currentOrderAgreement, OrderChangePolicyError, proposedOrderAgreement, validAgreementDate, type OrderChangeTerms } from './change-policy';
 import { defaultProductionStages, productionSemantic } from './production-template';
+import { orderClientUid } from './client-ownership';
 
 type ChangeStatus = 'pending' | 'approved' | 'rejected' | 'changes_requested' | 'cancelled' | 'applied';
 type AuthIdentity = { uid: string; token: Record<string, unknown> };
@@ -69,14 +70,7 @@ async function actor(transaction: Transaction, atelierId: string, order: Firebas
   if (mode === 'manage' || profile.accountType !== 'client') throw new HttpsError('permission-denied', 'Seu perfil não pode acessar esta alteração.');
   const email = typeof auth.token.email === 'string' ? auth.token.email.trim().toLowerCase() : '';
   if (!email || typeof order.email !== 'string' || order.email.trim().toLowerCase() !== email) throw new HttpsError('permission-denied', 'Este pedido não pertence à sua conta verificada.');
-  if (typeof order.clientUserId === 'string' && order.clientUserId !== auth.uid) throw new HttpsError('permission-denied', 'Este pedido está vinculado a outra conta.');
-  let linked = order.clientUserId === auth.uid;
-  if (typeof order.clientId === 'string' && order.clientId && !order.clientId.includes('/')) {
-    const client = await transaction.get(adminDb.doc(`ateliers/${atelierId}/clients/${order.clientId}`));
-    if (typeof client.data()?.userId === 'string' && client.data()?.userId !== auth.uid) throw new HttpsError('permission-denied', 'O cadastro do cliente está vinculado a outra conta.');
-    linked = linked || client.data()?.userId === auth.uid;
-  }
-  if (!linked) throw new HttpsError('permission-denied', 'O pedido precisa estar vinculado à sua conta antes de responder.');
+  if (await orderClientUid(transaction, atelierId, order) !== auth.uid) throw new HttpsError('permission-denied', 'O pedido precisa estar vinculado à sua conta antes de responder.');
   return { kind: 'client' as const, atelier: atelier! };
 }
 

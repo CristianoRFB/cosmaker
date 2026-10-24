@@ -17,13 +17,6 @@ service cloud.firestore {
         && (request.auth.token.platformAdmin == true || get(profilePath).data.accountType == 'platform_admin');
     }
 
-    function verifiedEmailMatches(email) {
-      return signedIn()
-        && request.auth.token.email_verified == true
-        && request.auth.token.email is string
-        && request.auth.token.email.lower() == email.lower();
-    }
-
     function memberPath(atelierId, userId) {
       return /databases/$(database)/documents/ateliers/$(atelierId)/members/$(userId);
     }
@@ -83,14 +76,20 @@ service cloud.firestore {
 
     function orderClientLink(atelierId, orderData) {
       let clientId = orderData.get('clientId', null);
-      let clientKey = clientId is string && clientId.size() > 0 ? clientId : '__unlinked__';
+      let validClient = clientId is string && clientId.matches('[A-Za-z0-9_-]{1,150}');
+      let clientKey = validClient ? clientId : '__unlinked__';
       let clientPath = /databases/$(database)/documents/ateliers/$(atelierId)/clients/$(clientKey);
-      let clientUid = exists(clientPath) ? get(clientPath).data.get('userId', null) : null;
+      let clientUid = validClient && exists(clientPath) ? get(clientPath).data.get('userId', null) : null;
       let orderUid = orderData.get('clientUserId', null);
-      return (!(orderUid is string && clientUid is string) || orderUid == clientUid)
+      // Raw reads cannot query unindexed CRM by email. Existing orders need a UID;
+      // legacy unbound records remain staff-visible for deliberate reconciliation.
+      return (orderData.get('atelierId', atelierId) == atelierId)
+        && (clientId == null || (validClient && exists(clientPath)))
+        && (orderUid == null || (orderUid is string && orderUid.matches('[^/]{1,128}')))
+        && (clientUid == null || (clientUid is string && clientUid.matches('[^/]{1,128}')))
+        && (!(orderUid is string && clientUid is string) || orderUid == clientUid)
         && (orderUid is string ? orderUid == request.auth.uid
-          : clientUid is string ? clientUid == request.auth.uid
-          : verifiedEmailMatches(orderData.get('email', '')));
+          : clientUid is string && clientUid == request.auth.uid);
     }
 
     function isOrderClient(atelierId, orderId) {

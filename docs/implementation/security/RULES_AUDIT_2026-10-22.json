@@ -1,7 +1,21 @@
 {
-  "score": 4,
-  "summary": "Auditoria Rules direcionada corrigida e testada localmente: nenhum acesso Storage raw/cross-service, propostas por UID e perfis/medidas validados. Permanecem inventário/revogação real de tokens já distribuídos, homologação externa e transporte scheduler; dependências têm revisão separada. Não é aprovação de produção nem auditoria exaustiva de todas as Functions.",
+  "score": 1,
+  "summary": "Auditoria parcial em continuidade (24/10): confirmada consulta direta por e-mail reutilizado em pedido sem UID e corrigida a política de vínculo durável, com regressões em execução. Encontrado também acesso raw ao snapshot de custos internos do próprio pedido; projeção de detalhe e fechamento do root raw ainda pendentes. Não é aprovação de segurança ou produção.",
   "findings": [
+    {
+      "check": "Field-Level vs. Identity-Level Security",
+      "severity": "critical",
+      "issue": "O detalhe cliente ainda lê o documento completo do pedido. approvedQuoteSnapshot preserva materialsCost/laborCost/otherCost do orçamento para histórico interno; uma leitura raw não permite ocultar esses campos.",
+      "recommendation": "Criar getClientOrder com sessão/UID/CRM e projeção allowlisted; migrar o detalhe antes de negar a leitura raw do root ao cliente. Preservar snapshot integral para staff e testar negativos mais jornada.",
+      "status": "PENDENTE_LOCAL"
+    },
+    {
+      "check": "Identity-Level Security",
+      "severity": "critical",
+      "issue": "Teste vermelho confirmou recebimento exposto por consulta direta de pedido legado sem UID quando o e-mail possui CRM de outro UID; Rules raw também aceitaram o acesso.",
+      "recommendation": "Exigir UID durável no pedido/CRM em todos os leitores, preservar legado para reconciliação pela equipe, validar malformed UID/conflitos e casos positivos.",
+      "status": "IMPLEMENTADO_REGRESSAO_EM_CURSO"
+    },
     {
       "check": "Storage Abuse",
       "severity": "major",

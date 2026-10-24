@@ -3,6 +3,7 @@ import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb, adminStorage } from '../admin';
 import { requireVerifiedIdentity } from './access';
 import { orderFileHash, revokeOrderFileTokens, validOrderFileBytes } from './order-file-storage';
+import { orderClientUid } from './client-ownership';
 
 const acceptedTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'application/pdf']);
 const maxBytes = 20 * 1024 * 1024;
@@ -61,7 +62,7 @@ function fileView(fileId: string, data: Record<string, unknown>, atelierId: stri
 }
 
 export const listOrderFiles = onCall(async (call) => {
-  const token = requireVerifiedIdentity(call.auth);
+  requireVerifiedIdentity(call.auth);
   const data = input(call.data);
   only(data, ['atelierId', 'orderId']);
   const { atelierId, orderId } = ids(data);
@@ -77,16 +78,7 @@ export const listOrderFiles = onCall(async (call) => {
     const permissions = Array.isArray(membership?.permissions) ? membership.permissions : [];
     const staff = profile.data()?.active === true && profile.data()?.accountType === 'atelier_member' && profile.data()?.atelierId === atelierId
       && membership?.active === true && (['owner', 'admin'].includes(String(membership.role)) || permissions.includes('orders:read') || permissions.includes('orders:manage'));
-    const orderData = order.data()!;
-    const clientId = id(orderData.clientId) ? orderData.clientId : null;
-    const client = clientId ? await transaction.get(adminDb.doc(`ateliers/${atelierId}/clients/${clientId}`)) : null;
-    const orderUid = id(orderData.clientUserId) ? orderData.clientUserId : null;
-    const profileUid = id(client?.data()?.userId) ? String(client!.data()!.userId) : null;
-    const linkedUid = orderUid ?? profileUid;
-    const conflictingLink = orderUid && profileUid && orderUid !== profileUid;
-    const owns = profile.data()?.accountType === 'client' && !conflictingLink && (linkedUid
-      ? linkedUid === call.auth!.uid
-      : typeof token.email === 'string' && typeof orderData.email === 'string' && token.email.toLowerCase() === orderData.email.toLowerCase());
+    const owns = !staff && profile.data()?.accountType === 'client' && await orderClientUid(transaction, atelierId, order.data()!) === call.auth!.uid;
     if (profile.data()?.active !== true || (!staff && !owns)) throw new HttpsError('permission-denied', 'O pedido não está disponível para esta conta.');
     const snapshot = await transaction.get(orderRef.collection('files').orderBy('createdAt', 'asc'));
     const files = snapshot.docs.map((document) => fileView(document.id, document.data(), atelierId));

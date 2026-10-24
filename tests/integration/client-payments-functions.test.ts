@@ -60,6 +60,29 @@ describe('Client payment projections', () => {
     await adminAuth.updateUser(customer.uid, { disabled: true }); await expect(call()).rejects.toMatchObject({ code: 'functions/unauthenticated' }); await adminAuth.updateUser(customer.uid, { disabled: false });
     await adminAuth.updateUser(customer.uid, { emailVerified: false }); await auth.currentUser!.getIdToken(true); await expect(call()).rejects.toMatchObject({ code: 'functions/failed-precondition' }); await adminAuth.updateUser(customer.uid, { emailVerified: true }); await auth.currentUser!.getIdToken(true);
   }, 60_000);
+  it('denies direct payment lookup when a reused email belongs to another CRM UID', async () => {
+    await signIn(customer.email);
+    const legacy = order.parent.doc('reused-email-direct');
+    const crm = db.doc(`ateliers/${tenants[0]}/clients/reused-email-owner`);
+    try {
+      await legacy.set({ ...(await order.get()).data(), clientUserId: null, clientId: null, email: customer.email });
+      await legacy.collection('payments').doc('receipt').set({ type: 'deposit', status: 'paid', amount: 30, amountCents: 3000, createdAt: now });
+      await crm.set({ email: customer.email, userId: other.uid });
+      await expect(call('listClientOrderPayments', { orderId: legacy.id })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      await expect(call('getClientPayment', { orderId: legacy.id, paymentId: 'receipt' })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      await expect(call('getOrderConversation', { orderId: legacy.id })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      await expect(call('listOrderFiles', { orderId: legacy.id })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      await crm.delete(); // A genuinely unbound historical order also needs deliberate UID reconciliation.
+      await expect(call('listClientOrderPayments', { orderId: legacy.id })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      for (const clientUserId of [42, '', [], other.uid]) {
+        await legacy.update({ clientUserId });
+        await expect(call('listClientOrderPayments', { orderId: legacy.id })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+      }
+      await legacy.update({ clientUserId: customer.uid, email: 'previous-contact@cosmaker.test' });
+      expect(await call('listClientOrderPayments', { orderId: legacy.id })).toMatchObject({ payments: [expect.objectContaining({ id: 'receipt' })] });
+    } finally { await db.recursiveDelete(legacy); await crm.delete(); }
+  }, 60_000);
+
   it('pages client order history and retains undated/CRM-linked orders without email or malformed-UID bypass', async () => {
     await signIn(customer.email);
     const base = (await order.get()).data();

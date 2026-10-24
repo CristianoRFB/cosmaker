@@ -3,6 +3,7 @@ import { adminDb, adminStorage } from '../admin';
 import { identity, failure } from './order-file-bytes';
 import { productionId } from './production-configuration';
 import { revokeOrderFileTokens, validOrderFileBytes } from './order-file-storage';
+import { orderClientUid } from './client-ownership';
 
 /** Photos are private evidence; their URLs must not outlive the viewer's authorization. */
 export const downloadProductionPhotoBytes = onRequest({ cors: true, timeoutSeconds: 120 }, async (request, response) => {
@@ -28,14 +29,7 @@ export const downloadProductionPhotoBytes = onRequest({ cors: true, timeoutSecon
       const permissions = Array.isArray(membership?.permissions) ? membership.permissions : [];
       const staff = profile.get('accountType') === 'atelier_member' && profile.get('atelierId') === atelierId && membership?.active === true
         && (['owner', 'admin'].includes(String(membership.role)) || permissions.includes('orders:read') || permissions.includes('orders:manage'));
-      const orderUid = typeof order.get('clientUserId') === 'string' ? order.get('clientUserId') as string : null;
-      const clientId = typeof order.get('clientId') === 'string' ? productionId(order.get('clientId'), 'Cliente') : null;
-      const client = clientId ? await transaction.get(adminDb.doc(`ateliers/${atelierId}/clients/${clientId}`)) : null;
-      const clientUid = typeof client?.get('userId') === 'string' ? client.get('userId') as string : null;
-      const linkedUid = orderUid ?? clientUid;
-      const conflict = orderUid && clientUid && orderUid !== clientUid;
-      const owns = profile.get('accountType') === 'client' && !conflict && (linkedUid ? linkedUid === token.uid
-        : typeof token.email === 'string' && typeof order.get('email') === 'string' && token.email.toLowerCase() === String(order.get('email')).toLowerCase());
+      const owns = !staff && profile.get('accountType') === 'client' && await orderClientUid(transaction, atelierId, order.data()!) === token.uid;
       const value = record.data()!;
       if (value.uploadStatus !== 'ready' || (!staff && !(owns && value.visibleToClient === true))) throw new HttpsError('permission-denied', 'Foto indisponível para esta conta.');
       if (value.storagePath !== path || value.atelierId !== atelierId || value.orderId !== orderId) throw new HttpsError('failed-precondition', 'A referência da foto precisa de revisão.');

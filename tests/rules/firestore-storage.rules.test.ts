@@ -210,6 +210,29 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(updateDoc(doc(client, 'ateliers/atelier-a/measurementProfiles/profile-a/measurements/chest'), { value: 99 }));
   });
 
+  it('rejects raw order access through recycled email or malformed UID while preserving trusted CRM links', async () => {
+    const customer = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
+    const staff = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    const path = 'ateliers/atelier-a/orders/order-a';
+    await assertSucceeds(getDoc(doc(customer, path)));
+    await environment.withSecurityRulesDisabled(async context => {
+      await updateDoc(doc(context.firestore(), path), { clientId: null, clientUserId: null });
+      await updateDoc(doc(context.firestore(), 'ateliers/atelier-a/clients/client-a'), { userId: 'client-b' });
+      await setDoc(doc(context.firestore(), 'ateliers/atelier-a/clients/__unlinked__'), { userId: 'client-a' });
+    });
+    await assertFails(getDoc(doc(customer, path)));
+    await assertFails(getDoc(doc(customer, `${path}/measurementSnapshot/chest`)));
+    await assertSucceeds(getDoc(doc(staff, path)));
+    for (const clientUserId of [42, '', ['client-a'], 'other-uid']) {
+      await environment.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), path), { clientUserId }));
+      await assertFails(getDoc(doc(customer, path)));
+    }
+    await environment.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), path), { clientUserId: 'client-a' }));
+    await assertSucceeds(getDoc(doc(customer, path)));
+    await environment.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), path), { clientId: 'client-a' }));
+    await assertFails(getDoc(doc(customer, path))); // Conflicting explicit CRM UID remains authoritative.
+  });
+
   it('revokes order reads for inactive profiles, unverified staff and suspended tenants', async () => {
     const customer = environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }).firestore();
     const staff = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
