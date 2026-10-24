@@ -1,8 +1,8 @@
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { FieldValue } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
-import { adminDb, adminStorage } from '../admin';
-import { orderFileHash, revokeOrderFileTokens } from '../orders/order-file-storage';
+import { adminDb } from '../admin';
+import { orderFileHash } from '../orders/order-file-storage';
 
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -139,7 +139,7 @@ function validateQuoteInput(value: unknown) {
   };
 }
 
-interface ReferenceDescriptor { name: string; contentType: string; size: number; }
+interface ReferenceDescriptor { name: string; contentType: string; size: number; sha256: string; }
 
 function validateReferenceDescriptors(value: unknown): ReferenceDescriptor[] {
   if (value === undefined) return [];
@@ -152,11 +152,12 @@ function validateReferenceDescriptors(value: unknown): ReferenceDescriptor[] {
     const size = data.size;
     if (typeof contentType !== 'string' || !allowedImageTypes.has(contentType)) throw new HttpsError('invalid-argument', 'Use imagens JPEG, PNG ou WebP.');
     if (typeof size !== 'number' || !Number.isInteger(size) || size <= 0 || size > maxReferenceSize) throw new HttpsError('invalid-argument', 'Cada imagem pode ter até 10 MB.');
-    return { name, contentType, size };
+    if (typeof data.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(data.sha256)) throw new HttpsError('invalid-argument', 'O hash da referência é inválido.');
+    return { name, contentType, size, sha256: data.sha256 };
   });
 }
 
-function assertIntakeAvailable(lookup: TenantLookup) {
+export function assertIntakeAvailable(lookup: TenantLookup) {
   if (lookup.status === 'invalid_slug') throw new HttpsError('invalid-argument', 'O endereço público do ateliê é inválido.');
   if (lookup.status === 'not_found' || lookup.status === 'unpublished') throw new HttpsError('not-found', 'Este ateliê não está disponível para solicitações públicas.');
   if (lookup.status === 'suspended') throw new HttpsError('failed-precondition', 'Este ateliê está temporariamente suspenso.');
@@ -177,7 +178,7 @@ export const createPublicQuoteRequest = onCall(async (call) => {
   const requestRef = adminDb.collection('ateliers').doc(atelierId).collection('quoteRequests').doc();
   const references = descriptors.map(() => {
     const uploadId = randomUUID();
-    return { uploadId, storagePath: `ateliers/${atelierId}/quoteRequests/${requestRef.id}/references/${uploadId}` };
+    return { uploadId, storagePath: `ateliers/${atelierId}/quoteRequests/${requestRef.id}/references/${uploadId}`, capability: randomBytes(32).toString('hex'), expiresAtMs: Date.now() + 15 * 60_000 };
   });
   await adminDb.runTransaction(async (transaction) => {
     const [atelier, publicProfile, slug] = await Promise.all([
@@ -203,89 +204,16 @@ export const createPublicQuoteRequest = onCall(async (call) => {
     transaction.create(requestRef, { ...quoteRequest, ...(Object.keys(showcaseContext).length ? { showcaseContext } : {}) });
     references.forEach((reference, index) => transaction.create(requestRef.collection('references').doc(reference.uploadId), {
       storagePath: reference.storagePath, originalName: descriptors[index].name, contentType: descriptors[index].contentType,
-      size: descriptors[index].size, uploadStatus: 'pending', createdAt: FieldValue.serverTimestamp(),
+      size: descriptors[index].size, sha256: descriptors[index].sha256, uploadStatus: 'pending', createdAt: FieldValue.serverTimestamp(),
+      uploadCapabilityHash: orderFileHash(Buffer.from(reference.capability)), uploadExpiresAtMs: reference.expiresAtMs, uploadSlug: lookup.tenant!.slug,
     }));
   });
   return { requestId: requestRef.id, references };
 });
 
-function hasValidImageSignature(contentType: string, bytes: Uint8Array) {
-  if (contentType === 'image/jpeg') return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
-  if (contentType === 'image/png') return bytes.length >= 8 && [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a].every((byte, index) => bytes[index] === byte);
-  if (contentType === 'image/webp') return bytes.length >= 12
-    && String.fromCharCode(...bytes.slice(0, 4)) === 'RIFF'
-    && String.fromCharCode(...bytes.slice(8, 12)) === 'WEBP';
-  return false;
-}
-
-export const completePublicQuoteReferenceUpload = onCall(async (call) => {
-  const lookup = await lookupTenant(call.data?.tenantSlug);
-  const atelierId = assertIntakeAvailable(lookup);
-  const requestId = typeof call.data?.requestId === 'string' ? call.data.requestId : '';
-  const uploadId = typeof call.data?.uploadId === 'string' ? call.data.uploadId : '';
-  if (!/^[A-Za-z0-9_-]{10,150}$/.test(requestId) || !/^[0-9a-f-]{36}$/i.test(uploadId)) {
-    throw new HttpsError('invalid-argument', 'A referência enviada é inválida.');
-  }
-
-  const requestRef = adminDb.doc(`ateliers/${atelierId}/quoteRequests/${requestId}`);
-  const referenceRef = requestRef.collection('references').doc(uploadId);
-  const [requestSnapshot, referenceSnapshot] = await Promise.all([requestRef.get(), referenceRef.get()]);
-  if (!requestSnapshot.exists || requestSnapshot.data()?.status !== 'new' || !referenceSnapshot.exists) {
-    throw new HttpsError('not-found', 'A solicitação ou a referência não está disponível.');
-  }
-  const reference = referenceSnapshot.data()!;
-  const expectedPath = `ateliers/${atelierId}/quoteRequests/${requestId}/references/${uploadId}`;
-  if (reference.uploadStatus !== 'pending' || reference.storagePath !== expectedPath || !allowedImageTypes.has(reference.contentType)) {
-    throw new HttpsError('failed-precondition', 'A referência não está aguardando validação.');
-  }
-
-  const file = adminStorage.bucket().file(expectedPath);
-  const [exists] = await file.exists();
-  if (!exists) throw new HttpsError('not-found', 'O arquivo de referência não foi encontrado.');
-  const [metadata] = await file.getMetadata();
-  const actualSize = Number(metadata.size);
-  const actualType = metadata.contentType;
-  if (actualSize !== reference.size || actualSize <= 0 || actualSize > maxReferenceSize || actualType !== reference.contentType) {
-    await Promise.all([file.delete({ ignoreNotFound: true }), referenceRef.delete()]);
-    throw new HttpsError('invalid-argument', 'O arquivo não corresponde ao tipo ou tamanho informado.');
-  }
-
-  const [content] = await file.download();
-  if (!hasValidImageSignature(reference.contentType, content)) {
-    await Promise.all([file.delete({ ignoreNotFound: true }), referenceRef.delete()]);
-    throw new HttpsError('invalid-argument', 'O conteúdo da imagem não corresponde ao formato informado.');
-  }
-
-  await revokeOrderFileTokens(expectedPath);
-  await adminDb.runTransaction(async (transaction) => {
-    const [atelier, profile, slug, currentRequest, currentReference] = await Promise.all([
-      transaction.get(adminDb.doc(`ateliers/${atelierId}`)), transaction.get(adminDb.doc(`publicAteliers/${atelierId}`)),
-      transaction.get(adminDb.doc(`publicAtelierSlugs/${lookup.tenant!.slug}`)), transaction.get(requestRef), transaction.get(referenceRef),
-    ]);
-    if (atelier.get('active') !== true || atelier.get('demoWorkspace') === true || profile.get('published') !== true || profile.get('quoteRequestsEnabled') !== true || slug.get('atelierId') !== atelierId || profile.get('slug') !== lookup.tenant!.slug
-      || currentRequest.get('status') !== 'new' || currentReference.get('uploadStatus') !== 'pending' || currentReference.get('storagePath') !== expectedPath || currentReference.get('size') !== reference.size || currentReference.get('contentType') !== reference.contentType) throw new HttpsError('failed-precondition', 'A solicitação mudou durante a validação do arquivo.');
-    transaction.update(referenceRef, { uploadStatus: 'ready', storageGeneration: String(metadata.generation), sha256: orderFileHash(content), validatedAt: FieldValue.serverTimestamp() });
-  });
-  return { uploadId, ready: true };
+// Deprecated public mutation endpoints cannot complete or delete server-managed or legacy objects.
+// Existing ready references remain available through the authenticated byte reader.
+export const completePublicQuoteReferenceUpload = onCall(() => {
+  throw new HttpsError('failed-precondition', 'Envie a referência pelo transporte protegido.');
 });
-
-export const discardPublicQuoteReferenceUpload = onCall(async (call) => {
-  const lookup = await lookupTenant(call.data?.tenantSlug);
-  const atelierId = lookup.atelierId;
-  const requestId = typeof call.data?.requestId === 'string' ? call.data.requestId : '';
-  const uploadId = typeof call.data?.uploadId === 'string' ? call.data.uploadId : '';
-  if (!atelierId || !/^[A-Za-z0-9_-]{10,150}$/.test(requestId) || !/^[0-9a-f-]{36}$/i.test(uploadId)) {
-    return { discarded: false };
-  }
-
-  const requestRef = adminDb.doc(`ateliers/${atelierId}/quoteRequests/${requestId}`);
-  const referenceRef = requestRef.collection('references').doc(uploadId);
-  const referenceSnapshot = await referenceRef.get();
-  if (!referenceSnapshot.exists || referenceSnapshot.data()?.uploadStatus !== 'pending') return { discarded: false };
-  const expectedPath = `ateliers/${atelierId}/quoteRequests/${requestId}/references/${uploadId}`;
-  await Promise.all([
-    adminStorage.bucket().file(expectedPath).delete({ ignoreNotFound: true }),
-    referenceRef.delete(),
-  ]);
-  return { discarded: true };
-});
+export const discardPublicQuoteReferenceUpload = onCall(() => ({ discarded: false }));

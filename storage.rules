@@ -44,25 +44,6 @@ service firebase.storage {
         && firestore.get(atelierPath).data.demoWorkspace == true;
     }
 
-    function mayWritePublicReference(atelierId, requestId, referenceId) {
-      let intakePath = /databases/(default)/documents/publicAteliers/$(atelierId);
-      let atelierPath = /databases/(default)/documents/ateliers/$(atelierId);
-      let requestPath = /databases/(default)/documents/ateliers/$(atelierId)/quoteRequests/$(requestId);
-      let referencePath = referenceRecordPath(atelierId, requestId, referenceId);
-      return firestore.exists(intakePath)
-        && firestore.get(intakePath).data.published == true
-        && firestore.get(intakePath).data.quoteRequestsEnabled == true
-        && firestore.exists(atelierPath)
-        && firestore.get(atelierPath).data.active == true
-        && firestore.exists(requestPath)
-        && firestore.get(requestPath).data.status == 'new'
-        && firestore.exists(referencePath)
-        && firestore.get(referencePath).data.uploadStatus == 'pending'
-        && firestore.get(referencePath).data.storagePath == 'ateliers/' + atelierId + '/quoteRequests/' + requestId + '/references/' + referenceId
-        && firestore.get(referencePath).data.size == request.resource.size
-        && firestore.get(referencePath).data.contentType == request.resource.contentType;
-    }
-
     function referenceIsReady(atelierId, requestId, referenceId) {
       let referencePath = referenceRecordPath(atelierId, requestId, referenceId);
       return firestore.exists(referencePath)
@@ -112,7 +93,7 @@ service firebase.storage {
     match /ateliers/{atelierId}/quoteRequests/{requestId}/references/{referenceId} {
       // Private reference bytes require current server-side authorization; no reusable download URLs.
       allow read: if false;
-      allow create: if isReferenceImage() && !isDemoWorkspace(atelierId) && mayWritePublicReference(atelierId, requestId, referenceId);
+      allow create: if false;
       allow update, delete: if false;
     }
 

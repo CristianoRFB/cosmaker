@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL MASTER IV — referências públicas por servidor WIP — 2026-10-24
+
+- Recuperado remoto/checkout limpo `3339fa1ee6795a8bb885232452434064c1d11462`; CI anterior 39956690546 PASS. Não há fast-forward posterior. Node 22.23.4/Java 21 confirmados; `cloud-setup.sh` em execução com dependências existentes.
+- IMPLEMENTADO, ainda sem aceite: capability aleatória de 256 bits (apenas hash persistido), validade técnica de 15 minutos, escopo slug/solicitação/arquivo/tipo/tamanho/SHA-256; HTTP POST de bytes com resolução canônica, autorização transacional antes/depois de I/O, lease e create sem sobrescrever objetos existentes. Retry idêntico de capability consumida só reconhece recibo, sem nova gravação; expiração continua obrigatória.
+- Interface pública migrou do Storage SDK ao endpoint protegido. Create raw fechado; complete legado recusa mutação e discard legado não apaga arquivos, eliminando corrida com conclusão. Referências prontas/legadas permanecem no leitor autenticado anterior; não houve exclusão/migração/revogação global.
+- Functions build PASS inicial. TypeScript inicial identificou nulabilidade de app e tipo de Buffer do teste, corrigidos; gates finais ainda pendentes. Backend negativo ampliado e jornada contínua adaptada; Rules/E2E alterados, AINDA NÃO APROVADOS. Não registrar F5 PASS.
+- Próximo gate imediato: integração referências (capabilities, A/B, expiração, replay/concorrência, assinatura/hash, colisão e legado), Rules negativas e E2E público. Depois inventário de caminhos/tokens sintéticos, portal cliente e F2/F6.
+- Aceite formal permanece 10/16; esse índice não é conclusão funcional. Inventário verificável de funcionalidades ainda deve ser estabelecido antes de calcular o indicador funcional. F2/F3/F5/F6 parciais, F7/F8 pendentes, sem prontidão comercial/produção.
+
 ## F5 — fotos de produção por servidor: IMPLEMENTADO e TESTADO_LOCALMENTE — 2026-10-23
 
 - Fonte integral preservada no remoto `25e35d8a61e5be86fd28086c30f0c0befb2d7fca`, CI **PASS** [39956173337](https://github.com/CristianoRFB/cosmaker/actions/runs/39956173337). Fechamento documenta o gate da versão final, depois da correção de hash na conclusão compartilhada, sem promover F5 global.

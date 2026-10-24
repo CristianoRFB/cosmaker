@@ -507,9 +507,9 @@ describe('Firestore and Storage tenant rules', () => {
     }
   });
 
-  it('limits public reference uploads to image types and enabled public intake', async () => {
+  it('denies raw public reference uploads after server migration', async () => {
     const guest = environment.unauthenticatedContext().storage();
-    await assertSucceeds(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref-a'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
+    await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref-a'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-a/quoteRequests/request-a/references/ref.html'), new Uint8Array([1, 2, 3]), { contentType: 'text/html' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-closed/quoteRequests/request-closed/references/ref.png'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));
     await assertFails(uploadBytes(ref(guest, 'ateliers/atelier-unpublished-intake/quoteRequests/request-unpublished/references/ref-unpublished'), new Uint8Array([1, 2, 3]), { contentType: 'image/png' }));

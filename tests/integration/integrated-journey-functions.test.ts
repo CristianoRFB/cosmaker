@@ -2,7 +2,6 @@ import { createRequire } from 'node:module';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { connectFirestoreEmulator, getFirestore as getClientFirestore, addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { connectStorageEmulator, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { initializeApp, deleteApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
@@ -58,7 +57,6 @@ function call<T>(name: string, data: Record<string, unknown> = {}) {
 }
 
 const { getStorage: getAdminStorage } = requireFromFunctions('firebase-admin/storage');
-const storage = getStorage(clientApp, `gs://${projectId}.appspot.com`); connectStorageEmulator(storage, emulatorHost, Number(process.env.COSMAKER_STORAGE_EMULATOR_PORT || '19199'));
 const clientDb = getClientFirestore(clientApp); connectFirestoreEmulator(clientDb, emulatorHost, Number(process.env.FIRESTORE_EMULATOR_HOST!.split(':').at(-1)));
 const bucket = getAdminStorage(adminApp).bucket(`${projectId}.appspot.com`); const png = readFileSync(new URL('../fixtures/production-progress.png', import.meta.url));
 let customer: Identity; const slugs = [`journey-${nonce}-a`, `journey-${nonce}-b`]; const root = () => adminDb.doc(`ateliers/${atelierIds[0]}`);
@@ -88,9 +86,9 @@ describe('Integrated visitor to completed order journey', () => {
     await signIn(ownerA);
     const service = await call<{ id: string }>('saveAtelierService', { requestId: newId(), title: 'Armaduras sob medida', description: 'Confecção e acabamento de armaduras sintéticas.', category: 'armor', public: true, active: true, sortOrder: 0, internalNotes: 'Nota privada da equipe', version: 0 });
     await signOut(auth);
-    const created = await call<{ requestId: string; references: Array<{ uploadId: string; storagePath: string }> }>('createPublicQuoteRequest', { tenantSlug: slugs[0], input: { name: 'Cliente da jornada', email: customer.email, character: 'Armadura da jornada', franchise: 'Obra sintética', category: 'full_cosplay', description: 'Projeto totalmente fictício para a jornada integrada.', desiredDeliveryDate: '2027-12-31', urgency: 'normal', serviceId: service.id }, references: [{ name: 'reference.png', contentType: 'image/png', size: png.length }] });
-    await uploadBytes(ref(storage, created.references[0].storagePath), png, { contentType: 'image/png' });
-    await call('completePublicQuoteReferenceUpload', { tenantSlug: slugs[0], requestId: created.requestId, uploadId: created.references[0].uploadId });
+    const created = await call<{ requestId: string; references: Array<{ uploadId: string; storagePath: string; capability: string }> }>('createPublicQuoteRequest', { tenantSlug: slugs[0], input: { name: 'Cliente da jornada', email: customer.email, character: 'Armadura da jornada', franchise: 'Obra sintética', category: 'full_cosplay', description: 'Projeto totalmente fictício para a jornada integrada.', desiredDeliveryDate: '2027-12-31', urgency: 'normal', serviceId: service.id }, references: [{ name: 'reference.png', contentType: 'image/png', size: png.length, sha256: (await import('node:crypto')).createHash('sha256').update(png).digest('hex') }] });
+    const referenceUpload = await fetch(`http://${emulatorHost}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || '15001'}/${projectId}/us-central1/uploadPublicQuoteReferenceBytes?${new URLSearchParams({ tenantSlug: slugs[0], requestId: created.requestId, uploadId: created.references[0].uploadId })}`, { method: 'POST', body: png, headers: { 'Content-Type': 'image/png', Authorization: `Bearer ${created.references[0].capability}` } });
+    expect(referenceUpload.status).toBe(200);
     expect((await root().collection('quoteRequests').doc(created.requestId).get()).get('showcaseContext.service.title')).toBe('Armaduras sob medida');
     expect((await call<{ services: unknown[] }>('listPublicShowcase', { tenantSlug: slugs[1] })).services).toEqual([]);
     console.log('JOURNEY: visitante → serviço → solicitação e imagem persistidos.');
@@ -124,7 +122,7 @@ describe('Integrated visitor to completed order journey', () => {
     await move('issue', { reservationId: reservation.reservationId });
     await call('recordFinanceEntry', { requestId: newId(), orderId, kind: 'expense', basis: 'actual', category: 'materials', amountCents: 5000, description: 'Materiais consumidos na jornada', effectiveDate: today });
     await stage('stage-fitting', 'start');
-    const photo = await call<{ photoId: string; storagePath: string }>('createProductionPhotoUpload', { atelierId: atelierIds[0], orderId, stageId: 'stage-fitting', originalName: 'fitting.png', contentType: 'image/png', caption: 'Prova sintética da jornada', visibleToClient: true });
+    const photo = await call<{ photoId: string; storagePath: string; capability: string }>('createProductionPhotoUpload', { atelierId: atelierIds[0], orderId, stageId: 'stage-fitting', originalName: 'fitting.png', contentType: 'image/png', caption: 'Prova sintética da jornada', visibleToClient: true });
     const photoEndpoint = new URL(`http://${emulatorHost}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || 15001}/${projectId}/us-central1/uploadProductionPhotoBytes`);
     for (const [key, value] of Object.entries({ atelierId: atelierIds[0], orderId, photoId: photo.photoId })) photoEndpoint.searchParams.set(key, value);
     const uploadedPhoto = await fetch(photoEndpoint, { method: 'POST', body: new Uint8Array(png), headers: { Authorization: `Bearer ${await auth.currentUser!.getIdToken()}`, 'Content-Type': 'image/png' } });

@@ -92,7 +92,19 @@ test('intake e upload A × B permanecem no tenant resolvido e rejeitam atelierId
   }
 
   try {
+    const rawRequests: string[] = [];
+    page.on('request', req => { if (req.url().includes('/v0/b/')) rawRequests.push(req.url()); });
+    await page.setViewportSize({ width: 320, height: 900 });
+    const transfer = page.waitForResponse(res => res.url().includes('/uploadPublicQuoteReferenceBytes'));
     const requestA = await submitRequest('aurora-cosplay', 'A', true);
+    expect((await transfer).status()).toBe(200);
+    expect(rawRequests).toEqual([]);
+    for (const width of [320, 375, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/aurora-cosplay/orcamento');
+      await expect(page.getByRole('heading', { name: 'Solicite um orçamento' })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    }
     const requestARef = db.doc(`ateliers/atelier-aurora/quoteRequests/${requestA.requestId}`);
     const savedA = await requestARef.get();
     expect(savedA.exists).toBe(true);

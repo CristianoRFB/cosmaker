@@ -48,3 +48,5 @@ export { downloadQuoteReferenceBytes } from './public/quote-reference-bytes';
 
 export { listClientQuotes, getClientQuote } from './quotes/client-quotes';
 export { uploadProductionPhotoBytes } from './orders/production-photo-upload';
+
+export { uploadPublicQuoteReferenceBytes } from './public/quote-reference-upload';
