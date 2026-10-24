@@ -1,0 +1,16 @@
+{
+  "projectId": "demo-cosmaker",
+  "syntheticOnly": true,
+  "readOnlyVerified": true,
+  "fixtureDelta": {
+    "objects": 1,
+    "objectsWithTokenMetadata": 1
+  },
+  "outputContainsPathsTokensOrPrivateMetadata": false,
+  "guards": {
+    "wrongProjectRejected": true,
+    "nonLoopbackRejected": true
+  },
+  "realInventory": "NOT_RUN",
+  "globalRevocation": "NOT_RUN"
+}

@@ -122,7 +122,7 @@ test('titular cria convite pela tela e a pessoa aceita com conta verificada no E
       expect(await confirm.evaluate(element => element.getBoundingClientRect().width <= innerWidth)).toBe(true);
     }
     await confirm.getByRole('button', { name: 'Transferir titularidade', exact: true }).click();
-    await expect(page.getByRole('status').filter({ hasText: 'Titularidade transferida. Sua conta agora é administradora.' })).toBeVisible();
+    await expect(page.locator('[aria-live="polite"]').getByText('Titularidade transferida. Sua conta agora é administradora.', { exact: true })).toBeVisible();
     expect((await adminDb.doc(`ateliers/${atelierId}`).get()).get('ownerId')).toBe(invited.uid);
     const owners = await adminDb.collection(`ateliers/${atelierId}/members`).where('role', '==', 'owner').get();
     expect(owners.docs.map((member: { id: string }) => member.id)).toEqual([invited.uid]);

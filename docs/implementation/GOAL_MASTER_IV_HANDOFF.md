@@ -1,46 +1,46 @@
-# GOAL MASTER IV — continuidade técnica
+# GOAL MASTER IV — handoff de parada solicitada
 
-**INCOMPLETO / WIP global.** Branch exclusiva codex/cosmaker-master-finalizacao, repositório CristianoRFB/cosmaker. Último remoto anterior a este checkpoint:67e94ea5ca3c6ea894ce318233cd0a2db7dc964b. Fazer fetch/confirmar HEAD e CI na retomada, preservar WIP. Somente demo-cosmaker, Node22/Java21, dados sintéticos; nenhuma operação Firebase real/deploy/IAM/billing/merge/force foi feita ou autorizada.
+**INCOMPLETO / WIP. Usuário solicitou encerrar e commitar imediatamente em24/10/2026.**
 
-## Prioridade de retomada deste WIP (prevalece sobre a lista abaixo)
+Repositório CristianoRFB/cosmaker; branch exclusiva codex/cosmaker-master-finalizacao. Último remoto anterior a este checkpoint:9d53e8fc20d6dc4385273f02c3c73025d36d7441. Na retomada, fetch/confirmar HEAD e working tree/CI. Nenhum Firebase real, deploy, IAM, billing, merge ou force push foi feito ou autorizado. Somente demo-cosmaker, Node22/Java21 e fixtures sintéticas.
 
-Remoto anterior1e06e173553f7807e7bf68a5be6ce5b745a88a48. Os seis SDKs restantes passaram28/28; total de cenários distintos atuais104. Produção/CRM browser extra1/1 passou1,3min. Recuperação de senha teve bug real de recibo para conta ausente; fonte corrigida, build81 e E2E1/1 PASS15,1s com replay, senha antiga, UID/papel, falha de rede/retry e quatro larguras. Não repetir esses gates sem alteração pertinente.
+## Implementado e preservado
 
-**Ação exata:** aguardar build72537 (/tmp/cosmaker-team-feedback-build.log), iniciar cloud-start e repetir só team-invitation.spec.ts + google-emulator.spec.ts. Equipe agora testa permissões, desativação de membership (conta global continua ativa), recusa de acesso, reativação e titular único. Último caso chegou à transferência persistida, mas perdeu confirmação no refresh da sessão; toast global foi implementado e AINDA NÃO TESTADO. Dois ensaios anteriores falharam por asserções incorretas, não por bugs de RBAC.
+Referências públicas com capabilities/hash/expiração/MIME/assinatura/limites/SHA-256 e bytes por servidor; Storage deny-all, zero cross-service. Leitores legados protegidos e snapshots sem capabilities; produção anterior preservada. Portal Home/Perfil/Pagamentos, histórico paginado52pedidos, medidas CRM≠UID e revisão de proposta conectados; diretório global/Auth, assinatura e rotas públicas por slug sem dados demonstrativos fingindo persistência.
 
-Google está bloqueado pelo proxy ao buscar biblioteca estática apis.google.com/js/api.js, CONNECT403. Teste novo diferencia skip externo explícito dessa falha; outros erros continuam falhando. Conector de ambiente não publica configuração; proposta mínima em CLOUD_NETWORK_REVIEW.md para revisão do responsável, sem Firebase real/credenciais. Não repetir tentativas indefinidas nem marcar popup como PASS.
+Pedidos privados exigem UID durável/CRM consistente em mensagens, pagamentos, arquivos, fotos, revisões/aprovações. Legados sem vínculo são preservados para revisão staff, sem backfill automático por e-mail. getClientOrder/listClientOrders compartilham allowlist; root raw de pedido é staff-only e custos/notas/atores internos não saem no DTO. Snapshot integral permanece no banco.
 
-Depois: ensaio positivo/read-only do inventário de tokens com objeto sintético (script existente inventory-emulator-storage-tokens.mjs), concluir evidências da FUNCTIONAL_INVENTORY.json (47operações já congeladas; percentual ainda null/DRAFT), estáticos/CI/matriz final. Runtime interativo36358 foi encerrado antes do build72537; nenhum teste em execução neste checkpoint. Arquivos/testes novos devem ser preservados em WIP. Não reexecutar104integrações,35casos de Rules complementares ou recuperação já aprovados sem mudança pertinente.
+Recuperação de senha corrigida para recibo condicional de conta ausente, com erros de rede/rate limit preservados. Login usa mensagem genérica de credenciais. Transferência de titularidade usa toast global que sobrevive ao refresh de sessão. Lançador Linux acompanha PID+startTime e encerra PubSub destacado; runtime38403 recebeu TERM nesta parada.
 
-## Implementação atual
+## Últimas evidências reais
 
-Upload público com capabilities/hash/expiração/bytes por servidor, Storage deny-all e leitores legados protegidos; transporte de produção anterior preservado. Portal Home/Perfil/Pagamentos, paginação52pedidos, medidas CRM≠UID, revisão de proposta, diretório global/Auth e assinatura conectados. Rotas públicas globais usam slug explícito; menu móvel e conteúdo informativo funcionais, textos jurídicos em homologação.
+- Backend atual104cenários distintos por domínio (inclui commercial12, client-payments/detalhe7 e os lotes SDK detalhados no progresso). Não somar repetições como cenários novos.
+- Unitários121/121 no marco de ownership; modelos relevantes preservados. Functions/Next81/TypeScript e lint passaram nos marcos registrados. Último build do toast Next81/Functions e TypeScript PASS; o novo harness de inventário ainda não recebeu lint final. CI do checkpoint final precisa consulta.
+- Rules finais: lote34PASS/1FAIL por fixture reservada, corrigida e repetida isoladamente1PASS/34skipped. Mesmas Rules,35casos cobertos por execuções complementares; não afirmar lote integral35/35.
+- Portal/detalhe/anexos2/2 PASS1,6min, detalhe320/375/768/1440 e payload sem custos; público2/2 PASS. Mensagens/navegação quatro papéis5PASS, com revisão/produção1FAIL por expectativas financeiras antigas; repetição só da revisão1/1 PASS32,7s. Jornada foto/aprovação/CRM adicional1/1 PASS1,3min com quatro larguras.
+- Recuperação de senha1/1 PASS15,1s: quatro larguras, OOB único/replay inválido, senha antiga recusada, UID/perfil/papel preservados, conta ausente, rede abortada e retry. Google popup NÃO PASSOU: bloqueio de biblioteca estática pelo proxy.
+- Equipe final1/1 PASS20,2s (17,7s de teste), /tmp/cosmaker-team-transfer-accepted-e2e.log: convite/aceite, papéis/permissões, revogação somente da membership, acesso negado, reativação, único titular e confirmação persistente. Ensaios anteriores falharam por seletores/expectativa de conta global e pelo bug real de feedback; não viram PASS retroativamente.
+- Recuperação sintética Auth/Firestore/Storage export/import em instâncias novas PASS, bytes/hash, centavos/histórico e ACL A/B/raw privado. Sem replay de Functions ou restore real.
+- Inventário sintético de tokens PASS: script test-storage-token-inventory.mjs detecta objeto com token por delta1, não altera token/geração/bytes, exporta só contagens e recusa projeto/endpoint indevidos. Resultado sanitizado versionado; fixture própria removida. Não houve inventário/revogação global real.
 
-Corrigido reuso de e-mail nos leitores de pedidos: UID durável/CRM consistente obrigatório, incluindo arquivos/fotos/mensagens/pagamentos/revisões/aprovações. Legados sem vínculo são preservados para revisão deliberada staff, sem backfill automático por e-mail. Detalhe cliente migrou a getClientOrder; lista/detalhe compartilham allowlist. Root raw privado somente staff; snapshot completo de custos permanece no banco. PRIVATE_ORDER_SECURITY.md e auditoria JSON têm evidências dos dois achados críticos resolvidos localmente.
+## Pendências locais exatas
 
-Lançador Linux acompanha sua árvore por PID+startTime e encerra PubSub destacado. Unitário e nove portas liberadas após runtime completo passaram. Dependências atuais Vitest4.1.12/CLI15.34.1/Admin14.5/Functions7.4/Next15.5.28; root prod0/Functions prod0 e root completo5moderados na última revisão. Sem force ou peers ignorados.
+1. Conferir CI do HEAD final e confirmar encerramento do runtime/working tree. Sem novos testes extensos para retomar.
+2. Lint/diff/checks estáticos proporcionais do novo script e últimas alterações de testes; corrigir falhas reais. Não repetir104integrações, Rules, recuperação ou E2Es aprovados sem mudança pertinente.
+3. Concluir atribuição de evidências em FUNCTIONAL_INVENTORY.json:47operações congeladas, quatro critérios de peso1. Arquivo ainda DRAFT e functionalPercent=null. Gerar cálculo/relatório reproduzível, sem inventar porcentagens; Google e scheduler devem preservar seus bloqueios, com crédito apenas dos critérios comprovados.
+4. Consolidar matriz formal de16marcos, documentação/handoff/CI. Fases inteiras só recebem PASS com todos os critérios obrigatórios comprovados. Não inventar módulos, cotas comerciais ou redesign para aumentar percentuais.
 
-## Evidências e limites atuais
+## Bloqueios externos comprovados
 
-- Commercial12/12 na retomada (inclui CRM/diretório/RBAC/Auth/paginação), logs cosmaker-resume-commercial-backend. Não repetir sem alteração pertinente.
-- SDKs: oito lotes isolados63/63 PASS (pagamentos6, client-quotes5, orders33/quatro arquivos, fotos4, mensagens5, jornada1, referências5, quotes4). Após projeção do detalhe, pagamentos/detalhe7/7 PASS mais repetição dirigida1/1 da mesma operação com negativos adicionais; não somar repetições como testes únicos.
-- Rules finais:34PASS/1FAIL por fixture reservada; fixture corrigida e teste final direcionado1PASS/34skipped. Mesmas Rules finais,35casos cobertos em execuções complementares; não afirmar lote integral35/35.
-- Unitários121/121 no marco de ownership; Functions/Next81/TypeScript e lint passaram. Build/TypeScript novos da projeção também passaram; CI do novo HEAD ainda precisa consulta.
-- E2Es retomada: portal/paginação, diretório/configurações/entrega e medidas/revisão aprovados em quatro larguras; público2/2. Mais recente portal/anexos2/2 PASS1,6min inclui detalhe projetado320/375/768/1440, resposta sem custos internos e bytes/revogação/A×B. Capturas inspecionadas. Execuções novas em andamento abaixo.
-- Recuperação com stack atual PASS: Auth/Firestore/Storage export/import em instâncias novas, bytes/hash, centavos/histórico, ACL A/B e raw privado. Artefatos sintéticos97a2222e ignorados no Git. Não valida restore real ou replay de Functions.
-- Scheduler CLI15.34.1: publicação/entrega/ack PubSub confirmados, mas Unsupported trigger signature:http; timeout25s, não PASS. Wrapper HTTP atual PASS; não é homologação do agendamento real.
-- Trace de MaxListeners em teeny-request:461/pipeline via Storage8.4.0. Não foi suprimido nem diagnosticado como vazamento comprovado. Consulta npm view confirmou Storage8.4.0/teeny-request11.1.1 já latest; nenhum patch oficial disponível. Acompanhamento upstream documentado, sem supressão ou diagnóstico de heap comprovado.
+- Popup Google local precisa apis.google.com/js/api.js; proxy recusa CONNECT403 antes do popup. Teste registra skip somente nessa falha exata, nunca PASS. Proposta mínima de rede em CLOUD_NETWORK_REVIEW.md; conector disponível apenas lê runtime, não publica configuração. Nenhuma conta Google real foi usada.
+- Scheduler CLI15.34.1 entrega/ack PubSub mas rejeita Unsupported trigger signature:http. Wrapper HTTP atual passou; não homologa timer/transporte real. Não repetir indefinidamente nem modificar node_modules para disfarçar.
+- Dependências runtime produção0 na última auditoria; root completo5moderados upstream CLI. Storage8.4.0/teeny-request11.1.1 já latest; warning de pipeline/listeners conhecido, sem patch oficial, supressão ou vazamento de heap comprovado.
+- Firebase/GCS/IAM/índices/agendamento reais, inventário/revogação de tokens reais, recuperação operacional/RPO/RTO, OAuth/e-mails/Auth reais, jurídico e release exigem sessão/autorização externa futura.
 
-## Próxima ação exata
+## Estado formal e comercial
 
-1. UI adicional fechou5PASS/1FAIL (teste esperava financeiro pré-F1.6); mensagens e quatro papéis320/375/768/1440 PASS. Teste de revisão alinhado à tela financeira atual e repetido sozinho1/1 PASS32,7s. Runtime31134 encerrado. Não repetir esses seis cenários sem mudança pertinente. Conferir lote SDK novo se ativo e preservar logs/resultados.
-2. Executar SDKs independentes ainda pendentes após majors: finance,showcase,reports,delivery,team,inventory. Harness por domínio sequencial, sem navegador simultâneo. Lote único17arquivos anterior foi interrompido por memória8,7/9,9GiB e nunca foi aprovado. Preservar concorrência interna dos testes.
-3. Fechar inventário funcional verificável conforme FUNCTIONAL_INVENTORY_METHOD.md, auditar ações/rotas restantes, verificar dependência upstream e CI do HEAD final. Não inventar módulos/quotas e não repetir gates inalterados.
+F1.1–F1.9 e F4 aceitos localmente em marcos históricos. F2/F3/F5/F6 PARCIAIS / WIP global; F7/F8 pendentes. Formal10/16=62,5%. Conclusão funcional ainda não calculada. Produto não homologado para clientes reais/produção. Há pendências locais de consolidação além dos bloqueios externos.
 
-## Estado e restrições
+## Transporte GitHub
 
-F1.1–F1.9 e F4 aceitos localmente em marcos históricos; regressões relevantes acima. F2/F3/F5/F6 parciais até fechamento dos critérios; F7/F8 pendentes. Formal10/16=62,5%; percentual funcional ainda sem inventário fechado. Há tarefas locais executáveis. Produto não homologado para clientes reais.
-
-Externos: Firebase/GCS/IAM/índices/scheduler reais, inventário e revogação autorizados de tokens reais já distribuídos, operação/recuperação real/RPO/RTO, jurídico e release. Pagamentos bancários/gateway/canais pagos ficam fora do escopo.
-
-Publicação GitHub: terminal tem identidade sem push; usar conector CristianoRFB link_6ad2df3229d48191bd0ef1a65deeb821, árvore idêntica/commit/ref expected_sha e force:false. Guardar commit local em local/cloud-checkpoint-* e fetch/rebase que reconhece patch; sem reset. Progresso canônico e histórico completo em MASTER_FINALIZATION_PROGRESS.md; /tmp é temporário.
+Usar conector CristianoRFB link_6ad2df3229d48191bd0ef1a65deeb821 (terminal tem identidade sem push), árvore idêntica/commit/ref com expected_sha e force:false. Preservar commit local em local/cloud-checkpoint-* e fetch/rebase reconhecendo patch; sem reset. Progresso histórico completo em MASTER_FINALIZATION_PROGRESS.md; logs /tmp são temporários e não foram publicados com tokens ou dados pessoais.

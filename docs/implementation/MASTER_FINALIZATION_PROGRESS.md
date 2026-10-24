@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## ENCERRAMENTO IMEDIATO SOLICITADO — INCOMPLETO / WIP — 2026-10-24
+
+- Usuário solicitou parar e commitar imediatamente. Desenvolvimento e testes interrompidos; runtime cloud-start38403 recebeu TERM. Último remoto anterior9d53e8fc20d6dc4385273f02c3c73025d36d7441. Este checkpoint preserva inclusive o trabalho parcial; não há novo aceite global ou prontidão comercial.
+- Confirmada correção do feedback de titularidade: E2E equipe **1/1 PASS**,20,2s (17,7s de teste), `/tmp/cosmaker-team-transfer-accepted-e2e.log`. Inclui convite/aceite, papéis/permissões, vínculo desativado com conta global preservada, acesso negado, reativação, transferência para um único titular, antigo titular admin e toast global sobrevivendo ao refresh; formulário/modal320/375/768/1440. Última falha intermediária procurava role=status, mas toast usa região aria-live; asserção ajustada sem novo relaxamento de regras ou mudança de backend.
+- Google popup **1 SKIPPED / BLOCKED_EXTERNAMENTE** em `/tmp/cosmaker-final-feedback-e2e.log`, conforme falha exata de proxy na biblioteca apis.google.com/js/api.js. O mesmo lote teve1FAIL de seletor do toast; não é2/2 PASS. Equipe foi repetida sozinha e passou. Proposta de rede em CLOUD_NETWORK_REVIEW.md, ainda não publicada.
+- Novo ensaio `bash scripts/cloud-run.sh node scripts/test-storage-token-inventory.mjs` **PASS**, exit0: objeto sintético com metadata de token detectado por delta1; scanner não altera token, geração ou bytes e não exporta caminhos/tokens/metadata privada; projeto diferente e endpoint não loopback recusados antes do SDK. Fixture própria removida. Resultado sanitizado versionado em security/SYNTHETIC_TOKEN_INVENTORY_2026-10-24.json. **Inventário real e revogação global NOT_RUN**. Avisos upstream PassThrough continuam presentes, sem supressão.
+- O novo script não recebeu lint final nesta interrupção. Último Next81/Functions build e TypeScript passaram antes das últimas alterações apenas de testes/harness; não inferir CI do novo HEAD. CI final, inventário funcional (47operações, DRAFT/null), cálculo verificável, matriz formal e consolidação documental permanecem pendentes locais.
+- F1.1–F1.9/F4 com aceites locais históricos e regressões descritas; F2/F3/F5/F6 **PARCIAIS / NÃO ACEITOS GLOBALMENTE**; F7/F8 pendentes. Formal10/16=62,5%; percentual funcional não calculado. Nenhum Firebase real/deploy/IAM/billing/merge/force foi usado. Handoff de parada atualizado em GOAL_MASTER_IV_HANDOFF.md.
+
 ## GOAL IV — domínios SDK fechados e autenticação em consolidação — 2026-10-24
 
 - Remoto anterior1e06e173553f7807e7bf68a5be6ce5b745a88a48. Seis lotes SDK finais **28/28 PASS**: finance7/22,16s; showcase5/30,09s; reports5/12,66s; delivery4/17,84s; team4/17,35s; inventory3/15,41s (`/tmp/cosmaker-final-<domínio>.log`). Com as versões mais recentes por domínio, são104cenários de integração distintos nesta stack, sem somar repetições ou tentativas interrompidas.
