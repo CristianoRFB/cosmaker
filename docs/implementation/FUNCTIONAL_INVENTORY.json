@@ -1,0 +1,1501 @@
+{
+  "schemaVersion": 1,
+  "assessment": "DRAFT_EVIDENCE_ASSIGNMENT_PENDING",
+  "operationSetFrozenAt": "2026-10-24T03:15:56.183245+00:00",
+  "method": "FUNCTIONAL_INVENTORY_METHOD.md",
+  "unitWeight": 1,
+  "criteria": [
+    "implementation",
+    "persistence",
+    "interface",
+    "negative"
+  ],
+  "scope": "Operações do produto e ferramentas locais já aprovadas; não mede esforço, prontidão comercial ou aceite formal. Operações relacionadas não são desdobradas por rota equivalente. Critérios incompletos preservam crédito dos demais.",
+  "operations": [
+    {
+      "id": "auth-session",
+      "domain": "Conta",
+      "operation": "Cadastro, login, verificação e saída",
+      "sources": [
+        "services/firebase/auth.service.ts"
+      ],
+      "backendSuite": "rules",
+      "uiEvidenceSource": "tests/e2e/client-profile-registration.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:services/firebase/auth.service.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "auth-recovery",
+      "domain": "Conta",
+      "operation": "Recuperação de senha",
+      "sources": [
+        "app/(auth)/recuperar-senha/page.tsx"
+      ],
+      "backendSuite": "auth-recovery",
+      "uiEvidenceSource": "PENDING",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:app/(auth)/recuperar-senha/page.tsx"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "crm-records",
+      "domain": "CRM",
+      "operation": "Busca paginada, cadastro e edição de clientes",
+      "sources": [
+        "functions/src/clients/clients.ts"
+      ],
+      "backendSuite": "commercial",
+      "uiEvidenceSource": "tests/e2e/client-crm.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/clients/clients.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "crm-context",
+      "domain": "CRM",
+      "operation": "Contexto de pedidos e histórico de interações",
+      "sources": [
+        "functions/src/clients/clients.ts"
+      ],
+      "backendSuite": "commercial",
+      "uiEvidenceSource": "tests/e2e/client-crm.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/clients/clients.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "team-members",
+      "domain": "Equipe",
+      "operation": "Membros, permissões e revogação",
+      "sources": [
+        "functions/src/team/members.ts"
+      ],
+      "backendSuite": "team",
+      "uiEvidenceSource": "tests/e2e/team-invitation.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/team/members.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "team-invitations",
+      "domain": "Equipe",
+      "operation": "Convites, aceite, expiração e revogação",
+      "sources": [
+        "functions/src/team/invitations.ts"
+      ],
+      "backendSuite": "team",
+      "uiEvidenceSource": "tests/e2e/team-invitation.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/team/invitations.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "team-ownership",
+      "domain": "Equipe",
+      "operation": "Transferência de titularidade",
+      "sources": [
+        "functions/src/team/members.ts"
+      ],
+      "backendSuite": "team",
+      "uiEvidenceSource": "tests/e2e/team-invitation.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/team/members.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "tenant-public",
+      "domain": "Público",
+      "operation": "Resolver por slug e identidade white-label",
+      "sources": [
+        "functions/src/public/tenant.ts"
+      ],
+      "backendSuite": "references",
+      "uiEvidenceSource": "tests/e2e/public-tenants.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/public/tenant.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "quote-intake",
+      "domain": "Orçamentos",
+      "operation": "Solicitação pública e dados do projeto",
+      "sources": [
+        "functions/src/public/tenant.ts"
+      ],
+      "backendSuite": "references",
+      "uiEvidenceSource": "tests/e2e/public-tenants.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/public/tenant.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "quote-references",
+      "domain": "Orçamentos",
+      "operation": "Referências por capability, bytes e leitura privada",
+      "sources": [
+        "functions/src/public/quote-reference-upload.ts"
+      ],
+      "backendSuite": "references",
+      "uiEvidenceSource": "tests/e2e/public-tenants.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/public/quote-reference-upload.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "quote-authoring",
+      "domain": "Orçamentos",
+      "operation": "Rascunho, publicação e revisão versionada",
+      "sources": [
+        "functions/src/quotes/create-quote-draft.ts"
+      ],
+      "backendSuite": "quotes",
+      "uiEvidenceSource": "tests/e2e/measurement-quote-revision.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/quotes/create-quote-draft.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "quote-response",
+      "domain": "Orçamentos",
+      "operation": "Consulta, aprovação, recusa e pedido de ajuste pelo cliente",
+      "sources": [
+        "functions/src/quotes/client-quotes.ts"
+      ],
+      "backendSuite": "client-quotes",
+      "uiEvidenceSource": "tests/e2e/client-quote-privacy.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/quotes/client-quotes.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "quote-order",
+      "domain": "Pedidos",
+      "operation": "Conversão aprovada com itens e snapshots preservados",
+      "sources": [
+        "functions/src/orders/create-order.ts"
+      ],
+      "backendSuite": "journey",
+      "uiEvidenceSource": "tests/e2e/quote-approval.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/create-order.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "quote-expiration",
+      "domain": "Orçamentos",
+      "operation": "Expiração automática por prazo UTC",
+      "sources": [
+        "functions/src/quotes/expire-quotes.ts"
+      ],
+      "backendSuite": "scheduler",
+      "uiEvidenceSource": "NA",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/quotes/expire-quotes.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "NA",
+          "reason": "Operação automática ou ferramenta CLI; não há formulário/tela própria prometida."
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "measurement-profiles",
+      "domain": "Medidas",
+      "operation": "Fichas staff/cliente com vínculo CRM e arquivo",
+      "sources": [
+        "functions/src/orders/list-client-measurement-profiles.ts"
+      ],
+      "backendSuite": "client-payments",
+      "uiEvidenceSource": "tests/e2e/measurement-quote-revision.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/list-client-measurement-profiles.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "measurement-values",
+      "domain": "Medidas",
+      "operation": "Edição validada de valores e snapshots imutáveis",
+      "sources": [
+        "repositories/measurements.repository.ts"
+      ],
+      "backendSuite": "client-payments",
+      "uiEvidenceSource": "tests/e2e/measurement-quote-revision.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:repositories/measurements.repository.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "client-orders",
+      "domain": "Pedidos",
+      "operation": "Histórico paginado e detalhe autorizado do cliente",
+      "sources": [
+        "functions/src/orders/get-client-order.ts"
+      ],
+      "backendSuite": "client-payments",
+      "uiEvidenceSource": "tests/e2e/client-portal.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/get-client-order.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "production-configuration",
+      "domain": "Produção",
+      "operation": "Etapas, responsáveis, pesos e prazos próprios",
+      "sources": [
+        "functions/src/orders/production-configuration.ts"
+      ],
+      "backendSuite": "orders",
+      "uiEvidenceSource": "tests/e2e/order-change-production.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/production-configuration.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "production-progress",
+      "domain": "Produção",
+      "operation": "Andamento, bloqueios e aprovação/revisão de etapas",
+      "sources": [
+        "functions/src/orders/respond-to-production-approval.ts"
+      ],
+      "backendSuite": "orders",
+      "uiEvidenceSource": "tests/e2e/order-change-production.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/respond-to-production-approval.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "production-photos",
+      "domain": "Produção",
+      "operation": "Fotos, bytes protegidos e evidências de aprovação",
+      "sources": [
+        "functions/src/orders/production-photo-upload.ts"
+      ],
+      "backendSuite": "production-photo-bytes",
+      "uiEvidenceSource": "tests/e2e/quote-approval.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/production-photo-upload.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "order-revisions",
+      "domain": "Pedidos",
+      "operation": "Mudanças de acordo aprovadas e aplicadas com histórico",
+      "sources": [
+        "functions/src/orders/change-requests.ts"
+      ],
+      "backendSuite": "orders",
+      "uiEvidenceSource": "tests/e2e/order-change-production.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/change-requests.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "order-files",
+      "domain": "Pedidos",
+      "operation": "Anexos, compartilhamento, versões e revogação",
+      "sources": [
+        "functions/src/orders/order-files.ts"
+      ],
+      "backendSuite": "orders",
+      "uiEvidenceSource": "tests/e2e/order-files-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/order-files.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "scheduling-planning",
+      "domain": "Agenda",
+      "operation": "Capacidade, bloqueios, alocação, cancelamento e risco",
+      "sources": [
+        "functions/src/scheduling/planning.ts"
+      ],
+      "backendSuite": "orders",
+      "uiEvidenceSource": "tests/e2e/scheduling-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/scheduling/planning.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "scheduling-events",
+      "domain": "Agenda",
+      "operation": "Eventos e acompanhamento de prazos",
+      "sources": [
+        "functions/src/scheduling/events.ts"
+      ],
+      "backendSuite": "orders",
+      "uiEvidenceSource": "tests/e2e/scheduling-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/scheduling/events.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "inventory-catalog",
+      "domain": "Estoque",
+      "operation": "Materiais, fornecedores, SKU e arquivo",
+      "sources": [
+        "functions/src/inventory/inventory.ts"
+      ],
+      "backendSuite": "inventory",
+      "uiEvidenceSource": "tests/e2e/inventory-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/inventory/inventory.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "inventory-movements",
+      "domain": "Estoque",
+      "operation": "Movimentos, BOM, reserva, consumo e liberação",
+      "sources": [
+        "functions/src/inventory/inventory.ts"
+      ],
+      "backendSuite": "inventory",
+      "uiEvidenceSource": "tests/e2e/inventory-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/inventory/inventory.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "finance-ledger",
+      "domain": "Financeiro",
+      "operation": "Custos planejados/reais, mão de obra, despesas, receitas e margens",
+      "sources": [
+        "functions/src/finance/finance.ts"
+      ],
+      "backendSuite": "finance",
+      "uiEvidenceSource": "tests/e2e/finance-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/finance/finance.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "finance-payments",
+      "domain": "Financeiro",
+      "operation": "Recebimentos declarados, saldo e compensações idempotentes",
+      "sources": [
+        "functions/src/finance/finance.ts"
+      ],
+      "backendSuite": "finance",
+      "uiEvidenceSource": "tests/e2e/finance-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/finance/finance.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "finance-legacy",
+      "domain": "Financeiro",
+      "operation": "Conciliação de recebimento legado sem alterar saldo",
+      "sources": [
+        "functions/src/finance/finance.ts"
+      ],
+      "backendSuite": "finance",
+      "uiEvidenceSource": "tests/e2e/finance-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/finance/finance.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "showcase-catalog",
+      "domain": "Serviços e portfólio",
+      "operation": "Manutenção de serviços e projetos publicados",
+      "sources": [
+        "functions/src/showcase/showcase.ts"
+      ],
+      "backendSuite": "showcase",
+      "uiEvidenceSource": "tests/e2e/showcase-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/showcase/showcase.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "showcase-images",
+      "domain": "Serviços e portfólio",
+      "operation": "Fotos, organização visual e permissões de publicação",
+      "sources": [
+        "functions/src/showcase/images.ts"
+      ],
+      "backendSuite": "showcase",
+      "uiEvidenceSource": "tests/e2e/showcase-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/showcase/images.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "messages",
+      "domain": "Comunicação",
+      "operation": "Conversa de pedido, anexos, leitura e histórico",
+      "sources": [
+        "functions/src/messages/conversations.ts"
+      ],
+      "backendSuite": "messages",
+      "uiEvidenceSource": "tests/e2e/messages-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/messages/conversations.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "notifications",
+      "domain": "Comunicação",
+      "operation": "Notificações internas por UID e deduplicação",
+      "sources": [
+        "functions/src/notifications/internal-notifications.ts"
+      ],
+      "backendSuite": "messages",
+      "uiEvidenceSource": "tests/e2e/messages-workflow.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/notifications/internal-notifications.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "reports",
+      "domain": "Relatórios",
+      "operation": "Indicadores reais de pedidos, produção, orçamento, prazos e financeiro com filtros",
+      "sources": [
+        "functions/src/reports/reports.ts"
+      ],
+      "backendSuite": "reports",
+      "uiEvidenceSource": "tests/e2e/reports-settings.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/reports/reports.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "tenant-preferences",
+      "domain": "Configurações",
+      "operation": "Preferências operacionais e identidade pública",
+      "sources": [
+        "functions/src/reports/reports.ts"
+      ],
+      "backendSuite": "reports",
+      "uiEvidenceSource": "tests/e2e/reports-settings.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/reports/reports.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "order-delivery",
+      "domain": "Entrega",
+      "operation": "Entrega, conclusão, gates operacionais e histórico",
+      "sources": [
+        "functions/src/orders/finalize-order.ts"
+      ],
+      "backendSuite": "delivery",
+      "uiEvidenceSource": "tests/e2e/order-delivery.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/finalize-order.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "platform-workspace",
+      "domain": "Plataforma",
+      "operation": "Métricas, diretório de ateliês, suspensão e auditoria global",
+      "sources": [
+        "functions/src/platform/get-platform-overview.ts"
+      ],
+      "backendSuite": "commercial",
+      "uiEvidenceSource": "tests/e2e/admin-workspace.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/platform/get-platform-overview.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "platform-users",
+      "domain": "Plataforma",
+      "operation": "Diretório paginado de perfis e situação Auth",
+      "sources": [
+        "functions/src/platform/list-platform-users.ts"
+      ],
+      "backendSuite": "commercial",
+      "uiEvidenceSource": "tests/e2e/final-settings-directory.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/platform/list-platform-users.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "commercial-standard",
+      "domain": "Comercial",
+      "operation": "Catálogo, entitlements, planos manuais, estados e downgrade preservando histórico",
+      "sources": [
+        "functions/src/commercial/platform-management.ts"
+      ],
+      "backendSuite": "commercial",
+      "uiEvidenceSource": "tests/e2e/commercial-standard.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/commercial/platform-management.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "commercial-trial-demo",
+      "domain": "Comercial",
+      "operation": "Trial manual, demonstração isolada e encerramento",
+      "sources": [
+        "functions/src/commercial/platform-management.ts"
+      ],
+      "backendSuite": "commercial",
+      "uiEvidenceSource": "tests/e2e/commercial-standard.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/commercial/platform-management.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "portal-home",
+      "domain": "Portal",
+      "operation": "Resumo real, próximos passos e navegação por contexto",
+      "sources": [
+        "app/cliente/page.tsx"
+      ],
+      "backendSuite": "client-payments",
+      "uiEvidenceSource": "tests/e2e/client-portal.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:app/cliente/page.tsx"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "portal-profile",
+      "domain": "Portal",
+      "operation": "Perfil próprio com identidade e autoridade preservadas",
+      "sources": [
+        "app/cliente/perfil/page.tsx"
+      ],
+      "backendSuite": "rules",
+      "uiEvidenceSource": "tests/e2e/client-portal.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:app/cliente/perfil/page.tsx"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "portal-payments",
+      "domain": "Portal",
+      "operation": "Consulta autorizada de recebimentos e saldo em centavos",
+      "sources": [
+        "functions/src/orders/client-payments.ts"
+      ],
+      "backendSuite": "client-payments",
+      "uiEvidenceSource": "tests/e2e/client-portal.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/client-payments.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "public-navigation",
+      "domain": "Público",
+      "operation": "Rotas globais por slug, menu, informações e recuperação de navegação",
+      "sources": [
+        "components/public/tenant-entry.tsx"
+      ],
+      "backendSuite": "public-navigation",
+      "uiEvidenceSource": "tests/e2e/public-navigation.spec.ts",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:components/public/tenant-entry.tsx"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "local-runtime",
+      "domain": "Operação local",
+      "operation": "Instalação, build, inicialização e encerramento reutilizáveis",
+      "sources": [
+        "scripts/cloud-start.mjs"
+      ],
+      "backendSuite": "runtime",
+      "uiEvidenceSource": "NA",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:scripts/cloud-start.mjs"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "NA",
+          "reason": "Operação automática ou ferramenta CLI; não há formulário/tela própria prometida."
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "synthetic-recovery",
+      "domain": "Operação local",
+      "operation": "Exportação e restauração sintéticas de Auth/Firestore/Storage com ACL",
+      "sources": [
+        "scripts/emulator-recovery-fixture.mjs"
+      ],
+      "backendSuite": "recovery",
+      "uiEvidenceSource": "NA",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:scripts/emulator-recovery-fixture.mjs"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "NA",
+          "reason": "Operação automática ou ferramenta CLI; não há formulário/tela própria prometida."
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    },
+    {
+      "id": "legacy-file-compat",
+      "domain": "Arquivos",
+      "operation": "Leitura legada protegida e inventário sintético de tokens",
+      "sources": [
+        "functions/src/orders/legacy-file-bytes.ts"
+      ],
+      "backendSuite": "references",
+      "uiEvidenceSource": "NA",
+      "status": "IMPLEMENTADA_PARCIALMENTE",
+      "checks": {
+        "implementation": {
+          "state": "PASS",
+          "evidence": [
+            "Next81/Functions builds atuais, progresso canônico; fonte:functions/src/orders/legacy-file-bytes.ts"
+          ]
+        },
+        "persistence": {
+          "state": "PENDING",
+          "evidence": []
+        },
+        "interface": {
+          "state": "NA",
+          "reason": "Operação automática ou ferramenta CLI; não há formulário/tela própria prometida."
+        },
+        "negative": {
+          "state": "PENDING",
+          "evidence": []
+        }
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "status": "FORA_DO_ESCOPO",
+      "items": [
+        "Gateway/checkout e cobrança automática",
+        "WhatsApp, e-mail transacional pago e canais externos",
+        "Novas cotas/benefícios comerciais não aprovados",
+        "Cadastro estruturado de endereços sem contrato aprovado"
+      ]
+    },
+    {
+      "status": "BLOCKED_EXTERNAMENTE",
+      "excludedFromFunctionalDenominatorReason": "Execução/homologação em serviços reais e revisão jurídica são gates de prontidão comercial, não novas funcionalidades de software local. Implementações locais correlatas permanecem no inventário.",
+      "items": [
+        "Firebase/GCS/IAM/índices/scheduler reais",
+        "Inventário e revogação autorizados de tokens reais existentes",
+        "Backup/restore real, retenção, RPO/RTO e operação de release",
+        "Formalização jurídica, responsável e canais comerciais"
+      ]
+    }
+  ],
+  "functionalPercent": null,
+  "formalMilestones": {
+    "passed": 10,
+    "total": 16,
+    "percent": 62.5
+  },
+  "commercialReadiness": "NAO_HOMOLOGADO"
+}

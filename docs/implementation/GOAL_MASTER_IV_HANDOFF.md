@@ -2,6 +2,16 @@
 
 **INCOMPLETO / WIP global.** Branch exclusiva codex/cosmaker-master-finalizacao, repositório CristianoRFB/cosmaker. Último remoto anterior a este checkpoint:67e94ea5ca3c6ea894ce318233cd0a2db7dc964b. Fazer fetch/confirmar HEAD e CI na retomada, preservar WIP. Somente demo-cosmaker, Node22/Java21, dados sintéticos; nenhuma operação Firebase real/deploy/IAM/billing/merge/force foi feita ou autorizada.
 
+## Prioridade de retomada deste WIP (prevalece sobre a lista abaixo)
+
+Remoto anterior1e06e173553f7807e7bf68a5be6ce5b745a88a48. Os seis SDKs restantes passaram28/28; total de cenários distintos atuais104. Produção/CRM browser extra1/1 passou1,3min. Recuperação de senha teve bug real de recibo para conta ausente; fonte corrigida, build81 e E2E1/1 PASS15,1s com replay, senha antiga, UID/papel, falha de rede/retry e quatro larguras. Não repetir esses gates sem alteração pertinente.
+
+**Ação exata:** aguardar build72537 (/tmp/cosmaker-team-feedback-build.log), iniciar cloud-start e repetir só team-invitation.spec.ts + google-emulator.spec.ts. Equipe agora testa permissões, desativação de membership (conta global continua ativa), recusa de acesso, reativação e titular único. Último caso chegou à transferência persistida, mas perdeu confirmação no refresh da sessão; toast global foi implementado e AINDA NÃO TESTADO. Dois ensaios anteriores falharam por asserções incorretas, não por bugs de RBAC.
+
+Google está bloqueado pelo proxy ao buscar biblioteca estática apis.google.com/js/api.js, CONNECT403. Teste novo diferencia skip externo explícito dessa falha; outros erros continuam falhando. Conector de ambiente não publica configuração; proposta mínima em CLOUD_NETWORK_REVIEW.md para revisão do responsável, sem Firebase real/credenciais. Não repetir tentativas indefinidas nem marcar popup como PASS.
+
+Depois: ensaio positivo/read-only do inventário de tokens com objeto sintético (script existente inventory-emulator-storage-tokens.mjs), concluir evidências da FUNCTIONAL_INVENTORY.json (47operações já congeladas; percentual ainda null/DRAFT), estáticos/CI/matriz final. Runtime interativo36358 foi encerrado antes do build72537; nenhum teste em execução neste checkpoint. Arquivos/testes novos devem ser preservados em WIP. Não reexecutar104integrações,35casos de Rules complementares ou recuperação já aprovados sem mudança pertinente.
+
 ## Implementação atual
 
 Upload público com capabilities/hash/expiração/bytes por servidor, Storage deny-all e leitores legados protegidos; transporte de produção anterior preservado. Portal Home/Perfil/Pagamentos, paginação52pedidos, medidas CRM≠UID, revisão de proposta, diretório global/Auth e assinatura conectados. Rotas públicas globais usam slug explícito; menu móvel e conteúdo informativo funcionais, textos jurídicos em homologação.

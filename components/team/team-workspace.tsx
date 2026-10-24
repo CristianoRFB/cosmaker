@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/components/ui/toast';
 import { PermissionPicker } from '@/components/team/permission-picker';
 import { teamRoleLabel } from '@/lib/team/presentation';
 import { teamMemberUpdateSchema } from '@/schemas/team.schema';
@@ -24,6 +25,7 @@ function formatDate(value: string | null) {
 }
 
 export function TeamWorkspace({ focus = 'team' }: { focus?: 'team' | 'permissions' }) {
+  const toast = useToast();
   const { firebaseUser, refreshUser } = useAuth();
   const { atelierId, role: actorRole, permissions: actorPermissions, membershipValid, loading: tenantLoading, hasPermission } = useTenant();
   const canRead = hasPermission('team:read');
@@ -115,9 +117,10 @@ export function TeamWorkspace({ focus = 'team' }: { focus?: 'team' | 'permission
     try {
       await transferAtelierOwnership(transferTarget.id);
       setTransferTarget(null);
+      // Session refresh can remount the workspace. Keep success feedback outside it.
+      toast('Titularidade transferida. Sua conta agora é administradora.', 'success');
       await refreshUser();
       await load();
-      setNotice('Titularidade transferida. Sua conta agora é administradora.');
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Não foi possível transferir a titularidade.');
     } finally { setBusy(false); }

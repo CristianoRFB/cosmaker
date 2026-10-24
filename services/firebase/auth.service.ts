@@ -20,7 +20,7 @@ function messageForAuthError(error: unknown) {
   const code = (error as { code?: string })?.code;
   const messages: Record<string, string> = {
     'auth/invalid-credential': 'E-mail ou senha incorretos.',
-    'auth/user-not-found': 'Não encontramos uma conta com esse e-mail.',
+    'auth/user-not-found': 'E-mail ou senha incorretos.',
     'auth/wrong-password': 'E-mail ou senha incorretos.',
     'auth/email-already-in-use': 'Este e-mail já possui uma conta.',
     'auth/weak-password': 'Use uma senha com pelo menos 8 caracteres.',
@@ -90,6 +90,9 @@ export async function requestPasswordReset(email: string) {
     const { auth } = requireFirebase();
     await sendPasswordResetEmail(auth, email.trim());
   } catch (error) {
+    // The receipt is conditional for both existing and absent accounts. Keep
+    // network/rate-limit errors visible; do not turn a failed transfer into success.
+    if ((error as { code?: string })?.code === 'auth/user-not-found') return;
     throw new Error(messageForAuthError(error));
   }
 }

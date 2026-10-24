@@ -85,6 +85,50 @@ test('titular cria convite pela tela e a pessoa aceita com conta verificada no E
     expect(invitationSnapshot.docs[0].data().status).toBe('accepted');
     expect(memberSnapshot.data()).toMatchObject({ active: true, role: 'assistant' });
     expect(profileSnapshot.data()).toMatchObject({ accountType: 'atelier_member', atelierId, role: 'assistant' });
+
+    await page.goto('/atelier/equipe');
+    const memberCard = page.getByText(invitedEmail, { exact: true }).locator('..').locator('..');
+    await memberCard.getByRole('button', { name: 'Alterar acesso', exact: true }).click();
+    for (const width of [320, 375, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 }); await expect(page.getByRole('combobox', { name: 'Papel', exact: true })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    }
+    await page.getByRole('combobox', { name: 'Papel', exact: true }).selectOption('cosmaker');
+    await page.locator('label').filter({ hasText: 'orders:read' }).getByRole('checkbox').check();
+    await page.getByRole('button', { name: 'Salvar acesso', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Vínculo e permissões atualizados.' })).toBeVisible();
+    await expect.poll(async () => (await adminDb.doc(`ateliers/${atelierId}/members/${invited.uid}`).get()).data()).toMatchObject({ role: 'cosmaker', permissions: expect.arrayContaining(['orders:read']), active: true });
+    for (const active of [false, true]) {
+      await memberCard.getByRole('button', { name: 'Alterar acesso', exact: true }).click();
+      await page.getByLabel('Vínculo ativo', { exact: true }).setChecked(active);
+      await page.getByRole('button', { name: 'Salvar acesso', exact: true }).click();
+      await expect(page.getByRole('status').filter({ hasText: 'Vínculo e permissões atualizados.' })).toBeVisible();
+      await expect.poll(async () => (await adminDb.doc(`ateliers/${atelierId}/members/${invited.uid}`).get()).get('active')).toBe(active);
+      expect((await adminDb.doc(`users/${invited.uid}`).get()).get('active')).toBe(true);
+      if (!active) {
+        const blockedContext = await page.context().browser()!.newContext();
+        try {
+          const blocked = await blockedContext.newPage(); await blocked.goto('/login?next=%2Fatelier%2Fpedidos');
+          await blocked.locator('#email').fill(invitedEmail); await blocked.locator('#password').fill(invitedPassword);
+          await blocked.getByRole('button', { name: 'Entrar', exact: true }).click();
+          await expect(blocked.getByRole('heading', { name: 'Ateliê não vinculado', exact: true })).toBeVisible();
+        } finally { await blockedContext.close(); }
+      }
+    }
+    await memberCard.getByRole('button', { name: 'Transferir titularidade', exact: true }).click();
+    const confirm = page.getByRole('dialog', { name: 'Confirmar transferência', exact: true });
+    for (const width of [320, 375, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 }); await expect(confirm).toBeVisible();
+      expect(await confirm.evaluate(element => element.getBoundingClientRect().width <= innerWidth)).toBe(true);
+    }
+    await confirm.getByRole('button', { name: 'Transferir titularidade', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Titularidade transferida. Sua conta agora é administradora.' })).toBeVisible();
+    expect((await adminDb.doc(`ateliers/${atelierId}`).get()).get('ownerId')).toBe(invited.uid);
+    const owners = await adminDb.collection(`ateliers/${atelierId}/members`).where('role', '==', 'owner').get();
+    expect(owners.docs.map((member: { id: string }) => member.id)).toEqual([invited.uid]);
+    expect((await adminDb.doc(`users/${owner.uid}`).get()).get('role')).toBe('admin');
+    await expect(page.getByRole('heading', { name: 'Membros do ateliê', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Transferir titularidade', exact: true })).toHaveCount(0);
   } finally {
     await adminDb.recursiveDelete(adminDb.doc(`ateliers/${atelierId}`)).catch(() => undefined);
     const audits = await adminDb.collection('auditLogs').where('atelierId', '==', atelierId).get().catch(() => null);
