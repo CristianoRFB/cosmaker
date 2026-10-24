@@ -30,6 +30,7 @@ export function useClientOrders() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const revision = useRef(0);
+  const invalidate = useCallback(() => { revision.current++; }, []);
   const reload = useCallback(async (cursor?: string) => {
     const current = ++revision.current;
     if (!uid || !verified || !user?.active || user.accountType !== 'client') { setState({ uid: '', orders: [], nextCursor: null }); setLoading(false); return; }
@@ -41,7 +42,7 @@ export function useClientOrders() {
     } catch (reason) { if (current === revision.current) setError(reason instanceof Error ? reason.message : 'Não foi possível carregar os pedidos.'); }
     finally { if (current === revision.current) setLoading(false); }
   }, [uid, verified, user?.active, user?.accountType]);
-  useEffect(() => { void reload(); return () => { revision.current++; }; }, [reload]);
+  useEffect(() => { void reload(); return invalidate; }, [reload, invalidate]);
   const current = state.uid === uid ? state : { orders: [], nextCursor: null };
   return { orders: current.orders, loading, error, reload: () => reload(), hasMore: Boolean(current.nextCursor), loadMore: () => current.nextCursor ? reload(current.nextCursor) : Promise.resolve() };
 }

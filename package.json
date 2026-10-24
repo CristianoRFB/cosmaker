@@ -70,10 +70,10 @@
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "^15.5.28",
-    "firebase-tools": "^15.32.0",
+    "firebase-tools": "^15.34.1",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.12"
   },
   "overrides": {
     "postcss": "^8.5.28",

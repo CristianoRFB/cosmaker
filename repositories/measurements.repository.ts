@@ -1,13 +1,13 @@
-import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, where, limit, updateDoc } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { measurementInputSchema, measurementProfileInputSchema, type MeasurementInput, type MeasurementProfileInput } from '@/schemas/measurement.schema';
 import { requireFirebase } from '@/services/firebase/firebase.client';
 import type { Measurement, MeasurementProfile } from '@/types/measurement';
 
-export async function listClientMeasurementProfiles(clientId: string) {
+export async function listClientMeasurementProfiles() {
   const { functions } = requireFirebase();
   const list = httpsCallable<undefined, { profiles: MeasurementProfile[] }>(functions, 'listClientMeasurementProfiles');
-  return (await list()).data.profiles.filter((profile) => profile.clientId === clientId);
+  return (await list()).data.profiles;
 }
 
 export async function getMeasurementProfile(atelierId: string, profileId: string) {
@@ -54,4 +54,20 @@ export async function updateMeasurement(atelierId: string, profileId: string, me
     notes: parsed.notes,
     updatedAt: serverTimestamp(),
   });
+}
+
+export async function listAtelierClientMeasurementProfiles(atelierId: string, clientId: string) {
+  const { db } = requireFirebase();
+  const result = await getDocs(query(collection(db, 'ateliers', atelierId, 'measurementProfiles'), where('clientId', '==', clientId), limit(501)));
+  if (result.size > 500) throw new Error('As fichas precisam de uma consulta assistida.');
+  return result.docs.map(record => ({ id: record.id, atelierId, ...record.data() }) as MeasurementProfile);
+}
+export async function createClientMeasurementProfile(atelierId: string, name: string, requestId: string) {
+  return (await httpsCallable<Record<string, unknown>, { profileId: string }>(requireFirebase().functions, 'createClientMeasurementProfile')({ atelierId, name, requestId })).data.profileId;
+}
+
+export async function updateMeasurementProfile(atelierId: string, profileId: string, input: { name: string; active: boolean }) {
+  const parsed = measurementProfileInputSchema.parse(input);
+  if (typeof input.active !== 'boolean') throw new Error('Estado da ficha inválido.');
+  await updateDoc(doc(requireFirebase().db, 'ateliers', atelierId, 'measurementProfiles', profileId), { name: parsed.name, active: input.active, updatedAt: serverTimestamp() });
 }

@@ -31,3 +31,15 @@ Atualizados Next e eslint-config-next para **15.5.28**, mantendo a major aprovad
 Auditoria de produção da raiz voltou a **0 vulnerabilidades** (`/tmp/cosmaker-next-audit-fixed.json`). Nova auditoria integral aponta **22 pacotes: 2 críticos, 13 altos, 7 moderados**, nas ferramentas/cadeias dev; continuam pendentes. Auditoria Functions permanece **9 moderados, nenhum alto/crítico**. Resultados zero de ontem são históricos, não evidência permanente do registro npm.
 
 Gates desta atualização, incluindo build, unitários, smoke e CI remoto, constam no checkpoint canônico. Não confundir patch de dependências com aceite global de Storage, segurança ou homologação comercial.
+
+## Atualização compatível e validação em andamento — 2026-10-24
+
+O registro passou a apontar body-parser alto em Functions, além de Vitest/tinypool críticos e patches novos de Vite/zod/CLI. Atualizados Vitest para4.1.12 (mínimo4.1.11), Firebase CLI15.34.1, zod e transitivos dentro dos contratos suportados. Next15.5.28/React19/Firebase12.19 e o override gRPC existente foram preservados. Atualizações dirigidas de fast-uri/ip-address/re2 removeram alertas moderados corrigíveis sem alterar as políticas de produto.
+
+Functions migrou para firebase-admin14.5.0 e firebase-functions7.4.0: Node22 satisfaz engines e o peer oficial de Functions7.4 inclui Admin14. Não houve override incompatível de uuid, downgrade de SDK, audit fix --force nem deploy. A major dos SDKs mudou e exige regressão integral proporcional dos consumidores; compilação e um subconjunto não bastam para aceitar a migração. As APIs usadas de Auth/Firestore/Storage e v2 permanecem compatíveis nos gates já executados.
+
+Auditorias atuais: aplicação de produção0, Functions de produção0; auditoria integral da raiz5 moderados,0 altos/críticos. Os cinco são agregados das cadeias CLI Pub/Sub/OpenTelemetry e gaxios/uuid. Updates oficiais dentro das faixas suportadas não os eliminaram. Não aplicar a sugestão de downgrade do CLI para14.23 nem trocar major transitiva fora de seu contrato para produzir um zero artificial. O CLI só opera os emuladores locais neste ensaio; não há servidor MCP/FTP/PAC externo nem entradas de baggage/v3/v5/v6 vindas de domínio. Alertas continuam registrados, não encerrados globalmente.
+
+npm10.9.9 apresentou TypeError edgesOut ao construir peers da atualização. O defeito repetiu sem node_modules; o resolvedor npm11.13.0 gerou o lockfile válido, sem --force/--legacy-peer-deps. A instalação limpa npm ci do Node22 funcionou depois. O node_modules anterior ficou temporariamente preservado em /tmp; nenhum código do usuário ou dado Firebase foi removido. Os lançadores continuam Node22 e npm ci; não há nova configuração manual recorrente de credenciais.
+
+Vitest4 executou120/120 unitários e os SDKs novos passaram10/10 integrações de propostas/pedidos/pagamentos/medidas. Functions e TypeScript atuais passaram. Regressões amplas, Rules, recuperação, build/UI e CI do checkpoint final ainda devem fechar a atualização. Não tratar este WIP como aprovação de F5/F6 ou produção.

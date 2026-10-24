@@ -1,5 +1,16 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL IV — dependências e medidas CRM preservadas WIP — 2026-10-24
+
+- Remoto anterior `ee7b1957c9a003ce9c34f5a63fbecc6e8e09d568`; CI40046515677 PASS. Reinicialização do ambiente preservou filesystem/WIP; nenhum trabalho de domínio foi perdido.
+- Dependências: Vitest4.1.12, CLI15.34.1, Admin14.5/Functions7.4 oficialmente compatíveis com Node22/entre si; patches transitivos. Root prod0 e Functions prod0; root completo5moderados/0altos/0críticos, pendência de cadeias upstream CLI. npm10 edgesOut resolvido por geração de lock com npm11.13, sem forçar peers; npm ci limpo funcionou. [Revisão](DEPENDENCY_SECURITY_REVIEW.md). Precisa regressão ampla antes de aceitar a mudança de majors dos SDKs.
+- Unitários120/120 PASS no Vitest4; backend atual10/10 PASS,46,44s (`/tmp/cosmaker-measurement-sdk-integration.log`): propostas5 e pagamentos/pedidos/medidas5, com SDKs novos. Functions/TypeScript PASS; três avisos de ref em cleanup foram corrigidos, lint final pendente.
+- Corrigida lacuna concreta F2: medidas listadas/criadas pelo cliente presumiam clientId=UID e perdiam CRM com ID próprio. Listagem agora valida sessão/perfil/tenant/vínculo CRM por UID, retém legado/sem data, recusa namespace/payload/A×B/revogação e não filtra IDs CRM pelo UID no frontend. Criação servidor escolhe vínculo canônico único, nome validado, retry idempotente com requestId e uma auditoria. Negativos e persistência passaram no backend; interface ainda precisa gate.
+- Rota staff de medidas agora mantém fichas/estado ativo e valores, com permissões existentes; editor compartilhado preserva a UI anterior e snapshots. Valores decimais usam step any conforme schema. Link real no CRM. Hooks limpam dados e descartam respostas de contexto anterior. **WIP de interface sem aceite**.
+- Rota de revisão de orçamento deixou de ser estrutural: reutiliza o formulário canônico preenchido, cria nova versão preservando proposta anterior; aprovado direciona às revisões do pedido. Sem alterar contrato monetário/tenant ou gateway. **Build/E2E pendentes**.
+- Legado Storage refinado para nomes Unicode legítimos e permissão measurements:read para imagens de medidas (clients:read não basta). Teste negativo/positivo ampliado; regressão desse refinamento ainda pendente.
+- F2/F3/F5/F6 continuam parciais; formal10/16. Método funcional estabelecido, inventário/cálculo ainda pendentes. Próximos gates: estáticos, regressão dos SDKs e UI/paginação/medidas/revisão; encerrar rotas restantes e recuperação/scheduler proporcional.
+
 ## GOAL IV — histórico de pedidos paginado e ownership compartilhado WIP — 2026-10-24
 
 - Portal aceito localmente preservado em `dd0ca745efd2ac19b72db8e57a8f0dcf850ca88d`. Lacuna concreta subsequente: lista de pedidos devolvia apenas50 e descartava hasMore; pedidos legados ligados somente ao CRM não reapareciam após troca de e-mail; UID malformado e CRM por e-mail exigiam o mesmo conservadorismo já aceito nas propostas.

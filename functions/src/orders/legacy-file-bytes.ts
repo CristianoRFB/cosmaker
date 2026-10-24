@@ -13,11 +13,11 @@ export const downloadLegacyAtelierFileBytes = onRequest({ cors: true, timeoutSec
     if (Object.keys(request.query).some(key => key !== 'path') || typeof request.query.path !== 'string') throw new HttpsError('invalid-argument', 'Caminho legado inválido.');
     const relative = request.query.path;
     const parts = relative.split('/');
-    if (parts.some(part => !/^[A-Za-z0-9_. -]{1,180}$/.test(part) || ['.', '..'].includes(part))) throw new HttpsError('invalid-argument', 'Caminho legado inválido.');
+    if (Buffer.byteLength(relative) > 1024 || parts.some(part => !part || part.length > 255 || /[\x00-\x1f\x7f\\]/.test(part) || ['.', '..'].includes(part))) throw new HttpsError('invalid-argument', 'Caminho legado inválido.');
     let permission = ''; let entityPath = ''; let maximum = 20 * 1024 * 1024; let imageOnly = false;
     if (parts.length === 2 && parts[0] === 'branding') { permission = 'atelier:settings'; maximum = 5 * 1024 * 1024; imageOnly = true; }
     else if (parts.length === 3 && parts[0] === 'portfolio') { permission = 'portfolio:manage'; entityPath = `portfolio/${parts[1]}`; imageOnly = true; }
-    else if (parts.length === 4 && parts[0] === 'clients' && parts[2] === 'measurements') { permission = 'clients:read'; entityPath = `clients/${parts[1]}`; }
+    else if (parts.length === 4 && parts[0] === 'clients' && parts[2] === 'measurements') { permission = 'measurements:read'; entityPath = `clients/${parts[1]}`; }
     else if (parts.length === 2 && ['contracts', 'invoices'].includes(parts[0])) permission = parts[0] === 'invoices' ? 'finance:read' : 'orders:read';
     else if (parts.length === 4 && parts[0] === 'orders' && ['shipping', 'documents', 'references', 'approvals'].includes(parts[2])) { permission = 'orders:read'; entityPath = `orders/${parts[1]}`; }
     else throw new HttpsError('invalid-argument', 'Este caminho usa outro contrato de arquivos.');

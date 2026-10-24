@@ -121,6 +121,7 @@ export default function AtelierClientDetailPage() {
       </form></CardContent> : null}
     </Card>
 
+    {history.access.measurements ? <Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href={`/atelier/clientes/${encodeURIComponent(clientId)}/medidas`}>Gerenciar fichas de medidas</Link> : null}
     <div className="grid gap-4 lg:grid-cols-2">
       <HistoryCard title="Solicitações" icon={<ClipboardList size={18} />} rows={history.requests} empty="Nenhuma solicitação vinculada." render={(item) => <><strong>{String(item.character ?? 'Solicitação')}</strong><span className="text-slate-500">{String(item.franchise ?? '')} · {String(item.status ?? '—')}</span><time className="text-xs text-slate-500">{formatDate(item.createdAt)}</time></>} />
       <HistoryCard title="Propostas" icon={<FileText size={18} />} rows={history.quotes} empty="Nenhuma proposta vinculada." render={(item) => <><strong>Proposta {String(item.id).slice(0, 10)}</strong><span className="text-slate-500">{String(item.status ?? '—')} · {money(item.total)}</span><time className="text-xs text-slate-500">{formatDate(item.createdAt)}</time></>} />

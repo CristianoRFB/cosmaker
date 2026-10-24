@@ -16,7 +16,7 @@ export { publishQuote } from './quotes/publish-quote';
 export { respondToQuote } from './quotes/respond-to-quote';
 export { expireQuotes } from './quotes/expire-quotes';
 export { createOrderFromApprovedQuote } from './orders/create-order';
-export { listClientMeasurementProfiles } from './orders/list-client-measurement-profiles';
+export { listClientMeasurementProfiles, createClientMeasurementProfile } from './orders/list-client-measurement-profiles';
 export { listClientOrders } from './orders/list-client-orders';
 export { confirmOrderDeposit } from './orders/confirm-order-deposit';
 export { updateProductionStage } from './orders/update-production-stage';

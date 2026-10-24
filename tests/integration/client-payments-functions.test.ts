@@ -32,7 +32,7 @@ beforeAll(async () => {
   await db.doc(`ateliers/${tenants[0]}/clients/crm`).set({ userId: customer.uid });
   await order.collection('payments').doc('deposit').set({ type: 'deposit', status: 'paid', amount: 30, amountCents: 3000, method: 'cash', reference: 'INTERNAL-REFERENCE', confirmedBy: 'PRIVATE-STAFF-UID', financeEntryId: 'PRIVATE-LEDGER', paidAt: now, createdAt: now });
 });
-afterAll(async () => { for (const id of tenants) await db.recursiveDelete(db.doc(`ateliers/${id}`)); for (const identity of [customer, other]) { await adminAuth.deleteUser(identity.uid); await db.doc(`users/${identity.uid}`).delete(); } await deleteApp(app); await admin.delete(); });
+afterAll(async () => { const audits = await db.collection('auditLogs').where('atelierId', '==', tenants[0]).get(); await Promise.all(audits.docs.map((row: { ref: { delete(): Promise<unknown> } }) => row.ref.delete())); for (const id of tenants) await db.recursiveDelete(db.doc(`ateliers/${id}`)); for (const identity of [customer, other]) { await adminAuth.deleteUser(identity.uid); await db.doc(`users/${identity.uid}`).delete(); } await deleteApp(app); await admin.delete(); });
 
 describe('Client payment projections', () => {
   it('projects real cents and balances, preserves compensated history and paginates without internal data', async () => {
@@ -78,6 +78,24 @@ describe('Client payment projections', () => {
     expect(ids).toContain('undated'); expect(ids).toContain('crm-linked'); expect(ids).not.toContain('malformed-uid'); expect(ids).not.toContain('email-only-forbidden');
     await expect(list({ cursor: 'not-a-cursor' })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
     await expect(list({ cursor: Buffer.from(`ateliers/${tenants[1]}/orders/order`).toString('base64url') })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+  }, 60_000);
+
+  it('lists and creates reusable measurements using the CRM link instead of assuming clientId equals UID', async () => {
+    await signIn(customer.email);
+    const list = (data: Record<string, unknown> = {}) => httpsCallable<Record<string, unknown>, { profiles: Array<{ id: string; clientId: string }> }>(functions, 'listClientMeasurementProfiles')(data).then(result => result.data);
+    const create = (extra: Record<string, unknown> = {}) => httpsCallable<Record<string, unknown>, { profileId: string; alreadyCreated: boolean }>(functions, 'createClientMeasurementProfile')({ atelierId: tenants[0], name: 'Ficha do CRM', requestId: 'measurement-intent', ...extra }).then(result => result.data);
+    await db.doc(`ateliers/${tenants[0]}/measurementProfiles/legacy-crm-profile`).set({ clientId: 'crm', name: 'Medidas anteriores', active: true, createdAt: now, updatedAt: now });
+    const created = await create(); expect(created.alreadyCreated).toBe(false);
+    expect((await create()).profileId).toBe(created.profileId);
+    expect((await db.doc(`ateliers/${tenants[0]}/measurementProfiles/${created.profileId}`).get()).get('clientId')).toBe('crm');
+    const page = await list(); expect(page.profiles).toContainEqual(expect.objectContaining({ id: 'legacy-crm-profile', clientId: 'crm' })); expect(page.profiles).toContainEqual(expect.objectContaining({ id: created.profileId, clientId: 'crm' }));
+    const audits = await db.collection('auditLogs').where('entityId', '==', created.profileId).get(); expect(audits.size).toBe(1);
+    await expect(create({ clientId: other.uid })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    await expect(create({ atelierId: tenants[1] })).rejects.toMatchObject({ code: 'functions/permission-denied' });
+    await expect(create({ name: 'Changed intent' })).rejects.toMatchObject({ code: 'functions/already-exists' });
+    await expect(list({ uid: other.uid })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    await signIn(other.email); expect((await list()).profiles).toEqual([]);
+    await signIn(customer.email); await db.doc(`users/${customer.uid}`).update({ active: false }); await expect(list()).rejects.toMatchObject({ code: 'functions/permission-denied' }); await db.doc(`users/${customer.uid}`).update({ active: true });
   }, 60_000);
 
   it('rejects inconsistent money and never invents a zero balance on corrupt legacy data', async () => {

@@ -172,7 +172,7 @@ describe('Protected quote reference bytes', () => {
     await adminDb.doc(`ateliers/${atelierIds[0]}/orders/legacy-order`).set({ status: 'completed' });
     const endpoint = `http://${emulatorHost}:${process.env.COSMAKER_FUNCTIONS_EMULATOR_PORT || '15001'}/${projectId}/us-central1/downloadLegacyAtelierFileBytes`;
     const read = async (path: string, anonymous = false) => fetch(`${endpoint}?${new URLSearchParams({ path })}`, { headers: !anonymous && auth.currentUser ? { Authorization: `Bearer ${await auth.currentUser.getIdToken()}` } : {} });
-    const paths = ['branding/legacy.png', 'portfolio/legacy-project/legacy.png', 'clients/legacy-client/measurements/legacy.png', 'contracts/legacy.pdf', 'invoices/legacy.pdf', 'orders/legacy-order/shipping/legacy.pdf'];
+    const paths = ['branding/medida-á.png', 'branding/legacy.png', 'portfolio/legacy-project/legacy.png', 'clients/legacy-client/measurements/legacy.png', 'contracts/legacy.pdf', 'invoices/legacy.pdf', 'orders/legacy-order/shipping/legacy.pdf'];
     for (const path of paths) {
       const bytes = path.endsWith('.pdf') ? Buffer.from('%PDF-1.4\nsynthetic') : png;
       const type = path.endsWith('.pdf') ? 'application/pdf' : 'image/png';
@@ -187,6 +187,11 @@ describe('Protected quote reference bytes', () => {
       await signIn(ownerB); expect((await read(path)).status).toBe(404); await signIn(ownerA);
     }
     for (const path of ['../other/secret', 'ateliers/other/contracts/secret.pdf', 'orders/legacy-order/production/photo', 'orders/legacy-order/attachments/file', 'quoteRequests/request/references/ref']) expect((await read(path)).status).toBe(400);
+    await signIn(noReportAccess);
+    const member = adminDb.doc(`ateliers/${atelierIds[0]}/members/${noReportAccess.uid}`);
+    await member.update({ permissions: ['clients:read'] }); expect((await read('clients/legacy-client/measurements/legacy.png')).status).toBe(403);
+    await member.update({ permissions: ['measurements:read'] }); expect((await read('clients/legacy-client/measurements/legacy.png')).status).toBe(200);
+    await member.update({ permissions: ['orders:read'] });
     await signIn(customer); expect((await read(paths[0])).status).toBe(403);
     await signIn(quotesReader); expect((await read(paths[0])).status).toBe(403);
     await signIn(ownerA);
