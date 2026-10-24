@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## RETOMADA — fuso da agenda e métricas mobile corrigidos — 2026-10-24
+
+- Fetch confirmou5fe1f495b91b2bb1e4e2925236725f8df40c0f43/árvore limpa; CI40060408944 SUCCESS. Node22.23.4/Java21 e lint das últimas alterações de testes/inventário sintético PASS. Nenhum Firebase real ou mudança de rede/credenciais.
+- Regressão complementar de navegador teve **12PASS/4FAIL**,5,2min (`/tmp/cosmaker-consolidation-browser.log`). Dois casos administrativos iniciaram antes da prontidão web e receberam conexão recusada; dois defeitos reais foram encontrados: overflow das métricas em320px e alocação convertida pelo fuso do navegador, contrariando o fuso do responsável. Não é lote16/16.
+- Métricas agora usam grid de coluna com largura mínima controlada e cabeçalho de auditoria responsivo, sem recortar conteúdo. Repetição administrativo/relatórios/agenda teve **4PASS/1FAIL**,2,4min (`/tmp/cosmaker-scheduling-metrics-e2e.log`): os dois administrativos e relatórios/preferências/métricas em320/375/768/1440 passaram. A falha de agenda foi expectativa do teste negativo:2h planejadas em intervalo de1h disparavam validação anterior; corrigido para2h fora do expediente. Agenda isolada passou1/1,25s, antes do refinamento de exibição abaixo.
+- Agenda interpreta datetime-local no fuso IANA do responsável, rejeita horário inexistente/ambíguo, preserva formulário quando o servidor recusa e informa o fuso. Persistência09h SãoPaulo→12hUTC comprovada. Refinamento final também projeta o fuso gravado no slot e formata a lista nesse fuso; legado sem fuso válido usa UTC explícito. Não altera autorização ou horários existentes.
+- Unitários direcionados **3/3 PASS**,406ms (`/tmp/cosmaker-schedule-time-unit.log`): SãoPaulo/offset45min/UTC, DST inválido/ambíguo e exibição. Backend agenda **3/3 PASS**,43,49s (`/tmp/cosmaker-scheduling-timezone-backend.log`), incluindo projeção/legado, concorrência, permissões/A×B; substitui os mesmos3cenários do loteorders33, sem inflar104cenários distintos. Functions/Next81/lint PASS. **E2E da exibição final em execução neste checkpoint; não aceitar antes de seu resultado.**
+- Inventário reproduzível e consolidação formal ainda WIP. Formal10/16; F2/F3/F5/F6 parciais; Google/scheduler sem PASS. Histórico de parada anterior preservado abaixo.
+
 ## ENCERRAMENTO IMEDIATO SOLICITADO — INCOMPLETO / WIP — 2026-10-24
 
 - Usuário solicitou parar e commitar imediatamente. Desenvolvimento e testes interrompidos; runtime cloud-start38403 recebeu TERM. Último remoto anterior9d53e8fc20d6dc4385273f02c3c73025d36d7441. Este checkpoint preserva inclusive o trabalho parcial; não há novo aceite global ou prontidão comercial.

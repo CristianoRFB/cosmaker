@@ -209,6 +209,12 @@ describe('Scheduling Functions em Firebase Emulator', () => {
     await expect(call('allocateProductionTime', overlap as unknown as Record<string, unknown>)).rejects.toBeTruthy();
     const storedSlots = await adminDb.collection(`ateliers/${atelierA}/productionSlots`).where('date', '==', date).where('status', '==', 'scheduled').get();
     expect(storedSlots.size).toBe(2);
+    const projected = await call<{ slots: Array<{ id: string; timezone: string; startAt: string }> }>('listScheduleWorkspace', { fromDate: date, toDate: date });
+    expect(projected.slots.find((slot) => slot.id === winnerInput.requestId)).toMatchObject({ timezone: 'America/Sao_Paulo' });
+    await storedSlots.docs[0].ref.update({ timezone: null });
+    const legacy = await call<{ slots: Array<{ id: string; timezone: string }> }>('listScheduleWorkspace', { fromDate: date, toDate: date });
+    expect(legacy.slots.find((slot) => slot.id === storedSlots.docs[0].id)?.timezone).toBe('UTC');
+    await storedSlots.docs[0].ref.update({ timezone: 'America/Sao_Paulo' });
     const assignedStage = (await adminDb.doc(`ateliers/${atelierA}/orders/${winnerInput.orderId}/productionStages/${winnerInput.stageId}`).get()).data();
     expect(assignedStage?.assignedTo).toBe(memberA.uid);
     expect((await adminDb.doc(`ateliers/${atelierA}/orders/${winnerInput.orderId}`).get()).data()?.status).toBe('scheduled');

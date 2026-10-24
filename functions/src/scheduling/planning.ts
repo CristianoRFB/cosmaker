@@ -524,6 +524,7 @@ export const listScheduleWorkspace = onCall(async (call) => {
       id: document.id, atelierId: identity.atelierId, date: String(item.date), orderId: String(item.orderId),
       stageId: String(item.stageId), stageName: String(item.stageName ?? 'Etapa'), assignedTo: String(item.assignedTo),
       assignedName: nameFor(String(item.assignedTo)), startAt: toISOString(item.startAt) ?? '', endAt: toISOString(item.endAt) ?? '',
+      timezone: validScheduleTimezone(item.timezone) ? String(item.timezone) : 'UTC',
       plannedHours: Number(item.plannedHours) || 0, status: item.status === 'cancelled' ? 'cancelled' as const : 'scheduled' as const,
     };
   });

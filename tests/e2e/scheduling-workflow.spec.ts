@@ -17,6 +17,7 @@ const projectId = 'demo-cosmaker';
 const adminApp = initializeAdminApp({ projectId }, `scheduling-e2e-${randomUUID()}`);
 const adminAuth = getAdminAuth(adminApp);
 const adminDb = getFirestore(adminApp);
+test.use({ timezoneId: 'UTC' });
 
 test('configura capacidade, planeja produção e registra/cancela bloqueio e evento na interface', async ({ page }) => {
   test.setTimeout(180_000);
@@ -66,15 +67,31 @@ test('configura capacidade, planeja produção e registra/cancela bloqueio e eve
     await expect(page).toHaveURL(/\/atelier\/agenda$/);
     await page.getByLabel('Etapa do pedido').selectOption('order-e2e|stage-e2e');
     await page.getByLabel('Responsável').selectOption(uid);
+    await expect(page.getByText('Horários da alocação no fuso do responsável: America/Sao_Paulo.')).toBeVisible();
+    await page.getByLabel('Início').fill(`${tomorrow}T06:00`);
+    await page.getByLabel('Fim').fill(`${tomorrow}T08:00`);
+    await page.getByLabel('Prazo da etapa').fill(tomorrow);
+    await page.getByRole('button', { name: 'Alocar no cronograma' }).click();
+    await expect(page.getByRole('alert').filter({ hasText: 'A alocação precisa caber no expediente' })).toBeVisible();
+    await expect(page.getByLabel('Início')).toHaveValue(`${tomorrow}T06:00`);
+    await expect(page.getByLabel('Prazo da etapa')).toHaveValue(tomorrow);
+    expect((await adminDb.collection(`ateliers/${atelierId}/productionSlots`).get()).size).toBe(0);
     await page.getByLabel('Início').fill(`${tomorrow}T09:00`);
     await page.getByLabel('Fim').fill(`${tomorrow}T11:00`);
     await page.getByLabel('Prazo da etapa').fill(tomorrow);
+    for (const width of [320, 375, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect(page.getByRole('button', { name: 'Alocar no cronograma' })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    }
     await page.getByRole('button', { name: 'Alocar no cronograma' }).click();
     await expect(page.getByText('Horas alocadas no cronograma.')).toBeVisible();
     await expect(page.getByText('Modelagem · 2 h')).toBeVisible();
+    await expect(page.getByText(/09:00–11:00 · America\/Sao_Paulo/)).toBeVisible();
     const slots = await adminDb.collection(`ateliers/${atelierId}/productionSlots`).get();
     expect(slots.docs).toHaveLength(1);
     expect(slots.docs[0].data()).toMatchObject({ status: 'scheduled', orderId: 'order-e2e', assignedTo: uid, date: tomorrow });
+    expect(slots.docs[0].data().startAt.toDate().toISOString()).toBe(`${tomorrow}T12:00:00.000Z`);
 
     await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
     await expect(page.getByText('Alocação cancelada e capacidade liberada.')).toBeVisible();

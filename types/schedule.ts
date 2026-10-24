@@ -23,6 +23,7 @@ export interface ProductionSlot {
   assignedName: string;
   startAt: string;
   endAt: string;
+  timezone: string;
   plannedHours: number;
   status: 'scheduled' | 'cancelled';
 }

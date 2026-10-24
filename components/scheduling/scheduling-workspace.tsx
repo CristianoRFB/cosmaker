@@ -17,6 +17,7 @@ import {
 import { cancelAtelierEvent, createAtelierEvent, listAtelierEvents, updateAtelierEvent } from '@/repositories/events.repository';
 import type { AtelierEvent } from '@/types/event';
 import type { ScheduleWorkspace } from '@/types/schedule';
+import { formatScheduleTime, scheduleWallTimeToIso } from '@/lib/utils/schedule-time';
 
 type Focus = 'agenda' | 'capacity' | 'blocks' | 'events' | 'timeline';
 type EventDraft = { title: string; type: typeof eventTypes[number]; startDate: string; endDate: string; orderId: string; notes: string };
@@ -76,6 +77,7 @@ export function SchedulingWorkspace({ focus }: { focus: Focus }) {
   const [notice, setNotice] = useState('');
   const [eventDraft, setEventDraft] = useState<EventDraft>(emptyEvent);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
+  const [allocationMemberId, setAllocationMemberId] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -109,6 +111,7 @@ export function SchedulingWorkspace({ focus }: { focus: Focus }) {
 
   const members = workspace?.members ?? [];
   const visibleMembers = canManageTeam ? members : members.filter((member) => member.memberId === firebaseUser?.uid);
+  const allocationMember = visibleMembers.find((member) => member.memberId === allocationMemberId) ?? visibleMembers[0];
 
   async function perform(action: () => Promise<unknown>, success: string) {
     setBusy(true);
@@ -118,8 +121,10 @@ export function SchedulingWorkspace({ focus }: { focus: Focus }) {
       await action();
       setNotice(success);
       await load();
+      return true;
     } catch (actionError) {
       setError(errorMessage(actionError));
+      return false;
     } finally { setBusy(false); }
   }
 
@@ -146,17 +151,23 @@ export function SchedulingWorkspace({ focus }: { focus: Focus }) {
     const localStart = String(form.get('startAt') || '');
     const localEnd = String(form.get('endAt') || '');
     const deadline = String(form.get('deadline') || '');
+    const assignedTo = String(form.get('assignedTo') || '');
+    const member = visibleMembers.find((candidate) => candidate.memberId === assignedTo);
+    let startAt: string; let endAt: string;
+    try {
+      if (!member) throw new Error('Selecione um responsável com capacidade configurada.');
+      startAt = scheduleWallTimeToIso(localStart, member.timezone);
+      endAt = scheduleWallTimeToIso(localEnd, member.timezone);
+    } catch (conversionError) { setError(errorMessage(conversionError)); return; }
     const payload = {
-      requestId: randomRequestId(), orderId, stageId, assignedTo: String(form.get('assignedTo') || ''),
-      startAt: localStart ? new Date(localStart).toISOString() : '',
-      endAt: localEnd ? new Date(localEnd).toISOString() : '',
+      requestId: randomRequestId(), orderId, stageId, assignedTo, startAt, endAt,
       plannedHours: Number(form.get('plannedHours')),
       ...(deadline ? { deadline } : {}),
     };
     const parsed = productionSlotSchema.safeParse(payload);
     if (!parsed.success) { setError(parsed.error.issues[0]?.message ?? 'Revise a alocação informada.'); return; }
-    await perform(() => allocateProductionTime(parsed.data), 'Horas alocadas no cronograma.');
-    formElement.reset();
+    const saved = await perform(() => allocateProductionTime(parsed.data), 'Horas alocadas no cronograma.');
+    if (saved) formElement.reset();
   }
 
   async function submitBlock(event: FormEvent<HTMLFormElement>) {
@@ -257,7 +268,8 @@ export function SchedulingWorkspace({ focus }: { focus: Focus }) {
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{(workspace?.capacityByDate ?? []).slice(0, 4).map((item) => <Card key={`${item.memberId}-${item.date}`}><CardContent className="pt-5"><p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{formatDate(item.date)}</p><p className="mt-2 text-lg font-bold text-slate-900">{Math.max(0, item.capacityHours - item.allocatedHours - item.blockedHours)} h disponíveis</p><p className="mt-1 text-xs text-slate-500">{item.allocatedHours} h alocadas · {item.blockedHours} h bloqueadas</p></CardContent></Card>)}</section>
       {canWriteSchedule ? <Card><CardHeader><CardTitle>Alocar horas de produção</CardTitle><CardDescription>O sistema valida expediente, capacidade diária, bloqueios e sobreposição antes de gravar.</CardDescription></CardHeader><CardContent><form className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" onSubmit={(event) => void submitAllocation(event)}>
         <label className={labelClass}>Etapa do pedido<select className={inputClass} name="stage" required>{workspace?.stages.filter((stage) => !['completed', 'approved'].includes(stage.status)).map((stage) => <option key={`${stage.orderId}|${stage.id}`} value={`${stage.orderId}|${stage.id}`}>{stage.character || stage.orderId} · {stage.id} · {stage.status}</option>)}</select></label>
-        <label className={labelClass}>Responsável<select className={inputClass} name="assignedTo" required>{visibleMembers.map((member) => <option key={member.memberId} value={member.memberId}>{member.memberName}{member.weeklyHours ? ` · ${member.weeklyHours} h/semana` : ' · capacidade não configurada'}</option>)}</select></label>
+        <label className={labelClass}>Responsável<select className={inputClass} name="assignedTo" required value={allocationMember?.memberId ?? ''} onChange={(event) => setAllocationMemberId(event.target.value)}>{visibleMembers.map((member) => <option key={member.memberId} value={member.memberId}>{member.memberName}{member.weeklyHours ? ` · ${member.weeklyHours} h/semana` : ' · capacidade não configurada'}</option>)}</select></label>
+        <p className="text-sm text-slate-600 sm:col-span-2">Horários da alocação no fuso do responsável: {allocationMember?.timezone ?? 'capacidade não configurada'}.</p>
         <label className={labelClass}>Início<input className={inputClass} defaultValue={`${plusDays(fromDate, 1)}T09:00`} name="startAt" type="datetime-local" required /></label>
         <label className={labelClass}>Fim<input className={inputClass} defaultValue={`${plusDays(fromDate, 1)}T11:00`} name="endAt" type="datetime-local" required /></label>
         <label className={labelClass}>Horas planejadas<input className={inputClass} defaultValue="2" min="0.25" max="16" name="plannedHours" step="0.25" type="number" required /></label>
@@ -265,7 +277,7 @@ export function SchedulingWorkspace({ focus }: { focus: Focus }) {
         <div className="self-end"><Button disabled={busy || !visibleMembers.length || !workspace?.stages.some((stage) => !['completed', 'approved'].includes(stage.status))} type="submit"><Clock3 size={16} />Alocar no cronograma</Button></div>
       </form></CardContent></Card> : null}
       <Card><CardHeader><CardTitle>Etapas e risco de atraso</CardTitle><CardDescription>O risco usa prazos de entrega e de etapas, evento registrado e alocações gravadas. Não há percentuais estimados.</CardDescription></CardHeader><CardContent className="grid gap-3">{workspace?.stages.length ? workspace.stages.map((stage) => <div className="grid gap-2 rounded-xl border border-slate-100 p-4 sm:grid-cols-[minmax(0,1fr)_auto]" key={`${stage.orderId}-${stage.id}`}><div><p className="font-semibold text-slate-900">{stage.character || 'Pedido'} · {stage.id}</p><p className="mt-1 text-sm text-slate-600">{stage.clientName || 'Cliente'} · {stage.status} · {stage.scheduledHours} h alocadas{stage.deadline ? ` · prazo ${formatDate(stage.deadline)}` : ''}</p><p className="mt-1 text-xs text-slate-500">Responsável: {members.find((member) => member.memberId === stage.assignedTo)?.memberName ?? (stage.assignedTo ? 'Membro da equipe' : 'Não atribuído')}</p>{stage.riskReasons.length ? <ul className="mt-2 list-inside list-disc text-sm text-slate-600">{stage.riskReasons.map((reason) => <li key={reason}>{reason}</li>)}</ul> : null}</div><Badge className="h-fit" tone={riskTone(stage.riskLevel)}>{riskLabel(stage.riskLevel)}</Badge></div>) : <p className="py-3 text-sm text-slate-600">Nenhuma etapa de pedido ativo encontrada para este ateliê.</p>}</CardContent></Card>
-      <Card><CardHeader><CardTitle>Alocações registradas</CardTitle></CardHeader><CardContent className="grid gap-3">{workspace?.slots.filter((slot) => slot.status === 'scheduled').length ? workspace.slots.filter((slot) => slot.status === 'scheduled').map((slot) => <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-100 p-4" key={slot.id}><div><p className="font-semibold text-slate-900">{slot.stageName} · {slot.plannedHours} h</p><p className="mt-1 text-sm text-slate-600">{slot.assignedName} · {formatDate(slot.date)} · {new Intl.DateTimeFormat('pt-BR', { timeStyle: 'short' }).format(new Date(slot.startAt))}–{new Intl.DateTimeFormat('pt-BR', { timeStyle: 'short' }).format(new Date(slot.endAt))}</p></div>{canWriteSchedule && (canManageTeam || slot.assignedTo === firebaseUser?.uid) ? <Button variant="danger" onClick={() => void perform(() => cancelProductionSlot(slot.id), 'Alocação cancelada e capacidade liberada.')} disabled={busy}><Trash2 size={15} />Cancelar</Button> : <Badge>Planejado</Badge>}</div>) : <p className="py-3 text-sm text-slate-600">Nenhuma alocação neste período.</p>}</CardContent></Card>
+      <Card><CardHeader><CardTitle>Alocações registradas</CardTitle></CardHeader><CardContent className="grid gap-3">{workspace?.slots.filter((slot) => slot.status === 'scheduled').length ? workspace.slots.filter((slot) => slot.status === 'scheduled').map((slot) => <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-100 p-4" key={slot.id}><div><p className="font-semibold text-slate-900">{slot.stageName} · {slot.plannedHours} h</p><p className="mt-1 text-sm text-slate-600">{slot.assignedName} · {formatDate(slot.date)} · {formatScheduleTime(slot.startAt, slot.timezone)}–{formatScheduleTime(slot.endAt, slot.timezone)} · {slot.timezone}</p></div>{canWriteSchedule && (canManageTeam || slot.assignedTo === firebaseUser?.uid) ? <Button variant="danger" onClick={() => void perform(() => cancelProductionSlot(slot.id), 'Alocação cancelada e capacidade liberada.')} disabled={busy}><Trash2 size={15} />Cancelar</Button> : <Badge>Planejado</Badge>}</div>) : <p className="py-3 text-sm text-slate-600">Nenhuma alocação neste período.</p>}</CardContent></Card>
       {focus === 'agenda' ? <Card><CardHeader><CardTitle>Eventos próximos</CardTitle><CardDescription>Eventos ativos vinculados ao ateliê.</CardDescription></CardHeader><CardContent className="grid gap-3">{events.length ? events.slice(0, 8).map((item) => <div className="flex items-center gap-3 rounded-xl bg-violet-50/70 p-3" key={item.id}><CalendarDays className="shrink-0 text-violet-700" size={18} /><div><p className="text-sm font-semibold text-slate-900">{item.title}</p><p className="text-xs text-slate-600">{formatDate(item.startDate)} · {item.type.replaceAll('_', ' ')}</p></div></div>) : <p className="text-sm text-slate-600">Ainda não há eventos ativos cadastrados.</p>}</CardContent></Card> : null}
     </> : null}
   </div>;

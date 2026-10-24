@@ -66,7 +66,7 @@ test('Platform Owner consulta métricas reais e controles globais em desktop e m
     await db.doc(`users/${user.uid}`).set({ active: true, accountType: 'platform_admin', id: user.uid, email, name: 'Administração sintética' });
     const total = (await db.collection('ateliers').count().get()).data().count;
     await page.goto('/login?next=%2Fadmin%2Fmetricas'); await page.locator('#email').fill(email); await page.locator('#password').fill(password); await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-    for (const width of [320, 1440]) {
+    for (const width of [320, 375, 768, 1440]) {
       await page.setViewportSize({ width, height: 900 }); await page.goto('/admin/metricas');
       await expect(page.getByText('Ateliês cadastrados', { exact: true }).locator('..')).toContainText(String(total));
       await expect(page.getByText('Ateliês com plano ativo', { exact: true })).toBeVisible();
