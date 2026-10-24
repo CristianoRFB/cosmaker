@@ -60,6 +60,26 @@ describe('Client payment projections', () => {
     await adminAuth.updateUser(customer.uid, { disabled: true }); await expect(call()).rejects.toMatchObject({ code: 'functions/unauthenticated' }); await adminAuth.updateUser(customer.uid, { disabled: false });
     await adminAuth.updateUser(customer.uid, { emailVerified: false }); await auth.currentUser!.getIdToken(true); await expect(call()).rejects.toMatchObject({ code: 'functions/failed-precondition' }); await adminAuth.updateUser(customer.uid, { emailVerified: true }); await auth.currentUser!.getIdToken(true);
   }, 60_000);
+  it('pages client order history and retains undated/CRM-linked orders without email or malformed-UID bypass', async () => {
+    await signIn(customer.email);
+    const base = (await order.get()).data();
+    const batch = db.batch();
+    for (let index = 0; index < 52; index++) batch.set(order.parent.doc(`page-${String(index).padStart(2, '0')}`), { ...base, createdAt: Timestamp.fromMillis(now.toMillis() - index * 1000) });
+    batch.set(order.parent.doc('undated'), { ...base, createdAt: null });
+    batch.set(order.parent.doc('crm-linked'), { ...base, clientUserId: null, email: 'old-address@cosmaker.test' });
+    batch.set(order.parent.doc('malformed-uid'), { ...base, clientUserId: 42 });
+    batch.set(order.parent.doc('email-only-forbidden'), { ...base, clientUserId: null, clientId: null, email: customer.email });
+    batch.set(db.doc(`ateliers/${tenants[0]}/clients/foreign-email`), { email: customer.email, userId: other.uid });
+    await batch.commit();
+    const list = (data: Record<string, unknown> = {}) => httpsCallable<Record<string, unknown>, { orders: Array<{ id: string }>; nextCursor: string | null }>(functions, 'listClientOrders')(data).then(result => result.data);
+    const first = await list(); expect(first.orders).toHaveLength(50); expect(first.nextCursor).toBeTruthy();
+    const second = await list({ cursor: first.nextCursor }); const ids = [...first.orders, ...second.orders].map(value => value.id);
+    expect(new Set(ids).size).toBe(55); expect(second.nextCursor).toBeNull();
+    expect(ids).toContain('undated'); expect(ids).toContain('crm-linked'); expect(ids).not.toContain('malformed-uid'); expect(ids).not.toContain('email-only-forbidden');
+    await expect(list({ cursor: 'not-a-cursor' })).rejects.toMatchObject({ code: 'functions/invalid-argument' });
+    await expect(list({ cursor: Buffer.from(`ateliers/${tenants[1]}/orders/order`).toString('base64url') })).rejects.toMatchObject({ code: 'functions/failed-precondition' });
+  }, 60_000);
+
   it('rejects inconsistent money and never invents a zero balance on corrupt legacy data', async () => {
     await signIn(customer.email);
     await order.update({ amountPaidCents: 1 }); await expect(call()).rejects.toMatchObject({ code: 'functions/failed-precondition' }); await order.update({ amountPaidCents: 0 });

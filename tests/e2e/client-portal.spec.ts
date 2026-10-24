@@ -64,6 +64,14 @@ test('portal persiste perfil e consulta home/pagamentos reais em quatro larguras
     await page.goto(`/cliente/pagamentos?atelierId=${root.id}&orderId=foreign-order`); await expect(page.locator('section [role="alert"]')).toBeVisible(); await expect(page.getByText('Recebimento confirmado', { exact: true })).toHaveCount(0);
     await order.collection('payments').doc('deposit').delete();
     await page.goto(`/cliente/pagamentos?${query}`); await expect(page.getByRole('heading', { name: 'Nenhum registro de pagamento' })).toBeVisible();
+    const more = db.batch();
+    for (let index = 0; index < 51; index++) more.set(root.collection('orders').doc(`older-${String(index).padStart(2, '0')}`), { ...value, character: `Projeto anterior ${index}`, createdAt: new Date(now.getTime() - 1000 - index) });
+    await more.commit();
+    await page.goto('/cliente/pedidos'); await expect(page.getByRole('link', { name: /Abrir pedido/ })).toHaveCount(50);
+    await page.getByRole('button', { name: 'Carregar mais pedidos', exact: true }).click(); await expect(page.getByRole('link', { name: /Abrir pedido/ })).toHaveCount(52);
+    await page.goto('/cliente/pagamentos'); await page.getByRole('button', { name: 'Carregar mais pedidos', exact: true }).click();
+    await expect(page.locator('#payment-order option')).toHaveCount(53);
+    await page.locator('#payment-order').selectOption(`${root.id}/older-50`); await expect(page.getByRole('heading', { name: 'Projeto anterior 50', exact: true })).toBeVisible();
     await page.goto('/logout'); await expect(page).toHaveURL(/\/login$/);
     await auth.updateUser(customer.uid, { email: `moved-${nonce}@cosmaker.test`, emailVerified: true });
     const replacement = await auth.createUser({ email, password, emailVerified: true });

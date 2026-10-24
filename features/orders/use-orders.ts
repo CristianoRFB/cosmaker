@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { getOrder, getProductionBoard, listAtelierOrders, listClientOrders } from '@/repositories/orders.repository';
+import { useCallback, useEffect, useState, useRef } from 'react';
+import { getOrder, getProductionBoard, listAtelierOrders, listClientOrdersPage } from '@/repositories/orders.repository';
 import { useAuth } from '@/providers/auth-provider';
 import { useTenant } from '@/providers/tenant-provider';
 import type { Order, OrderRecord } from '@/types/order';
@@ -24,21 +24,26 @@ export function useAtelierOrders() {
 
 export function useClientOrders() {
   const { user, firebaseUser } = useAuth();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const uid = firebaseUser?.uid || '';
+  const verified = firebaseUser?.emailVerified === true;
+  const [state, setState] = useState<{ uid: string; orders: Order[]; nextCursor: string | null }>({ uid: '', orders: [], nextCursor: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [loadedUid, setLoadedUid] = useState('');
-  useEffect(() => {
-    let active = true;
-    setOrders([]); setLoadedUid(''); setError('');
-    if (!user?.email || !firebaseUser?.uid || firebaseUser.emailVerified !== true) { setOrders([]); setLoading(false); return; }
+  const revision = useRef(0);
+  const reload = useCallback(async (cursor?: string) => {
+    const current = ++revision.current;
+    if (!uid || !verified || !user?.active || user.accountType !== 'client') { setState({ uid: '', orders: [], nextCursor: null }); setLoading(false); return; }
     setLoading(true); setError('');
-    listClientOrders(user.email).then((result) => { if (active) { setOrders(result); setLoadedUid(firebaseUser.uid); } })
-      .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : 'Não foi possível carregar os pedidos.'); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, [user?.email, firebaseUser?.uid, firebaseUser?.emailVerified]);
-  return { orders: loadedUid === firebaseUser?.uid ? orders : [], loading, error };
+    if (!cursor) setState({ uid: '', orders: [], nextCursor: null });
+    try {
+      const result = await listClientOrdersPage(cursor);
+      if (current === revision.current) setState(previous => ({ uid, orders: cursor && previous.uid === uid ? [...previous.orders, ...result.orders] : result.orders, nextCursor: result.nextCursor }));
+    } catch (reason) { if (current === revision.current) setError(reason instanceof Error ? reason.message : 'Não foi possível carregar os pedidos.'); }
+    finally { if (current === revision.current) setLoading(false); }
+  }, [uid, verified, user?.active, user?.accountType]);
+  useEffect(() => { void reload(); return () => { revision.current++; }; }, [reload]);
+  const current = state.uid === uid ? state : { orders: [], nextCursor: null };
+  return { orders: current.orders, loading, error, reload: () => reload(), hasMore: Boolean(current.nextCursor), loadMore: () => current.nextCursor ? reload(current.nextCursor) : Promise.resolve() };
 }
 
 export function useOrderDetail(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier') {

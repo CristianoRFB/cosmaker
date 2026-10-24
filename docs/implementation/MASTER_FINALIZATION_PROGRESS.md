@@ -1,5 +1,14 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL IV — histórico de pedidos paginado e ownership compartilhado WIP — 2026-10-24
+
+- Portal aceito localmente preservado em `dd0ca745efd2ac19b72db8e57a8f0dcf850ca88d`. Lacuna concreta subsequente: lista de pedidos devolvia apenas50 e descartava hasMore; pedidos legados ligados somente ao CRM não reapareciam após troca de e-mail; UID malformado e CRM por e-mail exigiam o mesmo conservadorismo já aceito nas propostas.
+- Red real **1 FAIL/3 não selecionados**,1,27s (`/tmp/cosmaker-client-orders-red.log`): ausência do cursor confirmada antes da alteração. Implementada paginação50 com cursor de caminho canônico pertencente à lista autorizada; inclui registros sem data e vínculos CRM por UID. Query defensiva500/100links/1000candidatos retorna erro explícito, sem cota comercial ou omissão silenciosa.
+- Política de visibilidade previamente aprovada de propostas extraída sem relaxar regras para helper compartilhado; pedidos usam a mesma prioridade UID/CRM/índice e recusam e-mail reutilizado, CRM não indexado conflitante e UID inválido. Propostas preservam estados/projeções anteriores.
+- Backend atual **9/9 PASS**,18,44s (`/tmp/cosmaker-client-ownership-final.log`):5 propostas+4 pagamentos/pedidos, incluindo55 pedidos autorizados paginados/legado, negações e integridade. Functions build PASS. Interface de pedidos e seletor de pagamentos ganharam carregar mais/atualizar e chave de sessão; **build/E2E dessa alteração ainda pendentes**.
+- Método dos novos indicadores estabelecido antes do cálculo em [FUNCTIONAL_INVENTORY_METHOD.md](FUNCTIONAL_INVENTORY_METHOD.md). Inventário final ainda pendente, sem chute percentual. Formal10/16 e prontidão comercial não aprovados.
+- Próximo gate: build/E2E de paginação e regressões compartilhadas, junto da atualização compatível de dependências. Depois encerrar rotas secundárias e recuperação/CI final.
+
 ## GOAL IV — Home, Perfil e Pagamentos do cliente testados localmente — 2026-10-24
 
 - Implementação enviada em `18f41027e7cb2005e0ec8e9ac78a691da9dd95a1`; contrato/evidências em [CLIENT_PORTAL.md](CLIENT_PORTAL.md). Home real por domínio, perfil restrito/persistente e pagamentos lista/detalhe por sessão/UID/tenant, sem gateway ou dados internos. Hook de pedidos não reutiliza resultados entre UIDs com mesmo e-mail.

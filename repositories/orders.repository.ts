@@ -31,12 +31,13 @@ export async function listOrderStatusHistory(atelierId: string, orderId: string,
   return { entries, nextCursor: snapshot.size > 50 ? entries.at(-1)?.id ?? null : null };
 }
 
-export async function listClientOrders(email: string) {
-  const normalizedEmail = email.trim().toLowerCase();
-  if (!normalizedEmail) return [];
+export async function listClientOrdersPage(cursor?: string) {
   const { functions } = requireFirebase();
-  const result = await httpsCallable<Record<string, never>, { orders: Order[]; hasMore: boolean }>(functions, 'listClientOrders')({});
-  return result.data.orders;
+  return (await httpsCallable<{ cursor?: string }, { orders: Order[]; hasMore: boolean; nextCursor: string | null }>(functions, 'listClientOrders')(cursor ? { cursor } : {})).data;
+}
+export async function listClientOrders(email: string) {
+  if (!email.trim()) return [];
+  return (await listClientOrdersPage()).orders;
 }
 
 export async function getOrder(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier', includePayments = true): Promise<OrderRecord | null> {

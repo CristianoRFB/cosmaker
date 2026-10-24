@@ -1,0 +1,13 @@
+# Medição funcional separada do aceite formal
+
+Metodologia estabelecida em 2026-10-24, antes do cálculo do novo indicador. A fonte do inventário são as operações previstas nos contratos canônicos e realmente presentes nas rotas/domínios atuais. O inventário final registra cada operação, domínio, fontes e evidências, sem transformar subrotas equivalentes em novas funcionalidades.
+
+Uma unidade verificável é um critério obrigatório de uma operação: (1) contrato/backend implementado; (2) persistência/integração comprovada; (3) interface conectada e exercitada; (4) autorização/integridade negativa comprovada. Cada critério aplicável vale uma unidade, com evidência específica. Critério não aplicável não entra no denominador, com justificativa explícita; por exemplo, uma página informativa não possui persistência própria. Critério sem teste obrigatório atual não recebe crédito de testado. Código parcial não apaga os critérios já comprovados da mesma operação.
+
+Estados por operação: IMPLEMENTADA_E_TESTADA quando todos os critérios aplicáveis passaram; IMPLEMENTADA_PARCIALMENTE quando há implementação/evidência para apenas parte dos critérios; NAO_IMPLEMENTADA quando os critérios de implementação ainda não existem; BLOCKED_EXTERNAMENTE quando o requisito atual depende de serviço/autorização externos, com dependência identificada; FORA_DO_ESCOPO para funcionalidades futuras não aprovadas. O inventário preserva o estado de cada critério para não converter uma funcionalidade complexa parcialmente entregue em zero.
+
+Conclusão funcional = unidades aplicáveis comprovadas / todas as unidades aplicáveis do escopo funcional atual. O relatório deve mostrar também implementações ainda sem evidência e dependências externas, para que a proporção não esconda pendências. Fora de escopo não entra no cálculo. Peso não depende de linhas de código, quantidade de testes ou quantidade de commits. Limites técnicos de consulta não viram quotas comerciais.
+
+A matriz formal continua com 16 marcos (nove F1 e sete fases F2–F8), todos com peso1. Cada marco só recebe PASS completo quando todos os seus critérios forem comprovados. Seu índice não substitui a conclusão funcional e não dá crédito fracionário.
+
+Prontidão comercial é um terceiro parecer: homologação Firebase real, autorização de publicação, segurança/recuperação operacional, tokens/legados reais e requisitos legais precisam de evidência própria. Emulator não comprova produção. Gateway, cobrança automática, canais externos pagos e diferenciais comerciais futuros não aprovados ficam fora do escopo atual, não como software a implementar.

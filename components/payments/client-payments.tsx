@@ -59,7 +59,7 @@ function PaymentRecords({ atelierId, orderId, paymentId }: { atelierId: string; 
 
 export function ClientPayments({ paymentId }: { paymentId?: string }) {
   const { firebaseUser, user } = useAuth();
-  const { orders, loading, error } = useClientOrders();
+  const { orders, loading, error, hasMore, loadMore } = useClientOrders();
   const [selection, setSelection] = useState<{ uid: string; value: string } | null>(null);
   const uid = firebaseUser?.uid || '';
   useEffect(() => {
@@ -75,6 +75,7 @@ export function ClientPayments({ paymentId }: { paymentId?: string }) {
     <p className="text-sm leading-6 text-slate-600">Registros declarados manualmente pelo ateliê. Combine diretamente com ele os próximos recebimentos.</p>
     {paymentId ? <Link className="inline-flex min-h-11 items-center text-sm font-semibold text-violet-700 underline" href={`/cliente/pagamentos?atelierId=${encodeURIComponent(atelierId || '')}&orderId=${encodeURIComponent(orderId || '')}`}>Voltar para pagamentos</Link> : null}
     {!paymentId && orders.length ? <label htmlFor="payment-order" className="grid min-w-0 gap-2 text-sm font-medium">Pedido<select id="payment-order" className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white p-3" value={selected} onChange={event => setSelection({ uid, value: event.target.value })}><option value="" disabled>Selecione um pedido</option>{orders.map(order => <option key={`${order.atelierId}/${order.id}`} value={`${order.atelierId}/${order.id}`}>{order.character || 'Projeto'} · {order.id.slice(0, 8)}</option>)}</select></label> : null}
+    {hasMore ? <Button variant="secondary" disabled={loading} onClick={() => void loadMore()}>Carregar mais pedidos</Button> : null}
     {loading ? <p role="status">Carregando pedidos…</p> : null}
     {error ? <p role="alert" className="text-sm text-rose-800">{error}</p> : null}
     {atelierId && orderId && !extra ? <PaymentRecords key={`${uid}/${selected}/${paymentId || ''}`} atelierId={atelierId} orderId={orderId} paymentId={paymentId} /> : !loading && !error ? <Card className="p-5"><h2 className="font-semibold">{paymentId ? 'Selecione o pedido do registro' : 'Nenhum pedido encontrado'}</h2><p className="mt-2 text-sm text-slate-600">Os registros ficam disponíveis nos pedidos vinculados à sua conta.</p><Link className="inline-flex min-h-11 items-center text-sm font-semibold text-violet-700 underline" href="/cliente/pedidos">Ver meus pedidos</Link></Card> : null}
