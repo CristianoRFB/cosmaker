@@ -23,6 +23,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate PowerShell preflight with synthetic fixtures only
+      - name: Validate operational tools and PowerShell runbooks with synthetic fixtures only
         shell: pwsh
-        run: node --test tests/operations/preflight.test.mjs tests/operations/runbooks.test.mjs
+        run: npm run test:operations

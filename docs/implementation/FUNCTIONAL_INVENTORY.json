@@ -2243,7 +2243,7 @@
     "scripts/migrate.ts": "79e691faa604ba5464e32e9906a94398384cfd8e9bedc9b81858de7994b83eec",
     "scripts/operations/maintenance-safety.mjs": "8bbbceb563d189829ce81b262299769c358969ede31c4afdfd5f4d84807b3155",
     "scripts/operations/preflight.ps1": "11bcd76323f9afdea955e7a92f4dcbf3b57df7a9a5d4e4828280524d01c7703a",
-    "scripts/operations/prepare-release.mjs": "4eef623c9ebb9faee5889a92ed824c2033f17a2b5fa1bebde4e2be8f3ec95c41",
+    "scripts/operations/prepare-release.mjs": "7b95c7625c48f629ee6cabdb32b8a544c82bd21791c7fb3cb7d40e72b750160e",
     "scripts/operations/synthetic-snapshot.mjs": "d693d3dbf4b0671df1a7fac2097002ee3e97311c2ceb2d16998cc8ec3247b8a0",
     "scripts/provision-platform-admin.mjs": "f2b34d54e3049c43dd1413c68c4343f8fbb030374807194cf599c62d79f25131",
     "scripts/seed-demo-atelier.ts": "cabd1c301607e6d15a3ab24f3196b82c9ebe4218d2e114824bce1f4087cd7f02",

@@ -1,5 +1,10 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL V — compatibilidade operacional Windows em fechamento
+
+- Código de paginação/roteiros enviado em150b24f32d537b200d00c095c3a8446889db1ad8, CI40120129390 SUCCESS. EsseCI validou preflight/parser Windows e11testes operacionais Linux. Novo checkpoint amplia a job Windows para todos os11testes operacionais, sem SDK real ou104integrações.
+- Preparador normaliza caminho-base real antes de conter artefatos, para não confundir caminhos curtos8.3 do Windows com symlink; paths de ambiente privados são recusados sem depender de caixa. Testes direcionados de manifesto2/2 PASS144ms. Sem mudança nos módulos de produto, Rules ou custos. Hash do utilitário revisto; índice182/184 e10/16 inalterados. Candidata/manifesto finais serão selados após este checkpoint; homologação real continua NOT_RUN.
+
 ## GOAL V — defeito de expiração corrigido e roteiros preparados — 2026-10-24
 
 - Primeiro código operacional enviado em1ec68b32d896fd9234e174b164b7cb98d0d464eb, CI40118304144 SUCCESS nas jobsLinux/Windows (preflightPS7 nativo). Não confundir esseCI com a correção posterior abaixo.

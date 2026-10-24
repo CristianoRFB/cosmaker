@@ -9,13 +9,14 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const required = ['firestore.rules', 'firestore.indexes.json', 'storage.rules', 'firebase.json', 'package.json', 'package-lock.json', 'functions/package.json', 'functions/package-lock.json', 'next.config.mjs', 'scripts/operations/preflight.ps1'];
 export async function hashArtifacts(base, paths) {
+  base = await realpath(base); // Normalize Windows short temp paths before containment checks.
   const result = [];
   for (const path of [...new Set(paths)].sort()) {
     assert(path && !isAbsolute(path) && !/^[A-Za-z]:/.test(path) && !path.split(/[\\/]/).includes('..'), 'Caminho de artefato deve ser relativo e seguro.');
     const absolute = resolve(base, path);
     assert(!relative(base, absolute).startsWith('..') && !relative(base, absolute).startsWith(sep), 'Artefato fora do checkout.');
     assert.equal(await realpath(absolute), absolute, 'Symlink em caminho de artefato recusado.');
-    assert(!/(^|[\\/])\.env(?:[.\\/]|$)|(^|[\\/])\.local[\\/]/.test(path), 'Segredos/dados privados nunca entram no manifesto.');
+    assert(!/(^|[\\/])\.env(?:[.\\/]|$)|(^|[\\/])\.local[\\/]/i.test(path), 'Segredos/dados privados nunca entram no manifesto.');
     const stat = await lstat(absolute); assert(stat.isFile() && !stat.isSymbolicLink(), 'Somente artefatos regulares.');
     const hash = createHash('sha256'); for await (const chunk of createReadStream(absolute)) hash.update(chunk);
     result.push({ path: path.split(sep).join('/'), bytes: stat.size, sha256: hash.digest('hex') });
