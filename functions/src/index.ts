@@ -52,3 +52,5 @@ export { uploadProductionPhotoBytes } from './orders/production-photo-upload';
 export { uploadPublicQuoteReferenceBytes } from './public/quote-reference-upload';
 
 export { downloadLegacyAtelierFileBytes } from './orders/legacy-file-bytes';
+
+export { listClientOrderPayments, getClientPayment } from './orders/client-payments';

@@ -1,8 +1,4 @@
-export default function DetalheDoPagamento() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Detalhe do pagamento</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Tela estrutural inicial do Cosmaker OS.</p>
-    </main>
-  );
-}
+'use client';
+import { useParams } from 'next/navigation';
+import { ClientPayments } from '@/components/payments/client-payments';
+export default function DetalheDoPagamento() { return <ClientPayments paymentId={useParams<{ paymentId: string }>().paymentId} />; }

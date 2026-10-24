@@ -27,16 +27,18 @@ export function useClientOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [loadedUid, setLoadedUid] = useState('');
   useEffect(() => {
     let active = true;
-    if (!user?.email || firebaseUser?.emailVerified !== true) { setOrders([]); setLoading(false); return; }
+    setOrders([]); setLoadedUid(''); setError('');
+    if (!user?.email || !firebaseUser?.uid || firebaseUser.emailVerified !== true) { setOrders([]); setLoading(false); return; }
     setLoading(true); setError('');
-    listClientOrders(user.email).then((result) => { if (active) setOrders(result); })
+    listClientOrders(user.email).then((result) => { if (active) { setOrders(result); setLoadedUid(firebaseUser.uid); } })
       .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : 'Não foi possível carregar os pedidos.'); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [user?.email, firebaseUser?.emailVerified]);
-  return { orders, loading, error };
+  }, [user?.email, firebaseUser?.uid, firebaseUser?.emailVerified]);
+  return { orders: loadedUid === firebaseUser?.uid ? orders : [], loading, error };
 }
 
 export function useOrderDetail(atelierId: string, orderId: string, viewer: 'atelier' | 'client' = 'atelier') {

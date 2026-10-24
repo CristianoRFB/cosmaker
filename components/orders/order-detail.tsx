@@ -33,6 +33,7 @@ export function OrderDetail({ record, backHref, clientView = false, onRefresh }:
       <div className="border-t border-violet-100 pt-3"><p className="text-xs text-violet-700">Saldo registrado</p><p className="mt-1 font-semibold text-slate-800">{formatOrderMoney(order.amountRemaining ?? order.approvedQuoteSnapshot.total)}</p></div>
     </div></CardContent></Card>
 
+    {clientView ? <Link className="inline-flex min-h-11 items-center font-semibold text-violet-700 underline" href={`/cliente/pagamentos?atelierId=${encodeURIComponent(order.atelierId)}&orderId=${encodeURIComponent(order.id)}`}>Ver registros de pagamento deste pedido</Link> : null}
     {!clientView && onRefresh ? <OrderDepositConfirmation record={record} reload={onRefresh} /> : null}
     <Link className="inline-flex min-h-11 items-center text-sm font-semibold text-violet-700" href={clientView ? `/cliente/mensagens/${encodeURIComponent(order.id)}?atelierId=${encodeURIComponent(order.atelierId)}` : `/atelier/mensagens?pedidoId=${encodeURIComponent(order.id)}`}>Conversar sobre este pedido →</Link>
     {!clientView ? <Link className="text-sm font-semibold text-violet-700" href={`/atelier/pedidos/${encodeURIComponent(order.id)}/historico`}>Consultar histórico completo do pedido</Link> : null}

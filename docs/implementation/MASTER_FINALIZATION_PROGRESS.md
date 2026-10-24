@@ -1,5 +1,15 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL IV — portal cliente conectado WIP — 2026-10-24
+
+- Segurança de upload/legado preservada no remoto `9acde8c52f2fce156fbae6848d5570da6c054af3`, com gates locais descritos abaixo.
+- IMPLEMENTADO, ainda sem aceite: Home consulta pedidos/propostas/notificações/conversas reais, estados por recurso, atualização e links para ações. Perfil salva somente name/phone/updatedAt no UID autenticado; e-mail/autoridade/tenant/CRM/histórico preservados, feedback por toast e refresh do perfil.
+- Pagamentos lista/detalhe ligados a callables novos com sessão verificada/revogação Auth, perfil cliente/tenant ativos, UID e CRM prioritários, projeção de centavos/status/tipo/método/datas, paginação50+1 e saldo derivado do acordo/recebimentos existentes. Sem gateway ou referências/atores internos. Históricos compensados são exibidos e valores inconsistentes geram falha explícita.
+- Read raw de payments de pedido fechado para clientes; staff financeiro mantém permissão. Detalhe cliente deixou de consultar pagamentos não renderizados e passa a abrir a tela canônica. Hook de pedidos limpa respostas e inclui UID na chave de sessão para impedir histórico de conta anterior com mesmo e-mail.
+- Primeiro backend **2 PASS/1 FAIL por timeout padrão de 5s** durante múltiplas chamadas/paginação. Timeout ajustado ao padrão de integração60s, não é aceite. Negativos atuais incluem perfil/tenant/CRM/e-mail reutilizado, payload, identidade não verificada e consistência monetária; nova verificação de conta Auth desabilitada ainda precisa execução.
+- Functions/TypeScript iniciais verdes; build de interface em fechamento. Rules alteradas e E2E portal **AINDA NÃO APROVADOS**. F3/F5/F6 seguem parciais; formal10/16; sem percentual funcional calculado nem prontidão comercial.
+- Próximo gate: backend pagamentos final, Rules negativas, E2E Home/Perfil/Pagamentos em320/375/768/1440 incluindo persistência e acesso negado; depois auditoria objetiva de rotas restantes e F6.
+
 ## GOAL IV — upload público e legado Storage testados localmente — 2026-10-24
 
 - Checkpoint inicial WIP enviado: `3a3137018f00a7eb2de206ab072900179390ae5c`. Transporte de produção anterior preservado. Implementação/contratos em [PUBLIC_REFERENCE_TRANSFER.md](PUBLIC_REFERENCE_TRANSFER.md).

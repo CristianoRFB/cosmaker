@@ -56,7 +56,7 @@ export async function getOrder(atelierId: string, orderId: string, viewer: 'atel
       ? query(collection(orderRef, 'photos'), where('visibleToClient', '==', true), where('uploadStatus', '==', 'ready'), orderBy('createdAt', 'asc'))
       : query(collection(orderRef, 'photos'), orderBy('createdAt', 'asc'))),
     getDocs(query(collection(orderRef, 'approvals'), orderBy('requestedAt', 'asc'))),
-    includePayments ? getDocs(query(collection(orderRef, 'payments'), orderBy('createdAt', 'asc'))) : Promise.resolve(null),
+    includePayments && viewer !== 'client' ? getDocs(query(collection(orderRef, 'payments'), orderBy('createdAt', 'asc'))) : Promise.resolve(null),
   ]);
   const productionPhotos = photoSnapshots.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data(), downloadUrl: null }) as import('@/types/production').ProductionPhoto);
   return {

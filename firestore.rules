@@ -301,8 +301,7 @@ service cloud.firestore {
               || hasAtelierPermission(atelierId, 'orders:read')
               || (isOrderClient(atelierId, orderId) && resource.data.visibleToClient == true && resource.data.uploadStatus == 'ready'))
             && (subcollection != 'payments'
-              || hasAtelierPermission(atelierId, 'finance:read')
-              || isOrderClient(atelierId, orderId));
+              || hasAtelierPermission(atelierId, 'finance:read'));
           allow create, update, delete: if false;
           match /{nestedCollection}/{nestedId} {
             allow read: if canReadOrder(atelierId, orderId)

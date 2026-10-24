@@ -231,6 +231,19 @@ describe('Firestore and Storage tenant rules', () => {
     await assertFails(getDoc(doc(customer, 'ateliers/atelier-a/orders/order-a')));
   });
 
+  it('keeps raw client payment records private while finance staff retains authorized reads', async () => {
+    const root = 'ateliers/atelier-a/orders/order-a/payments';
+    for (const context of [environment.unauthenticatedContext(), environment.authenticatedContext('client-a', { email: 'client@example.com', email_verified: true }), environment.authenticatedContext('client-b', { email: 'other@example.com', email_verified: true }), environment.authenticatedContext('member-b', { email_verified: true })]) {
+      const db = context.firestore();
+      await assertFails(getDoc(doc(db, `${root}/deposit`)));
+      await assertFails(getDocs(collection(db, root)));
+      await assertFails(setDoc(doc(db, `${root}/forged`), { status: 'paid', amount: 1 }));
+    }
+    const owner = environment.authenticatedContext('member-a', { email_verified: true }).firestore();
+    await assertSucceeds(getDoc(doc(owner, `${root}/deposit`)));
+    await assertFails(updateDoc(doc(owner, `${root}/deposit`), { amount: 1 }));
+  });
+
   it('rejects a recycled email and conflicting UID links when reading an order and its private metadata', async () => {
     await environment.withSecurityRulesDisabled(async (context) => {
       await updateDoc(doc(context.firestore(), 'ateliers/atelier-a/orders/order-a'), { clientUserId: 'client-a', email: 'reused@example.com' });
