@@ -1,5 +1,15 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL IV — Home, Perfil e Pagamentos do cliente testados localmente — 2026-10-24
+
+- Implementação enviada em `18f41027e7cb2005e0ec8e9ac78a691da9dd95a1`; contrato/evidências em [CLIENT_PORTAL.md](CLIENT_PORTAL.md). Home real por domínio, perfil restrito/persistente e pagamentos lista/detalhe por sessão/UID/tenant, sem gateway ou dados internos. Hook de pedidos não reutiliza resultados entre UIDs com mesmo e-mail.
+- Backend final pagamentos **3/3 PASS**,10,81s (`/tmp/cosmaker-client-payments-final.log`): centavos/saldos reais, compensação, paginação52registros, conta Auth desabilitada/token em cache, verificação, UID/CRM/e-mail reutilizado, tenant/perfil revogados, entrada/cursor inválidos e dinheiro inconsistente.
+- Rules atuais **33/33 PASS**,35,61s (`/tmp/cosmaker-portal-rules.log`): leitura raw de pagamentos negada ao próprio cliente, outro cliente/tenant/visitante; staff financeiro autorizado mantém leitura e não escreve diretamente. Demais negações preservadas.
+- E2E portal **1/1 PASS**,18,1s (`/tmp/cosmaker-portal-acceptance-e2e.log`), Home/Perfil/Pagamentos em320/375/768/1440, detalhes, persistência de nome/telefone e identidade/createdAt preservados, falha temporária/retry, nenhum registro, cliente alheio e reuso de e-mail. Capturas Pagamentos320 e Home1440 inspecionadas. Ensaios anteriores falharam por fixture de proposta sem custos obrigatórios e seletor alert que também encontrava o anúncio de rota Next; corrigidos sem mudar o contrato.
+- Unitários atuais **120/120 PASS**,23arquivos26,67s; lint/TypeScript/Functions/Next81 PASS. CI remoto deve ser registrado para o HEAD deste checkpoint, não inferido do anterior.
+- F3 portal essencial agora testado; **F3 global parcial** por rotas secundárias e paginação antiga de pedidos. F2 jornada6/6atual preservada, global pendente; F5/F6 parciais por dependências/revogação legada real/trigger. Formal permanece10/16 até critérios inteiros comprovados. Inventário funcional verificável ainda deve ser calculado separadamente.
+- Próximas ações locais: corrigir paginação de pedidos; encerrar rotas estruturais por contratos existentes; atualizar dependências com patches oficiais/compatíveis e repetir regressões afetadas/recuperação sintética. Auditoria24out encontrou body-parser alto novo em Functions, além dos críticos dev de Vitest/tinypool; zero anterior é histórico.
+
 ## GOAL IV — portal cliente conectado WIP — 2026-10-24
 
 - Segurança de upload/legado preservada no remoto `9acde8c52f2fce156fbae6848d5570da6c054af3`, com gates locais descritos abaixo.
