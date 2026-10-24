@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start --only functions",
-    "deploy": "firebase deploy --only functions"
+    "deploy": "node ../scripts/operations/prepare-release.mjs --layer=functions"
   },
   "dependencies": {
     "firebase-admin": "^14.5.0",

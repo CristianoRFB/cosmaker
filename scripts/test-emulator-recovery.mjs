@@ -3,6 +3,7 @@ import { createServer } from 'node:net';
 import { randomBytes } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { sealSyntheticSnapshot, verifySyntheticSnapshot } from './operations/synthetic-snapshot.mjs';
 const nonce = randomBytes(4).toString('hex');
 const directory = resolve('.firebase', `recovery-${nonce}`); await mkdir(directory, { recursive: true });
 const used = new Set();
@@ -18,6 +19,11 @@ for (const name of ['auth', 'firestore', 'storage', 'hub', 'logging']) config.em
 const configPath = resolve(directory, 'firebase.json'); await writeFile(configPath, JSON.stringify(config));
 const exportPath = resolve(directory, 'export');
 for (const phase of ['write', 'verify']) {
+  if (phase === 'verify') {
+    await sealSyntheticSnapshot(exportPath);
+    await verifySyntheticSnapshot(exportPath);
+    console.log('SNAPSHOT PASS: inventário completo Auth/Firestore/Storage e checksums antes do import.');
+  }
   const args = ['scripts/firebase-local-cli.mjs', 'emulators:exec', '--project', 'demo-cosmaker', '--config', configPath, '--only', 'auth,firestore,storage', ...(phase === 'verify' ? ['--import', exportPath] : []), `"${process.execPath}" scripts/emulator-recovery-fixture.mjs`];
   const code = await new Promise((resolveExit, reject) => {
     const child = spawn(process.execPath, args, { stdio: 'inherit', env: { ...process.env, COSMAKER_RECOVERY_RUN: nonce, COSMAKER_RECOVERY_PHASE: phase, COSMAKER_RECOVERY_CONFIG: configPath, COSMAKER_RECOVERY_EXPORT: exportPath } });

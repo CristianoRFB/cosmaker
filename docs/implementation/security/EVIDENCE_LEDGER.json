@@ -442,6 +442,18 @@
         "tests/e2e/google-emulator.spec.ts"
       ],
       "detail": "Apis.google.com/js/api.js recusado pelo proxy antes do popup; não PASS. Outro cenário no lote falhou por seletor do toast, repetido emteam."
+    },
+    "goal-v-operations": {
+      "outcome": "PASS sintético",
+      "logName": "cosmaker-goal-v-operations-final.log",
+      "logSha256": "37a3a1274f84f418145ad583b453fc3fe75f6e8c17ebe6285bce4e56f4ef5cc6",
+      "detail": "10/10 testes operacionais, incluindo PowerShell7.6.8 real no Linux com fixtures sintéticas, identidades/projetos/custos/checkout/serviços/bucket alheio recusados, dry-run sem SDK, adulteração/UIDs/checksums e nenhuma execução remota."
+    },
+    "goal-v-recovery": {
+      "outcome": "PASS sintético",
+      "logName": "cosmaker-goal-v-recovery.log",
+      "logSha256": "c4389b4dcdfbc0c35e917855c00607122df15857308649b441fc39969ad628a4",
+      "detail": "Export/import em instâncias novas PASS; manifesto completo/hash antes do import, UID inventory/claims preservados, manutenção --apply somente Emulator provada (admin sintético e slug não publicado), centavos/histórico/bytes e ACL A/B/raw após restore. Sem Functions/restore real."
     }
   }
 }

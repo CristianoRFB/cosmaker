@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/CristianoRFB/cosmaker.git",
+  "branch": "codex/cosmaker-master-finalizacao",
+  "projectId": null,
+  "projectNumber": null,
+  "storageBucket": null,
+  "region": "us-central1",
+  "operatorEmail": null,
+  "appOrigin": null,
+  "hostingMode": "UNDECIDED",
+  "costPolicy": "ZERO_BILLING",
+  "billingAuthorizationReference": null,
+  "requiredServices": [
+    "identitytoolkit.googleapis.com",
+    "firestore.googleapis.com",
+    "storage.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "run.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "eventarc.googleapis.com",
+    "pubsub.googleapis.com",
+    "cloudscheduler.googleapis.com"
+  ]
+}

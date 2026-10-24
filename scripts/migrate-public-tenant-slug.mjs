@@ -1,4 +1,9 @@
 import { createRequire } from 'node:module';
+import { maintenanceIntent } from './operations/maintenance-safety.mjs';
+
+const intendedProject = process.env.FIREBASE_ADMIN_PROJECT_ID?.trim() || (process.env.FIRESTORE_EMULATOR_HOST ? 'demo-cosmaker' : '');
+const intent = maintenanceIntent({ operation: 'migrate-public-tenant-slug', projectId: intendedProject, services: ['FIRESTORE_EMULATOR_HOST'] });
+if (intent.mode === 'DRY_RUN') { console.log(JSON.stringify(intent)); process.exit(0); }
 
 const requireFromFunctions = createRequire(new URL('../functions/package.json', import.meta.url));
 const { initializeApp, getApps } = requireFromFunctions('firebase-admin/app');
