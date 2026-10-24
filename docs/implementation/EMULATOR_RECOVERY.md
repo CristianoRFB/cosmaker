@@ -1,5 +1,7 @@
 # Recuperação ensaiada somente com emuladores
 
+GOAL V: harness também sela inventário/checksums Auth/Firestore/Storage antes do import e verifica contagem/conjunto de UIDs por hash após restore. Manifesto exclusivo recusa corrupção/ausências/extras/symlinks/UIDs duplicados. Teste completo aprovado emrecovery-b16e1619, incluindo admin/slug sintéticos pelos novos guards --apply; cliente normal continua sujeito à ACL. Roteiro real e limites de gerações GCS/tokens/RPO/RTO/falha parcial em [BACKUP_RESTORE](../operations/pre-homologation/BACKUP_RESTORE.md). Não reutilizar harness para dados reais.
+
 Com o runtime interativo encerrado, execute:
 
 ```bash

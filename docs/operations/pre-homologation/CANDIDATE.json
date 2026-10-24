@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "candidate": "0.2.0-rc.goal-v.1",
+  "sourceCommit": "9ec5c66cdd369b287a75b1f8f43ca660855dc25b",
+  "sourceTree": "d7310750add3d0d368bffaa224cfb164b387916d",
+  "recordedAt": "2026-10-24T18:25:05.007464+00:00",
+  "localBuild": {
+    "mode": "EMULATOR_ONLY_NOT_DEPLOYABLE",
+    "buildId": "yngCg_khRX3g1gx14G4R6",
+    "artifactCount": 823,
+    "manifestSha256": "c5f3a8430a8cc0fe0c577d09de0a1a4b885b465ca5eabafe39878d2e03a24584",
+    "privateManifestPath": ".local/goal-v-final/manifest.json",
+    "verified": true,
+    "deploymentExecuted": false
+  },
+  "sourceChecksums": {
+    "firestore.rules": "ed1856540718965303ab10d526449b4cf82c0bf5415f1f86517996b202d99279",
+    "storage.rules": "448d5566d8818dcb7f61f175eca95a39be70034f83c844d4dfbd0a8d312edfb9",
+    "firestore.indexes.json": "59542643201b81fb9d7165a70cb62c8b14a76fa8800877465cd9adc186b275fa",
+    "package-lock.json": "32e669d9b3e609f82ed9d722daffc63dde72dc24d746158b73282977bb796cb6",
+    "functions/package-lock.json": "e28ae5e2f8223d2cb863573fd8d1e58253c223d0daf9cb45af160e7e7ef1f70d",
+    "firebase.json": "2eba73dfeabce474a21841f3705502863b784766410e05d24b89bed58d8aad21"
+  },
+  "ciCode": {
+    "runId": 40120417689,
+    "headSha": "9ec5c66cdd369b287a75b1f8f43ca660855dc25b",
+    "conclusion": "success",
+    "url": "https://github.com/CristianoRFB/cosmaker/actions/runs/40120417689",
+    "jobs": [
+      "Linux verify",
+      "Windows operational tools"
+    ],
+    "unitTests": 124,
+    "operationalTestsPerOS": 11
+  },
+  "functional": {
+    "passed": 182,
+    "applicable": 184,
+    "percent": 98.91,
+    "operations": 47,
+    "methodChanged": false
+  },
+  "formal": {
+    "passed": 10,
+    "total": 16,
+    "percent": 62.5
+  },
+  "localEngineering": "READY_FOR_REAL_HOMOLOGATION",
+  "realHomologation": "PENDING_NOT_RUN",
+  "commercialReadiness": "NOT_READY",
+  "budgetPolicy": "ZERO_BILLING_BLOCKS_FULL_FIREBASE_DEPLOYMENT",
+  "productionDeploy": "NOT_RUN",
+  "migrationsReal": "NOT_RUN"
+}

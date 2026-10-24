@@ -25,6 +25,6 @@ Fontes oficiais: [Firebase Pricing](https://firebase.google.com/pricing), [mudan
 
 ## Upstream
 
-CLI instalado/latest consultado15.34.1; dispatcher PubSub só aceita event/cloudevent e rejeita http. Nenhuma correção oficial compatível identificada; transporte continua bloqueado, sem reensaio idêntico. Storage8.4.0/teeny-request11.1.1 continuam latest consultados, sem patch para o aviso conhecido. Auditoria anterior preservada: prod raiz/Functions0, root completo5moderados de ferramentas; não foi feito novo audit fix. [Triagem](../../implementation/DEPENDENCY_SECURITY_REVIEW.md).
+CLI instalado/latest consultado15.34.1; dispatcher PubSub só aceita event/cloudevent e rejeita http. Nenhuma correção oficial compatível identificada; transporte continua bloqueado, sem reensaio idêntico. Storage8.4.0/teeny-request11.1.1 continuam latest consultados, sem patch para o aviso conhecido. Auditoria final GOAL V somente leitura confirmou prod raiz/Functions0 e root completo5moderados de ferramentas/0altos/críticos; não foi feito audit fix. [Triagem](../../implementation/DEPENDENCY_SECURITY_REVIEW.md).
 
 Google: política efetiva segue sem apis.google.com; [evidência](../../implementation/security/GOOGLE_EMULATOR_RETRY_2026-10-24.json). Não repetir antes da aplicação da permissão.

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-24T18:27:54.496558+00:00",
+  "projectUsed": "demo-cosmaker",
+  "syntheticOnly": true,
+  "codeHead": "9ec5c66cdd369b287a75b1f8f43ca660855dc25b",
+  "ci": "https://github.com/CristianoRFB/cosmaker/actions/runs/40120417689",
+  "tests": {
+    "unitCI": {
+      "passed": 124,
+      "failed": 0
+    },
+    "operationalLinuxCI": {
+      "passed": 11,
+      "failed": 0
+    },
+    "operationalWindowsCI": {
+      "passed": 11,
+      "failed": 0
+    },
+    "recovery": "PASS Auth/Firestore/Storage, checksums, UIDs/claims, ACL",
+    "schedulerLogic": "PASS HTTP: pagination after100invalid rows, concurrent invocations and replay",
+    "schedulerTransport": "BLOCKED_EXTERNAMENTE_NOT_RETESTED",
+    "googlePopup": "BLOCKED_EXTERNAMENTE_NOT_RETESTED",
+    "sdk104": "PREVIOUS_VALID_EVIDENCE_REUSED_NO_REEXECUTION"
+  },
+  "audits": {
+    "root": {
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 5,
+        "high": 0,
+        "critical": 0,
+        "total": 5
+      },
+      "sha256": "599721ab4d1a89a836f4d42e861d4c5487d2917fae2ecc0f6e2083325738adc6"
+    },
+    "root-prod": {
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "sha256": "694b1a5d11505e51dac7a4d3c4c170a15140ddd1d904fdb2173a5124ab026b4a"
+    },
+    "functions-prod": {
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "sha256": "d1249ae7ef22b17797fc030ddd793d8edbc02023c51f0df9fbd83d733a8f65ed"
+    }
+  },
+  "realFirebase": "NOT_RUN",
+  "realDeploy": "NOT_RUN",
+  "billingChanges": "NOT_RUN",
+  "commercialReadiness": "NOT_READY"
+}

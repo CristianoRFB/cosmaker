@@ -2,7 +2,7 @@
 
 Não é versão publicada nem mudança da documentação canônica v0.2.0. package.json mantém sua versão histórica; o identificador acima organiza o pacote operacional. **Commercial readiness: NOT_READY. Homologação real: NOT_RUN.** Jurídico/termos/privacidade continuam preliminares, sem empresa/CNPJ/responsável inventados.
 
-Código-base e hashes finais são registrados no arquivo CANDIDATE.json deste diretório; manifesto completo de artefatos fica privado em .local/ e é regenerado por prepare-release.mjs. Bundle local de Emulator é não publicável. A futura candidata real precisa novo build com configuração real, manifesto e aceite próprios; não reutilizar buildId/hashes de outra compilação.
+Código-base e hashes finais são registrados no [CANDIDATE.json](CANDIDATE.json) deste diretório; manifesto completo de artefatos fica privado em .local/ e é regenerado por prepare-release.mjs. Bundle local de Emulator é não publicável. A futura candidata real precisa novo build com configuração real, manifesto e aceite próprios; não reutilizar buildId/hashes de outra compilação.
 
 ## Escopo preservado
 
@@ -19,7 +19,7 @@ Global Standard v01/preços/anuais/implantação/trial manual/CORE/entitlements 
 
 Ambiente: Node22/Java21/Next15, locks raiz/Functions, CLI15.34.1; variáveis públicas mínimas em web.env.example e destino privado target.example.json. Runtime usa ADC/FIREBASE_CONFIG; não requer chaves privadas versionadas. Region us-central1 atual; buckets não inferidos por sufixo. O host dinâmico ainda depende de decisão/custo externos.
 
-Resultados novos detalhados no [handoff](HANDOFF.md) e no [progresso](../../implementation/MASTER_FINALIZATION_PROGRESS.md); falhas vermelhas e ensaios intermediários preservados.104cenários SDK/Rules/UX prévios só reutilizados onde fonte/configuração relevante não mudou. Novos guards/recovery e scheduler têm evidência própria. CI final deve incluir Linux, Windows, build,124unitários, testes operacionais e verificador do inventário; CI não executa automaticamente104integrações ou homologação real.
+Resultados novos detalhados no [handoff](HANDOFF.md) e no [progresso](../../implementation/MASTER_FINALIZATION_PROGRESS.md); falhas vermelhas e ensaios intermediários preservados.104cenários SDK/Rules/UX prévios só reutilizados onde fonte/configuração relevante não mudou. Novos guards/recovery e scheduler têm evidência própria. CI do código9ec5c66 aprovou Linux/Windows, builds,124unitários,11testes operacionais em cadaOS e verificador do inventário; CI não executa automaticamente104integrações ou homologação real.
 
 ## Riscos e gates restantes
 

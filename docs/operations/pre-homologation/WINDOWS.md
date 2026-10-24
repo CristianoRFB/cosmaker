@@ -38,7 +38,7 @@ Copy-Item .\docs\operations\pre-homologation\target.example.json .\.local\target
 notepad .\.local\target.json
 ```
 
-Preencher somente a cópia privada. Selecionar host; não mudar costPolicy para passar no diagnóstico sem decisão autorizada. Referência de autorização não habilita billing. Não remover requiredServices. Após autorização para autenticar, conferir contas; login apenas se necessário:
+Preencher somente a cópia privada. Selecionar host; não mudar costPolicy para passar no diagnóstico sem decisão autorizada. Referência de autorização não habilita billing. Não remover requiredServices. Somente após decisão externa autorizando consumo, costPolicy pode ser USAGE_BASED_EXPLICITLY_AUTHORIZED e billingAuthorizationReference deve identificar essa decisão (ao menos12caracteres sem espaços, não é segredo). Isso não ativa billing. Após autorização para autenticar, conferir contas; login apenas se necessário:
 
 ```powershell
 gcloud auth list --filter='status:ACTIVE'

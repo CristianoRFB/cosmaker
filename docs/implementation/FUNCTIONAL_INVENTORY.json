@@ -26,7 +26,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -76,7 +76,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -114,7 +114,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -152,7 +152,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -190,7 +190,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -228,7 +228,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -266,7 +266,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -304,7 +304,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -342,7 +342,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -380,7 +380,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -418,7 +418,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -456,7 +456,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -494,7 +494,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -532,7 +532,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix",
             "EVIDENCE_LEDGER.json#goal-v-scheduler-build"
           ]
@@ -572,7 +572,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -610,7 +610,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -648,7 +648,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -689,7 +689,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -727,7 +727,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -765,7 +765,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -803,7 +803,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -841,7 +841,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -879,7 +879,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -921,7 +921,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -963,7 +963,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1001,7 +1001,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1039,7 +1039,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1077,7 +1077,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1115,7 +1115,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1153,7 +1153,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1191,7 +1191,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1229,7 +1229,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1267,7 +1267,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1305,7 +1305,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1343,7 +1343,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1381,7 +1381,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1419,7 +1419,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1458,7 +1458,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1496,7 +1496,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1534,7 +1534,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1572,7 +1572,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1613,7 +1613,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1653,7 +1653,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1694,7 +1694,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix"
           ]
         },
@@ -1732,7 +1732,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix",
             "EVIDENCE_LEDGER.json#goal-v-operations"
           ]
@@ -1773,7 +1773,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix",
             "EVIDENCE_LEDGER.json#goal-v-recovery"
           ]
@@ -1812,7 +1812,7 @@
         "implementation": {
           "state": "PASS",
           "evidence": [
-            "EVIDENCE_LEDGER.json#ci-code",
+            "EVIDENCE_LEDGER.json#ci-code-goal-v",
             "EVIDENCE_LEDGER.json#build-ui-fix",
             "EVIDENCE_LEDGER.json#tokens"
           ]
@@ -1865,9 +1865,9 @@
     "total": 16,
     "percent": 62.5
   },
-  "commercialReadiness": "NAO_HOMOLOGADO",
+  "commercialReadiness": "NOT_READY",
   "reviewedAt": "2026-10-24",
-  "codeCheckpoint": "6b4ac11f1412d33c0f7ffea8b678ed26d5ac2d9c",
+  "codeCheckpoint": "9ec5c66cdd369b287a75b1f8f43ca660855dc25b",
   "evidenceContext": {
     "app/(auth)/cadastro/page.tsx": "703e0e16044da714896eb2cc34f5a21175f52d7375eb88edc238d691a3b3a504",
     "app/(auth)/convite/page.tsx": "30a4d04a99bbe342a40ad9e9cfda632e01d74244f0f89a4b1552fe2609f0ab17",

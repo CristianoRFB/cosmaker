@@ -1,6 +1,6 @@
 # GOAL MASTER V — handoff operacional
 
-HEAD inicial8ad4a981f4d97f0a868ada10f0a1e3fa934c1385. Código operacional publicado inicialmente em1ec68b32d896fd9234e174b164b7cb98d0d464eb; CI [40118304144](https://github.com/CristianoRFB/cosmaker/actions/runs/40118304144) PASS Linux e Windows, antes da correção posterior do scheduler. HEAD final/candidata/evidências finais no CANDIDATE.json e topo do progresso. Repositório CristianoRFB/cosmaker, branch codex/cosmaker-master-finalizacao. Sem reset/force/merge/main ou operação Firebase real.
+HEAD inicial8ad4a981f4d97f0a868ada10f0a1e3fa934c1385. Código operacional publicado inicialmente em1ec68b32d896fd9234e174b164b7cb98d0d464eb; CI [40118304144](https://github.com/CristianoRFB/cosmaker/actions/runs/40118304144) PASS Linux e Windows, antes da correção posterior do scheduler. Código final9ec5c66cdd369b287a75b1f8f43ca660855dc25b, CI40120417689 PASS com124unitários e11operacionais em cadaOS. Candidata/evidências em [CANDIDATE.json](CANDIDATE.json) e topo do progresso; checkpoint documental posterior deve recuperar HEAD/CI viafetch. Repositório CristianoRFB/cosmaker, branch codex/cosmaker-master-finalizacao. Sem reset/force/merge/main ou operação Firebase real.
 
 ## A — resolvível no Cloud
 
@@ -20,7 +20,7 @@ Contratos de Auth/Firestore/Storage/Functions/Eventarc, uploads/GCS precondition
 
 ## Indicadores e aceitação
 
-Conclusão funcional182/184=98,91%; formal10/16=62,5%; comercialNOT_READY. F1.1–F1.9/F4 aceites locais preservados; F2/F3/F5/F6 parciais, F7 blocked e F8 não aceita. Este pacote operacional não altera esses marcos ou a versão canônica. CÓDIGO_LOCAL_PRONTO_PARA_HOMOLOGAÇÃO só pode ser afirmado ao fechar os gates locais/CI documentados; HOMOLOGAÇÃO_REAL continua PENDENTE.
+Conclusão funcional182/184=98,91%; formal10/16=62,5%; comercialNOT_READY. F1.1–F1.9/F4 aceites locais preservados; F2/F3/F5/F6 parciais, F7 blocked e F8 não aceita. Este pacote operacional não altera esses marcos ou a versão canônica. **CÓDIGO LOCAL PRONTO PARA HOMOLOGAÇÃO. HOMOLOGAÇÃO REAL PENDENTE.** Nenhuma tarefa local concreta/reproduzível identificada no escopo permanece; o CI do HEAD recuperado deve ser conferido antes de operar. Este estado não garante ausência de bugs ou sucesso dos testes reais.
 
 ## Retomada exata no PC
 

@@ -47,7 +47,7 @@ $env:COSMAKER_ADMIN_EMAIL = Read-Host 'Conta administrativa existente e verifica
 $env:COSMAKER_EXPECTED_ADMIN_UID = Read-Host 'UID existente conferido no Console'
 $env:COSMAKER_CONFIRM_PLATFORM_ADMIN = $ProjectId
 $env:COSMAKER_CONFIRM_REAL_PROJECT = $ProjectId
-$env:COSMAKER_REAL_OPERATION_AUTHORIZATION = Read-Host 'Referência da autorização específica já concedida'
+$env:COSMAKER_REAL_OPERATION_AUTHORIZATION = Read-Host 'Referência da autorização: mínimo12caracteres sem espaços'
 # Exige ADC autorizado e verificado separadamente; não criar/download de chave por conveniência.
 npm run admin:provision
 # Somente após revisar o dry-run, identidade, backup e autorização:

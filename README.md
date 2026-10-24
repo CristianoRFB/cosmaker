@@ -6,6 +6,8 @@ O estado técnico mais recente, os commits e os gates reais ficam em [MASTER_FIN
 
 O [inventário funcional local](docs/implementation/FUNCTIONAL_COMPLETION.md) registra47operações, evidências e cálculo reproduzível. A [matriz dos16marcos](docs/implementation/FORMAL_ACCEPTANCE.md) mede aceite formal separadamente. Nenhum desses indicadores homologa produção ou autoriza receber dados/clientes reais. Consulte o [handoff atual](docs/implementation/GOAL_MASTER_IV_HANDOFF.md) para continuar.
 
+Próxima sessão no PC: [pacote GOAL V / Windows](docs/operations/README.md), com preflight somente leitura, custo, configuração, candidata, aceite real, backup e rollback. **Firebase completo é incompatível com ZERO_BILLING; nenhuma cobrança foi ativada.**
+
 ## Execução Linux somente local
 
 No ambiente Cloud `cosmaker`, use `bash scripts/cloud-setup.sh` na instalação e `bash scripts/cloud-start.sh` na inicialização. As entradas selecionam Node 22 automaticamente, reaproveitam os lançadores abaixo e não usam credenciais reais. Consulte a configuração publicável em [LOCAL_EMULATOR_RUNTIME.md](docs/implementation/LOCAL_EMULATOR_RUNTIME.md).

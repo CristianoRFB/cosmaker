@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "codeCheckpoint": "6b4ac11f1412d33c0f7ffea8b678ed26d5ac2d9c",
+  "codeCheckpoint": "9ec5c66cdd369b287a75b1f8f43ca660855dc25b",
   "reviewedAt": "2026-10-24",
   "scope": "Somente Emulator demo-cosmaker. Hashes preservam identidade dos logs temporários; os conteúdos brutos não são publicados. O registro é uma revisão de evidências observadas, não substitui reexecução quando código/configuração relevante muda.",
   "records": {
@@ -448,7 +448,7 @@
       "outcome": "PASS sintético",
       "logName": "cosmaker-goal-v-operations-closure.log",
       "logSha256": "db4217b76b23458fdeab152296d23d18963e19ab6296c279081f5adc5be0400f",
-      "detail": "11/11 testes operacionais finais no Linux/PowerShell7: guards/fixtures, corrupção/completude/UIDs, manifesto e parser/links de runbooks. Nenhum comando real de runbook executado. Job Windows do checkpoint anterior aprovou preflight; parser dos runbooks será validado no novoCI."
+      "detail": "11/11 testes operacionais finais no Linux/PowerShell7 e11/11 noCIWindows nativo. Guards/fixtures, corrupção/completude/UIDs, manifesto, parser/links de runbooks. Nenhum comando real de runbook executado."
     },
     "goal-v-recovery": {
       "outcome": "PASS sintético",
@@ -480,6 +480,16 @@
       "logName": "cosmaker-goal-v-scheduler-functions-build.log",
       "logSha256": "25f11d5a032a40e24aa473de50af7e0b37b3a865d6cdcb93ed0c453e392b27f7",
       "detail": "Node22, compile final da paginação; lógica HTTP concorrente tem registro próprio, transporte continua bloqueado."
+    },
+    "ci-code-goal-v": {
+      "outcome": "SUCCESS",
+      "url": "https://github.com/CristianoRFB/cosmaker/actions/runs/40120417689",
+      "headSha": "9ec5c66cdd369b287a75b1f8f43ca660855dc25b",
+      "jobs": {
+        "Linux": 120950542389,
+        "Windows": 120950542124
+      },
+      "detail": "Logs confirmados:124/124 unitários/25arquivos,11/11 testes operacionais Linux e11/11 Windows nativos (inclui preflightPS7 e parser dos comandos). Instalação/buildFunctions/Next e inventário PASS. Não é homologação Firebase real ou reexecução104SDK."
     }
   }
 }

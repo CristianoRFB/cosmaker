@@ -1,6 +1,6 @@
 # Conclusão funcional local — Cosmaker OS
 
-Base de código: 6b4ac11f1412d33c0f7ffea8b678ed26d5ac2d9c. Revisão: 2026-10-24.
+Base de código: 9ec5c66cdd369b287a75b1f8f43ca660855dc25b. Revisão: 2026-10-24.
 
 **182/184 unidades = 98.91%**. São 47 operações congeladas antes do cálculo, com quatro critérios de peso1: implementação compilada, persistência/integração, interface exercitada e negativos de autorização/integridade. 4 critérios não aplicáveis têm justificativa no JSON e ficam fora do denominador. Cada critério comprovado conserva seu crédito mesmo quando outro está bloqueado. Não mede esforço, cobertura exaustiva ou prontidão para clientes reais.
 
@@ -92,6 +92,6 @@ I = implementação; P = persistência/integração; U = interface; N = negativo
 
 Aceite formal: **10/16 = 62.5%**, conforme [matriz dos 16 marcos](FORMAL_ACCEPTANCE.md). Não há aceite fracionário de fase.
 
-Prontidão comercial: **NAO_HOMOLOGADO**. Nenhum resultado Emulator equivale a homologação ou autorização de produção.
+Prontidão comercial: **NOT_READY**. Nenhum resultado Emulator equivale a homologação ou autorização de produção.
 
 Reproduzir/verificar: `bash scripts/cloud-run.sh node scripts/functional-inventory.mjs`. Após revisão das evidências, regenerar com `--write`. O verificador não executa testes nem converte pendências em PASS.
