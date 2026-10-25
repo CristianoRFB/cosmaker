@@ -36,12 +36,12 @@ export default {
       }
       return json({error:{status:'UNIMPLEMENTED',message:'Operação ainda não portada; sem fallback para Functions.'}},501);
     } catch(e) {
-      if(!(e instanceof Fault)) console.error('spark-proof: unexpected internal error');
+      if(!(e instanceof Fault)) console.error('spark-proof: unexpected internal error', e.name, e.message);
       return json({error:{status:(e.code||'internal').replaceAll('-','_').toUpperCase(),message:e instanceof Fault?e.message:'Falha interna.'}},e instanceof Fault?e.status:500);
     }
   },
-  async scheduled(event,env,ctx) {
+  async scheduled(event,env) {
     const config=localConfig(env),budget=new Budget();
-    ctx.waitUntil(expireQuotes(new Firestore(config,budget),event.scheduledTime));
+    await expireQuotes(new Firestore(config,budget),event.scheduledTime);
   },
 };

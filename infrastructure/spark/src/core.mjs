@@ -19,7 +19,9 @@ export class Budget {
   count = 0;
   async fetch(url, init) {
     if (++this.count > 46) fail('resource-exhausted', 'Orçamento de subrequests esgotado.', 429);
-    return fetch(url, { ...init, redirect: 'error', signal: AbortSignal.timeout(10_000) });
+    const response = await fetch(url, { ...init, redirect: 'manual', signal: AbortSignal.timeout(10_000) });
+    if (response.status >= 300 && response.status < 400) fail('unavailable', 'Redirecionamento recusado.', 503);
+    return response;
   }
 }
 export function only(value, fields) {

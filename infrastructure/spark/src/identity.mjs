@@ -16,7 +16,7 @@ function validateClaims(p, project, now = new Date()) {
     || !Number.isInteger(p.iat) || p.iat > seconds || !Number.isInteger(p.auth_time) || p.auth_time > seconds) fail('unauthenticated', 'Sessão inválida.', 401);
 }
 export function assertUserState(p, user) {
-  if (!user || user.localId !== p.sub || user.disabled === true || Number(user.validSince || 0) > p.auth_time) fail('unauthenticated', 'Sessão revogada.', 401);
+  if (!user || user.localId !== p.sub || user.disabled === true || (!Number.isSafeInteger(Number(user.validSince || 0)) || Number(user.validSince || 0) < 0 || Number(user.validSince || 0) > p.auth_time)) fail('unauthenticated', 'Sessão revogada.', 401);
   if (p.email_verified !== true || user.emailVerified !== true) fail('failed-precondition', 'Confirme seu e-mail.', 403);
 }
 export async function identity(req, config, budget) {

@@ -41,7 +41,9 @@ export class Firestore {
   }
   async get(path,transaction) {
     this.name(path);
-    const j=await this.request('/'+path+(transaction?'?transaction='+encodeURIComponent(transaction):''),undefined,'GET',true);
+    // Official batchGet body carries the transaction bytes. Emulator GET query bytes parsing is broken.
+    const response=transaction?await this.request(':batchGet',{documents:[this.name(path)],transaction}):null;
+    const j=transaction?response.find(v=>v.found)?.found:await this.request('/'+path,undefined,'GET',true);
     return j?{path,name:j.name,version:j.updateTime,data:data(j.fields||{})}:null;
   }
   write(path,value,create=false,mask) { return {update:{name:this.name(path),fields:fields(value)}, ...(mask?{updateMask:{fieldPaths:mask}}:{}), ...(create?{currentDocument:{exists:false}}:{})}; }
@@ -62,7 +64,7 @@ export class Firestore {
   }
   async query(query) { return (await this.request(':runQuery',{structuredQuery:query})).filter(r=>r.document).map(r=>({name:r.document.name,data:data(r.document.fields||{})})); }
 }
-export function permission(member, scope) { return member?.active===true && (['owner','admin'].includes(member.role)||member.permissions?.includes(scope)); }
+export function permission(member, scope) { return member?.active===true && (['owner','admin'].includes(member.role)||(Array.isArray(member.permissions)&&member.permissions.includes(scope))); }
 export async function actor(db,uid,scope,tx=db) {
   const profile=(await tx.get(`users/${uid}`))?.data;
   const tenant=profile?.atelierId;

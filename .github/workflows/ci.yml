@@ -16,6 +16,15 @@ jobs:
       - run: npm test -- --run
       - run: npm run test:operations
       - run: npm run docs:functional
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci --prefix infrastructure/spark
+      - run: npm --prefix infrastructure/spark test
+      - run: node infrastructure/spark/run-integration.mjs
+        env:
+          WRANGLER_SEND_METRICS: 'false'
   windows-preflight:
     runs-on: windows-latest
     steps:
@@ -26,3 +35,9 @@ jobs:
       - name: Validate operational tools and PowerShell runbooks with synthetic fixtures only
         shell: pwsh
         run: npm run test:operations
+      - run: npm ci --prefix infrastructure/spark
+      - name: Validate isolated Workers guards and runtime on Windows
+        shell: pwsh
+        run: npm --prefix infrastructure/spark test
+        env:
+          WRANGLER_SEND_METRICS: 'false'
