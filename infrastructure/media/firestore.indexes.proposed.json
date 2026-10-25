@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "mediaUploadFactsV7",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {"fieldPath": "atelierId", "order": "ASCENDING"},
+        {"fieldPath": "recordedAt", "order": "ASCENDING"}
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "mediaAssetsV7",
+      "fieldPath": "atelierId",
+      "indexes": [{"order": "ASCENDING", "queryScope": "COLLECTION_GROUP"}]
+    }
+  ]
+}

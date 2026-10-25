@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "scope": "GOAL VII, seven cumulative gates supplied in the mandate",
+  "denominator": 7,
+  "accepted": 0,
+  "partial": 6,
+  "blocked": 1,
+  "method": "Each gate needs all its guarantees in the proposed no-billing runtime, including applicable hosted evidence. Local scenario counts are separate. Partial work is recorded, not credited as complete equivalence.",
+  "gates": [
+    {
+      "id": 1,
+      "name": "Private exact 20 MiB bytes",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "RTDB Emulator and official local Storage OSS, full SHA-256, interrupted TUS resume, original download; UI RTDB.",
+      "remaining": "Full verification/read path within Workers Free CPU/subrequests; hosted gateway/auth and token semantics."
+    },
+    {
+      "id": 2,
+      "name": "Tenant A/B and negative RBAC",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "Canonical UID/member/order checks, client sharing, revocation; provider raw deny; official bucket default-deny roles.",
+      "remaining": "Hosted Firebase JWT or privileged broker identity, minimal secrets and end-to-end revocation/cache. Default-deny OSS RLS does not prove Firestore membership visible to Supabase."
+    },
+    {
+      "id": 3,
+      "name": "No-billing viable capacity",
+      "state": "BLOCKED",
+      "evidence": "Official Free/Spark limits documented; 21 tenants/42 reservations,28 admitted14 denied, no deletion.",
+      "remaining": "1GB global saturates before37days even1tenant at2x20MiB/day. Account eligibility/card/billing not verified; cannot promise unchanged growing multi-tenant operation. No paid upgrade applied."
+    },
+    {
+      "id": 4,
+      "name": "Cross-store crash and restore",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "RTDB20MiB+metadata snapshot/restore interrupted/resumed, SHA, preserved dates, orphan reservation/positive absence, tombstone, API delete recovery.",
+      "remaining": "Native Supabase restore, pending/orphan collection protocol, hosted inventory/accounting and independent operational backup/restore. No automatic abandoned upload collector accepted."
+    },
+    {
+      "id": 5,
+      "name": "Auditable safe retention",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "Classes, UTC windows, hysteresis, no shortening, canonical closures, holds/legacy, all-recipient internal notices, leases,110invalid records and revision fence. DRY_RUN only.",
+      "remaining": "Snapshot do TXT é fonte autorizada; arquivo77 ausente registrado sem inventar conteúdo. Worker scheduled alcança broker Node local; processamento integral Free e operação hospedada ainda não aceitos."
+    },
+    {
+      "id": 6,
+      "name": "Download and notice UX",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "7 distinct E2E:320/375/768/1440,20MiB original hashes, oversize error, optional bounded PNG thumbnail, canonical notices, global pause and old public route smoke.",
+      "remaining": "Technical lab only, RTDB. Direct native/hosted TUS browser/CORS and all original upload consumers remain uncut; no silent functional replacement."
+    },
+    {
+      "id": 7,
+      "name": "Rollback to previous adapter",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "Separate branch/namespaces, flags OFF default guards,37baseline source hashes unchanged, old public routes render; both prior remote branches preserved.",
+      "remaining": "No data migration performed. Old6MiB reader does not read new20MiB objects; dual-reader/export and migration rollback must be proven before any future cutover."
+    }
+  ],
+  "storageCutover": false,
+  "retentionCutover": false,
+  "liveDeletion": false,
+  "commercialReadiness": "NOT_READY"
+}

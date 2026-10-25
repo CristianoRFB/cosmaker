@@ -497,5 +497,25 @@
       ],
       "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
     }
-  ]
+  ],
+  "goalVII": {
+    "cutover": false,
+    "baselineFlows": 14,
+    "candidateNamespaces": [
+      "ateliers/{tenant}/mediaAssetsV7",
+      "mediaUsageV7",
+      "mediaV7/objects/proof",
+      "private bucket cosmaker-media-proof/proof"
+    ],
+    "candidateMaxBytes": 20971520,
+    "candidateFormats": [
+      "application/pdf",
+      "image/png",
+      "image/jpeg",
+      "image/webp"
+    ],
+    "classificationAuthority": "server domain, never browser tier/TTL",
+    "legacy": "UNKNOWN_LEGACY no_auto_delete; no real token inventory/revocation",
+    "originalSourceFilesPreserved": 37
+  }
 }

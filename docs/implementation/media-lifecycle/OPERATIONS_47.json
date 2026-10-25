@@ -40,10 +40,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "PARTIAL_LOCAL_MEDIA_ONLY",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Auth Emulator, sessão inválida/desabilitada/revogada; JWKS real continua bloqueado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -70,10 +76,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -100,10 +112,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -130,10 +148,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -160,10 +184,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "PARTIAL_LOCAL_MEDIA_RBAC",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Revogação canônica de membership impede leitura da prova; não revalida convites/equipe inteira.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -190,10 +220,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -220,10 +256,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -250,10 +292,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -280,10 +328,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -310,10 +364,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "NOT_PORTED_DOMAIN_MAPPING_ONLY",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Público10MiB protegido anterior intacto; prova atual requer staff e pedido.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -340,10 +400,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -370,10 +436,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -400,10 +472,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -430,10 +508,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -460,10 +544,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -490,10 +580,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -520,10 +616,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -550,10 +652,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -580,10 +688,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -610,10 +724,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "NOT_PORTED_DOMAIN_MAPPING_ONLY",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Classe/contratos inventariados, sem alterar fluxo aprovado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -640,10 +760,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -670,10 +796,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "PARTIAL_LOCAL_ISOLATED_20MIB",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "RTDB real + broker: 20MiB, SHA, A/B, sharing, retry, bytes privados; native OSS provider adicional, UI RTDB isolada. Não substitui contratos existentes.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -700,10 +832,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -730,10 +868,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -760,10 +904,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -790,10 +940,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -820,10 +976,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -850,10 +1012,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -880,10 +1048,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -910,10 +1084,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -940,10 +1120,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "NOT_PORTED_PERSISTENT_PROTECTED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Portfólio publicado fora de TTL; adaptador não foi ligado ao módulo.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -970,10 +1156,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1000,10 +1192,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "PARTIAL_LOCAL_RETENTION_NOTICES_ONLY",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Avisos internos canônicos de retenção, falha e deduplicação; restante preservado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1030,10 +1228,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1060,10 +1264,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1090,10 +1300,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1120,10 +1336,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "PARTIAL_LOCAL_MEDIA_GOVERNANCE",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Pausa de novos uploads e meters; não reimplementa painel global inteiro.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1150,10 +1372,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1180,10 +1408,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1210,10 +1444,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1240,10 +1480,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1270,10 +1516,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1300,10 +1552,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1330,10 +1588,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "UNCHANGED_NOT_REVALIDATED",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Sem alteração de domínio; nenhum PASS herdado.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1360,10 +1624,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "PARTIAL_LOCAL_MEDIA_RUNTIME",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "Node22/Java21/Emulators/workerd e Storage OSS Linux; Windows política/guards.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1390,10 +1660,16 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "PARTIAL_LOCAL_RTDB_MEDIA_ONLY",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "20MiB+metadados, crash/retry, checksum, ACL, tombstone e ausência positiva; Supabase restore não aceito.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     },
     {
@@ -1420,11 +1696,25 @@
         "rollback": "Usar branch candidata cca4e23; não houve migração real nem reescrita de dados."
       },
       "goalVII": {
-        "state": "NOT_REVALIDATED",
+        "state": "PRESERVED_NO_CUTOVER",
         "storageCutover": false,
         "retentionCutover": false,
-        "dataPreserved": true
+        "dataPreserved": true,
+        "notes": "37hashes do código de upload anterior preservados; leitor20MiB novo não é legado6MiB.",
+        "persistenceEquivalent": false,
+        "securityEquivalent": false,
+        "testsEquivalent": false,
+        "limits": "MEDIA_STORAGE_20MIB_PROOF.md; 1GB global/Free CPU e credenciais reais não aceitos.",
+        "rollback": "Flags OFF; namespaces isolados, fontes antigas preservadas. Não há migração real para desfazer."
       }
     }
-  ]
+  ],
+  "goalVII": {
+    "wholeOperationsAccepted": 0,
+    "operationDenominator": 47,
+    "storageGatesAccepted": 0,
+    "storageGateDenominator": 7,
+    "method": "Matriz ANTERIOR/GOALVI/GOALVII por operação, sem transferir182/184; evidências parciais não são equivalência completa.",
+    "commercial": "NOT_READY"
+  }
 }

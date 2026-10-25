@@ -22,7 +22,7 @@ test('Official private bucket/RLS denies public, anon and authenticated roles; n
  assert.equal(nativeReady,true,'20MiB prerequisite');
  for(const [type,token]of[['public',null],['authenticated',config.anon],['authenticated',config.authenticated]]){
   const r=await fetch(config.origin+'/object/'+type+'/cosmaker-media-proof/'+key,{headers:token?{Authorization:'Bearer '+token}:{}});
-  assert.notEqual(r.status,200);assert.notEqual(r.status,206);const body=await r.json();assert.ok(body.error||body.message);observations.push({access:type,role:token===config.anon?'anon':token===config.authenticated?'authenticated':'public',deniedStatus:r.status});
+  assert.equal(r.status,400);const body=await r.json();assert.ok(body.error||body.message);observations.push({access:type,role:token===config.anon?'anon':token===config.authenticated?'authenticated':'public',deniedStatus:r.status});
  }
 });
 test('Official immutable signed upload rejects existing object and 20 MiB+1 TUS length',async()=>{
@@ -31,6 +31,9 @@ test('Official immutable signed upload rejects existing object and 20 MiB+1 TUS 
  const changed=Buffer.from(bytes);changed[300]^=1;await assert.rejects(tusUpload({...cap,mime:'application/pdf'},changed),/TUS/);await provider.verify(key,{size:bytes.length,sha256:hashBytes(bytes),mime:'application/pdf'});
  const other='proof/native-tenant/'+randomBytes(32).toString('hex')+'/1';const otherCap=await provider.begin(other,{size:MAX_FILE_BYTES,sha256:hashBytes(bytes),mime:'application/pdf'});
  const extra=await fetch(otherCap.tusEndpoint,{method:'POST',headers:{...meta(other,MAX_FILE_BYTES+1),'x-signature':otherCap.providerToken}});assert.ok(extra.status>=400);observations.push({oversizedRejected:extra.status,immutableOverwriteRejected:true});
+ await assert.rejects(tusUpload({...cap,key:other,mime:'application/pdf'},pdfBytes(600)),/TUS/);
+ const forged=cap.providerToken.split('.');forged[1]=Buffer.from(JSON.stringify({exp:9999999999,url:'forged'})).toString('base64url');
+ await assert.rejects(tusUpload({...cap,providerToken:forged.join('.'),mime:'application/pdf'},pdfBytes(600)),/TUS/);
 });
 test('Official Storage API synthetic delete operates on exact proof key; metadata SQL deletion is never used',async()=>{
  assert.equal(nativeReady,true,'20MiB prerequisite');

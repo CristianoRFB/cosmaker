@@ -1,0 +1,35 @@
+import {createRequire} from 'node:module';
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+import {writeFile,mkdir} from 'node:fs/promises';
+import {startBroker} from '../src/broker.mjs';
+import {MediaCoordinator} from '../src/coordinator.mjs';
+import {RtdbChunkProvider,hashBytes} from '../src/storage.mjs';
+import {proofDatabase} from '../src/proof-db.mjs';
+import {png} from './fixtures.mjs';
+const root=fileURLToPath(new URL('../../../',import.meta.url)),req=createRequire(new URL('../../../functions/package.json',import.meta.url));
+if(process.env.GCLOUD_PROJECT!=='demo-cosmaker'||!['FIREBASE_AUTH_EMULATOR_HOST','FIRESTORE_EMULATOR_HOST','FIREBASE_DATABASE_EMULATOR_HOST'].every(k=>/^127\.0\.0\.1:\d+$/.test(process.env[k]||'')))throw Error('Only loopback demo-cosmaker');
+const {initializeApp,deleteApp}=req('firebase-admin/app'),{getAuth}=req('firebase-admin/auth'),{getFirestore}=req('firebase-admin/firestore');
+const app=initializeApp({projectId:'demo-cosmaker'},'media-ui-v7'),auth=getAuth(app),admin=getFirestore(app),tenant='media-ui-a';
+const env={MODE:'emulator',PROJECT_ID:'demo-cosmaker',AUTH_ORIGIN:'http://'+process.env.FIREBASE_AUTH_EMULATOR_HOST,FIRESTORE_ORIGIN:'http://'+process.env.FIRESTORE_EMULATOR_HOST,DATABASE_ORIGIN:'http://'+process.env.FIREBASE_DATABASE_EMULATOR_HOST,COSMAKER_MEDIA_PROOF:'true'};
+const core=new MediaCoordinator({db:proofDatabase(env),provider:new RtdbChunkProvider(env.DATABASE_ORIGIN),enabled:true});
+let broker,next;
+try{
+ const user=await auth.createUser({uid:'media-ui-owner',email:'media-ui@cosmaker.test',password:'Synthetic!Password123',emailVerified:true});
+ await admin.doc('users/'+user.uid).set({active:true,accountType:'atelier_member',atelierId:tenant});await admin.doc('ateliers/'+tenant).set({active:true,name:'Ateliê sintético'});await admin.doc(`ateliers/${tenant}/members/${user.uid}`).set({active:true,role:'owner'});
+ await admin.doc(`ateliers/${tenant}/orders/order-ui`).set({atelierId:tenant,status:'confirmed'});
+ const global=await auth.createUser({email:'platform-media-ui@cosmaker.test',password:'Synthetic!Password123',emailVerified:true});await admin.doc('users/'+global.uid).set({active:true,accountType:'platform_admin'});
+ broker=await startBroker({core,env,cronSecret:createHash('sha256').update('local-synthetic-'+Date.now()).digest('hex')});
+ next=spawn(process.execPath,[root+'scripts/dev-local.mjs'],{cwd:root,stdio:['ignore','pipe','pipe'],env:{...process.env,PORT:'3107',COSMAKER_MEDIA_PROOF:'true',COSMAKER_MEDIA_ORIGIN:broker.origin,COSMAKER_MEDIA_AUTH_ORIGIN:env.AUTH_ORIGIN,NEXT_TELEMETRY_DISABLED:'1'}});
+ let nextLog='';for(const stream of[next.stdout,next.stderr])stream.on('data',v=>{nextLog=(nextLog+v).slice(-100000);});
+ let ready=false;for(let i=0;i<90;i++){if(next.exitCode!==null)throw Error('Next exited');try{const r=await fetch('http://127.0.0.1:3107/api/media-proof/lab');if(r.ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,500));}if(!ready)throw Error('Next local not ready');
+ const run=async phase=>{const code=await new Promise(resolve=>{const child=spawn(process.execPath,[root+'node_modules/@playwright/test/cli.js','test','tests/e2e/media-lifecycle.spec.ts','--max-failures=1'],{cwd:root,stdio:'inherit',env:{...process.env,COSMAKER_MEDIA_UI:'true',COSMAKER_MEDIA_UI_PHASE:phase,E2E_BASE_URL:'http://127.0.0.1:3107'}});child.on('exit',resolve);});if(code!==0)throw Error('Media UI phase failed: '+phase);};
+ if(!process.argv.includes('--notices-only'))await run('uploads');
+ const entries=await admin.collection(`ateliers/${tenant}/mediaAssetsV7`).get();if(!process.argv.includes('--notices-only')&&(entries.size!==5||entries.docs.some(d=>d.get('state')!=='READY')||entries.docs.filter(d=>d.get('size')===20*1024*1024).length!==4))throw Error('Four viewports did not persist four full files');
+ const c=await core.create({uid:user.uid},{requestId:'retention-notices',orderId:'order-ui',size:png.length,sha256:hashBytes(png),mime:'image/png',shared:false});await core.putPart({uid:user.uid},tenant,c.asset.id,1,0,png);await core.complete({uid:user.uid},tenant,c.asset.id,1);
+ await admin.doc(`ateliers/${tenant}/orders/order-ui`).update({status:'completed',completedAt:new Date(Date.now()-200*86400000)});await core.evaluateRetention(tenant,c.asset.id,'HIGH');
+ await run('notices');
+ console.log(process.argv.includes('--notices-only')?'GVII_NOTICE_GOVERNANCE_RETEST_PASS':'GVII_UI_PERSISTENCE: four exact 20 MiB files/verified browser downloads; optional PNG thumbnail; canonical notice record; authenticated global pause; original routes smoke.');
+ await mkdir(root+'.local/media-v7',{recursive:true});await writeFile(root+'.local/media-v7/next-ui.log',nextLog);
+}finally{if(next){next.kill('SIGTERM');await new Promise(resolve=>next.exitCode!==null?resolve():next.once('exit',resolve));}await broker?.close();await deleteApp(app);}

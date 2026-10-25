@@ -12,6 +12,7 @@ import {DAY,MiB,POLICY_VERSION,retentionFor} from '../src/policy.mjs';
 import {backupMedia,restoreMedia,reconcileRecovery} from '../src/recovery.mjs';
 import {retentionSweep} from '../src/retention-job.mjs';
 import {startBroker} from '../src/broker.mjs';
+import {closeActivityWindows} from '../src/activity.mjs';
 const req=createRequire(new URL('../../../functions/package.json',import.meta.url));
 const {initializeApp,deleteApp}=req('firebase-admin/app'),{getAuth}=req('firebase-admin/auth'),{getFirestore}=req('firebase-admin/firestore');
 for(const key of['FIREBASE_AUTH_EMULATOR_HOST','FIRESTORE_EMULATOR_HOST','FIREBASE_DATABASE_EMULATOR_HOST'])if(!/^127\.0\.0\.1:\d+$/.test(process.env[key]||''))throw Error('Loopback Emulator required');
@@ -61,6 +62,9 @@ test('hash or MIME tampering leaves pending private bytes; lease expiry/fencing 
  const core=coordinators.rtdb,bytes=pdfBytes(600),c=await core.create(who.a,input(bytes,{sha256:'0'.repeat(64)}));await core.putPart(who.a,tenantA,c.asset.id,1,0,bytes);
  await assert.rejects(core.complete(who.a,tenantA,c.asset.id,1),/integrity/);assert.equal((await admin.doc(core.assetPath(tenantA,c.asset.id)).get()).get('state'),'PENDING');
  tick+=300001;await assert.rejects(core.putPart(who.a,tenantA,c.asset.id,1,0,bytes),{code:'failed-precondition'});const fence=await core.renew(who.a,tenantA,c.asset.id);assert.equal(fence,2);await assert.rejects(core.putPart(who.a,tenantA,c.asset.id,1,0,bytes),{code:'failed-precondition'});
+ const resumable=await core.create(who.a,input(png,{mime:'image/png'}));await core.putPart(who.a,tenantA,resumable.asset.id,1,0,png);
+ await admin.doc(`ateliers/${tenantA}/orders/order-a`).update({updatedAt:new Date(tick)});await assert.rejects(core.complete(who.a,tenantA,resumable.asset.id,1),{code:'failed-precondition'});
+ const refreshedFence=await core.renew(who.a,tenantA,resumable.asset.id);assert.equal((await core.complete(who.a,tenantA,resumable.asset.id,refreshedFence)).asset.state,'READY');
  const bad=await core.create(who.a,input(Buffer.from('not a png'),{mime:'image/png'}));await core.putPart(who.a,tenantA,bad.asset.id,1,0,Buffer.from('not a png'));await assert.rejects(core.complete(who.a,tenantA,bad.asset.id,1),/integrity/);
 });
 test('concurrent reservations serialize capacity and failed attempts never discard existing files',async()=>{
@@ -106,7 +110,7 @@ test('20 MiB bytes+metadata backup, crash/resume restore, exact read and positiv
  const read=await core.read(who.client,tenantA,r.asset.id);assert.equal(hashBytes(read.bytes),snapshot.sha256);assert.equal(read.asset.createdAt.toISOString(),snapshot.metadata.createdAt);assert.equal(read.asset.mediaClass,snapshot.metadata.mediaClass);
  const operation=hashBytes(snapshot.snapshotSha256);assert.equal((await reconcileRecovery(core,operation)).released,true);assert.equal((await reconcileRecovery(core,operation)).alreadyApplied,true);
  assert.equal((await restoreMedia(core,who.a,snapshot,{mode:'SYNTHETIC_APPLY'})).alreadyApplied,true);
- await admin.doc('mediaTombstonesV7/'+r.asset.id).set({atelierId:tenantA,key:r.asset.key});await assert.rejects(restoreMedia(core,who.a,snapshot),/Tombstone/);
+ await admin.doc('mediaTombstonesV7/'+r.asset.id).set({atelierId:tenantA,key:r.asset.key});await assert.rejects(restoreMedia(core,who.a,snapshot),/Tombstone/);await assert.rejects(core.read(who.a,tenantA,r.asset.id),{code:'permission-denied'});
 },{timeout:180000});
 test('all required recipients, retry idempotence, failure recovery and authorized extension fence',async()=>{
  const core=coordinators.rtdb,r=await upload(core,png,{mime:'image/png',shared:true}),path=core.assetPath(tenantA,r.asset.id);
@@ -168,8 +172,24 @@ test('HTTP broker checks Auth Emulator tokens, disabled/revoked users and global
   assert.equal((await fetch(broker.origin+'/governance',{method:'POST',headers,body:JSON.stringify({uploadsPaused:true})})).status,200);
   const view=await(await fetch(broker.origin+'/governance',{headers})).json();assert.equal(view.data.settings.uploadsPaused,true);assert.equal(view.data.mode,'DRY_RUN');
   assert.equal((await fetch(broker.origin+'/internal/retention-dry-run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scheduledTime:tick})})).status,403);
+  await admin.doc('platformRuntime/mediaRetentionV7').set({leaseUntil:new Date(0),cursor:null});
   runtime=new Miniflare(convertV4MiniflareOptions({modules:true,script:await readFile(new URL('../src/cron-worker.mjs',import.meta.url),'utf8'),compatibilityDate:'2026-10-25',bindings:{MODE:'emulator',PROJECT_ID:'demo-cosmaker',MEDIA_BROKER_ORIGIN:broker.origin,MEDIA_CRON_SECRET:secret}}));
   await runtime.ready;const worker=await runtime.getWorker();const result=await worker.scheduled({scheduledTime:tick,cron:'0 * * * *'});assert.equal(result.outcome,'ok');
+  assert.equal((await admin.doc('platformRuntime/mediaRetentionV7').get()).get('mode'),'DRY_RUN');
   assert.equal((await runtime.dispatchFetch('http://localhost/cron')).status,404);
  }finally{await runtime?.dispose();await broker.close();}
+},{timeout:60000});
+test('lifecycle admission: closed activity windows persist real facts and 21 tenants share aggregate pending capacity safely',async()=>{
+ const core=coordinators.rtdb,start=tick-61*DAY,activityPath='ateliers/activity-fixture/mediaActivityV7/current';
+ await admin.doc(activityPath).set({tier:'HIGH',belowWindows:0,lastClosedEnd:null,windowStartAt:new Date(start).toISOString(),events:[],policyVersion:POLICY_VERSION});
+ await admin.doc('ateliers/activity-fixture/mediaUploadFactsV7/one').set({atelierId:'activity-fixture',size:1,recordedAt:new Date(start+DAY)});
+ assert.equal((await closeActivityWindows(core,'activity-fixture')).tier,'NONE');assert.equal((await closeActivityWindows(core,'never-active')),null);
+ assert.equal((await admin.doc('ateliers/never-active/mediaActivityV7/current').get()).exists,false);
+ const provider=new RtdbChunkProvider(env.DATABASE_ORIGIN);provider.name='rtdb-chunked-capacity-local';const capacityCore=new MediaCoordinator({db,provider,enabled:true,now:()=>tick});
+ await admin.doc('platformRuntime/mediaGovernanceV7').set({uploadsPaused:false});
+ const batch=admin.batch();for(let n=0;n<21;n++){const tenant='capacity-'+n,uid='capacity-uid-'+n;batch.set(admin.doc('users/'+uid),{active:true,accountType:'atelier_member',atelierId:tenant});batch.set(admin.doc('ateliers/'+tenant),{active:true});batch.set(admin.doc(`ateliers/${tenant}/members/${uid}`),{active:true,role:'owner'});batch.set(admin.doc(`ateliers/${tenant}/orders/order-a`),{atelierId:tenant,status:'confirmed'});}await batch.commit();
+ const outcomes=[];for(let n=0;n<21;n++)outcomes.push(...await Promise.allSettled([0,1].map(()=>capacityCore.create({uid:'capacity-uid-'+n},input(full)))));
+ const accepted=outcomes.filter(o=>o.status==='fulfilled'),denied=outcomes.filter(o=>o.status==='rejected');assert.ok(accepted.length>0&&denied.length>0);assert.ok(denied.every(o=>o.reason.code==='resource-exhausted'));
+ const meter=(await admin.doc(capacityCore.meterPath()).get()).data();assert.equal(meter.active,0);assert.ok(meter.pending<1_000_000_000*.8);assert.equal(Object.values(meter.tenants).reduce((a,b)=>a+b,0),meter.pending);
+ console.log('GVII_21_TENANTS',JSON.stringify({tenants:21,attempts:42,accepted:accepted.length,denied:denied.length,pending:meter.pending,objectsDeleted:0,monthlyTelemetry:'NOT_PROVIDER_BILLING'}));
 },{timeout:60000});

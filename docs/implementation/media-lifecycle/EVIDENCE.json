@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "dateUTC": "2026-10-25",
+  "baselineCommit": "d659faa40bd8dff3929daac2f6a39aa47bccea19",
+  "branch": "codex/cosmaker-goal-vii-media-lifecycle",
+  "historicalOnly": {
+    "functional": "182/184",
+    "formal": "10/16"
+  },
+  "uniquePassingScenarios": 35,
+  "denominatorMethod": "9 unitários/guards +15 integrações +4 testes oficiais OSS +7 E2E distintos; não soma repetições. Isso não é percentual de produto nem aceite do provedor hospedado.",
+  "cutover": false,
+  "commercial": "NOT_READY",
+  "runs": [
+    {
+      "scope": "policy and guards",
+      "privateLogName": "cosmaker-gvii-unit-final.log",
+      "logSha256": "9582f9f74ec8687a207a0d9f110b5a46c4e81df03e8c11a1732cbee59c2b09d0",
+      "passed": 9,
+      "total": 9,
+      "note": "PASS observado; CI reproduz no commit versionado."
+    },
+    {
+      "scope": "Emulator integration",
+      "privateLogName": "cosmaker-gvii-final-integration.log",
+      "logSha256": "f7daa5ce88275c3607112348ebcaca18e5c5b52d871284223e8c4e15f9a9809b",
+      "passed": 15,
+      "total": 15,
+      "note": "PASS observado; CI reproduz no commit versionado."
+    },
+    {
+      "scope": "official Storage OSS negative retest",
+      "privateLogName": "cosmaker-gvii-native-negative-retest.log",
+      "logSha256": "8c2826bc752d8c2787023fe2c662695f923354612f2ce3f96fbc47baeb7b5fe0",
+      "passed": 4,
+      "total": 4,
+      "note": "PASS observado; CI reproduz no commit versionado."
+    },
+    {
+      "scope": "UI uploads and optional PNG",
+      "privateLogName": "cosmaker-gvii-ui-final.log",
+      "logSha256": "f75fcea5eea81e6952243c786322398d74d80a8273fbb163fd6031d534b9bba0",
+      "passed": 5,
+      "total": 5,
+      "note": "Log combinado UI contém falha posterior; somente5cenários uploads deste registro contam, notices2/2 do reteste separado."
+    },
+    {
+      "scope": "UI notices/governance focused retest",
+      "privateLogName": "cosmaker-gvii-ui-notices-retest.log",
+      "logSha256": "097cfdbb009134bf90c284e26aa9df0e2883f1197261b92dcc47eca0e8d5db83",
+      "passed": 2,
+      "total": 2,
+      "note": "PASS observado; CI reproduz no commit versionado."
+    },
+    {
+      "scope": "Next build",
+      "privateLogName": "cosmaker-gvii-build.log",
+      "logSha256": "93360e7f39ce2dc0d37827f112b8553c4f48457bcaee538e056dca9d38f203c9",
+      "passed": null,
+      "total": null,
+      "note": "PASS observado; CI reproduz no commit versionado."
+    },
+    {
+      "scope": "targeted lint",
+      "privateLogName": "cosmaker-gvii-lint-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": null,
+      "total": null,
+      "note": "PASS observado; CI reproduz no commit versionado."
+    },
+    {
+      "scope": "targeted transfer retry after legitimate order update",
+      "privateLogName": "cosmaker-gvii-transfer-retest.log",
+      "logSha256": "772cda6dfe6aaafd18b87be6d8ba44c16f74180cc1034e1f2d359b44d1c75be5",
+      "passed": 1,
+      "total": 1,
+      "note": "Reteste do cenário de integridade existente; não aumenta35cenários distintos. Renew atualiza fence e snapshot da versão canônica ativa, preservando bloqueio na corrida."
+    }
+  ],
+  "earlierAttempts": [
+    {
+      "name": "first UI selector",
+      "result": "FAIL",
+      "reason": "role alert também encontrou o anunciador Next; seletor corrigido e ensaio repetido."
+    },
+    {
+      "name": "UI final uploads+notices combined",
+      "result": "5 upload PASS +1 notice PASS +1 governance TIMEOUT",
+      "reason": "Teste global30s incluiu compilação de rotas antigas; reteste isolado2/2 com90s. Não tratar a execução combinada como7/7."
+    },
+    {
+      "name": "additional native startup",
+      "result": "FAIL_TIMEOUT",
+      "reason": "Arranque Docker excedeu90s sob carga concorrente; recursos próprios removidos; limite300s e reteste oficial4/4."
+    }
+  ],
+  "providerObservations": {
+    "measurements": [
+      {
+        "provider": "RTDB_EMULATOR_REAL",
+        "bytes": 20971520,
+        "wallMs": 10224.686823,
+        "firestoreRequests": 340,
+        "verificationProviderRequests": 41,
+        "workerFree": "BLOCKED_NOT_EDGE_ACCEPTANCE"
+      },
+      {
+        "provider": "SUPABASE_PROTOCOL_DOUBLE_NOT_PROVIDER_ACCEPTANCE",
+        "bytes": 20971520,
+        "tusNativeSha256": false,
+        "realRls": false,
+        "realBilling": false
+      }
+    ],
+    "cutover": false,
+    "commercial": "NOT_READY"
+  },
+  "officialStorageObservations": {
+    "observations": [
+      {
+        "kind": "OFFICIAL_STORAGE_OSS_NOT_HOSTED_FREE",
+        "infoFields": [
+          "id",
+          "name",
+          "version",
+          "bucket_id",
+          "size",
+          "content_type",
+          "cache_control",
+          "content_encoding",
+          "etag",
+          "metadata",
+          "last_modified",
+          "created_at",
+          "archived_at",
+          "is_delete_marker",
+          "is_versioned"
+        ],
+        "tusResume": true,
+        "bytes": 20971520
+      },
+      {
+        "access": "public",
+        "role": "public",
+        "deniedStatus": 400
+      },
+      {
+        "access": "authenticated",
+        "role": "anon",
+        "deniedStatus": 400
+      },
+      {
+        "access": "authenticated",
+        "role": "authenticated",
+        "deniedStatus": 400
+      },
+      {
+        "oversizedRejected": 413,
+        "immutableOverwriteRejected": true
+      }
+    ],
+    "hostedProject": false,
+    "billing": false,
+    "firebaseJwtIntegration": "NOT_TESTED",
+    "imageTransforms": false
+  },
+  "sourceHashes": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "1f88344029b5cda924d9b436063493920c52ba13af175aed83ad920ddb30e191"
+    },
+    {
+      "file": "app/api/media-proof/[...operation]/route.ts",
+      "sha256": "339776c140485c773ab2774a050092b66ed135ba7e561ee44d900bab79f1c790"
+    },
+    {
+      "file": "app/api/media-proof/lab/page.tsx",
+      "sha256": "0d0b356e7ff14ece606ad0331ddda959630810efb081fc6c66acd0aaaf756811"
+    },
+    {
+      "file": "app/api/media-proof/lab/proof.tsx",
+      "sha256": "0e39127654dc01481961dafc448e1045e22ac9b9986783aa5937d91dfeafa993"
+    },
+    {
+      "file": "infrastructure/media/run-integration.mjs",
+      "sha256": "6caaddac1e0d056d49188d9e7f5353431cef09ff129fc56804b85144b13dd8b9"
+    },
+    {
+      "file": "infrastructure/media/run-native.mjs",
+      "sha256": "67b64d8e249b573250b8ea5cdc0e1091bb1ab136b38a55a1fdbbf3af1de5b38e"
+    },
+    {
+      "file": "infrastructure/media/src/activity.mjs",
+      "sha256": "c8c5dc1e0c8fe95b26cd7103c535fb1554c64f9b3d46bae6e0227cd95bd3a3cc"
+    },
+    {
+      "file": "infrastructure/media/src/broker.mjs",
+      "sha256": "745faa445a7c40b700df00e2b4a344fc34641c526f0a218af01efe656d75c342"
+    },
+    {
+      "file": "infrastructure/media/src/coordinator.mjs",
+      "sha256": "f0aa6232f0f57fa4972b08df26668d59230b588eecfd3e942b0b16c74edb5b52"
+    },
+    {
+      "file": "infrastructure/media/src/cron-worker.mjs",
+      "sha256": "3b414227af728de376b8e2cd5f748be3e75c3c3dc24f2918af447fb00d8c5f51"
+    },
+    {
+      "file": "infrastructure/media/src/policy.mjs",
+      "sha256": "40b3d15ae9e732a7e6a8d32ca2531df25a8a933c2de6e9a2ec300e9b2f072233"
+    },
+    {
+      "file": "infrastructure/media/src/proof-db.mjs",
+      "sha256": "bb3357e2f682fc0be0bee849420e2ede2847afb9f1f70110eeac80e64078f20c"
+    },
+    {
+      "file": "infrastructure/media/src/recovery.mjs",
+      "sha256": "c3e5cb6b9dca4df5714bee6b48af9be801d0610db3e4eb92b1cf60b96e4e618c"
+    },
+    {
+      "file": "infrastructure/media/src/retention-job.mjs",
+      "sha256": "199ffe237c17ad57ffc897ee0ec9a740ab978eca36cef2f185f35ca7b45fb336"
+    },
+    {
+      "file": "infrastructure/media/src/storage.mjs",
+      "sha256": "3d34ffcd1de557ec9baf499a971922b403c47927d83fed6bcc17d1e01d6531c7"
+    },
+    {
+      "file": "infrastructure/media/test/fixtures.mjs",
+      "sha256": "d81ca6947f553661ec783b20c4be127a7444ad111b5eef0f1ce1c2dc33923259"
+    },
+    {
+      "file": "infrastructure/media/test/guards.test.mjs",
+      "sha256": "5b78fd5f5a50223abfd4e6fdd70eb410531a7ab3968a09ca5b579791fea1b403"
+    },
+    {
+      "file": "infrastructure/media/test/integration.mjs",
+      "sha256": "51c23e9d6eaeb910fc2bd2a2fc2e6ba9aecb46cfc24fa2bbf419522014a5e1cf"
+    },
+    {
+      "file": "infrastructure/media/test/local-supabase.mjs",
+      "sha256": "f3fbec554fdd6d11390b617a8ce9ce124a8aca31a1544c8117a1ec1979e479bf"
+    },
+    {
+      "file": "infrastructure/media/test/native-storage.mjs",
+      "sha256": "a9eb2ba0138e3cf3494f3994cae14dbb5c527afcceee3e2058024de0bf6f19d3"
+    },
+    {
+      "file": "infrastructure/media/test/policy.test.mjs",
+      "sha256": "bc0d649c031ed3653c7c975a21839dc0914df77f5c90116de3de31a2a7cb3a4d"
+    },
+    {
+      "file": "infrastructure/media/test/storage-api-double.mjs",
+      "sha256": "7662d654d7143958c3ce6cd328cb1d79952c1a795f6c9de13bf0279718a7a547"
+    },
+    {
+      "file": "infrastructure/media/test/ui.mjs",
+      "sha256": "7a6055c6e8e5de4d0ed13fb8b432911a59dff4302aa128ae3902e558bf800163"
+    },
+    {
+      "file": "tests/e2e/media-lifecycle.spec.ts",
+      "sha256": "526a336a84a6ed811e2796c3348df72c66781bed13682acd0896dbefce4bb413"
+    }
+  ]
+}

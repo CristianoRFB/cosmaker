@@ -17,17 +17,21 @@ if(process.argv.includes('--stop')){
  if(!connectionPath.startsWith(resolve(root,'.local/media-v7')+'/cosmaker-media-v7-')||!connectionPath.endsWith('/connection.json'))throw Error('Unsafe local cleanup path');
  const own=JSON.parse(await readFile(connectionPath,'utf8'));
  if(!/^cosmaker-media-v7-[a-f0-9]{10}$/.test(own.network)||own.pg!==own.network+'-pg'||own.storage!==own.network+'-storage')throw Error('Unsafe local cleanup names');
- for(const name of[own.storage,own.pg])await docker(['stop',name]);
+ for(const name of[own.storage,own.pg])await docker(['rm','-f',name]);
  await docker(['network','rm',own.network]);await rm(resolve(connectionPath,'..'),{recursive:true,force:true});await rm(pointer,{force:true});
  console.log('OWN_SYNTHETIC_CONTAINERS_STOPPED');process.exit(0);
 }
 await mkdir(dir,{recursive:true,mode:0o700});
-const cleanup=async()=>{for(const name of[storage,pg])try{await docker(['stop',name]);}catch{}try{await docker(['network','rm',network]);}catch{}await rm(dir,{recursive:true,force:true});const pointer=root+'.local/media-v7/oss-connection-path.txt';if((await readFile(pointer,'utf8').catch(()=>''))===dir+'/connection.json')await rm(pointer,{force:true});};
+const cleanup=async()=>{for(const name of[storage,pg])try{await docker(['rm','-f',name]);}catch{}try{await docker(['network','rm',network]);}catch{}await rm(dir,{recursive:true,force:true});const pointer=root+'.local/media-v7/oss-connection-path.txt';if((await readFile(pointer,'utf8').catch(()=>''))===dir+'/connection.json')await rm(pointer,{force:true});};
+let stopping=false;
+for(const signal of['SIGINT','SIGTERM'])process.once(signal,async()=>{if(stopping)return;stopping=true;await cleanup();process.exit(0);});
 try{
+ console.log('GVII_OSS_STARTING_OWN_NETWORK');
  await docker(['info','--format','{{.ServerVersion}}']);await docker(['network','create',network]);
  await writeFile(dir+'/postgres.env','POSTGRES_PASSWORD='+password+'\nPOSTGRES_DB=postgres\n',{mode:0o600});
  await docker(['run','--rm','-d','--name',pg,'--network',network,'--env-file',dir+'/postgres.env','postgres@sha256:f4610795587492cd4fb887c2dc3de301b813278bb6f616992061141b5f15ac36']);
  for(let i=0;i<20;i++){try{await docker(['exec',pg,'pg_isready','-U','postgres']);break;}catch{if(i===19)throw Error('Local PostgreSQL not ready');await new Promise(r=>setTimeout(r,500));}}
+ console.log('GVII_OSS_POSTGRES_READY_STARTING_STORAGE');
  const lines=['SERVER_PORT=5000','SERVER_HOST=0.0.0.0','AUTH_JWT_SECRET='+jwtSecret,'AUTH_JWT_ALGORITHM=HS256','ANON_KEY='+anon,'SERVICE_KEY='+service,'DATABASE_URL=postgresql://postgres:'+password+'@'+pg+':5432/postgres','DB_INSTALL_ROLES=true','STORAGE_BACKEND=file','STORAGE_FILE_BACKEND_PATH=/tmp/cosmaker-storage','UPLOAD_FILE_SIZE_LIMIT=20971520','UPLOAD_FILE_SIZE_LIMIT_STANDARD=20971520','UPLOAD_SIGNED_URL_EXPIRATION_TIME=120','TUS_URL_PATH=/upload/resumable','TUS_URL_EXPIRY_MS=3600000','IMAGE_TRANSFORMATION_ENABLED=false','PG_QUEUE_ENABLE=false','OTEL_METRICS_ENABLED=false','PROMETHEUS_METRICS_ENABLED=false','LOG_LEVEL=error'];
  await writeFile(dir+'/storage.env',lines.join('\n')+'\n',{mode:0o600});
  const ca=process.env.CODEX_PROXY_CERT;const caArgs=ca?['--mount',`type=bind,src=${ca},dst=/run/proxy-ca.pem,readonly`,'-e','NODE_EXTRA_CA_CERTS=/run/proxy-ca.pem']:[];
@@ -37,5 +41,5 @@ try{
  await writeFile(dir+'/connection.json',JSON.stringify({origin:'http://127.0.0.1:15400',service,anon,authenticated,pg,storage,network,kind:'OFFICIAL_SUPABASE_STORAGE_OSS_LOCAL_NOT_HOSTED_FREE'},null,2),{mode:0o600});
  await writeFile(root+'.local/media-v7/oss-connection-path.txt',dir+'/connection.json',{mode:0o600});
  console.log('OFFICIAL_SUPABASE_OSS_LOCAL_READY: private connection file, no hosted project/billing.');
- if(process.argv.includes('--probe-only')){await cleanup();}else await new Promise(resolve=>{const timer=setInterval(()=>{},1000);for(const signal of['SIGINT','SIGTERM'])process.on(signal,async()=>{await cleanup();clearInterval(timer);resolve();});});
+ if(process.argv.includes('--probe-only')){await cleanup();}else await new Promise(()=>{setInterval(()=>{},1000);});
 }catch(error){await cleanup();throw error;}

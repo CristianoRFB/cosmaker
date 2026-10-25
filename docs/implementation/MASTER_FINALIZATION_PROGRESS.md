@@ -1,5 +1,12 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL VII — prova local de mídia, substituição bloqueada — 2026-10-25
+
+Branch isolada `codex/cosmaker-goal-vii-media-lifecycle` desde d659faa; candidata cca4e23/GOALVI preservados. Implementados adaptadores locais20MiB, política v01, reservas globais/tenant, avisos, backup/restore RTDB, tombstones, cron privado DRY_RUN e UI técnica responsiva.35cenários distintos passaram (9unitários/15integrações/4StorageOSSoficial/7E2E), Next15/TypeScript/lint/audit novos aprovados. Tentativas falhas/retestes explícitos no ledger, sem repetir104SDK/124unitários. CI final deve ser conferido no SHA exato.
+
+**NOT_READY / flags OFF / nenhum cutover.**1GBglobal satura antes da retenção no cenário2×20MiB/dia/tenant; CPU/subrequestsFree e operação hospedada não aceitos.0/7gates completos de substituição,6parciais/1bloqueado; não é0%de implementação.182/184 e10/16 continuam históricos da stack antiga. Pendências locais e externas separadas no [handoff](GOAL_VII_HANDOFF.md), [prova](MEDIA_STORAGE_20MIB_PROOF.md) e [runbook](../operations/MEDIA_RETENTION_DRY_RUN.md). Não portar outrasFunctions enquanto gates estiverem abertos; sem deploy/billing/R2/conta real ou exclusão de legado.
+
+
 ## GOAL MASTER V — CÓDIGO LOCAL PRONTO PARA HOMOLOGAÇÃO — 2026-10-24
 
 - **HOMOLOGAÇÃO REAL PENDENTE / comercial NOT_READY.** HEAD inicial8ad4a981f4d97f0a868ada10f0a1e3fa934c1385; checkpoints publicados1ec68b3 (preflight/guards/recovery),150b24f (paginaçao scheduler/roteiros),9ec5c66 (compatibilidade/CIWindows completo). Código9ec5c66cdd369b287a75b1f8f43ca660855dc25b aprovado no [CI40120417689](https://github.com/CristianoRFB/cosmaker/actions/runs/40120417689). Logs confirmados:124/124unitários/25arquivos,11/11operacionais Linux e11/11Windows nativos. Novo checkpoint final é documental; conferir seuCI após publicação, sem inferir resultado por SHA anterior.

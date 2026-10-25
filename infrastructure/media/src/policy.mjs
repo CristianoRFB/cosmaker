@@ -21,7 +21,7 @@ export function updateActivity(previous,window,{closed=false}={}) {
   if(!closed||base.lastClosedEnd===window.endAt)return {...base};
   const consecutive=base.lastClosedEnd===window.startAt;
   const belowWindows=consecutive?base.belowWindows+1:1;
-  return {tier:belowWindows>=2?observed:base.tier,belowWindows:belowWindows>=2?0:belowWindows,lastClosedEnd:window.endAt,policyVersion:POLICY_VERSION};
+  return {...base,tier:belowWindows>=2?observed:base.tier,belowWindows:belowWindows>=2?0:belowWindows,lastClosedEnd:window.endAt,policyVersion:POLICY_VERSION};
 }
 // Classification is selected by the trusted domain adapter, never by a browser TTL or frequency.
 export function classifyDomain({domain,mime,approvedEvidence=false}) {
@@ -32,7 +32,7 @@ export function classifyDomain({domain,mime,approvedEvidence=false}) {
   return 'UNKNOWN_LEGACY';
 }
 export function retentionFor(asset,tier,now,previous=asset.retention) {
-  const no=reason=>({policyVersion:POLICY_VERSION,activityTier:tier,noAutoDelete:true,reason,retentionStartAt:null,dueAt:null,graceUntil:null,promisedGraceUntil:previous?.promisedGraceUntil||previous?.graceUntil||null});
+  const no=reason=>({policyVersion:POLICY_VERSION,activityTier:tier,noAutoDelete:true,reason,retentionStartAt:null,dueAt:null,graceUntil:null,promisedDueAt:previous?.promisedDueAt||previous?.dueAt||null,graceDays:previous?.graceDays||0,promisedGraceUntil:previous?.promisedGraceUntil||previous?.graceUntil||null});
   if(asset.mediaClass!=='TEMP_WORKFLOW')return no('DOMAIN_PROTECTED');
   if(asset.legalHold===true)return no('LEGAL_HOLD');
   if(asset.origin==='versioned_docs'||asset.key?.startsWith('docs/'))return no('VERSIONED_ASSET');
@@ -41,11 +41,11 @@ export function retentionFor(asset,tier,now,previous=asset.retention) {
   const start=Math.max(...asset.links.map(l=>Date.parse(l.completedAt)));
   if(start>now+60000)return no('CLOCK_SKEW');
   const days=tier==='HIGH'?30:90,graceDays=Math.max(tier==='HIGH'?7:14,previous?.graceDays||0);
-  const priorDue=Date.parse(previous?.dueAt||'')||0;
+  const priorDue=Date.parse(previous?.promisedDueAt||previous?.dueAt||'')||0;
   const priorGrace=Date.parse(previous?.promisedGraceUntil||previous?.graceUntil||'')||0;
   const due=Math.max(start+days*DAY,priorDue);
   const grace=Math.max(due+graceDays*DAY,priorGrace);
-  return {policyVersion:POLICY_VERSION,activityTier:tier,noAutoDelete:false,reason:null,retentionStartAt:new Date(start).toISOString(),dueAt:new Date(due).toISOString(),graceUntil:new Date(grace).toISOString(),promisedGraceUntil:new Date(grace).toISOString(),warningAt:new Date(due-7*DAY).toISOString(),graceDays};
+  return {policyVersion:POLICY_VERSION,activityTier:tier,noAutoDelete:false,reason:null,retentionStartAt:new Date(start).toISOString(),dueAt:new Date(due).toISOString(),promisedDueAt:new Date(due).toISOString(),graceUntil:new Date(grace).toISOString(),promisedGraceUntil:new Date(grace).toISOString(),warningAt:new Date(due-7*DAY).toISOString(),graceDays};
 }
 export function deletionDecision(asset,now) {
   const r=asset.retention;
@@ -62,7 +62,7 @@ export function admission({active,pending,reserved=0,capacity,essential=false,no
   if(capacity===0)return {allowed:false,level:'SUSPEND',ratio:1,reason:'NO_CAPACITY'};
   const used=active+pending,ratio=used/capacity,projected=(used+reserved)/capacity;
   if(ratio>=.9||projected>=.9)return {allowed:false,level:'SUSPEND',ratio,reason:'PRESERVE_EXISTING'};
-  if((ratio>=.8||noticeFailure)&&!essential)return {allowed:false,level:'LIMIT',ratio,reason:noticeFailure?'NOTICE_FAILURE':'NONESSENTIAL'};
+  if((projected>=.8||noticeFailure)&&!essential)return {allowed:false,level:'LIMIT',ratio,reason:noticeFailure?'NOTICE_FAILURE':'NONESSENTIAL'};
   return {allowed:true,level:ratio>=.7?'ALERT':'NORMAL',ratio,reason:null};
 }
 export function capacityScenario({tenants,uploadsPerTenantPerDay=2,size=20*MiB,capacity=1_000_000_000,encodingRatio=1}) {

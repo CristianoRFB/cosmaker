@@ -32,6 +32,7 @@ export class MediaCoordinator{
   const reservation=this.provider.name.startsWith('rtdb')?4*Math.ceil(v.size/3)+Math.ceil(v.size/PART_BYTES)*1024+4096:MAX_FILE_BYTES;
   const result=await this.db.transaction(async tx=>{
    const actor=await this.staff(who.uid,tx),path=this.assetPath(actor.tenant,id),old=(await tx.get(path))?.data;
+   if(await tx.get('mediaTombstonesV7/'+id))deny();
    if(old){if(old.fingerprint!==fingerprint)throw new MediaFault('failed-precondition','Chave idempotente usada para outro arquivo.');if(['TOMBSTONED','REVOKED','DELETING'].includes(old.state))deny();return old;}
    const governance=(await tx.get('platformRuntime/mediaGovernanceV7'))?.data;if(governance?.uploadsPaused===true)throw new MediaFault('resource-exhausted','Uploads pausados; arquivos existentes preservados.',429);
    const order=(await tx.get(`ateliers/${actor.tenant}/orders/${v.orderId}`));if(!order||['cancelled','refunded','completed'].includes(order.data.status))throw new MediaFault('failed-precondition','Pedido não aceita novo envio.');
@@ -49,7 +50,7 @@ export class MediaCoordinator{
  }
  async authorizePending(who,tenant,id,fence){return this.db.transaction(async tx=>{const asset=(await tx.get(this.assetPath(tenant,id)))?.data;if(!asset||asset.state!=='PENDING'||asset.ownerUid!==who.uid||asset.leaseFence!==fence||asset.leaseUntil?.getTime()<=this.now())throw new MediaFault('failed-precondition','Reserva/lease expirou ou foi substituído.');await this.access(who,tenant,asset,true,tx);return asset;});}
  async putPart(who,tenant,id,fence,index,bytes){const asset=await this.authorizePending(who,tenant,id,fence);return this.provider.putPart(asset.key,index,bytes,asset);}
- async renew(who,tenant,id){return this.db.transaction(async tx=>{const path=this.assetPath(tenant,id),asset=(await tx.get(path))?.data;if(!asset||asset.state!=='PENDING'||asset.ownerUid!==who.uid)deny();await this.access(who,tenant,asset,true,tx);const fence=asset.leaseFence+1;tx.set(path,{leaseFence:fence,leaseUntil:new Date(this.now()+300000),revision:asset.revision+1},['leaseFence','leaseUntil','revision']);audit(tx,tenant,who.uid,'media.lease_renewed',id,{fence},this.now());return fence;});}
+ async renew(who,tenant,id){return this.db.transaction(async tx=>{const path=this.assetPath(tenant,id),asset=(await tx.get(path))?.data;if(!asset||asset.state!=='PENDING'||asset.ownerUid!==who.uid)deny();await this.access(who,tenant,asset,true,tx);const order=await tx.get(`ateliers/${tenant}/orders/${asset.orderId}`);if(!order||['cancelled','refunded','completed'].includes(order.data.status))throw new MediaFault('failed-precondition','Pedido não aceita retomada.');const fence=asset.leaseFence+1;tx.set(path,{leaseFence:fence,leaseUntil:new Date(this.now()+300000),revision:asset.revision+1,orderVersion:order.version},['leaseFence','leaseUntil','revision','orderVersion']);audit(tx,tenant,who.uid,'media.lease_renewed',id,{fence},this.now());return fence;});}
  async complete(who,tenant,id,fence){
   let asset=(await this.db.get(this.assetPath(tenant,id)))?.data;if(asset?.state==='READY'){await this.access(who,tenant,asset,true);return{alreadyApplied:true,asset};}
   asset=await this.authorizePending(who,tenant,id,fence);
@@ -67,12 +68,12 @@ export class MediaCoordinator{
    const activeBytes=this.provider.name.startsWith('rtdb')?4*Math.ceil(current.size/3)+Math.ceil(current.size/PART_BYTES)*1024+4096:current.size;
    const ready={...current,state:'READY',revision:current.revision+1,activeBytes,retention,completedAt:new Date(now)};
    tx.set(path,ready);tx.set(this.meterPath(),{...meter,pending:meter.pending-current.reservation,active:meter.active+activeBytes,tenants:{...meter.tenants,[tenant]:meter.tenants[tenant]-current.reservation+activeBytes}});
-   tx.set(activityPath,{...activity,events});tx.create(`ateliers/${tenant}/mediaUploadFactsV7/${id}`,{atelierId:tenant,assetId:id,size:current.size,recordedAt:new Date(now)});
+   tx.set(activityPath,{...activity,windowStartAt:previous?.windowStartAt||new Date(Math.floor(now/DAY)*DAY).toISOString(),events});tx.create(`ateliers/${tenant}/mediaUploadFactsV7/${id}`,{atelierId:tenant,assetId:id,size:current.size,recordedAt:new Date(now)});
    audit(tx,tenant,who.uid,'media.ready',id,{...verification,mediaClass:current.mediaClass},now);return{alreadyApplied:false,asset:ready};
   });
   return{...result,verificationRequests,verificationWallMs:performance.now()-started,workerFreeAcceptance:'BLOCKED_NOT_BENCHMARKED_ON_EDGE'};
  }
- async read(who,tenant,id){const asset=(await this.db.get(this.assetPath(tenant,id)))?.data;if(!asset||asset.state!=='READY')deny();await this.access(who,tenant,asset);
+ async read(who,tenant,id){const asset=(await this.db.get(this.assetPath(tenant,id)))?.data;if(!asset||asset.state!=='READY'||await this.db.get('mediaTombstonesV7/'+id))deny();await this.access(who,tenant,asset);
   const downloadId=randomUUID(),month=new Date(this.now()).toISOString().slice(0,7),reservation=this.provider.name.startsWith('rtdb')?4*Math.ceil(asset.size/3)+Math.ceil(asset.size/PART_BYTES)*1024+4096:asset.size;
   await this.db.transaction(async tx=>{const m=(await tx.get(this.meterPath()))?.data;if(!m)throw Error('Missing meter');const ledgers={...(m.egressMonths||{})},ledger=ledgers[month]||{estimated:0,reservations:{}};if(ledger.estimated+Object.values(ledger.reservations).reduce((a,b)=>a+b,0)+reservation>this.monthlyEgress)throw new MediaFault('resource-exhausted','Orçamento sintético de transferência atingido; arquivos preservados.',429);ledger.reservations[downloadId]=reservation;ledgers[month]=ledger;tx.set(this.meterPath(),{egressMonths:ledgers},['egressMonths']);});
   // A local proof buffers exact bytes only after bounded provider iteration; NOT a Free Worker implementation.
@@ -81,7 +82,7 @@ export class MediaCoordinator{
   await this.db.transaction(async tx=>{const meter=(await tx.get(this.meterPath()))?.data,ledgers={...(meter?.egressMonths||{})},ledger=ledgers[month];if(!ledger?.reservations?.[downloadId])throw Error('Missing transfer reservation');delete ledger.reservations[downloadId];ledger.estimated+=reservation;tx.set(this.meterPath(),{egressEstimated:meter.egressEstimated+full.length,egressMonths:ledgers},['egressEstimated','egressMonths']);});return{asset,bytes:full};
  }
  async revoke(who,tenant,id){return this.db.transaction(async tx=>{const path=this.assetPath(tenant,id),asset=(await tx.get(path))?.data;if(!asset)deny();await this.access(who,tenant,asset,true,tx);tx.set(path,{state:'REVOKED',revision:asset.revision+1},['state','revision']);audit(tx,tenant,who.uid,'media.revoked',id,{previous:asset.state},this.now());return{state:'REVOKED'};});}
- async getView(who,tenant,id){const a=(await this.db.get(this.assetPath(tenant,id)))?.data;if(!a||['DELETING','TOMBSTONED','REVOKED'].includes(a.state))deny();await this.access(who,tenant,a);return{id:a.id,state:a.state,size:a.size,mime:a.mime,mediaClass:a.mediaClass,shared:a.shared,retention:a.retention||{noAutoDelete:true,reason:'PENDING'},notices:Object.fromEntries(Object.entries(a.notices||{}).map(([k,n])=>[k,{failed:n.failed===true,recordedAt:n.recordedAt||null,channel:n.channel||null}])),revision:a.revision};}
+ async getView(who,tenant,id){const a=(await this.db.get(this.assetPath(tenant,id)))?.data;if(!a||['DELETING','TOMBSTONED','REVOKED'].includes(a.state)||await this.db.get('mediaTombstonesV7/'+id))deny();await this.access(who,tenant,a);return{id:a.id,state:a.state,size:a.size,mime:a.mime,mediaClass:a.mediaClass,shared:a.shared,retention:a.retention||{noAutoDelete:true,reason:'PENDING'},notices:Object.fromEntries(Object.entries(a.notices||{}).map(([k,n])=>[k,{failed:n.failed===true,recordedAt:n.recordedAt||null,channel:n.channel||null}])),revision:a.revision};}
  async evaluateRetention(tenant,id,tier){
   const path=this.assetPath(tenant,id);return this.db.transaction(async tx=>{
    const asset=(await tx.get(path))?.data;

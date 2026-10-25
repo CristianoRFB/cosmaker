@@ -8,6 +8,8 @@ test('exact adaptive thresholds and immediate increase; NONE creates no artifici
  for(const [uploads,bytes,tier] of [[0,0,'NONE'],[1,1,'LOW'],[4,20*MiB-1,'LOW'],[5,5,'MEDIUM'],[1,20*MiB,'MEDIUM'],[30,30,'HIGH'],[1,200*MiB,'HIGH']])assert.equal(tierOf({uploads,bytes}),tier);
  assert.equal(updateActivity(null,window(0,0)),null);assert.equal(updateActivity({tier:'LOW'},window(30,30)).tier,'HIGH');
  assert.throws(()=>tierOf({uploads:-1,bytes:0}));
+ assert.throws(()=>tierOf({uploads:0,bytes:1}));
+ assert.throws(()=>updateActivity({tier:'unknown'},window(1,1)));
 });
 test('downgrade needs two distinct completed consecutive 30-day windows, replay is inert',()=>{
  let state={tier:'HIGH',belowWindows:0,lastClosedEnd:null};
@@ -21,6 +23,7 @@ test('domain, active/multiple links, unknown legacy, docs and legal hold overrid
 test('UTC closure dates, no shortening promises, LOW no-delete, viewing is irrelevant',()=>{
  const medium=retentionFor(asset(),'MEDIUM',now);assert.equal(medium.dueAt,'2026-04-01T00:00:00.000Z');assert.equal(medium.graceUntil,'2026-04-15T00:00:00.000Z');
  const high=retentionFor(asset({retention:medium}),'HIGH',now);assert.equal(high.dueAt,medium.dueAt);assert.equal(high.graceUntil,medium.graceUntil);
+ const low=retentionFor(asset({retention:medium}),'LOW',now),again=retentionFor(asset({retention:low}),'HIGH',now);assert.equal(again.dueAt,medium.dueAt);assert.equal(again.graceDays,14);
  assert.equal(retentionFor(asset(),'LOW',now).noAutoDelete,true);assert.deepEqual(retentionFor(asset({lastViewedAt:new Date(now).toISOString()}),'HIGH',now),retentionFor(asset(),'HIGH',now));
 });
 test('notices, grace and revision prevent premature deletion; planning remains dry-run',()=>{
@@ -34,6 +37,7 @@ test('notices, grace and revision prevent premature deletion; planning remains d
 test('70/80/90 percent admission never deletes existing data and notices failure closes optional uploads',()=>{
  assert.equal(admission({active:70,pending:0,capacity:100}).level,'ALERT');
  assert.equal(admission({active:79,pending:1,reserved:1,capacity:100}).allowed,false);
+ assert.equal(admission({active:79,pending:0,reserved:2,capacity:100}).allowed,false);
  assert.equal(admission({active:80,pending:0,reserved:1,capacity:100,essential:true}).allowed,true);
  assert.equal(admission({active:89,pending:1,reserved:0,capacity:100,essential:true}).allowed,false);
  assert.equal(admission({active:1,pending:0,capacity:100,noticeFailure:true}).allowed,false);

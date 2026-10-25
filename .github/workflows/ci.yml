@@ -62,8 +62,22 @@ jobs:
       - run: npm ci --prefix infrastructure/media
       - run: npm --prefix infrastructure/media test
       - run: node infrastructure/media/run-integration.mjs
+      - run: npx eslint app/api/media-proof tests/e2e/media-lifecycle.spec.ts
+      - run: npm run build:local
+      - run: npx playwright install --with-deps chromium
+      - run: node infrastructure/media/run-integration.mjs ui
       - run: npm run docs:functional
       - run: npm audit --prefix infrastructure/media --audit-level=high
+  media-native-storage:
+    if: github.ref_name == 'codex/cosmaker-goal-vii-media-lifecycle' || github.head_ref == 'codex/cosmaker-goal-vii-media-lifecycle'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Official Storage OSS containers only, synthetic private 20 MiB proof
+        run: node infrastructure/media/run-native.mjs
   media-windows:
     if: github.ref_name == 'codex/cosmaker-goal-vii-media-lifecycle' || github.head_ref == 'codex/cosmaker-goal-vii-media-lifecycle'
     runs-on: windows-latest
