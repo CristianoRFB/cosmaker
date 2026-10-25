@@ -1,0 +1,501 @@
+{
+  "schemaVersion": 1,
+  "baseline": "d659faa",
+  "scope": "All matching code files plus manually classified binary domains",
+  "scanPattern": "upload|storagePath|photoURL|avatar|attachment|download.*Bytes",
+  "sourceFiles": [
+    {
+      "file": "app/api/upload/assinar/route.ts",
+      "sha256": "b901ea41a6d4660d26fbc0e84af1dc316b0921da365cccaf331aa8af3ecf1f2c"
+    },
+    {
+      "file": "components/commercial/tenant-commercial-banner.tsx",
+      "sha256": "94f7303e3e07c521d5cb105b0f5506038e238f44649e586140440b4bb6e30f0b"
+    },
+    {
+      "file": "components/layout/workspace-layout.tsx",
+      "sha256": "a550066c1b42d986fff91f04b7e624634338ec21f8e8970d7b84eb8177be6cba"
+    },
+    {
+      "file": "components/messages/messages-workspace.tsx",
+      "sha256": "f3e833186132c42d01cc05d49d0a6a519e46ea8739ebda208ba8bb2aacbfa91d"
+    },
+    {
+      "file": "components/orders/order-detail.tsx",
+      "sha256": "367e7d85204103d12f88c596cd779ad91931921c161b5af6ebe5aac3ac47c523"
+    },
+    {
+      "file": "components/orders/order-history.tsx",
+      "sha256": "dab4c34069a28ba9d1316e711fef5e9349de0153e3e6c60938edac25725a5664"
+    },
+    {
+      "file": "components/orders/order-files.tsx",
+      "sha256": "03fb0b62d69a9195659b77a083ea05fc8efbe9e38dd8a422bd72f14757af35b8"
+    },
+    {
+      "file": "components/portfolio/showcase-admin.tsx",
+      "sha256": "718c566489a33560ddc8c5986d8791ce6fbdd37ece2830738ab25105dcca760d"
+    },
+    {
+      "file": "components/production/production-stage-controls.tsx",
+      "sha256": "9066bf24782ce68071d8eb250448c16a26beae7368dd2ce24fbd29b70189783e"
+    },
+    {
+      "file": "components/production/production-photo-image.tsx",
+      "sha256": "d9b0e5bc3bb842e7588ca14dffb5dc6927738ad3322b58b5796b1e8242c6ad1f"
+    },
+    {
+      "file": "components/public/quote-request-form.tsx",
+      "sha256": "f4909639c922d5751eb5669dabf9ecbb6ac9ef1f6107a20cca0a33f5c3e39405"
+    },
+    {
+      "file": "components/ui/avatar.tsx",
+      "sha256": "a1616f5f8a8dfa1d6b9d61c7e2d3b574ef683e0325e1c7729c09811d4bbd581f"
+    },
+    {
+      "file": "services/firebase/auth.service.ts",
+      "sha256": "0bf2a30b5a8c67f889cf847c5767156079cca0a6f5f83fa2d5c07eedb75ea532"
+    },
+    {
+      "file": "services/firebase/storage.service.ts",
+      "sha256": "75099882be69f2ae4270de070301981b938277087b65b504f67015a3b114238a"
+    },
+    {
+      "file": "functions/src/index.ts",
+      "sha256": "47f74d08ff6d198cb2fd7760ed298aaff5107c37ca049ac72f39b0ae2d28e7ff"
+    },
+    {
+      "file": "functions/src/commercial/access.ts",
+      "sha256": "9ea2b4d57e8177b0ae1bb849de7d4aec6df5b3a769ed02de7d04958781762b9a"
+    },
+    {
+      "file": "functions/src/orders/create-order.ts",
+      "sha256": "7ba39a1b75a1dc4c56440339f2067b5b954876c81be2bebb82b680197c650626"
+    },
+    {
+      "file": "functions/src/orders/production-photos.ts",
+      "sha256": "b51c8e6b22921f290c8205152862838c3f2c802867978df0442f18f77c517822"
+    },
+    {
+      "file": "functions/src/orders/respond-to-production-approval.ts",
+      "sha256": "646dca932cf9c6fab5d44d106edc2f7835541d946f75aac10fb79049d52621e2"
+    },
+    {
+      "file": "functions/src/orders/update-production-stage.ts",
+      "sha256": "8e572fb696d7af654ec6e28bc86bd6f0537b4807e9ef1fc6682d74d0fd4bdd3c"
+    },
+    {
+      "file": "functions/src/orders/order-file-bytes.ts",
+      "sha256": "07fa0ef7e0978c0d5054c04f914d71d35fe78c2469e0703059451886bf7bd99f"
+    },
+    {
+      "file": "functions/src/orders/order-file-storage.ts",
+      "sha256": "baba14db72949412e703d65dacef95823fd252b254fa9bc5135035f852a22d30"
+    },
+    {
+      "file": "functions/src/orders/production-evidence.ts",
+      "sha256": "954f668e144c3aac65820454cd4478023fd78cb6d5748989e4d6dd6d6252622a"
+    },
+    {
+      "file": "functions/src/orders/production-photo-upload.ts",
+      "sha256": "9b5285c524915c078fc4e970a56f834813e600c4caae21cc804c7bf7aa41b7b2"
+    },
+    {
+      "file": "functions/src/orders/legacy-file-bytes.ts",
+      "sha256": "4b810e53cc08bb150c90a840834410d0a619fb4311eb9446784ddce5cf096d40"
+    },
+    {
+      "file": "functions/src/orders/production-photo-bytes.ts",
+      "sha256": "ccb08ef01fd7fc01230abf23676a0a4c28881cb687ff4ed4ecf41654dabaf48f"
+    },
+    {
+      "file": "functions/src/orders/order-files.ts",
+      "sha256": "f9d58aa601dfd99defad15817eb765337eca6a3985b38e7c398833b0a68b0f63"
+    },
+    {
+      "file": "functions/src/public/tenant.ts",
+      "sha256": "937a067e72e354557f35828d9255639a0d7c1cf211651318ddb4e68d8633d9bf"
+    },
+    {
+      "file": "functions/src/public/quote-reference-upload.ts",
+      "sha256": "bf87e70a1de24eb7636f6371ce29ea3e33d477ecadbf21f71c80a11bad3c3bc0"
+    },
+    {
+      "file": "functions/src/public/quote-reference-bytes.ts",
+      "sha256": "a0e83e2d076df62989917db155143ddde831f798a9765cd7eeefba34efda4254"
+    },
+    {
+      "file": "functions/src/messages/conversations.ts",
+      "sha256": "6044574cfbb75cca78a7a0f45cda78377215b27cd226794852049132e2f7c987"
+    },
+    {
+      "file": "functions/src/showcase/images.ts",
+      "sha256": "da669e61de1f76843db9779952381667a5d2a18fc439a77c220754ace831b510"
+    },
+    {
+      "file": "types/conversation.ts",
+      "sha256": "f3ebef6f408b8ef157a44c4fc2d8ae5a7c9102fefe434a108c7ae60e514f6c5f"
+    },
+    {
+      "file": "types/order.ts",
+      "sha256": "24cfdf2dfbdd97a59f40f3f6807a39ea2ee3139b4ce8e56e4f159d15da94c2dc"
+    },
+    {
+      "file": "types/production.ts",
+      "sha256": "5b57fc88087f43e16f1333cc890b38bd0654a21a3b49a4ba4aed7dad6f034425"
+    },
+    {
+      "file": "types/quote-request.ts",
+      "sha256": "c8333996a35140f6ac41551780a3f3dc60a59ad2fe1268c658055e28ad517c90"
+    },
+    {
+      "file": "types/user.ts",
+      "sha256": "44484ee2f05ba4b66ed9580a272d111e302f29e84b66166de0078587ac1bcace"
+    }
+  ],
+  "flows": [
+    {
+      "id": "public_quote_references",
+      "area": "Orçamento público",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "TEMP_WORKFLOW",
+      "maxMiB": 10,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "capability slug/request; staff privado",
+      "lifecycle": "new→linked; não adotar TTL legado",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/public/tenant.ts",
+        "functions/src/public/quote-reference-upload.ts",
+        "functions/src/public/quote-reference-bytes.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "order_attachments",
+      "area": "Pedidos/anexos",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "MIXED",
+      "maxMiB": 20,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "UID/CRM + orders:manage/read; sharing explícito",
+      "lifecycle": "imagens referência TEMP; documentos/PDF protegidos",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/orders/order-files.ts",
+        "functions/src/orders/order-file-bytes.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "production_photos",
+      "area": "Produção/fotos",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "MIXED",
+      "maxMiB": 10,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "UID + stage + orders:manage; aprovação referencia foto",
+      "lifecycle": "evidência aprovada protegida; refs TEMP só após todos links fechados",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/orders/production-photos.ts",
+        "functions/src/orders/production-photo-upload.ts",
+        "functions/src/orders/production-photo-bytes.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "portfolio_images",
+      "area": "Portfólio publicado",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "PERSISTENT_BUSINESS",
+      "maxMiB": 10,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "staff portfolio/settings; público só publicado",
+      "lifecycle": "sem limpeza genérica",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/showcase/images.ts",
+        "functions/src/showcase/showcase.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "branding_legacy",
+      "area": "Marca/branding",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "UNKNOWN_LEGACY",
+      "maxMiB": 5,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "atelier:settings; reader servidor",
+      "lifecycle": "sem novos uploads; no_auto_delete",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/orders/legacy-file-bytes.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "portfolio_legacy",
+      "area": "Portfólio legado",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "UNKNOWN_LEGACY",
+      "maxMiB": 20,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "portfolio:manage; entidade existe",
+      "lifecycle": "compatibilidade só leitura",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/orders/legacy-file-bytes.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "measurements_legacy",
+      "area": "Medidas/anexos",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "UNKNOWN_LEGACY",
+      "maxMiB": 20,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "measurements:read e cadastro CRM",
+      "lifecycle": "cadastro/medidas textuais não são blobs",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/orders/legacy-file-bytes.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "contracts_invoices",
+      "area": "Contratos e comprovantes",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "PROTECTED_REGULATED",
+      "maxMiB": 20,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "orders/finance:read",
+      "lifecycle": "no_auto_delete, mesmo negócio encerrado",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/orders/legacy-file-bytes.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "legacy_order_files",
+      "area": "Entrega/documentos/referências/aprovações legadas",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "UNKNOWN_LEGACY",
+      "maxMiB": 20,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "orders:read; pedido canônico",
+      "lifecycle": "no_auto_delete",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/orders/legacy-file-bytes.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "message_attachments",
+      "area": "Mensagens",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "INHERITS_LINKED_ASSET",
+      "maxMiB": 20,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "GCS legacy/protected server",
+      "authorization": "pedido + UID; anexos ready/compartilhados",
+      "lifecycle": "não copia bytes; vínculo múltiplo impede expiração prematura",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/messages/conversations.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "oauth_avatar",
+      "area": "Avatar Auth",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "PERSISTENT_BUSINESS",
+      "maxMiB": null,
+      "formats": [],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "external OAuth",
+      "authorization": "photoURL OAuth externo; perfil próprio",
+      "lifecycle": "sem uploader local provado; não apagar URL externa",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "services/firebase/auth.service.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "docs_assets",
+      "area": "Screenshots/leads/imagens geradas/docs",
+      "owner": "repositório",
+      "tenant": null,
+      "mediaClass": "PERSISTENT_BUSINESS",
+      "maxMiB": null,
+      "formats": [],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "Git",
+      "authorization": "Git/versionado; fora do namespace",
+      "lifecycle": "NUNCA fixture cliente ou alvo TTL",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "docs/versions/v0.2.0/GENERATED_VISUALS.md"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "crm_notes_inventory",
+      "area": "CRM/notas/estoque/financeiro/agenda",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "NO_MEDIA",
+      "maxMiB": null,
+      "formats": [],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "none",
+      "authorization": "RBAC documentos",
+      "lifecycle": "não foi encontrado uploader de blob nestes domínios",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "functions/src/clients/clients.ts",
+        "functions/src/inventory/inventory.ts",
+        "functions/src/finance/finance.ts"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    },
+    {
+      "id": "spark_proof",
+      "area": "Candidato GOAL VI",
+      "owner": "tenant/UID de domínio",
+      "tenant": "atelierId canônico",
+      "mediaClass": "UNKNOWN_LEGACY",
+      "maxMiB": 6,
+      "formats": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ],
+      "gif": "NOT_ACCEPTED_EXISTING_CONTRACT",
+      "provider": "RTDB6MiB",
+      "authorization": "gateway Auth/tenant; RTDB raw deny",
+      "lifecycle": "fallback preservado sem TTL",
+      "ttl": "no_auto_delete until explicit classification proof",
+      "businessValue": "history/evidence/identity",
+      "lossImpact": "potential business/history loss; no cutover",
+      "sources": [
+        "infrastructure/spark/src/files.mjs"
+      ],
+      "tests": "ver source scan e evidências GOAL VI/IV; sem herança de PASS novo"
+    }
+  ]
+}

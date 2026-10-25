@@ -1,0 +1,13 @@
+# MEDIA_LIFECYCLE_GVII — decisão e prova em implementação
+
+Status: implementation_pending. Base remota d659faa40bd8dff3929daac2f6a39aa47bccea19, branch isolada codex/cosmaker-goal-vii-media-lifecycle. Candidata cca4e23 e branch GOAL VI preservadas. Flags OFF, sem cutover ou deploy.
+
+O documento externo77_SAAS_GLOBAL_MEDIA_LIFECYCLE_STANDARD_v01.md não foi encontrado no checkout. Fonte materializada: [mandato fornecido](../implementation/media-lifecycle/GOAL_VII_MANDATE.txt), snapshot literal com regrasD/E/H. Não se declara possuir o texto completo externo. Esta implementação adapta apenas as regras efetivamente recebidas; não altera preços/entitlements ou versão comercial.
+
+Desenho: MediaStorageProvider intercambiável; metadados/auditoria canônicos continuam Firestore. Prova RTDB com manifest/chunks e comparação com protocolo SupabaseStorage/TUS em double local identificado. Sem Postgres de negócio, Firebase real, credenciais, R2, billing ou serviços pagos. Hash/MIME, tenant/UID, reservas, fencing, pending/ready/reconciliação e tombstones antecedem qualquer discussão de substituição. Provider real, RLS, revogação de signedURLs e CPUFree não recebem PASS por simulação.
+
+Retenção: só TEMP_WORKFLOW,30dias de uso por tenant; HIGH30uploads ou200MiB, MEDIUM5ou20MiB; HIGH30+7dias após fechamento real, MEDIUM90+14, LOW/NONE sem delete. Subida imediata e descida após duas janelas completas consecutivas. Datas prometidas nunca encurtam. Links ativos/hold/documentos/fixos/legados/desconhecidos/docs versionados não expiram. Avisos internos registrados e tolerância efetiva são gates; falha em avisos restringe upload não essencial. Agendador só DRY_RUN, sem deletar dados reais.
+
+Riscos/gates: quotas globais1GB/egress vs20tenants; signedURL pode continuar válida atéexpiração/cache; Firebaseclaims não equivalem a membershipsFirestore no RLS; SupabaseFree sem transformação de imagens; RestoreDB não restaura blobs; RTDBBase64 aumenta espaço/tráfego e verificação grande pode exceder CPU10ms/50requests. Inventário e evidências serão mantidos separados da aceitação histórica182/184 e10/16.
+
+Fontes oficiais: [limites](https://supabase.com/docs/guides/storage/uploads/file-limits), [TUS/x-signature](https://supabase.com/docs/guides/storage/uploads/resumable-uploads), [FirebaseAuth](https://supabase.com/docs/guides/auth/third-party/firebase-auth), [preços](https://supabase.com/pricing), [backup](https://supabase.com/docs/guides/platform/backups), [Workers limites](https://developers.cloudflare.com/workers/platform/limits/).

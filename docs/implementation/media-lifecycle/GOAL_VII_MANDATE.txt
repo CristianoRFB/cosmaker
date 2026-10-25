@@ -1,0 +1,100 @@
+COSMAKER OS — GOAL MASTER VII
+PROVA DE STORAGE PRIVADO 20 MiB + RETENÇÃO ADAPTATIVA + GOVERNANÇA GLOBAL DE IMAGENS
+Data: 2026-10-25
+Executor: Codex Cloud
+Modo: IMPLEMENTAÇÃO CONCRETA EM BRANCH ISOLADA, com análise e experimentos locais, sem deploy/sem billing.
+
+CONTEXTO E FONTES
+- Repositório alvo: https://github.com/CristianoRFB/cosmaker
+- Branch de portabilidade informada: codex/cosmaker-spark-zero-billing
+- HEAD reportado após GOAL VI: d659faa (VERIFICAR remotamente antes de começar; não assumir se divergente)
+- Candidata anterior preservada: cca4e23281afd4bcfcc5eb0dc69c38e8b641eba2, na branch codex/cosmaker-master-finalizacao; NÃO ALTERAR.
+- GOAL VI: 6 commits informados; Worker/Firestore REST, RTDB privado teto implementado 6 MiB, cron workerd, OpenNext, validações locais e CI. Migração incompleta, NOT_READY.
+- 101 Functions mapeadas; 47 operações congeladas: apenas 7 parcialmente testadas na nova stack, 0 com equivalência integral aceita. Não transferir 182/184 ou 10/16 antigos para arquitetura nova.
+- Anexo canônico no contexto/projeto do usuário: 77_SAAS_GLOBAL_MEDIA_LIFECYCLE_STANDARD_v01.md. Se não estiver presente no checkout, solicitar materialização pelo contexto fornecido ou implementar a partir destas regras; NÃO inventar que arquivo externo já está no repo. Ao preparar a documentação local, registrar referência e snapshot apropriados.
+
+MANDATO INEGOCIÁVEL
+1. Firebase Auth + Firestore permanecem no Spark. Nenhum Blaze, billing, R2, gateway, novo serviço pago, alteração IAM real, deployment externo, login em contas reais, secrets expostos, manipulação de produção ou dados reais.
+2. Meta funcional: arquivos privados até 20 MiB inteiros (20*1024*1024 bytes), com upload, download, integridade, autorização, isolamento tenant A/B, leases, rollback, expiração segura e restauração. A experiência do Cosmaker NÃO pode perder funcionalidades só para caber no Free.
+3. Não migre as 101 Functions, banco principal nem todos os módulos para Supabase. Faça primeiro POC + adaptador pluggable de mídia, comparando RTDB atual com Supabase Storage Free; avance apenas onde houver equivalência comprovada.
+4. Trabalhe de verdade no código, não entregue apenas plano/auditoria. Se houver bloqueio técnico objetivo, implemente o máximo seguro e marque os gates restantes como BLOCKED com evidência; jamais falsear PASS.
+5. Preserve WIP, commits existentes, main, branch original e fallback. Sem force push, hard reset, rebase destrutivo, exclusão de legado ou merge em main.
+6. Não usar assets do diretório docs/ (screenshots, mockups/lead, imagens geradas) como mídia temporária de clientes e nunca aplicar expiração automática a esses arquivos versionados.
+
+BRANCH / PRE-FLIGHT
+- Leia README, docs/CURRENT.md, status GOAL VI, arquitetura, rotas do Storage, regras, migradores, testes, CI e operações. Descubra o worktree ativo e o branch remoto, preserve alterações não comitadas.
+- Faça fetch e confira HEAD real com d659faa. Caso divergente, analise a diferença e siga o topo remoto verificável sem sobrescrever trabalho.
+- Crie branch isolada, p.ex. codex/cosmaker-goal-vii-media-lifecycle, partindo da branch GOAL VI íntegra.
+- Criar docs/decisions/MEDIA_LIFECYCLE_GVII.md com visão, limites, matriz de riscos e links oficiais; registrar CHANGE global com status implementation_pending.
+- Estabeleça checkpoints pequenos e commits com push frequente na branch isolada.
+
+FASE A — INVENTÁRIO REAL, CONGELAMENTO DE CONTRATOS
+- Varra a base e encontre TODOS os fluxos que usam upload, foto, anexo, portfolio, avatar, mídia de cliente/ateliê, imagem gerada, referências, notas, orçamento, produção, estoque e mensagens.
+- Crie matriz por operação: arquivo, proprietário, tenant, área, entrada, leitura, compartilhamento, tamanho aceito, storage atual, permissões, TTL, valor de negócio, estado ativo/encerrado, testes atuais, impacto se perder.
+- Confira o contrato binário real de 20 MiB e outros tamanhos locais existentes; se o teto reportado estiver desatualizado, documente sem redefinir tamanho arbitrariamente.
+- Marque mídias como TEMP_WORKFLOW, TEMP_DERIVED, PERSISTENT_BUSINESS, PROTECTED_REGULATED, UNKNOWN_LEGACY ou NO_MEDIA; classe do domínio prevalece sobre frequência. NÃO configurar expiração em objetos legados desconhecidos.
+- Mantenha o modelo de dados e interfaces existentes com adaptador intercambiável, feature flag OFF por padrão; nenhum cutover.
+
+FASE B — COMPARAÇÃO TÉCNICA OBJETIVA DE ARMAZENAMENTO
+Candidato 1: RTDB Spark na arquitetura atual, com chunking/manifest idempotente, hashes, quotas e ausência de transações cross-DB. Verificar se há prova plausível de 20 MiB sem prejuízo de limites do RTDB e sem base64 irresponsável.
+Candidato 2 (preferido se provar): Supabase Storage Free somente para arquivos (não Supabase Postgres como novo banco de negócio). Confirmar limites OFICIAIS atuais de 50 MB por objeto, quota de 1 GB, egress, projetos Free, pausas e backups; não declarar viável para todos os tenants por causa do limite individual.
+- POC Supabase em ambiente local simulado/mocks fiéis se não houver serviço real acessível. Não criar projeto remoto/ativar serviço sem autorização.
+- Estudar SDK/API, Firebase Auth Third-Party integration, claim `role: authenticated`, integração de claims sem Cloud Functions/Blaze e RLS de storage. Firestore memberships NÃO são visíveis automaticamente para RLS do Supabase; NUNCA basear isolamento somente em path/tenantId enviado pelo browser ou em supabase.auth.uid() sem checar associação ao tenant.
+- Comparar (a) acesso Firebase token + RLS com memberships confiáveis e (b) servidor autenticado gerando uma capacidade de upload/download com escopo mínimo, caminho imutável, vínculo usuário/tenant, tamanho e validade. Não assumir que signed upload URL suporta TUS: PROVAR integração resumível para 20 MiB e controle de autorização, ou bloquear o gate.
+- Investigar caminhos que enviem 20 MiB diretamente para Storage com capabilities/autorização confiáveis, evitando passar buffers inteiros pelo Worker Free (limite de CPU). Não usar service_role no cliente.
+- Validar URLs assinadas de curta duração, autorização em leitura, revogação, replay, expiração e ausência de referência cruzada entre ateliês; notar possíveis janelas de cache de URLs assinadas.
+- Supabase Free não fornece transformações de imagem no Storage (recurso Pro). Se necessário, criar miniaturas locais seguras, opt-in e sem tocar no original, sem dependências pesadas incompatíveis com o Worker Free. Não afirmar que haverá processamento automático gratuito se não houver prova.
+- Fazer tabela comparativa: suporte 20 MiB; CPU; subrequests; RBAC; RLS; backup byte-a-byte; limites; custo R$0 sem cartão/billing; tamanho total suportado para 1/5/20 tenants; egress/pausa e risco de recuperação.
+
+FASE C — IMPLEMENTAR FLUXO VERTICAL DE ARQUIVOS NO AMBIENTE LOCAL
+- Implementar interface MediaStorageProvider e adaptador/test-double, mantendo RTDB e seus contratos intactos; SupabaseStorageAdapter somente quando a prova for suficiente.
+- Reservar capacidade antes de cada upload concorrente, criar key imutável por tenant/asset, validar MIME/magic bytes, size, SHA-256, idempotency key, lease/fencing token, autenticação e membership servidor, políticas de compartilhamento explícito e auditoria.
+- Upload do arquivo exatamente de 20 MiB via fluxo adequado, retomar quando rede cai, tolerar retry e evitar duplicação; leitura e export/download exatos. Teste 20 MiB+1 byte deve falhar com mensagem correta se esse é o limite do produto.
+- Metadados Firestore e blob não compartilham ACID: estados PENDING/READY, reconciliador, garbage-collection de uploads nunca finalizados, outbox/inbox ou protocolo equivalente, recuperação após crash e revogação explícita.
+- Não permitir bypass via rota antiga, Storage raw no navegador, endpoint público, tenant enviado pelo cliente ou service credentials.
+
+FASE D — POLÍTICA GLOBAL v01 ADAPTADA AO COSMAKER
+- Implementar APENAS para `TEMP_WORKFLOW` a classificação adaptativa tenant-a-tenant por 30 dias: HIGH >=30 uploads OU >=200 MiB; MEDIUM >=5 uploads OU >=20 MiB e abaixo de HIGH; LOW restante com 1+; NONE 0.
+- HIGH = 30 dias após conclusão real do pedido/etapa + 7 dias de tolerância. MEDIUM = 90 + 14 dias. LOW = sem auto-delete. Em NONE não criar dados artificialmente. Rascunhos derivados podem ter TTL curto específico, apenas se comprovadamente regeneráveis.
+- Mídia persistente de marca/portfolio publicado e documentos contratuais ficam fora da limpeza genérica. Pedido em andamento SEM data de conclusão não expira. UNKNOWN_LEGACY/PROTECTED_REGULATED: no_auto_delete. Não aceitar atividade de visualização como mecanismo automático para renovar infinito.
+- Subir classe imediatamente; baixar somente após duas janelas consecutivas abaixo do limiar. Nunca encurtar TTL já prometido retroativamente. Guardar policyVersion, retentionStartAt, dueAt, graceUntil, aviso e trilha de auditoria.
+- Exibir UX de arquivos: classificação, tamanho, data de vencimento, botão baixar, exportação individual ou ZIP se couber no ambiente gratuito, avisos antes e no vencimento, tolerância, falha na notificação e auditoria; mobile 320/375/768/1440.
+- Provar agendador/cron em UTC, leases, idempotência, paginação com 100+ inválidos antes dos elegíveis, ensaios com FakeClock, legal hold, vínculos múltiplos, persistência de metadados e exclusão via Storage API, jamais SQL direto.
+- Deleção começa DRY_RUN. Não executar live deletes/deploy nesta fase. Se aviso obrigatório não foi entregue/registrado conforme política, adiar exclusão e limitar uploads para preservar dados.
+
+FASE E — ADMISSION CONTROL / ECONOMIA REAL
+- Meter bytes reais ativos + pendentes, consumo do tenant e agregado do projeto/provedor, downloads/egress (estimativa distinta de telemetria real) e concorrência. Reconciliar com números do provedor quando houver API/teste permitido.
+- Operação padrão: 70% alertar; 80% limitar uploads não essenciais se exceder orçamento/reserva; 90% suspender novos uploads de mídia; preservar acesso e arquivos existentes, nunca apagar antecipadamente só para baixar percentual.
+- Testar cenários com 20 MiB e 1, 5, 20 tenants: incluir exemplo 2x20 MiB/dia saturando o Free antes do primeiro vencimento. Se promessa de consumo crescente multi-tenant não se sustentar, escrever BLOCKER e proposta comercial futura sem ativar plano pago.
+- Não transformar retenção/capacidade em limite de Essencial/Pro/Premium não aprovado comercialmente; não inventar nova tabela de preços ou addon.
+
+FASE F — SEGURANÇA / BACKUP / RESILIÊNCIA
+- Testes negativos: Tenant A lendo/removendo/assinando Tenant B; uid falsificado; role revogada; token expirado; public read; XSS via SVG; payload não imagem; ZIP bomb quando aplicável; upload após reserva expirar; ataque de repetição; relógio deslocado; stale signed URL; concorrência e corrida de exclusão após extensão autorizada.
+- Fazer backup sintético de metadados e dos próprios bytes; provar restauração, checksum e vínculo tenant. Backup do banco não equivale a backup de objetos Supabase. Tombstones impedem ressurreição de deletados. Sem restore real da POC sintética: não declarar READY.
+- Verificar libs open source (licença/manutenção/segurança) antes de integrar. Dependency review incremental e npm audit nos novos módulos.
+- Se Worker Free exigir CPU acima de 10 ms/50 subrequests, registrar inviabilidade real. Benchmarks workerd são evidência LOCAL, não aceite remoto.
+
+FASE G — TESTES E EFICIÊNCIA
+- Testar só superfícies alteradas + smoke das interfaces antigas: não repetir automaticamente 104 cenários SDK, 124 unitários ou toda suite pesada se não houver mudança que justifique. Executar regressão proporcional e reportar denominador das novas evidências.
+- Matrizes: formatos JPEG/PNG/WebP/GIF aceitos conforme contrato; 0 bytes, 6 MiB, 19.99 MiB, 20 MiB, 20 MiB+1; hash; resume; cache; checksum; RLS; leaks; aviso/due/grace/delete; 20+ tenants; concurrency; mobile; rollback.
+- CI verificável; builds e lint sem mascarar skips.
+
+FASE H — HANDOFF FIEL E CRITÉRIOS DE PARADA
+Entregar docs/decisions/MEDIA_LIFECYCLE_GVII.md, docs/implementation/MEDIA_STORAGE_20MIB_PROOF.md, docs/operations/MEDIA_RETENTION_DRY_RUN.md e matriz de 47 operações afetadas com estado ANTERIOR/NOVO; commits com hashes; branch HEAD; evidência dos testes.
+
+Separar explicitamente:
+(A) conclusão funcional da stack ANTIGA `182/184`, 10/16 formal — HISTÓRICO, não altera;
+(B) escopo/aceite do GOAL VII (seu próprio numerador/denominador);
+(C) pronto para clientes reais `NOT_READY` até homologação do provedor, custo, tokens reais, backup/restore e jurídico.
+
+Aceite para liberar a SUBSTITUIÇÃO DO STORAGE exige cumulativamente:
+1) upload + download privado íntegro de 20 MiB;
+2) tenant A/B + RBAC negativo;
+3) no-billing comprovado, com limites reais assumidos;
+4) reconciliação Firestore + Storage com crash/restore;
+5) regra de retenção segura e auditável + no_auto_delete de fixos e legados;
+6) UX de download e aviso sem perda silenciosa;
+7) rollback testável para adaptador anterior.
+Se não fechar qualquer gate, manter feature flag OFF, relatórios de bloqueio explícitos e NOT_READY. NÃO fazer deploy nem ativar rotina destrutiva; prosseguir para outras Functions somente após esse gate técnico.
+
+AÇÃO FINAL: commits pequenos e push branch isolada, com relatório preciso do que foi IMPLEMENTADO, VALIDADO LOCALMENTE, NÃO TESTADO NO PROVEDOR, BLOCKED, e passos específicos que exigiriam autorização posterior.
