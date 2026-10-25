@@ -12,7 +12,7 @@ async function proxy(request: Request, context: { params: Promise<{ operation: s
   if (origin.protocol !== 'http:' || !['127.0.0.1', 'localhost', '[::1]'].includes(origin.hostname) || !origin.port
     || origin.username || origin.password || origin.pathname !== '/' || origin.search || origin.hash) return new Response(null, { status: 503 });
   const headers = new Headers();
-  for (const key of ['authorization', 'content-type', 'x-request-id', 'x-content-sha256']) { const value = request.headers.get(key); if (value) headers.set(key, value); }
+  for (const key of ['authorization', 'content-type', 'x-request-id', 'x-content-sha256', 'x-visible-to-client']) { const value = request.headers.get(key); if (value) headers.set(key, value); }
   try {
     const chunks: Uint8Array[] = []; let size = 0;
     const reader = request.body?.getReader();
@@ -28,7 +28,7 @@ async function proxy(request: Request, context: { params: Promise<{ operation: s
       redirect: 'manual', cache: 'no-store', signal: AbortSignal.timeout(30_000) });
     if (upstream.status >= 300 && upstream.status < 400) return new Response(null, { status: 502 });
     const outgoing = new Headers({ 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' });
-    for (const key of ['content-type', 'content-disposition', 'x-content-sha256']) { const value = upstream.headers.get(key); if (value) outgoing.set(key, value); }
+    for (const key of ['content-type', 'content-disposition', 'x-content-sha256', 'x-visible-to-client']) { const value = upstream.headers.get(key); if (value) outgoing.set(key, value); }
     return new Response(upstream.body, { status: upstream.status, headers: outgoing });
   } catch { return NextResponse.json({ error: { message: 'Runtime local indisponível.' } }, { status: 503 }); }
 }

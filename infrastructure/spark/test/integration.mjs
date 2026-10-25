@@ -26,7 +26,7 @@ async function call(name,data,who='ownerA') {
   return {status:r.status,subrequests:Number(r.headers.get('X-Spark-Subrequests')),...await r.json()};
 }
 async function fileUpload(bytes,requestId=randomUUID(),who='ownerA',extras={}) {
-  const r=await mf.dispatchFetch(`http://localhost/files/${a}/order-a`,{method:'POST',headers:{Authorization:'Bearer '+people[who].token,'Content-Type':'application/pdf','x-request-id':requestId,'x-content-sha256':hash(bytes),...extras},body:bytes});
+  const r=await mf.dispatchFetch(`http://localhost/files/${a}/order-a`,{method:'POST',headers:{Authorization:'Bearer '+people[who].token,'Content-Type':'application/pdf','x-request-id':requestId,'x-content-sha256':hash(bytes),'x-visible-to-client':'true',...extras},body:bytes});
   return {status:r.status,subrequests:Number(r.headers.get('X-Spark-Subrequests')),...await r.json()};
 }
 async function fileGet(id,who='clientA',tenant=a) {return mf.dispatchFetch(`http://localhost/files/${tenant}/order-a/${id}`,{headers:{Authorization:'Bearer '+people[who].token}});}
@@ -102,7 +102,10 @@ test('Private RTDB upload: actual bytes, immutable retry, audit and authorized U
 });
 test('RTDB denies direct reads/writes with no auth or a valid Firebase client token; client A/B and durable UID ownership',async()=>{
   const path=`${env.DATABASE_ORIGIN}/spark/objects/${a}/${uploaded.data.fileId}.json?ns=demo-cosmaker-default-rtdb`;
-  for(const suffix of ['', '&auth='+encodeURIComponent(people.clientA.token)]) {const r=await fetch(path+suffix);assert.ok([401,403].includes(r.status), 'RTDB denial: '+r.status+' '+await r.text());}
+  for(const suffix of ['', '&auth='+encodeURIComponent(people.clientA.token)]) {
+    const r=await fetch(path+suffix);assert.ok([401,403].includes(r.status));assert.match((await r.json()).error,/permission denied/i);
+    const write=await fetch(path+suffix,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify('tampered')});assert.ok([401,403].includes(write.status));assert.match((await write.json()).error,/permission denied/i);
+  }
   const raw=await fetch(path,{method:'PUT',headers:{'Content-Type':'application/json'},body:'"tampered"'});assert.ok([401,403].includes(raw.status));
   assert.equal((await fileGet(uploaded.data.fileId,'clientOther')).status,403);
   assert.equal((await fileGet(uploaded.data.fileId,'ownerB')).status,403);
@@ -113,7 +116,7 @@ test('SHA/MIME failures, interrupted/pending upload and immutable create are not
   assert.equal((await fileUpload(Buffer.from('not a PDF'))).error.status,'INVALID_ARGUMENT');
   assert.equal((await fileUpload(pdf,randomUUID(),'ownerA',{'Content-Type':'image/png'})).error.status,'INVALID_ARGUMENT');
   const key=randomUUID(),fileId=hash(JSON.stringify([a,'order-a',people.ownerA.uid,key]));
-  const fingerprint=hash(JSON.stringify([hash(pdf),'application/pdf',pdf.length]));
+  const fingerprint=hash(JSON.stringify([hash(pdf),'application/pdf',pdf.length,true]));
   await db.doc(`ateliers/${a}/orders/order-a/sparkFiles/${fileId}`).set({status:'pending',fingerprint,leaseId:'old-interrupted',leaseUntil:new Date(Date.now()+60000)});
   assert.equal((await fileUpload(pdf,key)).error.status,'ABORTED');
   assert.equal((await fileGet(fileId)).status,403);
@@ -227,10 +230,16 @@ test('Actual interrupted HTTP upload publishes no metadata, object or quota rese
 test('Reused contact e-mail cannot recover a private order after original Auth UID deletion',async()=>{
   const email='uid-reuse-'+nonce+'@cosmaker.test',password='Synthetic!Password123';
   const first=await auth.createUser({email,password,emailVerified:true});
+  await db.doc(`ateliers/${a}/orders/order-a/sparkFiles/${uploaded.data.fileId}`).update({visibleToClient:true});
   const orderRef=db.doc(`ateliers/${a}/orders/order-a`);
   await orderRef.update({clientUserId:first.uid});
   await db.doc(`users/${first.uid}`).set({active:true,accountType:'client'});
+  const originalClient=initializeApp({apiKey:'emulator-only-key',projectId,authDomain:projectId+'.firebaseapp.com',appId:'emulator-only-app'},'original-uid-'+nonce);clients.push(originalClient);
+  const originalAuth=getAuth(originalClient);connectAuthEmulator(originalAuth,env.AUTH_ORIGIN,{disableWarnings:true});
+  const original=await signInWithEmailAndPassword(originalAuth,email,password);people.original={uid:first.uid,token:await original.user.getIdToken()};
+  assert.equal((await fileGet(uploaded.data.fileId,'original')).status,200);
   await auth.deleteUser(first.uid);
+  assert.equal((await fileGet(uploaded.data.fileId,'original')).status,401);
   const replacement=await auth.createUser({email,password,emailVerified:true});assert.notEqual(first.uid,replacement.uid);
   await db.doc(`users/${replacement.uid}`).set({active:true,accountType:'client'});
   const client=initializeApp({apiKey:'emulator-only-key',projectId,authDomain:projectId+'.firebaseapp.com',appId:'emulator-only-app'},'uid-reuse-'+nonce);clients.push(client);
@@ -239,4 +248,33 @@ test('Reused contact e-mail cannot recover a private order after original Auth U
   people.reused={uid:replacement.uid,token:await user.user.getIdToken()};
   assert.equal((await fileGet(uploaded.data.fileId,'reused')).status,403);
   await orderRef.update({clientUserId:people.clientA.uid});
+});
+
+test('Concurrent uploads with the same idempotency key have one immutable object, reservation and ready audit',async()=>{
+  const key=randomUUID(),fileId=hash(JSON.stringify([a,'order-a',people.ownerA.uid,key]));
+  const before=await rtdb('spark/quota');
+  const result=await Promise.all([fileUpload(pdf,key),fileUpload(pdf,key)]);
+  assert.ok(result.some(r=>r.status===200&&!r.data.alreadyApplied),JSON.stringify(result));
+  assert.ok(result.every(r=>[200,409].includes(r.status)),JSON.stringify(result));
+  const retry=await fileUpload(pdf,key);assert.equal(retry.status,200);assert.equal(retry.data.alreadyApplied,true);
+  const after=await rtdb('spark/quota');
+  assert.equal(Object.keys(after.files).length,Object.keys(before.files).length+1);
+  assert.equal(after.stored-before.stored,after.files[fileId].size);
+  const audits=await db.collection('auditLogs').where('action','==','spark.file_ready').get();
+  assert.equal(audits.docs.filter(d=>d.get('after').fileId===fileId).length,1);
+  assert.equal((await rtdb(`spark/objects/${a}/${fileId}`)).sha256,hash(pdf));
+});
+
+
+test('New private files default to staff-only and explicit sharing is bound to the immutable operation',async()=>{
+  const key=randomUUID();
+  const result=await fileUpload(pdf,key,'ownerA',{'x-visible-to-client':'false'});assert.equal(result.status,200);
+  assert.equal((await fileGet(result.data.fileId,'clientA')).status,403);
+  assert.equal((await fileGet(result.data.fileId,'ownerA')).status,200);
+  assert.equal((await fileUpload(pdf,key,'ownerA',{'x-visible-to-client':'true'})).error.status,'FAILED_PRECONDITION');
+  const noHeaderKey=randomUUID();
+  const response=await mf.dispatchFetch(`http://localhost/files/${a}/order-a`,{method:'POST',headers:{Authorization:'Bearer '+people.ownerA.token,'Content-Type':'application/pdf','x-request-id':noHeaderKey,'x-content-sha256':hash(pdf)},body:pdf});
+  assert.equal(response.status,200);const value=await response.json();
+  assert.equal((await db.doc(`ateliers/${a}/orders/order-a/sparkFiles/${value.data.fileId}`).get()).get('visibleToClient'),false);
+  assert.equal((await fileGet(value.data.fileId,'clientA')).status,403);
 });

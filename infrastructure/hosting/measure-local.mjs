@@ -11,7 +11,7 @@ for(const name of (await readdir('/proc')).filter(n=>/^\d+$/.test(n)))try{
 if(pids.length!==2)throw Error('Expected exactly two owned OpenNext workerd processes');
 async function stats(){let ticks=0,rss=0;for(const pid of pids){const raw=await readFile('/proc/'+pid+'/stat','utf8'),v=raw.slice(raw.lastIndexOf(')')+2).split(' ');ticks+=Number(v[11])+Number(v[12]);rss+=Number(v[21])*4096;}return{ticks,rss};}
 const rows=[];
-for(const path of ['/','/login','/spark-proof']){
+for(const path of ['/','/login','/api/spark-proof/lab']){
  const warm=await fetch('http://127.0.0.1:8788'+path,{redirect:'manual'});await warm.arrayBuffer();if(warm.status!==200)throw Error('Not ready: '+path);
  const before=await stats(),start=performance.now();
  for(let i=0;i<10;i++){const r=await fetch('http://127.0.0.1:8788'+path,{redirect:'manual'});await r.arrayBuffer();if(r.status!==200)throw Error('Preview failed');}

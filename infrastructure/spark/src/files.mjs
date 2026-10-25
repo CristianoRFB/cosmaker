@@ -66,6 +66,9 @@ export async function upload(req,db,rtdb,who,env,params) {
   if(!id(tenant)||!id(orderId)) fail('invalid-argument','Pedido inválido.');
   const requestId=req.headers.get('x-request-id'),digest=req.headers.get('x-content-sha256'),type=req.headers.get('content-type')?.split(';')[0];
   if(!id(requestId)||!/^[a-f0-9]{64}$/.test(digest||'')) fail('invalid-argument','Hash ou chave inválidos.');
+  const sharing=req.headers.get('x-visible-to-client');
+  if(sharing!==null&&!['true','false'].includes(sharing)) fail('invalid-argument','Compartilhamento inválido.');
+  const visibleToClient=sharing==='true';
   const [globalMax,tenantMax,monthlyMax]=limits(env);
   // Bound actual stream, not a trusted Content-Length.
   const reader=req.body?.getReader(); if(!reader) fail('invalid-argument','Arquivo ausente.');
@@ -74,7 +77,7 @@ export async function upload(req,db,rtdb,who,env,params) {
   const bytes=Buffer.concat(chunks);
   if(!validBytes(bytes,type)||await sha256(bytes)!==digest) fail('invalid-argument','MIME, assinatura ou SHA-256 inválidos.');
   const fileId=await sha256(JSON.stringify([tenant,orderId,who.uid,requestId]));
-  const fingerprint=await sha256(JSON.stringify([digest,type,size]));
+  const fingerprint=await sha256(JSON.stringify([digest,type,size,visibleToClient]));
   const metaPath=`ateliers/${tenant}/orders/${orderId}/sparkFiles/${fileId}`;
   const leaseId=crypto.randomUUID();
   const state=await db.transaction(async tx=>{
@@ -83,7 +86,7 @@ export async function upload(req,db,rtdb,who,env,params) {
     if(old?.fingerprint&&old.fingerprint!==fingerprint) fail('failed-precondition','Chave ocupada por outro conteúdo.');
     if(old?.status==='ready') return {ready:true};
     if(old?.leaseUntil instanceof Date&&old.leaseUntil.getTime()>Date.now()) fail('aborted','Envio em andamento.',409);
-    const value={fingerprint,sha256:digest,size,contentType:type,actorId:who.uid,visibleToClient:true,status:'pending',leaseId,leaseUntil:new Date(Date.now()+30000),orderVersion:order.version,createdAt:old?.createdAt||new Date()};
+    const value={fingerprint,sha256:digest,size,contentType:type,actorId:who.uid,visibleToClient,status:'pending',leaseId,leaseUntil:new Date(Date.now()+30000),orderVersion:order.version,createdAt:old?.createdAt||new Date()};
     tx.set(metaPath,value);return {ready:false,orderVersion:order.version};
   });
   if(state.ready) return {fileId,alreadyApplied:true};

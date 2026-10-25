@@ -54,3 +54,7 @@ Evento scheduled real no workerd, sem endpoint HTTP público de execução. Expi
 - Firebase Hosting estático Spark não executa SSR/rotas dinâmicas atuais por si só. Exportação estática integral exigiria alterar slug/SEO/rotas/servidor, não foi aplicada nem chamada de equivalente.
 
 Nenhuma alternativa remove as quotas ou oferece garantia comercial ilimitada R$0. Nenhum upgrade/billing/R2 foi recomendado como solução ou ativado. A migração do produto fica parada antes da troca de transportes enquanto os gates de equivalência continuarem abertos.
+
+A página técnica final fica em /api/spark-proof/lab, namespace api já reservado. A rota de raiz usada na prova inicial foi removida para não ocupar um slug legítimo de ateliê. Fora do opt-in a página/API respondem404; não há tela demo em produção.
+
+No fechamento, o candidato passou a usar staff-only por default; compartilhamento explícito entra no fingerprint e nunca é inferido do simples vínculo ao pedido.18casos locais incluem corrida de upload, stream HTTP abortado sem publicação, UID excluído/novoUID com e-mail reutilizado (com controle positivo anterior), e Rules RTDB negativas autenticadas de leitura/escrita. Isso fortalece a prova, sem aprovar os contratos de arquivos maiores ou demais domínios.

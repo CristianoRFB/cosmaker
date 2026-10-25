@@ -27,7 +27,7 @@ bash scripts/cloud-run.sh node infrastructure/spark/run-integration.mjs ui
 
 Caso de UI em320/375/768/1440 verifica login sintético, identidade Workspace via Worker/REST, despesa canônica e ausência de overflow. Harness exige4entradas/auditorias reais no Firestore Emulator; não basta toast. O teste fica explicitamente SKIPPED fora deste harness, para não exigir infraestrutura experimental na regressão antiga.
 
-Página /spark-proof e proxy /api/spark-proof só existem com três gates: flag opt-in, projeto demo e emuladores. Proxy recusa destinos não loopback, caminhos fora da allowlist, redirects e bytes acima6MiB. Não passa tokens por query nem deixa disparar scheduler HTTP. Não é uma tela comercial nova nem substitui painéis antigos.
+Página /api/spark-proof/lab e proxy /api/spark-proof só existem com três gates: flag opt-in, projeto demo e emuladores. Proxy recusa destinos não loopback, caminhos fora da allowlist, redirects e bytes acima6MiB. Não passa tokens por query nem deixa disparar scheduler HTTP. Não é uma tela comercial nova nem substitui painéis antigos.
 
 ```bash
 bash scripts/cloud-run.sh node infrastructure/hosting/measure-local.mjs

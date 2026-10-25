@@ -3,7 +3,7 @@ test.skip(process.env.COSMAKER_SPARK_UI !== 'true', 'Somente harness Spark isola
 for (const width of [320, 375, 768, 1440]) {
   test(`Spark local proof: Next/OpenNext to Worker/Firestore at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('/spark-proof');
+    await page.goto('/api/spark-proof/lab');
     await expect(page.getByRole('heading', { name: 'Prova local Spark' })).toBeVisible();
     await page.getByLabel('E-mail fictício').fill('spark-ui@cosmaker.test');
     await page.getByLabel('Senha fictícia').fill('Synthetic!Password123');
