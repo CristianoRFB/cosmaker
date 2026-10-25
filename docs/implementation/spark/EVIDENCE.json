@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-25T06:53:36.627328+00:00",
+  "assessment": "EXPERIMENTAL_WIP_NOT_EQUIVALENT",
+  "baselineCommit": "cca4e23281afd4bcfcc5eb0dc69c38e8b641eba2",
+  "productCodeCheckpoint": "98d7ba1cb35b5e2fe36ba7ded0b90063622a4d55",
+  "codeCI": {
+    "id": 40170273206,
+    "url": "https://github.com/CristianoRFB/cosmaker/actions/runs/40170273206",
+    "conclusion": "success",
+    "linux": {
+      "unitLegacy": 124,
+      "operational": 11,
+      "unitSpark": 5,
+      "emulatorSpark": 18
+    },
+    "windows": {
+      "operational": 11,
+      "unitSpark": 5
+    },
+    "openNextCI": false,
+    "interfaceCI": false
+  },
+  "local": {
+    "unitSpark": {
+      "passed": 5,
+      "failed": 0
+    },
+    "emulatorSpark": {
+      "passed": 18,
+      "failed": 0,
+      "services": [
+        "Auth",
+        "Firestore",
+        "Realtime Database",
+        "workerd"
+      ],
+      "syntheticProject": "demo-cosmaker",
+      "signatureIntegration": "UNSIGNED_AUTH_EMULATOR_ONLY",
+      "signedJwt": "RS256 synthetic keys in Node WebCrypto tests; live JWKS not tested"
+    },
+    "interface": {
+      "passed": 4,
+      "failed": 0,
+      "viewports": [
+        320,
+        375,
+        768,
+        1440
+      ],
+      "runtime": "Next15/OpenNext/workerd",
+      "route": "/api/spark-proof/lab",
+      "canonicalEntries": 4,
+      "uniqueFinanceAudits": 4,
+      "privateProxyFiles": true,
+      "scope": "Technical proof only: financial persistence and private/shared small PDF API. No commercial attachments UI or 47-operation journey."
+    },
+    "builds": {
+      "next": "15.5.28",
+      "opennext": "1.20.13",
+      "functions": "CI_PASS_UNMODIFIED",
+      "backendBundleKiB": 40.69,
+      "hostingBundleKiB": 10401.82,
+      "staticAssets": 284,
+      "mode": "EMULATOR_ONLY_NOT_DEPLOYABLE"
+    },
+    "staticChecks": [
+      "TypeScript",
+      "targeted ESLint",
+      "docs:check",
+      "docs:functional",
+      "git diff --check"
+    ]
+  },
+  "security": {
+    "defaultPrivate": true,
+    "sharingBoundToFingerprint": true,
+    "rawDatabaseRulesAuthenticatedNegative": true,
+    "tenantAB": true,
+    "reusedEmailUidPositiveNegative": true,
+    "concurrentUploadUniqueAudit": true,
+    "interruptedHttpNoPublication": true,
+    "currentRevocationConsulted": true,
+    "productionTransportEnabled": false,
+    "productionServiceOAuthJwks": "NOT_IMPLEMENTED_NOT_HOMOLOGATED"
+  },
+  "capacity": {
+    "candidateFileBytes": 6291456,
+    "requiredOrderFileBytes": 20971520,
+    "singleString20MiB": "EMULATOR_HTTP_400_NO_OBJECT",
+    "imageSafeResize": "NOT_IMPLEMENTED",
+    "cpuFree": "NOT_ACCEPTED",
+    "resourceMeasurement": "PROCESS_CPU_RSS_PROXY_NOT_EDGE_BILLABLE_CPU_OR_ISOLATE_HEAP",
+    "fileResources": {
+      "kind": "LOCAL_PROCESS_CPU_PROXY_NOT_EDGE_BILLABLE_CPU",
+      "tickMs": 10,
+      "workerFreeCpuMs": 10,
+      "measurements": [
+        {
+          "bytes": 65536,
+          "uploadWallMs": 465.3549870000006,
+          "downloadWallMs": 206.2333329999983,
+          "uploadSubrequests": 18,
+          "downloadSubrequests": 19,
+          "uploadProcessCpuMs": 20,
+          "downloadProcessCpuMs": 20,
+          "rssBytes": 106184704
+        },
+        {
+          "bytes": 1048576,
+          "uploadWallMs": 257.7022340000003,
+          "downloadWallMs": 381.7928519999987,
+          "uploadSubrequests": 18,
+          "downloadSubrequests": 19,
+          "uploadProcessCpuMs": 40,
+          "downloadProcessCpuMs": 40,
+          "rssBytes": 122511360
+        },
+        {
+          "bytes": 6291456,
+          "uploadWallMs": 500.9011019999998,
+          "downloadWallMs": 281.15959699999803,
+          "uploadSubrequests": 18,
+          "downloadSubrequests": 19,
+          "uploadProcessCpuMs": 110,
+          "downloadProcessCpuMs": 60,
+          "rssBytes": 181645312
+        }
+      ]
+    },
+    "hostingResources": {
+      "kind": "LOCAL_TWO_PROCESS_CPU_PROXY_NOT_EDGE_BILLABLE_CPU",
+      "workerFreeCpuMs": 10,
+      "tickMs": 10,
+      "rows": [
+        {
+          "path": "/",
+          "requests": 10,
+          "wallMs": 738.179355,
+          "processCpuMs": 470,
+          "processCpuMsPerRequest": 47,
+          "aggregateProcessRssBytes": 319852544
+        },
+        {
+          "path": "/login",
+          "requests": 10,
+          "wallMs": 614.7876259999998,
+          "processCpuMs": 420,
+          "processCpuMsPerRequest": 42,
+          "aggregateProcessRssBytes": 328241152
+        },
+        {
+          "path": "/api/spark-proof/lab",
+          "requests": 10,
+          "wallMs": 301.56700000000023,
+          "processCpuMs": 180,
+          "processCpuMsPerRequest": 18,
+          "aggregateProcessRssBytes": 330076160
+        }
+      ]
+    },
+    "quotaRealAccounting": "NOT_ACCEPTED",
+    "schedulerLocal": "SCHEDULED_EVENT_PASS",
+    "schedulerReal": "NOT_RUN",
+    "syntheticRecovery": "RTDB_NAMESPACE_ROUNDTRIP_ONLY",
+    "integratedRecovery": "NOT_ACCEPTED"
+  },
+  "compatibility": {
+    "operations": 47,
+    "functions": 101,
+    "partiallyExercised": 7,
+    "fullyEquivalentAccepted": 0,
+    "notRevalidated": 40,
+    "legacyFunctional": "182/184=98.91%",
+    "legacyFormal": "10/16=62.5%",
+    "targetPercentage": "NOT_COMPUTED_NO_INHERITANCE",
+    "commercial": "NOT_READY"
+  },
+  "audits": {
+    "spark": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "hosting": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "sourceSha256": {
+    ".github/workflows/ci.yml": "80a8b9fa9ead11cc8043280896d1c49dd18a40c9982e2ef78bb65556bbe71765",
+    "app/api/spark-proof/[...operation]/route.ts": "03028fa6ef62d21404807829d7f1029f6b5d5c9b6dcf7f7e1ba4d43522ee59c7",
+    "app/api/spark-proof/lab/page.tsx": "6f1082663f0986da04efd6fadcf66a01590786c2274ce25eb9858011c9ec4729",
+    "app/api/spark-proof/lab/proof.tsx": "fbbd1f51e845a60e4a96f4e770cfe0481d0520746f3d2e262d47a0cab87fa63b",
+    "firestore.rules": "ed1856540718965303ab10d526449b4cf82c0bf5415f1f86517996b202d99279",
+    "infrastructure/hosting/next-webpack.mjs": "a67470051556254ef617a6a8b35340bdf9927cdb87a09c4fb61d0102fd11a281",
+    "infrastructure/hosting/open-next.config.mjs": "86b543d97b7da6e9d22477482f8c52a609cab5cad5d43cedcb55cd69749c82f4",
+    "infrastructure/hosting/package-lock.json": "dfaf57854a7665cc063adb3d1b55f7d5040840160116e98426fda0f904960131",
+    "infrastructure/hosting/package.json": "8eb914c6fd0b36ececef3140e7662674d3ccf452f293ea16fbb096a3b9900898",
+    "infrastructure/hosting/wrangler.jsonc": "816fa55457a855a2e33882376f0683392a2073c1cada61288821b38e8b8aae0a",
+    "infrastructure/spark/database.rules.json": "92a6903ac6ba7a85ea7a99a80ef3be90c990a11061a7d03d2d712223f0127b7f",
+    "infrastructure/spark/package-lock.json": "851f8164d6dd274b578f4858b8efabd3decb9799bfcba8618bc39c023792666a",
+    "infrastructure/spark/package.json": "90dab295f68e8f4bd7eb42d5e1376b85e0e9912cfb70eab651db293e1fc9527e",
+    "infrastructure/spark/run-integration.mjs": "0fa30cce169a6b540fe8782f6df81b42e45d1a2a530d50ec822934aa53cb32fc",
+    "infrastructure/spark/src/core.mjs": "1a82a6f96b0efdb728896748f09913fc9c4603ac89407fce4ab1969277719f03",
+    "infrastructure/spark/src/files.mjs": "32fe9a74b41f09673e4f49bff490fa74f446c6ebd53c00f1aba5b05bcfd27ffd",
+    "infrastructure/spark/src/finance.mjs": "52b01db8923fafc74c2f56e70884e0f34f3fe300b7e8e4299fb42991dc257c76",
+    "infrastructure/spark/src/firestore.mjs": "d2ce466754cb5d0fcd84a4e6a9fb1c8131f032434f737dce5c82e2b15b75a838",
+    "infrastructure/spark/src/identity.mjs": "7071193f1e9fc67cab79aff2d816bd0b34f9cc541aea5fc3d01fcd58dc4e952f",
+    "infrastructure/spark/src/scheduler.mjs": "2453b7e6539df2890b0a197611a9828281ac05b9644d4ef83518ac2f7cce3d38",
+    "infrastructure/spark/src/worker.mjs": "0b61bc910cd5337b272edaa81239359e1b24173bc31eaf5366ede65d9835730a",
+    "infrastructure/spark/test/hosting-config.test.mjs": "63c377aa4c894eb3b512d6ed4b67de7c05833b132f950278f0f894726a78ddda",
+    "infrastructure/spark/test/identity.test.mjs": "8828db8e6cdb2e5f921a10562b8be2d0c8d992142f8123e17cf356adbb510587",
+    "infrastructure/spark/test/integration.mjs": "8083ff3833182ab7ba94fae6cfcfe4e8e70391e1412ca85b3c9e6a05f8f4fc76",
+    "infrastructure/spark/test/matrix.test.mjs": "9b479bf53109290dafcc81eb6834babb4941fd40e7586a1b9c5977ef6c82bcc9",
+    "infrastructure/spark/test/runtime.test.mjs": "c959360ed2ffb0d666e089d6ee4615e39158236e11a25d3ef27cdb06a42a8fc8",
+    "infrastructure/spark/test/ui.mjs": "4ab647530b01f48a5c307a3c6186bf5402294010ae3d6bd6eb913f2ea0537d62",
+    "infrastructure/spark/wrangler.jsonc": "5669672d4dc824fd45ba2efd8885dba5e4d200fc23799de9fa4a161fea62c072",
+    "next.config.mjs": "8ad82b0df4f425bd1a6df62bfcafbaa858edb4be52ae9b1c6b7ca88e76ff1661",
+    "services/spark/transport.ts": "394acdce4acb1094411320dea3b4adb1f10e0c031eefbd578da6aae5049560bf",
+    "storage.rules": "448d5566d8818dcb7f61f175eca95a39be70034f83c844d4dfbd0a8d312edfb9",
+    "tests/e2e/spark-proof.spec.ts": "dc0a6619f4be358a015504962f1574409363f83af21e592415b9e2f964fbc2d4"
+  },
+  "localLogSha256": {
+    "/tmp/cosmaker-spark-integration-final-strict.log": "dbae3e79adbd9be852561bf94403ccdbe8e52e684258bbd8239053da924d70a0",
+    "/tmp/cosmaker-spark-ui-and-files-final.log": "152c3a22024cba06a8a2799e83b1cb86eb4295b282e5d79ff47b9562e8197e53",
+    "/tmp/cosmaker-spark-unit-exact.log": "4bfe25417c4c66e81159e553c1fc72d4c38135f44dc011d53ec5a5ea5ceaa730",
+    "/tmp/cosmaker-spark-opennext-exact-build.log": "44966e3b93f82b5cdbd320b4ad512089ccbdc5ba8d9b376c90b5b77765dfea41",
+    "/tmp/cosmaker-spark-bundle-closure.log": "ae8875c603563ed7be49a8c6555e0962656b6216b3fd245c409491871fab9668",
+    "/tmp/cosmaker-spark-host-bundle-closure.log": "50a79109c1bde905ab971a6d119576d68bc549addc284ecbc961775194f75ab6",
+    "/tmp/cosmaker-spark-lint-exact.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "realOperations": {
+    "deploy": false,
+    "provision": false,
+    "billing": false,
+    "iam": false,
+    "migration": false,
+    "credentials": false,
+    "networkChanges": false
+  },
+  "sourceSha256Encoding": "UTF-8/LF from the tested Linux checkout; use Git blobs or normalize CRLF only when comparing Windows sources."
+}

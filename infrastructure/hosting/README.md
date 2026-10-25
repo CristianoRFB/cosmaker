@@ -34,3 +34,5 @@ bash scripts/cloud-run.sh node infrastructure/hosting/measure-local.mjs
 ```
 
 Medição Linux somente leitura exige exatamente dois processos workerd deste subprojeto. Aproxima CPU/RSS de processos locais; não mede CPU faturável/heap do isolate nem impõe10ms. Não publicar ou aceitar hostingFree por esse ensaio. Arquivos gerados .open-next/.wrangler/.local ficam fora do Git. Rollback local: encerrar preview, remover flag experimental do processo e voltar à candidata preservada; não houve migração ou deploy a reverter.
+
+Após os4cenários de interface, o harness também pode verificar o proxy privado com contas fictícias: arquivo staff-only, compartilhamento explícito, SHA-256 e recusa de alterar sharing no mesmo requestId. Isso testa transporte/ACL de arquivo pequeno, não oferece UI comercial de arquivos nem aprova o limite20MiB.

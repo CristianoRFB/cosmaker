@@ -1,3 +1,21 @@
+# Estado final — adaptação Spark INCOMPLETA
+
+Código de produto98d7ba1cb35b5e2fe36ba7ded0b90063622a4d55; CI [40170273206](https://github.com/CristianoRFB/cosmaker/actions/runs/40170273206) SUCCESS Linux/Windows. Commit posterior reúne apenas extensão do harness/evidências/handoff; recuperar HEAD remoto e seu CI antes de retomar. [EVIDENCE.json](EVIDENCE.json) contém hashes, resultados e limites. A candidata cca4e23 permanece intacta na branch anterior; caches .next/.open-next locais foram reconstruídos para o experimento e não são artefatos aprovados da candidata.
+
+Teste final de frontend:4/4 em320/375/768/1440,10,1s,4lançamentos/auditorias; verificações adicionais pelo proxy Next/OpenNext comprovaram PDF staff-only, compartilhamento explícito, hash e recusa de replay com mudança de sharing. Novo build completo com modo demo e alias opt-in PASS. Bundles atuais:backend40,69KiB;host10401,82KiB/284assets. Backend18/18 e unitários5/5, além do CI do código. Não foram repetidos104cenáriosSDK nem Google/PubSub antigos.
+
+**Não trocar o transporte do produto nem declarar arquitetura gratuita equivalente.** A prova não preserva20MiB, não implementa compressão segura, não comprova CPU/contabilidade Free, não tem OAuth/JWKS de produção e não porta99das101Functions. Duas são parcialmente adaptadas. Matriz:47operações,7parciais,40não revalidadas/portadas,0aceites integrais. Esses0aceites não significam0% de funcionalidade implementada. Indicadores182/184 e10/16 continuam exclusivos da arquitetura anterior. ComercialNOT_READY.
+
+Próxima ação local exata:resolver viabilidade de arquivos20MiB, imagem segura, quotas/reconciliação/restore e CPU Free antes de expandir handlers; comparar desenho fragmentado ou alternativa genuinamente gratuita listada em FEASIBILITY, sem provisionar/deployar. Depois fechar identidade de serviço/JWKS e migrar por domínio com regressão. Backend atual continua desabilitado fora de demo local, portanto não há segredo real a configurar agora. Hosting Free também não está aceito por mera compilação.
+
+Dependências externas futuras:contas/configuração Spark/Workers Free sem cobrança e autorização específica para secrets/IAM/serviços reais, índices/Rules publicados, quotas/CPU da borda, relógioCron e recuperação reais, domínio/hosting e homologação. Nenhuma delas autoriza Blaze/R2/pagamentos. Preflight/publicação do GOAL V referem-se à arquitetura antiga e não aprovam esta adaptação.
+
+Retomada:ler README/FEASIBILITY/COMPATIBILITY/FUNCTIONS_MAP; instalar os subprojetos e usar seus harnesses documentados. Template aninhado de emuladores é consumido pelo harness, não CLI direto. Não executar suítes antigas indiscriminadamente. Para Windows, testes unitários/guardas são nativos no CI; build/preview OpenNext demonstrados somente Linux, usar Cloud/WSL para reprodução até validar Windows. Nenhum resultado Windows de hosting é alegado.
+
+Rollback:working tree limpa e candidata remota preservada; voltar à branch antiga em checkout separado e reconstruir seu build local. Sem reset/force/merge ou migração de dados. Todos os processos de teste foram encerrados; logs privados em/tmp e.local não vão ao Git. Histórico de tentativas abaixo é intencional e não substitui este estado final.
+
+---
+
 # GOAL VI — adaptação Spark isolada (WIP)
 
 Base preservada: cca4e23281afd4bcfcc5eb0dc69c38e8b641eba2, CI40121145818 aprovado. Branch nova codex/cosmaker-spark-zero-billing. Nenhum código/domínio/Rules/configuração Firebase anterior foi substituído. Sem deploy, provisionamento, credenciais reais ou billing.
