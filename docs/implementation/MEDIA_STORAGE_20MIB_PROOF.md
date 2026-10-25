@@ -20,6 +20,16 @@ Reproduzir sem conta externa: `bash scripts/cloud-run.sh node infrastructure/med
 
 Schemas novos isolados mediaAssetsV7/mediaUsageV7/mediaActivityV7 e providerproof/mediaV7. Nenhuma reescrita do banco de negócio ou de referências GCS/generation. PENDING/READY e reserva precedem upload; lease/fence/revalidação de pedido impedem publicação inconsistente. Reconciliação, backup/restauração completos, cron/UX e gates finais ainda em implementação neste checkpoint.
 
+## Checkpoint de recuperação e retenção
+
+13/13 integrações de mídia passaram após ampliar as verificações; mais 1/1 integração direcionada do broker/Auth/cron workerd e 7/7 unitários de política. Backup incluiu metadados e os 20 MiB originais, com snapshot hash, falha após três partes da restauração, retomada em nova geração, leitura autorizada com mesmo SHA, datas/classificação preservadas e reconciliação de ausência positiva do objeto anterior. Tombstone impede ressurreição. Restauração Supabase ainda NÃO ACEITA: prova de restore RTDB não a substitui.
+
+Avisos internos são necessários para todos os destinatários canônicos (staff e cliente quando compartilhado), não equivalem a e-mail entregue; falha impede exclusão e restringe novos uploads opcionais. Retry não duplica revisão/auditoria. Extensão autorizada invalida plano antigo; pedido reaberto ou capability ainda válida bloqueia remoção. Falha entre API e commit deixa DELETING/tombstone e retoma sem baixar os meters duas vezes.
+
+Job UTC limitado a páginas de 16, cursor preservado na virada do dia, passou 110 registros inválidos antes dos válidos. Lease impede execução concorrente. O evento scheduled real do workerd chamou somente o endpoint secreto de DRY_RUN em loopback; endpoint público retorna 404. Este transporte usa broker Node local e NÃO comprova execução integral em Workers Free/cron remoto. Telemetria de egress continua estimativa conservadora, separada de números faturáveis indisponíveis. Reservas de downloads e órfãos falham fechadas; não somem ao ocorrer erro de rede.
+
+Interface técnica isolada e smoke visual ainda em andamento. Flags de produção OFF e sete gates cumulativos ainda não aceitos.
+
 Reproduzir apenas local:
 
 ```bash

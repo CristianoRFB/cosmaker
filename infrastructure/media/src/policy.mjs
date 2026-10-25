@@ -6,6 +6,7 @@ const rank={NONE:0,LOW:1,MEDIUM:2,HIGH:3};
 const validTime=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
 export function tierOf({uploads,bytes}) {
   if(!Number.isSafeInteger(uploads)||uploads<0||!Number.isSafeInteger(bytes)||bytes<0)throw Error('Invalid usage window');
+  if(uploads===0&&bytes!==0)throw Error('Bytes without uploads');
   if(uploads>=30||bytes>=200*MiB)return 'HIGH';
   if(uploads>=5||bytes>=20*MiB)return 'MEDIUM';
   return uploads>0||bytes>0?'LOW':'NONE';
@@ -14,6 +15,7 @@ export function updateActivity(previous,window,{closed=false}={}) {
   const observed=tierOf(window);
   if(!previous&&observed==='NONE')return null; // No artificial records for inactive tenants.
   if(!validTime(window.startAt)||!validTime(window.endAt)||Date.parse(window.endAt)-Date.parse(window.startAt)!==30*DAY)throw Error('Expected exact UTC 30-day window');
+  if(previous&&!(previous.tier in rank))throw Error('Unknown previous activity tier');
   const base=previous||{tier:'NONE',belowWindows:0,lastClosedEnd:null};
   if(rank[observed]>=rank[base.tier])return {...base,tier:observed,belowWindows:0,lastClosedEnd:closed?window.endAt:base.lastClosedEnd,policyVersion:POLICY_VERSION};
   if(!closed||base.lastClosedEnd===window.endAt)return {...base};
@@ -38,7 +40,7 @@ export function retentionFor(asset,tier,now,previous=asset.retention) {
   if(!['HIGH','MEDIUM'].includes(tier))return no('LOW_OR_NONE');
   const start=Math.max(...asset.links.map(l=>Date.parse(l.completedAt)));
   if(start>now+60000)return no('CLOCK_SKEW');
-  const days=tier==='HIGH'?30:90,graceDays=tier==='HIGH'?7:14;
+  const days=tier==='HIGH'?30:90,graceDays=Math.max(tier==='HIGH'?7:14,previous?.graceDays||0);
   const priorDue=Date.parse(previous?.dueAt||'')||0;
   const priorGrace=Date.parse(previous?.promisedGraceUntil||previous?.graceUntil||'')||0;
   const due=Math.max(start+days*DAY,priorDue);

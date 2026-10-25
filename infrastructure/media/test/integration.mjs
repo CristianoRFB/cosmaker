@@ -2,13 +2,16 @@ import {test,before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {randomUUID} from 'node:crypto';
-import {writeFile,mkdir} from 'node:fs/promises';
+import {writeFile,mkdir,readFile} from 'node:fs/promises';
 import {proofDatabase} from '../src/proof-db.mjs';
 import {MediaCoordinator} from '../src/coordinator.mjs';
 import {RtdbChunkProvider,SupabaseStorageAdapter,PART_BYTES,hashBytes,MAX_FILE_BYTES} from '../src/storage.mjs';
 import {storageApiDouble,tusUpload} from './storage-api-double.mjs';
 import {pdfBytes,png,jpeg,webp} from './fixtures.mjs';
 import {DAY,MiB,POLICY_VERSION,retentionFor} from '../src/policy.mjs';
+import {backupMedia,restoreMedia,reconcileRecovery} from '../src/recovery.mjs';
+import {retentionSweep} from '../src/retention-job.mjs';
+import {startBroker} from '../src/broker.mjs';
 const req=createRequire(new URL('../../../functions/package.json',import.meta.url));
 const {initializeApp,deleteApp}=req('firebase-admin/app'),{getAuth}=req('firebase-admin/auth'),{getFirestore}=req('firebase-admin/firestore');
 for(const key of['FIREBASE_AUTH_EMULATOR_HOST','FIRESTORE_EMULATOR_HOST','FIREBASE_DATABASE_EMULATOR_HOST'])if(!/^127\.0\.0\.1:\d+$/.test(process.env[key]||''))throw Error('Loopback Emulator required');
@@ -89,3 +92,84 @@ test('persisted policy, notices, dry-run, hold and stale revision protect agains
  await admin.doc(`ateliers/${tenantA}/orders/order-a`).update({status:'confirmed'});
 },{timeout:60000});
 test('save resource observations without promoting real provider/cost/Free/production acceptance',async()=>{await mkdir('.local/media-v7',{recursive:true});await writeFile('.local/media-v7/provider-observations.json',JSON.stringify({measurements,cutover:false,commercial:'NOT_READY'},null,2));console.log('GVII_PROVIDER_OBSERVATIONS',JSON.stringify(measurements));});
+test('20 MiB bytes+metadata backup, crash/resume restore, exact read and positive absence reconciliation',async()=>{
+ const core=coordinators.rtdb,r=await upload(core,full,{shared:true}),snapshot=await backupMedia(core,who.a,tenantA,r.asset.id);
+ assert.equal((await restoreMedia(core,who.a,snapshot)).mode,'DRY_RUN');
+ await assert.rejects(restoreMedia(core,who.b,snapshot),{code:'permission-denied'});
+ await assert.rejects(restoreMedia(core,who.a,{...snapshot,base64:snapshot.base64+'AAAA'}),/checksum/);
+ await providers.rtdb.remove(r.asset.key,{mode:'SYNTHETIC_APPLY',project:'demo-cosmaker',fixture:true});
+ const original=providers.rtdb.putPart.bind(providers.rtdb);let interrupted=false;
+ providers.rtdb.putPart=async(...args)=>{if(args[1]===3&&!interrupted){interrupted=true;throw Error('Synthetic interruption');}return original(...args);};
+ await assert.rejects(restoreMedia(core,who.a,snapshot,{mode:'SYNTHETIC_APPLY'}),/interruption/);providers.rtdb.putPart=original;
+ assert.equal((await admin.doc(core.assetPath(tenantA,r.asset.id)).get()).get('state'),'RESTORING');
+ const restored=await restoreMedia(core,who.a,snapshot,{mode:'SYNTHETIC_APPLY'});assert.equal(restored.bytes,MAX_FILE_BYTES);
+ const read=await core.read(who.client,tenantA,r.asset.id);assert.equal(hashBytes(read.bytes),snapshot.sha256);assert.equal(read.asset.createdAt.toISOString(),snapshot.metadata.createdAt);assert.equal(read.asset.mediaClass,snapshot.metadata.mediaClass);
+ const operation=hashBytes(snapshot.snapshotSha256);assert.equal((await reconcileRecovery(core,operation)).released,true);assert.equal((await reconcileRecovery(core,operation)).alreadyApplied,true);
+ assert.equal((await restoreMedia(core,who.a,snapshot,{mode:'SYNTHETIC_APPLY'})).alreadyApplied,true);
+ await admin.doc('mediaTombstonesV7/'+r.asset.id).set({atelierId:tenantA,key:r.asset.key});await assert.rejects(restoreMedia(core,who.a,snapshot),/Tombstone/);
+},{timeout:180000});
+test('all required recipients, retry idempotence, failure recovery and authorized extension fence',async()=>{
+ const core=coordinators.rtdb,r=await upload(core,png,{mime:'image/png',shared:true}),path=core.assetPath(tenantA,r.asset.id);
+ await admin.doc(`ateliers/${tenantA}/orders/order-a`).update({status:'completed',completedAt:new Date(tick-200*DAY)});
+ await admin.doc('users/'+who.client.uid).update({active:false});
+ await core.evaluateRetention(tenantA,r.asset.id,'HIGH');assert.equal((await admin.doc(path).get()).get('notices.due.failed'),true);assert.equal((await admin.doc(core.meterPath()).get()).get('noticeFailure'),true);
+ await admin.doc(`ateliers/${tenantA}/orders/order-a`).update({status:'confirmed'});
+ await assert.rejects(core.create(who.a,input(png,{mime:'image/png'})),{code:'resource-exhausted'});
+ await admin.doc('users/'+who.client.uid).update({active:true});await admin.doc(`ateliers/${tenantA}/orders/order-a`).update({status:'completed'});
+ await core.evaluateRetention(tenantA,r.asset.id,'HIGH');const before=(await admin.doc(path).get()).data();assert.equal(before.notices.due.recipients.length,2);assert.equal((await admin.doc(core.meterPath()).get()).get('noticeFailure'),false);
+ await core.evaluateRetention(tenantA,r.asset.id,'HIGH');assert.equal((await admin.doc(path).get()).get('revision'),before.revision);
+ tick+=15*DAY;const plan=await core.planDeletion(tenantA,r.asset.id);assert.equal(plan.eligible,true);
+ await core.protect(who.a,tenantA,r.asset.id,{extendUntil:new Date(tick+30*DAY).toISOString()});await assert.rejects(core.applySyntheticDeletion(plan,{mode:'SYNTHETIC_APPLY'}),{code:'aborted'});
+ await assert.rejects(core.protect(who.b,tenantA,r.asset.id,{legalHold:true}),{code:'permission-denied'});
+ await admin.doc(`ateliers/${tenantA}/orders/order-a`).update({status:'confirmed'});
+});
+test('deletion crash resumes exact API removal once and decrements tenant/global meters once',async()=>{
+ const core=coordinators.rtdb,r=await upload(core,png,{mime:'image/png'}),path=core.assetPath(tenantA,r.asset.id);
+ await admin.doc(`ateliers/${tenantA}/orders/order-a`).update({status:'completed',completedAt:new Date(tick-200*DAY)});await core.evaluateRetention(tenantA,r.asset.id,'HIGH');tick+=15*DAY;
+ const plan=await core.planDeletion(tenantA,r.asset.id),before=(await admin.doc(core.meterPath()).get()).data(),original=providers.rtdb.remove.bind(providers.rtdb);let fail=true;
+ providers.rtdb.remove=async(...args)=>{await original(...args);if(fail){fail=false;throw Error('Crash after provider API');}};
+ await assert.rejects(core.applySyntheticDeletion(plan,{mode:'SYNTHETIC_APPLY'}),/Crash/);assert.equal((await admin.doc(path).get()).get('state'),'DELETING');
+ await assert.rejects(core.protect(who.a,tenantA,r.asset.id,{legalHold:true}),{code:'failed-precondition'});
+ assert.equal((await core.applySyntheticDeletion(plan,{mode:'SYNTHETIC_APPLY'})).deleted,true);providers.rtdb.remove=original;
+ assert.equal((await core.applySyntheticDeletion(plan,{mode:'SYNTHETIC_APPLY'})).alreadyApplied,true);const after=(await admin.doc(core.meterPath()).get()).data();assert.equal(before.active-after.active,r.asset.activeBytes);assert.equal(before.tenants[tenantA]-after.tenants[tenantA],r.asset.activeBytes);
+ await admin.doc(`ateliers/${tenantA}/orders/order-a`).update({status:'confirmed'});
+});
+test('bounded UTC retention sweep passes 110 invalid records, retains cursor across midnight and lease protects concurrency',async()=>{
+ const core=coordinators.rtdb;const batch=admin.batch();for(let i=0;i<110;i++)batch.set(admin.doc('ateliers/aaa-invalid/mediaAssetsV7/bad-'+String(i).padStart(3,'0')),{synthetic:false});await batch.commit();
+ let invalid=0,evaluated=0;for(let page=0;page<12;page++){const result=await retentionSweep(core);invalid+=result.invalid;evaluated+=result.evaluated;if(page===1)tick+=DAY;}
+ assert.ok(invalid>=110);assert.ok(evaluated>0);
+ await admin.doc('platformRuntime/mediaRetentionV7').set({leaseUntil:new Date(tick+60000),leaseId:'other'});assert.equal((await retentionSweep(core)).leased,true);
+ await assert.rejects(retentionSweep(core,{scheduledTime:tick+120000}),/UTC/);
+});
+test('global pause and monthly transfer admission preserve bytes; membership revocation closes reads',async()=>{
+ const core=coordinators.rtdb,r=await upload(core,png,{mime:'image/png'});
+ await admin.doc('platformRuntime/mediaGovernanceV7').set({uploadsPaused:true});await assert.rejects(core.create(who.a,input(png,{mime:'image/png'})),{code:'resource-exhausted'});
+ assert.equal((await core.read(who.a,tenantA,r.asset.id)).bytes.length,png.length);await admin.doc('platformRuntime/mediaGovernanceV7').set({uploadsPaused:false});
+ const limited=new MediaCoordinator({db,provider:providers.rtdb,enabled:true,now:()=>tick,monthlyEgress:1});await assert.rejects(limited.read(who.a,tenantA,r.asset.id),{code:'resource-exhausted'});
+ await admin.doc(`ateliers/${tenantA}/members/${who.a.uid}`).update({active:false});await assert.rejects(core.read(who.a,tenantA,r.asset.id),{code:'permission-denied'});await admin.doc(`ateliers/${tenantA}/members/${who.a.uid}`).update({active:true});
+});
+test('HTTP broker checks Auth Emulator tokens, disabled/revoked users and global RBAC; workerd scheduled reaches private dry-run only',async()=>{
+ const core=coordinators.rtdb,secret=randomUUID()+randomUUID(),broker=await startBroker({core,env:{...env,COSMAKER_MEDIA_PROOF:'true'},cronSecret:secret});
+ const sparkReq=createRequire(new URL('../../spark/package.json',import.meta.url)),{Miniflare,convertV4MiniflareOptions}=sparkReq('miniflare');let runtime;
+ const login=async email=>{const r=await fetch(env.AUTH_ORIGIN+'/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=demo-key',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:'Synthetic!Password123',returnSecureToken:true})});assert.equal(r.status,200);return(await r.json()).idToken;};
+ try{
+  const token=await login('a-media-v7@cosmaker.test');
+  assert.equal((await fetch(broker.origin+'/governance')).status,401);
+  assert.equal((await fetch(broker.origin+'/governance',{headers:{Authorization:'Bearer invalid'}})).status,401);
+  const parts=token.split('.'),claims=JSON.parse(Buffer.from(parts[1],'base64url'));claims.exp=1;const expired=parts[0]+'.'+Buffer.from(JSON.stringify(claims)).toString('base64url')+'.';
+  assert.equal((await fetch(broker.origin+'/governance',{headers:{Authorization:'Bearer '+expired}})).status,401);
+  assert.equal((await fetch(broker.origin+'/governance',{headers:{Authorization:'Bearer '+token}})).status,403);
+  await auth.updateUser(who.a.uid,{disabled:true});assert.equal((await fetch(broker.origin+'/governance',{headers:{Authorization:'Bearer '+token}})).status,401);await auth.updateUser(who.a.uid,{disabled:false});
+  await auth.revokeRefreshTokens(who.a.uid);const staleClaims=JSON.parse(Buffer.from(parts[1],'base64url'));staleClaims.auth_time-=3600;const stale=parts[0]+'.'+Buffer.from(JSON.stringify(staleClaims)).toString('base64url')+'.';
+  assert.equal((await fetch(broker.origin+'/governance',{headers:{Authorization:'Bearer '+stale}})).status,401);
+  const owner=await auth.createUser({email:'platform-media-v7@cosmaker.test',password:'Synthetic!Password123',emailVerified:true});await admin.doc('users/'+owner.uid).set({active:true,accountType:'platform_admin'});const ownerToken=await login('platform-media-v7@cosmaker.test');
+  const headers={Authorization:'Bearer '+ownerToken,'Content-Type':'application/json'};
+  assert.equal((await fetch(broker.origin+'/governance',{method:'POST',headers,body:JSON.stringify({uploadsPaused:true,ttl:0})})).status,400);
+  assert.equal((await fetch(broker.origin+'/governance',{method:'POST',headers,body:JSON.stringify({uploadsPaused:true})})).status,200);
+  const view=await(await fetch(broker.origin+'/governance',{headers})).json();assert.equal(view.data.settings.uploadsPaused,true);assert.equal(view.data.mode,'DRY_RUN');
+  assert.equal((await fetch(broker.origin+'/internal/retention-dry-run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scheduledTime:tick})})).status,403);
+  runtime=new Miniflare(convertV4MiniflareOptions({modules:true,script:await readFile(new URL('../src/cron-worker.mjs',import.meta.url),'utf8'),compatibilityDate:'2026-10-25',bindings:{MODE:'emulator',PROJECT_ID:'demo-cosmaker',MEDIA_BROKER_ORIGIN:broker.origin,MEDIA_CRON_SECRET:secret}}));
+  await runtime.ready;const worker=await runtime.getWorker();const result=await worker.scheduled({scheduledTime:tick,cron:'0 * * * *'});assert.equal(result.outcome,'ok');
+  assert.equal((await runtime.dispatchFetch('http://localhost/cron')).status,404);
+ }finally{await runtime?.dispose();await broker.close();}
+},{timeout:60000});
