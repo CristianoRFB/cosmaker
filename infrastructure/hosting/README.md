@@ -4,7 +4,7 @@ Não executa deploy, provisionamento ou R2. Build somente demo-cosmaker. Preserv
 
 ```bash
 bash scripts/cloud-run.sh npm ci --prefix infrastructure/hosting
-COSMAKER_SPARK_BUILD=true WRANGLER_SEND_METRICS=false bash scripts/cloud-run.sh infrastructure/hosting/node_modules/.bin/opennextjs-cloudflare build --config infrastructure/hosting/wrangler.jsonc --openNextConfigPath infrastructure/hosting/open-next.config.ts
+COSMAKER_SPARK_BUILD=true WRANGLER_SEND_METRICS=false bash scripts/cloud-run.sh infrastructure/hosting/node_modules/.bin/opennextjs-cloudflare build --config infrastructure/hosting/wrangler.jsonc --openNextConfigPath infrastructure/hosting/open-next.config.mjs
 ```
 
 O build usa scripts/dev-local.mjs, força config fictícia e herda o output standalone do OpenNext. Não usar --skipNextBuild com um .next comum que não tenha standalone. Sem preview rodando durante build. Configuração Next normal permanece sem alias; opt-in escolhe a distribuição web do SDK Firestore SOMENTE no SSR experimental. A distribuição Node traz gRPC/protobuf com geração dinâmica de código, recusada no Worker. Não há patch de eval nem substituição pelo Firestore Lite que removeria recursos do cliente.

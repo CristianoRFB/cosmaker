@@ -14,5 +14,5 @@ test('Spark matrix covers the frozen 47 operations and all 101 existing Function
  for(const o of matrix.operations){assert.equal(o.after.dataPreserved,true);assert.equal(o.after.persistenceEquivalent,false);assert.equal(o.after.securityEquivalent,false);assert.equal(o.after.testsEquivalent,false);}
  const names=[...(await read('functions/src/index.ts')).matchAll(/export\s*\{([^}]+)\}\s*from/g)].flatMap(m=>m[1].split(',').map(v=>v.trim()).filter(Boolean));
  assert.equal(mapped.count,101);assert.deepEqual(mapped.functions.map(f=>f.name),names);
- for(const f of mapped.functions){assert.equal(f.productionEnabled,false);assert.equal(createHash('sha256').update(await read(f.source)).digest('hex'),f.sourceSha256);}
+ for(const f of mapped.functions){assert.equal(f.productionEnabled,false);assert.equal(createHash('sha256').update((await read(f.source)).replaceAll('\r\n','\n')).digest('hex'),f.sourceSha256);}
 });

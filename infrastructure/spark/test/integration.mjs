@@ -100,7 +100,7 @@ test('Private RTDB upload: actual bytes, immutable retry, audit and authorized U
   const got=await fileGet(uploaded.data.fileId);assert.equal(got.status,200);assert.equal(got.headers.get('cache-control'),'private, no-store');assert.equal(hash(Buffer.from(await got.arrayBuffer())),hash(pdf));
   const audits=await db.collection('auditLogs').where('action','==','spark.file_ready').get();assert.equal(audits.size,1);
 });
-test('RTDB denies direct reads/writes with no auth or a valid Firebase client token; client A/B and same email are not authority',async()=>{
+test('RTDB denies direct reads/writes with no auth or a valid Firebase client token; client A/B and durable UID ownership',async()=>{
   const path=`${env.DATABASE_ORIGIN}/spark/objects/${a}/${uploaded.data.fileId}.json?ns=demo-cosmaker-default-rtdb`;
   for(const suffix of ['', '&auth='+encodeURIComponent(people.clientA.token)]) {const r=await fetch(path+suffix);assert.ok([401,403].includes(r.status), 'RTDB denial: '+r.status+' '+await r.text());}
   const raw=await fetch(path,{method:'PUT',headers:{'Content-Type':'application/json'},body:'"tampered"'});assert.ok([401,403].includes(raw.status));
@@ -209,3 +209,34 @@ test('RTDB single-string 20 MiB incompatibility and local workerd resource measu
   const result={kind:'LOCAL_PROCESS_CPU_PROXY_NOT_EDGE_BILLABLE_CPU',tickMs:10,workerFreeCpuMs:10,measurements};
   await mkdir('.local/spark',{recursive:true});await writeFile('.local/spark/resources.json',JSON.stringify(result,null,2));console.log('SPARK_RESOURCES',JSON.stringify(result));
 }, {timeout:120000});
+
+
+test('Actual interrupted HTTP upload publishes no metadata, object or quota reservation',async()=>{
+  const key=randomUUID(),fileId=hash(JSON.stringify([a,'order-a',people.ownerA.uid,key]));
+  const before=await rtdb('spark/quota');
+  const endpoint=new URL(`files/${a}/order-a`,await mf.ready);
+  const abort=new AbortController();
+  const body=new ReadableStream({start(controller){controller.enqueue(new Uint8Array(Buffer.from('%PDF-1.7\npartial')));}});
+  const request=fetch(endpoint,{method:'POST',duplex:'half',body,headers:{Authorization:'Bearer '+people.ownerA.token,'Content-Type':'application/pdf','x-request-id':key,'x-content-sha256':hash(pdf)},signal:abort.signal});
+  setTimeout(()=>abort.abort(),150);
+  await assert.rejects(request,/abort|fetch failed/i);
+  await new Promise(resolve=>setTimeout(resolve,100));
+  assert.equal((await db.doc(`ateliers/${a}/orders/order-a/sparkFiles/${fileId}`).get()).exists,false);
+  assert.equal(await rtdb(`spark/objects/${a}/${fileId}`),null);assert.deepEqual(await rtdb('spark/quota'),before);
+});
+test('Reused contact e-mail cannot recover a private order after original Auth UID deletion',async()=>{
+  const email='uid-reuse-'+nonce+'@cosmaker.test',password='Synthetic!Password123';
+  const first=await auth.createUser({email,password,emailVerified:true});
+  const orderRef=db.doc(`ateliers/${a}/orders/order-a`);
+  await orderRef.update({clientUserId:first.uid});
+  await db.doc(`users/${first.uid}`).set({active:true,accountType:'client'});
+  await auth.deleteUser(first.uid);
+  const replacement=await auth.createUser({email,password,emailVerified:true});assert.notEqual(first.uid,replacement.uid);
+  await db.doc(`users/${replacement.uid}`).set({active:true,accountType:'client'});
+  const client=initializeApp({apiKey:'emulator-only-key',projectId,authDomain:projectId+'.firebaseapp.com',appId:'emulator-only-app'},'uid-reuse-'+nonce);clients.push(client);
+  const ca=getAuth(client);connectAuthEmulator(ca,env.AUTH_ORIGIN,{disableWarnings:true});
+  const user=await signInWithEmailAndPassword(ca,email,password);
+  people.reused={uid:replacement.uid,token:await user.user.getIdToken()};
+  assert.equal((await fileGet(uploaded.data.fileId,'reused')).status,403);
+  await orderRef.update({clientUserId:people.clientA.uid});
+});
