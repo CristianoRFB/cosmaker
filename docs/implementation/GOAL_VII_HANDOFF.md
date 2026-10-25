@@ -4,7 +4,7 @@
 
 Origin: CristianoRFB/cosmaker. HEAD inicial remoto confirmado: `d659faa40bd8dff3929daac2f6a39aa47bccea19`. Branch isolada `codex/cosmaker-goal-vii-media-lifecycle`. GOAL VI preservado em d659faa; candidata `codex/cosmaker-master-finalizacao` em cca4e23281afd4bcfcc5eb0dc69c38e8b641eba2. Sem reset destrutivo, force push, merge ou migração. HEAD final é o commit que inclui este documento: conferir `git log -5` e CI do SHA exato.
 
-Checkpoints enviados: `03a77ca` inventário/política; `06df2a8` vertical20MiB; `ff9fa34` Storage OSS oficial; `a2a895c` recuperação/retenção/cron. O checkpoint seguinte reúne UX, atividade fechada, admission21tenants, evidências e CI proporcional. Nenhum WIP deliberadamente deixado fora do Git.
+Checkpoints enviados: `03a77ca` inventário/política; `06df2a8` vertical20MiB; `ff9fa34` Storage OSS oficial; `a2a895c` recuperação/retenção/cron; `7299088` UX, atividade fechada, admission21tenants, evidências e CI proporcional aprovado40223312473. O checkpoint final reforça o vínculo entre ativo e adaptador de origem. Nenhum WIP deliberadamente deixado fora do Git.
 
 ## Implementação e validação
 
@@ -40,3 +40,5 @@ Com estratégia viável, fechar pendências locais listadas e repetir só a supe
 Retomada Git: fetch, checkout da branch isolada, conferir árvore e preservar commits. Lançadores do runbook fixam demo/loopback. Flags OFF fora dos harnesses. Namespaces novos não reescrevem referências legadas; leitor antigo6MiB não lê automaticamente20MiB novos. Não excluir legado nem chamar snapshot sintético de backup/revogação real.
 
 Correção adicional comprovada: renovação de lease atualiza o snapshot canônico de pedido ainda ativo. Um pedido legitimamente editado não deixa upload preso para sempre; corrida de atualização continua bloqueando a conclusão até renovação. Reteste direcionado1/1, sem repetir15integrações.
+
+Último hardening: leitura, retry/criação, política e plano/execução de remoção recusam provedor diferente do registrado. Reteste local direcionado20MiB1/1 incluiu leitura, reemissão e plano negativos entre adaptadores. Nenhuma capability é emitida como fallback silencioso; source hashes foram renovados e o CI final precisa aprovar este SHA.

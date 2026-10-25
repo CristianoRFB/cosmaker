@@ -38,6 +38,9 @@ test('RTDB actual Emulator: exactly 20 MiB upload, full SHA-256, private read, r
  await assert.rejects(core.read(who.b,tenantA,result.asset.id),{code:'permission-denied'});
  assert.equal((await core.complete(who.a,tenantA,result.asset.id,1)).alreadyApplied,true);
  await assert.rejects(core.create(who.a,{...result.request,size:MAX_FILE_BYTES-1}),{code:'failed-precondition'});
+ await assert.rejects(coordinators.supabase.read(who.a,tenantA,result.asset.id),{code:'permission-denied'});
+ await assert.rejects(coordinators.supabase.create(who.a,result.request),{code:'failed-precondition'});
+ assert.equal((await coordinators.supabase.planDeletion(tenantA,result.asset.id)).eligible,false);
  const audits=await admin.collection('auditLogs').where('entityId','==',result.asset.id).where('action','==','media.ready').get();assert.equal(audits.size,1);
  measurements.push({provider:'RTDB_EMULATOR_REAL',bytes:MAX_FILE_BYTES,wallMs:performance.now()-start,firestoreRequests:db.requests()-before,verificationProviderRequests:result.verificationRequests,workerFree:'BLOCKED_NOT_EDGE_ACCEPTANCE'});
 },{timeout:180000});

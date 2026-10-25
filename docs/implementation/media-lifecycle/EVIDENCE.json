@@ -75,6 +75,14 @@
       "passed": 1,
       "total": 1,
       "note": "Reteste do cenário de integridade existente; não aumenta35cenários distintos. Renew atualiza fence e snapshot da versão canônica ativa, preservando bloqueio na corrida."
+    },
+    {
+      "scope": "same 20 MiB integration plus wrong-provider negative fence",
+      "privateLogName": "cosmaker-gvii-provider-fence.log",
+      "logSha256": "05d7f369769d4992890720c80b7e6b1433efd66c7ce08e94a5472b69a59355bf",
+      "passed": 1,
+      "total": 1,
+      "note": "Reteste direcionado do cenário RTDB existente; não aumenta35. Outro adaptador não pode ler, reemitir capability ou planejar exclusão da origem registrada."
     }
   ],
   "earlierAttempts": [
@@ -183,7 +191,7 @@
     },
     {
       "file": "infrastructure/media/run-integration.mjs",
-      "sha256": "6caaddac1e0d056d49188d9e7f5353431cef09ff129fc56804b85144b13dd8b9"
+      "sha256": "768437f4ddb6d2ab4cd3c43742a7b3f7211443a1b4ec3353ba8772a28c68f695"
     },
     {
       "file": "infrastructure/media/run-native.mjs",
@@ -199,7 +207,7 @@
     },
     {
       "file": "infrastructure/media/src/coordinator.mjs",
-      "sha256": "f0aa6232f0f57fa4972b08df26668d59230b588eecfd3e942b0b16c74edb5b52"
+      "sha256": "2fca9c4bce53cac7434d547e3804fe96670f3aa3b20245aebcbc7b0a860e0524"
     },
     {
       "file": "infrastructure/media/src/cron-worker.mjs",
@@ -235,7 +243,7 @@
     },
     {
       "file": "infrastructure/media/test/integration.mjs",
-      "sha256": "51c23e9d6eaeb910fc2bd2a2fc2e6ba9aecb46cfc24fa2bbf419522014a5e1cf"
+      "sha256": "25a547954a1b2430ecf0eb44c868a16dbd2e139a4460510a69505bd9c9685e1d"
     },
     {
       "file": "infrastructure/media/test/local-supabase.mjs",
@@ -260,6 +268,20 @@
     {
       "file": "tests/e2e/media-lifecycle.spec.ts",
       "sha256": "526a336a84a6ed811e2796c3348df72c66781bed13682acd0896dbefce4bb413"
+    }
+  ],
+  "ciRuns": [
+    {
+      "sha": "7299088472c0c2b8f4523bb85d7f78e241d09909",
+      "runId": 40223312473,
+      "result": "SUCCESS",
+      "url": "https://github.com/CristianoRFB/cosmaker/actions/runs/40223312473",
+      "jobs": [
+        "media-proof SUCCESS",
+        "media-native-storage SUCCESS",
+        "media-windows SUCCESS"
+      ],
+      "scope": "Checkpoint de UX anterior ao hardening de provider; não é aprovação automática de fonte posterior."
     }
   ]
 }

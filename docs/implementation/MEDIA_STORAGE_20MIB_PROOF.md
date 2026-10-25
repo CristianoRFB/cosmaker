@@ -60,3 +60,5 @@ Todos saturam antes dos 37 dias do primeiro HIGH+grace. Com MEDIUM ou mídia per
 Próximo passo: definir estratégia verificável de capacidade e verificação/autorização dentro do Free antes de migrar. Pendências locais explícitas: restore Supabase nativo, coleta de órfãos, leitor dual/rollback de 20 MiB e TUS no browser. Dependências externas: conta Free/quota efetiva, identidade/JWKS/secrets mínimos, gateway/CORS/RLS/cache, índices reais, cron/CPU/telemetria, recuperação operacional e jurídico. Nenhum recebe PASS por esta prova. Não portar outras Functions com gate aberto.
 
 Reprodução, estados, backup e retorno: [runbook](../operations/MEDIA_RETENTION_DRY_RUN.md). Fonte global aplicada é o snapshot autorizado do TXT; arquivo 77 externo ausente foi registrado sem inventar seu conteúdo e sem solicitar confirmação.
+
+Hardening de origem: ativo registrado em outro adaptador não pode ser lido, retomado/reautorizado, ter retenção alterada ou ser removido pelo provider incorreto. Prova direcionada1/1 com20MiB, sem aumentar o denominador35. CI7299088 aprovado40223312473 é preservado como checkpoint; a revisão posterior deve ter seu próprio CI.

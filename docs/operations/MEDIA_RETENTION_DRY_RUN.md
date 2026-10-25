@@ -12,6 +12,8 @@ bash scripts/cloud-run.sh npm --prefix infrastructure/media test
 bash scripts/cloud-run.sh node infrastructure/media/run-integration.mjs
 # Só o ensaio Auth/broker/cron alterado:
 bash scripts/cloud-run.sh node infrastructure/media/run-integration.mjs security
+# Só vínculo de origem,20MiB e negativas entre adaptadores:
+bash scripts/cloud-run.sh node infrastructure/media/run-integration.mjs provider
 # Só integridade/lease e retomada após atualização legítima do pedido:
 bash scripts/cloud-run.sh node infrastructure/media/run-integration.mjs transfer
 # Só atividade fechada + capacidade agregada de 21 tenants:

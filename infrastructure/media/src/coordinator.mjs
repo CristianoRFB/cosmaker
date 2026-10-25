@@ -17,7 +17,7 @@ export class MediaCoordinator{
  async staff(uid,tx=this.db){const p=(await tx.get('users/'+uid))?.data;if(p?.active!==true||p.accountType!=='atelier_member'||!validId(p.atelierId))deny();const root='ateliers/'+p.atelierId;const a=(await tx.get(root))?.data,m=(await tx.get(root+'/members/'+uid))?.data;if(a?.active!==true||a.demoWorkspace===true||!can(m,'orders:manage'))deny();return{tenant:p.atelierId,profile:p,member:m};}
  async access(who,tenant,asset,write=false,tx=this.db){
   const profile=(await tx.get('users/'+who.uid))?.data,atelier=(await tx.get('ateliers/'+tenant))?.data;
-  if(profile?.active!==true||atelier?.active!==true||asset.atelierId!==tenant)deny();
+  if(profile?.active!==true||atelier?.active!==true||(asset.atelierId!==tenant||asset.provider!==this.provider.name))deny();
   const order=(await tx.get(`ateliers/${tenant}/orders/${asset.orderId}`))?.data;if(!order||(order.atelierId!==undefined&&order.atelierId!==tenant))deny();
   if(profile.accountType==='atelier_member'&&profile.atelierId===tenant){const member=(await tx.get(`ateliers/${tenant}/members/${who.uid}`))?.data;if(can(member,'orders:manage')||(!write&&can(member,'orders:read')))return{staff:true,order};}
   if(write||profile.accountType!=='client'||asset.shared!==true)deny();
@@ -33,7 +33,7 @@ export class MediaCoordinator{
   const result=await this.db.transaction(async tx=>{
    const actor=await this.staff(who.uid,tx),path=this.assetPath(actor.tenant,id),old=(await tx.get(path))?.data;
    if(await tx.get('mediaTombstonesV7/'+id))deny();
-   if(old){if(old.fingerprint!==fingerprint)throw new MediaFault('failed-precondition','Chave idempotente usada para outro arquivo.');if(['TOMBSTONED','REVOKED','DELETING'].includes(old.state))deny();return old;}
+   if(old){if(old.provider!==this.provider.name)throw new MediaFault('failed-precondition','Arquivo pertence a outro adaptador; migração não autorizada.');if(old.fingerprint!==fingerprint)throw new MediaFault('failed-precondition','Chave idempotente usada para outro arquivo.');if(['TOMBSTONED','REVOKED','DELETING'].includes(old.state))deny();return old;}
    const governance=(await tx.get('platformRuntime/mediaGovernanceV7'))?.data;if(governance?.uploadsPaused===true)throw new MediaFault('resource-exhausted','Uploads pausados; arquivos existentes preservados.',429);
    const order=(await tx.get(`ateliers/${actor.tenant}/orders/${v.orderId}`));if(!order||['cancelled','refunded','completed'].includes(order.data.status))throw new MediaFault('failed-precondition','Pedido não aceita novo envio.');
    const meter=(await tx.get(this.meterPath()))?.data||{active:0,pending:0,tenants:{},egressEstimated:0,noticeFailure:false};
@@ -86,7 +86,7 @@ export class MediaCoordinator{
  async evaluateRetention(tenant,id,tier){
   const path=this.assetPath(tenant,id);return this.db.transaction(async tx=>{
    const asset=(await tx.get(path))?.data;
-   if(!asset||asset.synthetic!==true||asset.origin!=='synthetic_proof'||asset.state!=='READY')return{skipped:true};
+   if(!asset||asset.synthetic!==true||asset.origin!=='synthetic_proof'||asset.state!=='READY'||asset.provider!==this.provider.name)return{skipped:true};
    if(!Array.isArray(asset.links)||asset.links.length>8||asset.links.some(l=>!validId(l?.id)))return{skipped:true,reason:'UNKNOWN_LINKS'};
    const links=[],recipients=new Set([asset.ownerUid]);let missingRecipient=false;
    for(const link of asset.links||[]){
@@ -129,12 +129,13 @@ export class MediaCoordinator{
    const changes={retention,revision:a.revision+1,...(legalHold===undefined?{}:{legalHold})};tx.set(path,changes,Object.keys(changes));audit(tx,tenant,who.uid,'media.protected',id,{legalHold:legalHold??a.legalHold,extendUntil:extendUntil||null},this.now());return{revision:a.revision+1};
   });
  }
- async planDeletion(tenant,id){const asset=(await this.db.get(this.assetPath(tenant,id)))?.data;return asset?{tenant,id,key:asset.key,...deletionDecision(asset,this.now())}:{eligible:false,reason:'MISSING'};}
+ async planDeletion(tenant,id){const asset=(await this.db.get(this.assetPath(tenant,id)))?.data;return asset&&asset.provider===this.provider.name?{tenant,id,key:asset.key,...deletionDecision(asset,this.now())}:{eligible:false,reason:'MISSING'};}
  async applySyntheticDeletion(plan,{mode='DRY_RUN'}={}){
   if(mode!=='SYNTHETIC_APPLY')return{mode:'DRY_RUN',wouldDelete:plan.eligible===true};
   const path=this.assetPath(plan.tenant,plan.id);
   const tombstone=await this.db.transaction(async tx=>{
    const a=(await tx.get(path))?.data,tomb=(await tx.get('mediaTombstonesV7/'+plan.id))?.data;
+   if(a?.provider!==this.provider.name)throw new MediaFault('failed-precondition','Adaptador não corresponde ao arquivo.');
    if(a?.state==='TOMBSTONED')return a;
    if(a?.state==='DELETING'&&a.synthetic===true&&a.revision===plan.expectedRevision+1&&tomb?.key===a.key)return a;
    let valid=true;for(const link of a?.links||[]){const order=(await tx.get(`ateliers/${plan.tenant}/orders/${link.id}`))?.data;if(order?.status!=='completed'||!(order.completedAt instanceof Date)||order.completedAt.toISOString()!==link.completedAt)valid=false;}
