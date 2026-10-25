@@ -16,3 +16,8 @@ playwright-report
 functions/lib
 *.tsbuildinfo
 firebase.commercial-test.[0-9]*.json
+.wrangler/
+.open-next/
+.dev.vars
+.dev.vars.*
+firebase.spark-test.[0-9]*.json

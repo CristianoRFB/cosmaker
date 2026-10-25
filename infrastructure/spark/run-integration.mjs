@@ -1,0 +1,10 @@
+import {writeFile,rm,readFile} from 'node:fs/promises';
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('../../',import.meta.url));
+const configPath=root+`firebase.spark-test.${process.pid}.json`;
+const config=JSON.parse(await readFile(root+'infrastructure/spark/firebase.emulator.json','utf8'));
+config.firestore={rules:'firestore.rules',indexes:'firestore.indexes.json'};config.database={rules:'infrastructure/spark/database.rules.json'};
+await writeFile(configPath,JSON.stringify(config));
+const result=spawn(process.execPath,['--require',root+'scripts/firebase-loopback-proxy.cjs',root+'node_modules/firebase-tools/lib/bin/firebase.js','emulators:exec','--project','demo-cosmaker','--config',configPath,'--only','auth,firestore,database',`"${process.execPath}" --test "${root}infrastructure/spark/test/integration.mjs"`],{cwd:root,stdio:'inherit',env:{...process.env,FIREBASE_CLI_DISABLE_UPDATE_CHECK:'true',WRANGLER_SEND_METRICS:'false'}});
+result.on('exit',async code=>{await rm(configPath,{force:true});process.exitCode=code??1;});
