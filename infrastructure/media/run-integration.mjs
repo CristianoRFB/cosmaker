@@ -1,0 +1,10 @@
+import {readFile,writeFile,rm} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {spawn} from 'node:child_process';
+const root=fileURLToPath(new URL('../../',import.meta.url));
+const config=JSON.parse(await readFile(root+'infrastructure/spark/firebase.emulator.json','utf8'));
+config.firestore={rules:'firestore.rules',indexes:'firestore.indexes.json'};config.database={rules:'infrastructure/spark/database.rules.json'};
+const path=root+`firebase.media-test.${process.pid}.json`;await writeFile(path,JSON.stringify(config));
+const command=`"${process.execPath}" --test "${root}infrastructure/media/test/integration.mjs"`;
+const child=spawn(process.execPath,['--require',root+'scripts/firebase-loopback-proxy.cjs',root+'node_modules/firebase-tools/lib/bin/firebase.js','emulators:exec','--project','demo-cosmaker','--config',path,'--only','auth,firestore,database',command],{cwd:root,stdio:'inherit',env:{...process.env,WRANGLER_SEND_METRICS:'false',FIREBASE_CLI_DISABLE_UPDATE_CHECK:'true'}});
+child.on('exit',async code=>{await rm(path,{force:true});process.exitCode=code??1;});

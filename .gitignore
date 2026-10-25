@@ -21,3 +21,4 @@ firebase.commercial-test.[0-9]*.json
 .dev.vars
 .dev.vars.*
 firebase.spark-test.[0-9]*.json
+firebase.media-test.[0-9]*.json

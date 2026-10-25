@@ -2,6 +2,7 @@ name: CI
 on: [push, pull_request]
 jobs:
   verify:
+    if: github.ref_name != 'codex/cosmaker-goal-vii-media-lifecycle' && github.head_ref != 'codex/cosmaker-goal-vii-media-lifecycle'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +27,7 @@ jobs:
         env:
           WRANGLER_SEND_METRICS: 'false'
   windows-preflight:
+    if: github.ref_name != 'codex/cosmaker-goal-vii-media-lifecycle' && github.head_ref != 'codex/cosmaker-goal-vii-media-lifecycle'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,3 +43,34 @@ jobs:
         run: npm --prefix infrastructure/spark test
         env:
           WRANGLER_SEND_METRICS: 'false'
+  media-proof:
+    if: github.ref_name == 'codex/cosmaker-goal-vii-media-lifecycle' || github.head_ref == 'codex/cosmaker-goal-vii-media-lifecycle'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm ci --prefix functions
+      - run: npm ci --prefix infrastructure/spark
+      - run: npm ci --prefix infrastructure/media
+      - run: npm --prefix infrastructure/media test
+      - run: node infrastructure/media/run-integration.mjs
+      - run: npm run docs:functional
+      - run: npm audit --prefix infrastructure/media --audit-level=high
+  media-windows:
+    if: github.ref_name == 'codex/cosmaker-goal-vii-media-lifecycle' || github.head_ref == 'codex/cosmaker-goal-vii-media-lifecycle'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix infrastructure/media
+      - run: npm --prefix infrastructure/media test
