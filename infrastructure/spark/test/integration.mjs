@@ -1,3 +1,4 @@
+import {fileURLToPath} from 'node:url';
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
@@ -22,11 +23,11 @@ const hash=b=>createHash('sha256').update(b).digest('hex');
 const payload=(extra={})=>({requestId:randomUUID(),kind:'expense',basis:'actual',category:'materials',amountCents:1234,description:'Material sintético',effectiveDate:new Date().toISOString().slice(0,10),orderId:'order-a',...extra});
 async function call(name,data,who='ownerA') {
   const r=await mf.dispatchFetch('http://localhost/'+name,{method:'POST',headers:{Authorization:'Bearer '+(people[who]?.token||'invalid'),'Content-Type':'application/json'},body:JSON.stringify({data})});
-  return {status:r.status,...await r.json()};
+  return {status:r.status,subrequests:Number(r.headers.get('X-Spark-Subrequests')),...await r.json()};
 }
 async function fileUpload(bytes,requestId=randomUUID(),who='ownerA',extras={}) {
   const r=await mf.dispatchFetch(`http://localhost/files/${a}/order-a`,{method:'POST',headers:{Authorization:'Bearer '+people[who].token,'Content-Type':'application/pdf','x-request-id':requestId,'x-content-sha256':hash(bytes),...extras},body:bytes});
-  return {status:r.status,...await r.json()};
+  return {status:r.status,subrequests:Number(r.headers.get('X-Spark-Subrequests')),...await r.json()};
 }
 async function fileGet(id,who='clientA',tenant=a) {return mf.dispatchFetch(`http://localhost/files/${tenant}/order-a/${id}`,{headers:{Authorization:'Bearer '+people[who].token}});}
 async function rtdb(path,method='GET',value) {
@@ -34,7 +35,7 @@ async function rtdb(path,method='GET',value) {
   assert.equal(r.ok,true,'RTDB fixture operation failed '+r.status);return r.json();
 }
 before(async()=>{
-  const built=await build({entryPoints:[new URL('../src/worker.mjs',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'neutral',external:['node:crypto','node:buffer']});
+  const built=await build({entryPoints:[fileURLToPath(new URL('../src/worker.mjs',import.meta.url))],bundle:true,write:false,format:'esm',platform:'neutral',external:['node:crypto','node:buffer']});
   mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:'spark-proof',modules:true,script:built.outputFiles[0].text,compatibilityDate:'2026-10-25',compatibilityFlags:['nodejs_compat'],bindings:env,outboundService:async request=>{
     const r=await runtimeFetch(request);
     if(mutateAfterObjectPut&&request.method==='PUT'&&new URL(request.url).pathname.startsWith('/spark/objects/')){const action=mutateAfterObjectPut;mutateAfterObjectPut=null;await action();}
@@ -203,7 +204,7 @@ test('RTDB single-string 20 MiB incompatibility and local workerd resource measu
     const result=await fileUpload(bytes);assert.equal(result.status,200,JSON.stringify(result));
     const middle=await stat(),uploadWallMs=performance.now()-start;
     const begin=performance.now(),response=await fileGet(result.data.fileId,'ownerA');assert.equal(response.status,200);assert.equal(hash(Buffer.from(await response.arrayBuffer())),hash(bytes));
-    const end=await stat();measurements.push({bytes:size,uploadWallMs,downloadWallMs:performance.now()-begin,uploadProcessCpuMs:(middle.ticks-before.ticks)*10,downloadProcessCpuMs:(end.ticks-middle.ticks)*10,rssBytes:end.rss});
+    const end=await stat();measurements.push({bytes:size,uploadWallMs,downloadWallMs:performance.now()-begin,uploadSubrequests:result.subrequests,downloadSubrequests:Number(response.headers.get('X-Spark-Subrequests')),uploadProcessCpuMs:(middle.ticks-before.ticks)*10,downloadProcessCpuMs:(end.ticks-middle.ticks)*10,rssBytes:end.rss});
   }
   const result={kind:'LOCAL_PROCESS_CPU_PROXY_NOT_EDGE_BILLABLE_CPU',tickMs:10,workerFreeCpuMs:10,measurements};
   await mkdir('.local/spark',{recursive:true});await writeFile('.local/spark/resources.json',JSON.stringify(result,null,2));console.log('SPARK_RESOURCES',JSON.stringify(result));

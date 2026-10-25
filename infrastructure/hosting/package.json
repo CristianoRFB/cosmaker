@@ -1,0 +1,17 @@
+{
+  "name": "cosmaker-opennext-feasibility",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@opennextjs/cloudflare": "1.20.13",
+    "next": "15.5.28",
+    "wrangler": "4.152.0",
+    "rclone.js": "0.6.6"
+  },
+  "overrides": {
+    "undici": "7.30.1",
+    "postcss": "8.5.31",
+    "adm-zip": "0.6.1",
+    "glob@^10.0.0": "10.5.0"
+  }
+}

@@ -1,3 +1,5 @@
+> Nesta branch GOAL VI, consultar [Spark/Workers Free WIP](implementation/spark/README.md). A candidata GOAL V e seus aceites foram preservados; não autorizam billing ou publicação desta adaptação.
+
 # Documentação técnica vigente
 
 A versão documental atual do Cosmaker OS é **v0.2.0 — Global Standard v01**, correspondente à mecânica comercial validada localmente no Firebase Emulator.

@@ -1,0 +1,1017 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "cca4e23281afd4bcfcc5eb0dc69c38e8b641eba2",
+  "count": 101,
+  "functions": [
+    {
+      "name": "getPlatformOverview",
+      "domain": "platform",
+      "source": "functions/src/platform/get-platform-overview.ts",
+      "sourceSha256": "ce956f0907f61c2779044355b32b6d360b0c5f75e3c0f44b5e1f888778a91642",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listPlatformAteliers",
+      "domain": "platform",
+      "source": "functions/src/platform/list-platform-ateliers.ts",
+      "sourceSha256": "63b241da535d693fe2be427914dae3d1f7d78fdb5fcc26cc2dd48ab77f19c9ac",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getPlatformAtelier",
+      "domain": "platform",
+      "source": "functions/src/platform/get-platform-atelier.ts",
+      "sourceSha256": "7327c727ea453d6f431c7d0abd392d60e05a767727cdfe3e1d6ab287a556811d",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "setPlatformAtelierStatus",
+      "domain": "platform",
+      "source": "functions/src/platform/set-platform-atelier-status.ts",
+      "sourceSha256": "98f7f64b733af343018f8ea73b6f3dd2980dbf9b8b01dd303d983704ccf6b596",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listPlatformAuditLogs",
+      "domain": "platform",
+      "source": "functions/src/platform/list-platform-audit-logs.ts",
+      "sourceSha256": "3d097a75606f94db996535504c7912279b937e8dc9356e682bad29ab1dbccec4",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "updatePlatformTenantCommercialState",
+      "domain": "commercial",
+      "source": "functions/src/commercial/platform-management.ts",
+      "sourceSha256": "0714f6ef80e8388a5b8f790b63f4489e8e87d66f2405aba9615d73f8ceb8337e",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createPlatformDemoTenant",
+      "domain": "commercial",
+      "source": "functions/src/commercial/platform-management.ts",
+      "sourceSha256": "0714f6ef80e8388a5b8f790b63f4489e8e87d66f2405aba9615d73f8ceb8337e",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "endPlatformDemoTenant",
+      "domain": "commercial",
+      "source": "functions/src/commercial/platform-management.ts",
+      "sourceSha256": "0714f6ef80e8388a5b8f790b63f4489e8e87d66f2405aba9615d73f8ceb8337e",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getTenantCommercialContext",
+      "domain": "commercial",
+      "source": "functions/src/commercial/tenant-context.ts",
+      "sourceSha256": "60e23efbe60db6ad755080f470e8da1b7faa311e668032485684f293db64ed5c",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getTenantFeatureAccess",
+      "domain": "commercial",
+      "source": "functions/src/commercial/tenant-context.ts",
+      "sourceSha256": "60e23efbe60db6ad755080f470e8da1b7faa311e668032485684f293db64ed5c",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "runTestOnlyCommercialOperation",
+      "domain": "commercial",
+      "source": "functions/src/commercial/tenant-context.ts",
+      "sourceSha256": "60e23efbe60db6ad755080f470e8da1b7faa311e668032485684f293db64ed5c",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listAtelierClients",
+      "domain": "clients",
+      "source": "functions/src/clients/clients.ts",
+      "sourceSha256": "64c29684becc30d8410e8e633b140f548cf4daae0dcfa76ba18b553c8e6dc379",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveAtelierClient",
+      "domain": "clients",
+      "source": "functions/src/clients/clients.ts",
+      "sourceSha256": "64c29684becc30d8410e8e633b140f548cf4daae0dcfa76ba18b553c8e6dc379",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "addAtelierClientInteraction",
+      "domain": "clients",
+      "source": "functions/src/clients/clients.ts",
+      "sourceSha256": "64c29684becc30d8410e8e633b140f548cf4daae0dcfa76ba18b553c8e6dc379",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getAtelierClient",
+      "domain": "clients",
+      "source": "functions/src/clients/clients.ts",
+      "sourceSha256": "64c29684becc30d8410e8e633b140f548cf4daae0dcfa76ba18b553c8e6dc379",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listAtelierTeam",
+      "domain": "team",
+      "source": "functions/src/team/members.ts",
+      "sourceSha256": "e8f9eb77710c71f2563eedbb4d6fa2a43c6bcd1562336f1e71900d474c3e9033",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "updateAtelierMember",
+      "domain": "team",
+      "source": "functions/src/team/members.ts",
+      "sourceSha256": "e8f9eb77710c71f2563eedbb4d6fa2a43c6bcd1562336f1e71900d474c3e9033",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "transferAtelierOwnership",
+      "domain": "team",
+      "source": "functions/src/team/members.ts",
+      "sourceSha256": "e8f9eb77710c71f2563eedbb4d6fa2a43c6bcd1562336f1e71900d474c3e9033",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createAtelierInvitation",
+      "domain": "team",
+      "source": "functions/src/team/invitations.ts",
+      "sourceSha256": "0aeda86b0c4e1f5e09c708dfdad20d7cf1516d23f42b21e7c1e7beaa0b2639e2",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listAtelierInvitations",
+      "domain": "team",
+      "source": "functions/src/team/invitations.ts",
+      "sourceSha256": "0aeda86b0c4e1f5e09c708dfdad20d7cf1516d23f42b21e7c1e7beaa0b2639e2",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "revokeAtelierInvitation",
+      "domain": "team",
+      "source": "functions/src/team/invitations.ts",
+      "sourceSha256": "0aeda86b0c4e1f5e09c708dfdad20d7cf1516d23f42b21e7c1e7beaa0b2639e2",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "acceptAtelierInvitation",
+      "domain": "team",
+      "source": "functions/src/team/invitations.ts",
+      "sourceSha256": "0aeda86b0c4e1f5e09c708dfdad20d7cf1516d23f42b21e7c1e7beaa0b2639e2",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveMemberScheduleCapacity",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/planning.ts",
+      "sourceSha256": "55312e898875f5ce44a8e8f9f068e6163ca0b1a00acd3679c85093274e457af0",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "allocateProductionTime",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/planning.ts",
+      "sourceSha256": "55312e898875f5ce44a8e8f9f068e6163ca0b1a00acd3679c85093274e457af0",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "cancelProductionSlot",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/planning.ts",
+      "sourceSha256": "55312e898875f5ce44a8e8f9f068e6163ca0b1a00acd3679c85093274e457af0",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createScheduleBlock",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/planning.ts",
+      "sourceSha256": "55312e898875f5ce44a8e8f9f068e6163ca0b1a00acd3679c85093274e457af0",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "cancelScheduleBlock",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/planning.ts",
+      "sourceSha256": "55312e898875f5ce44a8e8f9f068e6163ca0b1a00acd3679c85093274e457af0",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listScheduleWorkspace",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/planning.ts",
+      "sourceSha256": "55312e898875f5ce44a8e8f9f068e6163ca0b1a00acd3679c85093274e457af0",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listAtelierEvents",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/events.ts",
+      "sourceSha256": "6d9a73a7f13b7a0344d9ad2b3b177b10e193c9dcdeadab6846cfc909005ac4fc",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createAtelierEvent",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/events.ts",
+      "sourceSha256": "6d9a73a7f13b7a0344d9ad2b3b177b10e193c9dcdeadab6846cfc909005ac4fc",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "updateAtelierEvent",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/events.ts",
+      "sourceSha256": "6d9a73a7f13b7a0344d9ad2b3b177b10e193c9dcdeadab6846cfc909005ac4fc",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "cancelAtelierEvent",
+      "domain": "scheduling",
+      "source": "functions/src/scheduling/events.ts",
+      "sourceSha256": "6d9a73a7f13b7a0344d9ad2b3b177b10e193c9dcdeadab6846cfc909005ac4fc",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listInventoryWorkspace",
+      "domain": "inventory",
+      "source": "functions/src/inventory/inventory.ts",
+      "sourceSha256": "13cdb57706fdde9928c8905322a4e30f613117bf2e7ee07d2d379662e41dafcb",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listInventoryMovements",
+      "domain": "inventory",
+      "source": "functions/src/inventory/inventory.ts",
+      "sourceSha256": "13cdb57706fdde9928c8905322a4e30f613117bf2e7ee07d2d379662e41dafcb",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveInventoryMaterial",
+      "domain": "inventory",
+      "source": "functions/src/inventory/inventory.ts",
+      "sourceSha256": "13cdb57706fdde9928c8905322a4e30f613117bf2e7ee07d2d379662e41dafcb",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveInventorySupplier",
+      "domain": "inventory",
+      "source": "functions/src/inventory/inventory.ts",
+      "sourceSha256": "13cdb57706fdde9928c8905322a4e30f613117bf2e7ee07d2d379662e41dafcb",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "applyInventoryMovement",
+      "domain": "inventory",
+      "source": "functions/src/inventory/inventory.ts",
+      "sourceSha256": "13cdb57706fdde9928c8905322a4e30f613117bf2e7ee07d2d379662e41dafcb",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createQuoteDraft",
+      "domain": "quotes",
+      "source": "functions/src/quotes/create-quote-draft.ts",
+      "sourceSha256": "1b9d374b4a90a54382b24bf6f9a94a044daa57c74873993998551e81c2b0dfc4",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "publishQuote",
+      "domain": "quotes",
+      "source": "functions/src/quotes/publish-quote.ts",
+      "sourceSha256": "7674c366f10e914ea0c11da5005b63ec7556a22c56e90219e3973fcd03da76a8",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "respondToQuote",
+      "domain": "quotes",
+      "source": "functions/src/quotes/respond-to-quote.ts",
+      "sourceSha256": "ffab6252fb9a268ad9b5907d569cedf9b40b45592866995ac8b8305eee1b641f",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "expireQuotes",
+      "domain": "quotes",
+      "source": "functions/src/quotes/expire-quotes.ts",
+      "sourceSha256": "02492d6c646389c2260a99ac9c138eacc46c48600e45992859f21ce51e0e5dc4",
+      "transport": "scheduled",
+      "sparkStatus": "PARTIAL_LOCAL",
+      "adapter": "infrastructure/spark/src/scheduler.mjs",
+      "productionEnabled": false
+    },
+    {
+      "name": "createOrderFromApprovedQuote",
+      "domain": "orders",
+      "source": "functions/src/orders/create-order.ts",
+      "sourceSha256": "7ba39a1b75a1dc4c56440339f2067b5b954876c81be2bebb82b680197c650626",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listClientMeasurementProfiles",
+      "domain": "orders",
+      "source": "functions/src/orders/list-client-measurement-profiles.ts",
+      "sourceSha256": "595ddca794dc13dac2a354f81573bc427c6c2262ba87a5b7bf5ac984e67484f8",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createClientMeasurementProfile",
+      "domain": "orders",
+      "source": "functions/src/orders/list-client-measurement-profiles.ts",
+      "sourceSha256": "595ddca794dc13dac2a354f81573bc427c6c2262ba87a5b7bf5ac984e67484f8",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listClientOrders",
+      "domain": "orders",
+      "source": "functions/src/orders/list-client-orders.ts",
+      "sourceSha256": "2c00109586b0de19a24535010d2c0f5ecabdb4c70a5538f82f28de08728e89c9",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "confirmOrderDeposit",
+      "domain": "orders",
+      "source": "functions/src/orders/confirm-order-deposit.ts",
+      "sourceSha256": "3aca84754e913d87f7da7e962a98392c7fcdf95435b12628e90336a399bd4f28",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "updateProductionStage",
+      "domain": "orders",
+      "source": "functions/src/orders/update-production-stage.ts",
+      "sourceSha256": "8e572fb696d7af654ec6e28bc86bd6f0537b4807e9ef1fc6682d74d0fd4bdd3c",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "respondToProductionApproval",
+      "domain": "orders",
+      "source": "functions/src/orders/respond-to-production-approval.ts",
+      "sourceSha256": "646dca932cf9c6fab5d44d106edc2f7835541d946f75aac10fb79049d52621e2",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createProductionPhotoUpload",
+      "domain": "orders",
+      "source": "functions/src/orders/production-photos.ts",
+      "sourceSha256": "b51c8e6b22921f290c8205152862838c3f2c802867978df0442f18f77c517822",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "completeProductionPhotoUpload",
+      "domain": "orders",
+      "source": "functions/src/orders/production-photos.ts",
+      "sourceSha256": "b51c8e6b22921f290c8205152862838c3f2c802867978df0442f18f77c517822",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listProductionBoard",
+      "domain": "orders",
+      "source": "functions/src/orders/list-production-board.ts",
+      "sourceSha256": "99a681bb9cb65eb490dd39a0d445d580ab485e944507a820f4bffb098c5afbeb",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listOrderFiles",
+      "domain": "orders",
+      "source": "functions/src/orders/order-files.ts",
+      "sourceSha256": "f9d58aa601dfd99defad15817eb765337eca6a3985b38e7c398833b0a68b0f63",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createOrderFileUpload",
+      "domain": "orders",
+      "source": "functions/src/orders/order-files.ts",
+      "sourceSha256": "f9d58aa601dfd99defad15817eb765337eca6a3985b38e7c398833b0a68b0f63",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "completeOrderFileUpload",
+      "domain": "orders",
+      "source": "functions/src/orders/order-files.ts",
+      "sourceSha256": "f9d58aa601dfd99defad15817eb765337eca6a3985b38e7c398833b0a68b0f63",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "updateOrderFileAccess",
+      "domain": "orders",
+      "source": "functions/src/orders/order-files.ts",
+      "sourceSha256": "f9d58aa601dfd99defad15817eb765337eca6a3985b38e7c398833b0a68b0f63",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "uploadOrderFileBytes",
+      "domain": "orders",
+      "source": "functions/src/orders/order-file-bytes.ts",
+      "sourceSha256": "07fa0ef7e0978c0d5054c04f914d71d35fe78c2469e0703059451886bf7bd99f",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "downloadOrderFileBytes",
+      "domain": "orders",
+      "source": "functions/src/orders/order-file-bytes.ts",
+      "sourceSha256": "07fa0ef7e0978c0d5054c04f914d71d35fe78c2469e0703059451886bf7bd99f",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "downloadProductionPhotoBytes",
+      "domain": "orders",
+      "source": "functions/src/orders/production-photo-bytes.ts",
+      "sourceSha256": "ccb08ef01fd7fc01230abf23676a0a4c28881cb687ff4ed4ecf41654dabaf48f",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listOrderChangeRequests",
+      "domain": "orders",
+      "source": "functions/src/orders/change-requests.ts",
+      "sourceSha256": "4ea280e26368516a6c6bd6884cfad5d8e53d8f91695544f6440881c01bdfc933",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "proposeOrderChangeRequest",
+      "domain": "orders",
+      "source": "functions/src/orders/change-requests.ts",
+      "sourceSha256": "4ea280e26368516a6c6bd6884cfad5d8e53d8f91695544f6440881c01bdfc933",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "respondToOrderChangeRequest",
+      "domain": "orders",
+      "source": "functions/src/orders/change-requests.ts",
+      "sourceSha256": "4ea280e26368516a6c6bd6884cfad5d8e53d8f91695544f6440881c01bdfc933",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "applyOrderChangeRequest",
+      "domain": "orders",
+      "source": "functions/src/orders/change-requests.ts",
+      "sourceSha256": "4ea280e26368516a6c6bd6884cfad5d8e53d8f91695544f6440881c01bdfc933",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "cancelOrderChangeRequest",
+      "domain": "orders",
+      "source": "functions/src/orders/change-requests.ts",
+      "sourceSha256": "4ea280e26368516a6c6bd6884cfad5d8e53d8f91695544f6440881c01bdfc933",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getOrderProductionConfiguration",
+      "domain": "orders",
+      "source": "functions/src/orders/production-configuration.ts",
+      "sourceSha256": "93bdeb3e12c2bf9df3397bd95ed1b8fdf57e3fcef8a24995b2b89d2f52697f8e",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveOrderProductionConfiguration",
+      "domain": "orders",
+      "source": "functions/src/orders/production-configuration.ts",
+      "sourceSha256": "93bdeb3e12c2bf9df3397bd95ed1b8fdf57e3fcef8a24995b2b89d2f52697f8e",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "resolvePublicTenant",
+      "domain": "public",
+      "source": "functions/src/public/tenant.ts",
+      "sourceSha256": "937a067e72e354557f35828d9255639a0d7c1cf211651318ddb4e68d8633d9bf",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "createPublicQuoteRequest",
+      "domain": "public",
+      "source": "functions/src/public/tenant.ts",
+      "sourceSha256": "937a067e72e354557f35828d9255639a0d7c1cf211651318ddb4e68d8633d9bf",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "completePublicQuoteReferenceUpload",
+      "domain": "public",
+      "source": "functions/src/public/tenant.ts",
+      "sourceSha256": "937a067e72e354557f35828d9255639a0d7c1cf211651318ddb4e68d8633d9bf",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "discardPublicQuoteReferenceUpload",
+      "domain": "public",
+      "source": "functions/src/public/tenant.ts",
+      "sourceSha256": "937a067e72e354557f35828d9255639a0d7c1cf211651318ddb4e68d8633d9bf",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "recordFinanceEntry",
+      "domain": "finance",
+      "source": "functions/src/finance/finance.ts",
+      "sourceSha256": "a025f280fa3b7507ad11b681f4532d43460e035c83474438e354a4213a90217c",
+      "transport": "callable",
+      "sparkStatus": "PARTIAL_LOCAL",
+      "adapter": "infrastructure/spark/src/finance.mjs",
+      "productionEnabled": false
+    },
+    {
+      "name": "reverseFinanceEntry",
+      "domain": "finance",
+      "source": "functions/src/finance/finance.ts",
+      "sourceSha256": "a025f280fa3b7507ad11b681f4532d43460e035c83474438e354a4213a90217c",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listFinanceWorkspace",
+      "domain": "finance",
+      "source": "functions/src/finance/finance.ts",
+      "sourceSha256": "a025f280fa3b7507ad11b681f4532d43460e035c83474438e354a4213a90217c",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "reconcileLegacyFinancePayment",
+      "domain": "finance",
+      "source": "functions/src/finance/finance.ts",
+      "sourceSha256": "a025f280fa3b7507ad11b681f4532d43460e035c83474438e354a4213a90217c",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listAtelierShowcase",
+      "domain": "showcase",
+      "source": "functions/src/showcase/showcase.ts",
+      "sourceSha256": "18964c658e1c3146f464f02b0fce5928ca31e8104294ca560035fd87a61924bd",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveAtelierService",
+      "domain": "showcase",
+      "source": "functions/src/showcase/showcase.ts",
+      "sourceSha256": "18964c658e1c3146f464f02b0fce5928ca31e8104294ca560035fd87a61924bd",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveAtelierPortfolioProject",
+      "domain": "showcase",
+      "source": "functions/src/showcase/showcase.ts",
+      "sourceSha256": "18964c658e1c3146f464f02b0fce5928ca31e8104294ca560035fd87a61924bd",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listPublicShowcase",
+      "domain": "showcase",
+      "source": "functions/src/showcase/showcase.ts",
+      "sourceSha256": "18964c658e1c3146f464f02b0fce5928ca31e8104294ca560035fd87a61924bd",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveAtelierPublicProfile",
+      "domain": "showcase",
+      "source": "functions/src/showcase/showcase.ts",
+      "sourceSha256": "18964c658e1c3146f464f02b0fce5928ca31e8104294ca560035fd87a61924bd",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "uploadShowcaseImage",
+      "domain": "showcase",
+      "source": "functions/src/showcase/images.ts",
+      "sourceSha256": "da669e61de1f76843db9779952381667a5d2a18fc439a77c220754ace831b510",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "downloadShowcaseImage",
+      "domain": "showcase",
+      "source": "functions/src/showcase/images.ts",
+      "sourceSha256": "da669e61de1f76843db9779952381667a5d2a18fc439a77c220754ace831b510",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "removeShowcaseImage",
+      "domain": "showcase",
+      "source": "functions/src/showcase/images.ts",
+      "sourceSha256": "da669e61de1f76843db9779952381667a5d2a18fc439a77c220754ace831b510",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "sendOrderMessage",
+      "domain": "messages",
+      "source": "functions/src/messages/conversations.ts",
+      "sourceSha256": "6044574cfbb75cca78a7a0f45cda78377215b27cd226794852049132e2f7c987",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getOrderConversation",
+      "domain": "messages",
+      "source": "functions/src/messages/conversations.ts",
+      "sourceSha256": "6044574cfbb75cca78a7a0f45cda78377215b27cd226794852049132e2f7c987",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "markOrderConversationRead",
+      "domain": "messages",
+      "source": "functions/src/messages/conversations.ts",
+      "sourceSha256": "6044574cfbb75cca78a7a0f45cda78377215b27cd226794852049132e2f7c987",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listMessageInbox",
+      "domain": "messages",
+      "source": "functions/src/messages/conversations.ts",
+      "sourceSha256": "6044574cfbb75cca78a7a0f45cda78377215b27cd226794852049132e2f7c987",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listInternalNotifications",
+      "domain": "notifications",
+      "source": "functions/src/notifications/internal-notifications.ts",
+      "sourceSha256": "f061e959c914694b4be76dfcaf50f4c85ece5443a42423d67e7fba03b989680f",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "markInternalNotificationRead",
+      "domain": "notifications",
+      "source": "functions/src/notifications/internal-notifications.ts",
+      "sourceSha256": "f061e959c914694b4be76dfcaf50f4c85ece5443a42423d67e7fba03b989680f",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getOperationalPreferences",
+      "domain": "reports",
+      "source": "functions/src/reports/reports.ts",
+      "sourceSha256": "1a9d943e3156125b5b9badbf6d74412338cc1abb7bec7b96482d1569c15f681e",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "saveOperationalPreferences",
+      "domain": "reports",
+      "source": "functions/src/reports/reports.ts",
+      "sourceSha256": "1a9d943e3156125b5b9badbf6d74412338cc1abb7bec7b96482d1569c15f681e",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getAtelierOperationalReport",
+      "domain": "reports",
+      "source": "functions/src/reports/reports.ts",
+      "sourceSha256": "1a9d943e3156125b5b9badbf6d74412338cc1abb7bec7b96482d1569c15f681e",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "finalizeOrder",
+      "domain": "orders",
+      "source": "functions/src/orders/finalize-order.ts",
+      "sourceSha256": "783bb7afdb2fdae726150ec2c20096beabe2495b74daaaee321e7915e79f4dea",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "downloadQuoteReferenceBytes",
+      "domain": "public",
+      "source": "functions/src/public/quote-reference-bytes.ts",
+      "sourceSha256": "a0e83e2d076df62989917db155143ddde831f798a9765cd7eeefba34efda4254",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listClientQuotes",
+      "domain": "quotes",
+      "source": "functions/src/quotes/client-quotes.ts",
+      "sourceSha256": "73325a1693421f26c126175ed31a2f96076cc794b0af1f140c76f51d495f7c8b",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getClientQuote",
+      "domain": "quotes",
+      "source": "functions/src/quotes/client-quotes.ts",
+      "sourceSha256": "73325a1693421f26c126175ed31a2f96076cc794b0af1f140c76f51d495f7c8b",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "uploadProductionPhotoBytes",
+      "domain": "orders",
+      "source": "functions/src/orders/production-photo-upload.ts",
+      "sourceSha256": "9b5285c524915c078fc4e970a56f834813e600c4caae21cc804c7bf7aa41b7b2",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "uploadPublicQuoteReferenceBytes",
+      "domain": "public",
+      "source": "functions/src/public/quote-reference-upload.ts",
+      "sourceSha256": "bf87e70a1de24eb7636f6371ce29ea3e33d477ecadbf21f71c80a11bad3c3bc0",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "downloadLegacyAtelierFileBytes",
+      "domain": "orders",
+      "source": "functions/src/orders/legacy-file-bytes.ts",
+      "sourceSha256": "4b810e53cc08bb150c90a840834410d0a619fb4311eb9446784ddce5cf096d40",
+      "transport": "http",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listClientOrderPayments",
+      "domain": "orders",
+      "source": "functions/src/orders/client-payments.ts",
+      "sourceSha256": "906400c8917c71805e7beeef80df5181bb46bf79d9664e882a19e676cad99582",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getClientPayment",
+      "domain": "orders",
+      "source": "functions/src/orders/client-payments.ts",
+      "sourceSha256": "906400c8917c71805e7beeef80df5181bb46bf79d9664e882a19e676cad99582",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "listPlatformUsers",
+      "domain": "platform",
+      "source": "functions/src/platform/list-platform-users.ts",
+      "sourceSha256": "aa1c8343d6483f2341b086232dd9ad67caf97a7103f290c6e7f040bf3d103336",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    },
+    {
+      "name": "getClientOrder",
+      "domain": "orders",
+      "source": "functions/src/orders/get-client-order.ts",
+      "sourceSha256": "2943036ddce625dba81fc839dc1d81c6151d85e4678d483d71ed0e93f9051f07",
+      "transport": "callable",
+      "sparkStatus": "NOT_PORTED",
+      "adapter": null,
+      "productionEnabled": false
+    }
+  ]
+}

@@ -10,7 +10,7 @@
     "interface",
     "negative"
   ],
-  "scope": "Operações do produto e ferramentas locais já aprovadas; não mede esforço, prontidão comercial ou aceite formal. Operações relacionadas não são desdobradas por rota equivalente. Critérios incompletos preservam crédito dos demais.",
+  "scope": "Operações do produto e ferramentas locais já aprovadas; não mede esforço, prontidão comercial ou aceite formal. Operações relacionadas não são desdobradas por rota equivalente. Critérios incompletos preservam crédito dos demais. GOAL VI: este inventário continua exclusivo do transporte Functions/Storage anterior; a adaptação Spark possui matriz separada em spark/COMPATIBILITY.json e não herda estes PASS. A configuração Next mantém o default e isola o build experimental por opt-in.",
   "operations": [
     {
       "id": "auth-session",
@@ -2171,7 +2171,7 @@
     "lib/utils.ts": "c57157f95db180db9a91d35723b46086b9d3c95cb91913f78233a4c3ea3030d7",
     "lib/utils/schedule-time.ts": "cb7a38ec1602dbf32ab6884130d3a3870a5b400cf7dc4ba18eda8fe365da465f",
     "lib/validators/common.ts": "72ec647789fdbed4332b2fa61920b6b0c6856132fb8daf796e1417de3b5066df",
-    "next.config.mjs": "c756de99cd5b24fe69b4f51a23a2529415eb5aed745fd66653928338a88a2349",
+    "next.config.mjs": "8ad82b0df4f425bd1a6df62bfcafbaa858edb4be52ae9b1c6b7ca88e76ff1661",
     "package-lock.json": "32e669d9b3e609f82ed9d722daffc63dde72dc24d746158b73282977bb796cb6",
     "package.json": "55ad47a496f74b8dac1e8ab7ecaa4ef3f3e4e6cdc611482f6f56fb40f2e528d7",
     "playwright.config.ts": "9d8a9fc5c2278ca58af251abd9caa4adc88dc202ca5c835fb554604be4a6e4c6",

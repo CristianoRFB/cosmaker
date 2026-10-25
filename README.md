@@ -1,3 +1,5 @@
+> Branch experimental GOAL VI: adaptação Spark/Workers Free **incompleta**, sem substituição da candidata anterior. Estado, limites e comandos em [docs/implementation/spark/README.md](docs/implementation/spark/README.md). Os98,91% anteriores não aprovam a arquitetura nova.
+
 # Cosmaker OS
 
 SaaS multi-tenant para gestão de ateliês de cosplay. A aplicação compartilhada separa os dados privados por `atelierId`; páginas públicas resolvem o ateliê pelo slug da rota, sem fallback global.
