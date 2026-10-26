@@ -1,0 +1,1 @@
+{"name":"cosmaker-free-feasibility","private":true,"type":"module","scripts":{"test":"node --test test/*.test.mjs","simulate":"node simulate.mjs"}}

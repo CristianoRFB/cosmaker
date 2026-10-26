@@ -2,7 +2,7 @@ name: CI
 on: [push, pull_request]
 jobs:
   verify:
-    if: github.ref_name != 'codex/cosmaker-goal-vii-media-lifecycle' && github.head_ref != 'codex/cosmaker-goal-vii-media-lifecycle'
+    if: github.ref_name != 'codex/cosmaker-goal-vii-media-lifecycle' && github.head_ref != 'codex/cosmaker-goal-vii-media-lifecycle' && github.ref_name != 'codex/cosmaker-goal-viii-capacidade-free' && github.head_ref != 'codex/cosmaker-goal-viii-capacidade-free'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
         env:
           WRANGLER_SEND_METRICS: 'false'
   windows-preflight:
-    if: github.ref_name != 'codex/cosmaker-goal-vii-media-lifecycle' && github.head_ref != 'codex/cosmaker-goal-vii-media-lifecycle'
+    if: github.ref_name != 'codex/cosmaker-goal-vii-media-lifecycle' && github.head_ref != 'codex/cosmaker-goal-vii-media-lifecycle' && github.ref_name != 'codex/cosmaker-goal-viii-capacidade-free' && github.head_ref != 'codex/cosmaker-goal-viii-capacidade-free'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -88,3 +88,19 @@ jobs:
           node-version: 22
       - run: npm ci --prefix infrastructure/media
       - run: npm --prefix infrastructure/media test
+
+  free-capacity:
+    if: github.ref_name == 'codex/cosmaker-goal-viii-capacidade-free' || github.head_ref == 'codex/cosmaker-goal-viii-capacidade-free'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix infrastructure/feasibility
+      - run: npm --prefix infrastructure/feasibility test
+      - run: node infrastructure/feasibility/simulate.mjs
+      - run: git diff --exit-code -- docs/implementation/capacity-free/SCENARIOS.json docs/implementation/capacity-free/SCENARIOS.csv

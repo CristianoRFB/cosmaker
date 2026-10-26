@@ -1,0 +1,57 @@
+COSMAKER OS — GOAL MASTER VIII
+CAPACIDADE SUSTENTÁVEL FREE + EXECUÇÃO WORKERS FREE — PROVA BLOQUEANTE
+Referência: 25/10/2026
+
+MISSÃO
+Continuar o GOAL VII com evidências verificáveis para decidir se é possível preservar o contrato privado de 20 MiB, a retenção adaptativa, o isolamento multi-tenant e as 47 operações do Cosmaker com infraestrutura gratuita SEM billing, SEM cartão obrigatório e SEM R2. Não inventar capacidade, não transformar uma demonstração local em prontidão comercial e não abrir nova frente de migração de Functions enquanto o gate de armazenamento estiver bloqueado.
+
+BASE E RESTRIÇÕES
+- Repo: CristianoRFB/cosmaker.
+- Branch histórica protegida: codex/cosmaker-master-finalizacao, HEAD conhecido cca4e23281afd4bcfcc5eb0dc69c38e8b641eba2.
+- GOAL VI anterior: codex/cosmaker-spark-zero-billing, base d659faa40bd8dff3929daac2f6a39aa47bccea19.
+- GOAL VII atual: codex/cosmaker-goal-vii-media-lifecycle, HEAD confirmado 06b9241e987829ac96eb206998ba740fabdf8796.
+- Criar branch isolada codex/cosmaker-goal-viii-capacidade-free a partir do HEAD remoto CONFIRMADO do GOAL VII. Se mudou, reconciliar antes de qualquer mutação. Preservar worktrees, WIP e branches. Sem reset, force-push, merge main ou deploy.
+- Nenhum acesso mutável a contas reais, credenciais, Firebase real, Supabase hospedado, Backblaze real ou dados de clientes sem autorização separada. Não ativar Blaze, billing, cartão, R2, upgrades pagos ou serviços com overage incontrolável.
+- Flags de migração e deleção reais ficam OFF. DRY_RUN por padrão. Nada de apagar legados nem diminuir silenciosamente o limite de arquivo de 20 MiB ou as promessas de retenção.
+- Ler primeiro docs/implementation/GOAL_VII_HANDOFF.md, MEDIA_STORAGE_20MIB_PROOF.md, media-lifecycle/ACCEPTANCE.json, EVIDENCE.json, docs/operations/MEDIA_RETENTION_DRY_RUN.md e contrato global de mídia efetivamente disponível. Se faltar, registrar lacuna e não inventar conteúdo.
+
+RESULTADOS JÁ APROVADOS — NÃO REPETIR SEM NECESSIDADE
+- GOAL VII: 35 cenários distintos locais, incluindo 20 MiB íntegros em RTDB e Storage OSS oficial, retenção, UX, testes de segurança, backups RTDB; CI aprovado. 0/7 gates de cutover aceitos (6 parciais, 1 bloqueado). Não reportar isso como 0% desenvolvido.
+- Antigo Cosmaker: 182/184 funcionais e 10/16 marcos formais valem APENAS para arquitetura antiga. Não herdar métricas na arquitetura nova.
+- Não repetir os 104 cenários SDK nem toda a suíte 124 unitários antigos sem superfície alterada e justificativa.
+
+FASE A — CAPACIDADE MATEMÁTICA, COM CENÁRIOS DE NEGÓCIO
+1. Inventariar bytes: originais, previews, versões ocultas, uploads pendentes, backups, órfãos, egress, contas e quotas globais; diferenciar metadados Firestore de bytes efetivamente armazenados.
+2. Simular em bytes exatos, considerando 1 GB decimal do Supabase Free, 10 GB do Backblaze B2 (SE os termos atuais confirmarem) e demais candidatos elegíveis, carga 1/5/20 tenants, 0/1/2/5 fotos de 20 MiB/dia/tenant, mistura realista de 1–20 MiB, read/downloads e retenção HIGH 30+7, MEDIUM 90+14, LOW permanente, protegidas e holds. Projetar picos, concorrência, aumento orgânico e exclusões efetivas sem antecipá-las.
+3. Exibir horizonte até bloqueio, p95 de ocupação projetada, taxa admissível, alertas antes do esgotamento e impacto em promessas a clientes. Não inventar limites comerciais Essencial/Pro/Premium. O serviço deve recusar novos uploads de forma explícita e segura antes de ultrapassar as quotas, mantendo leituras autorizadas quando tecnicamente possível.
+4. Demonstrar, com fórmulas e cenários reproduzíveis, por que nenhuma quota fixa e finita oferece crescimento ilimitado. Se não houver envelope operacional comercialmente útil, concluir BLOCKED sem maquiar o problema.
+
+FASE B — CANDIDATOS DE ARMAZENAMENTO, SEM NOVA CONTA
+5. Revalidar fontes oficiais e termos atualizados, e registrar URLs/datas: Supabase Storage Free (1 GB, pausas e egress), Firebase RTDB Spark, Backblaze B2 (10 GB grátis e alegação de cadastro sem cartão; custos e regras de egress), e opcionalmente Tigris (5 GB grátis, mas atenção a cobranças por excesso) e ImageKit (verificar limite por arquivo, storage, privacidade e termos). R2 está EXPRESSAMENTE EXCLUÍDO. Não criar múltiplas contas para contornar quotas ou violar termos.
+6. Só classificar como candidato 'zero billing' se houver evidência de habilitação sem cartão/billing e comportamento seguro ao ultrapassar quotas. Franja gratuita de plano cobrável automaticamente não atende ao mandato. Se faltar comprovação, marcar CONDITIONAL, não PASS.
+7. Para candidato viável, escrever adaptador pequeno atrás da interface de storage existente e testar em emulator/OSS local compatível, sem fingir equivalência hospedada. Preferir provedores com API de objetos privada, políticas de acesso e operações de exclusão/listagem/versionamento claras. Especificar como controlar versões ocultas e objetos órfãos, pois 'delete' de um nome pode deixar versões consumindo quota.
+8. Verificar 20 MiB EXATOS, uploads interrompidos/retomados, SHA-256 ponta a ponta sem confiar somente em metadados enviados pelo usuário, autorização A/B, UID, RBAC, revogação, replay, lease, TTL de URL assinada, cache, CORS, retry, download após restore, egress, exclusão de versões, backup completo de bytes+metadados.
+9. Caso um fornecedor não ofereça zero-billing estrito, registrar BLOCKED/CONDITIONAL e não integrar como caminho de produção. Não criar contornos como buckets públicos, segredo no navegador, múltiplas contas grátis, perda de qualidade da imagem original ou armazenamento em dados JSON como solução cega.
+
+FASE C — ORÇAMENTO WORKERS FREE E CAMINHO DE DADOS
+10. Com base na documentação oficial do dia, impor orçamento Workers Free em execução: CPU HTTP e Cron (referência 10 ms), 50 subrequests por requisição, 128 MB RAM, 100.000 requests/dia; diferenciar tempo de parede de CPU efetiva. Criar contadores por operação, guards e relatórios por jornada. Não declarar aceite de CPU hosted com simulação local.
+11. Refatorar APENAS o caminho bloqueante de verificação/download se for possível remover verificação byte-a-byte pesada do Worker; estudar streaming autenticado, verificação incremental fora da borda, hash de origem confiável, upload direto privado com capability de prazo curto e validação canônica no broker. Não enfraquecer SHA-256 nem autorização para caber em 10 ms.
+12. Provar dentro do runtime workerd as jornadas críticas de 20 MiB sob limites configurados, com metas explícitas e evidências de CPU/subrequests. Se trabalho necessário não couber, falhar fechado e documentar impossibilidade sem prometer que hospedado será igual.
+13. Tratar cron, rate limits, gargalos de free tier, revogação e download com token expirado; nenhuma assinatura/signed URL deve criar acesso permanente após perda de permissão. Onde revogação imediata não for possível, declarar janela residual e exigir decisão formal.
+
+FASE D — PENDÊNCIAS LOCAIS PREEXISTENTES, SÓ SE CAPACIDADE TIVER CAMINHO
+14. Se houver candidato consistente, completar por prioridade: varredura/reconciliação de uploads PENDING abandonados, restauração bytes+metadados+versões do novo provedor, TUS/alternativa retomável de fato testada no navegador, leitor dual/rollback 20 MiB para legado 6 MiB, testes de perda de rede e fail-safe. Sem migração nem cutover reais.
+15. Se a capacidade continuar bloqueada, não executar as tarefas 14 apenas para elevar artificialmente a cobertura. Encerrar com evidências e decisão do bloqueio.
+
+CONDIÇÕES DE SEGURANÇA E GOVERNANÇA
+- Isolamento rígido entre ateliês; não confiar em tenantId ou UID do navegador; políticas canônicas no broker e acessos de storage mínimos. Dados financeiros e de produção intactos.
+- Respeitar retenção original HIGH 30+7 e MEDIUM 90+14 após fechamento canônico; LOW, fixos e protegidos sem expiração automática; avisos, holds, histórico e trilha de auditoria. Nunca apagar mídias antes da promessa para recuperar quota.
+- Sem cobrança automática e sem aplicar alterações comerciais ou limites dos planos não aprovados. Documentar custo de operação e riscos de serviço grátis.
+- Commit/push frequentes na branch isolada, CI proporcional e relatório de evidências com SHA. Sem deploy, credenciais reais, dados reais, R2 ou billing.
+
+CRITÉRIOS DE SAÍDA
+Entregar comparação fundamentada entre provedores, simulador reprodutível, envelope seguro por tenant e global, CPU/subrequest budget por operação, provas de integridade/segurança pertinentes e recomendações de arquitetura. Produzir documentos GOAL_VIII_HANDOFF.md, CAPACITY_FEASIBILITY.md, FREE_RUNTIME_BUDGET.md e matriz JSON de decisões/gates, respeitando convenções existentes do repo.
+Reportar separadamente: cenários novos distintos; gates atuais de migração aceitos/parciais/bloqueados; prontidão comercial; evidência local versus hospedada; bloqueios intransponíveis. NÃO declarar READY sem testes hosted, homologação e autorização explícita. Se não existir infraestrutura realmente sustentável R$0 sem billing para o volume escolhido, deixar NOT_READY com conclusão honesta e alternativas comerciais sujeitas a decisão posterior.
+
+COMANDOS DO CODEX
+Agir autonomamente no código local da branch isolada após preflight e leitura do handoff, sem solicitar perguntas triviais. Priorizar a decisão de viabilidade e o menor delta necessário; não ampliar o escopo para as 101 Functions nem gastar ciclos em suites já aprovadas. Fechar com commits/push, link do CI final e árvore limpa, se forem operações permitidas no ambiente Git autenticado.
