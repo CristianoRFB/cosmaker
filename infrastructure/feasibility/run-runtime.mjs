@@ -1,0 +1,12 @@
+import {readFile,writeFile,rm} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {spawn} from 'node:child_process';
+const root=fileURLToPath(new URL('../../',import.meta.url));
+const config=JSON.parse(await readFile(root+'infrastructure/spark/firebase.emulator.json','utf8'));
+config.firestore={rules:'firestore.rules',indexes:'firestore.indexes.json'};
+delete config.database;delete config.emulators.database;
+const path=root+`firebase.capacity-test.${process.pid}.json`;
+await writeFile(path,JSON.stringify(config));
+const command=`"${process.execPath}" --test "${root}infrastructure/feasibility/test/runtime.mjs"`;
+const child=spawn(process.execPath,['--require',root+'scripts/firebase-loopback-proxy.cjs',root+'node_modules/firebase-tools/lib/bin/firebase.js','emulators:exec','--project','demo-cosmaker','--config',path,'--only','auth,firestore',command],{cwd:root,stdio:'inherit',env:{...process.env,FIREBASE_CLI_DISABLE_UPDATE_CHECK:'true',WRANGLER_SEND_METRICS:'false'}});
+child.on('exit',async code=>{await rm(path,{force:true});process.exitCode=code??1;});

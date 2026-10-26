@@ -1,6 +1,6 @@
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-import {simulate,boundedEnvelope,MAX_BYTES} from './src/capacity.mjs';
+import {simulate,boundedEnvelope,physicalBytes,MAX_BYTES} from './src/capacity.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 const output=root+'docs/implementation/capacity-free/';
 const providers=JSON.parse(await readFile(output+'PROVIDERS.json','utf8')).providers.filter(p=>p.capacityBytes);
@@ -9,7 +9,7 @@ for(const provider of providers)for(const tenants of[1,5,20])for(const photosPer
  const options={capacity:provider.capacityBytes,monthlyEgress:provider.monthlyEgressBytes,encoding:provider.encoding,tenants,photosPerDay,
   ...(mix==='business-mix'?{sizes:[1048576,2*1048576,4*1048576,8*1048576,MAX_BYTES],previewBytes:65536,versionEvery:10,protectedEvery:20,persistentEvery:25,holdEvery:40,unknownEvery:50,fixedBytesPerTenant:1048576}:{}),days:180};
  scenarios.push({id:`${provider.id}-${tenants}-${photosPerDay}-${mix}`,provider:provider.id,mix,
-  demand:simulate(options),guarded:simulate(options,{guarded:true}),envelope:boundedEnvelope({capacity:provider.capacityBytes,tenants,meanBytes:MAX_BYTES,pendingBytes:tenants*MAX_BYTES*2})});
+  demand:simulate(options),guarded:simulate(options,{guarded:true}),envelope:boundedEnvelope({capacity:provider.capacityBytes,tenants,meanBytes:physicalBytes(MAX_BYTES,provider.encoding),pendingBytes:tenants*physicalBytes(MAX_BYTES,provider.encoding)*2})});
 }
 for(const variant of[{id:'orphans',orphanEvery:20},{id:'notice-failure',failNotices:true},{id:'all-held',holdEvery:1},{id:'permanent',persistentEvery:1},{id:'growth',growthBpsPer30Days:2000}]){
  const {id,...patch}=variant;const options={capacity:10000000000,tenants:20,photosPerDay:1,days:365,...patch};
