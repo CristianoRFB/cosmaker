@@ -1,0 +1,446 @@
+{
+  "schemaVersion": 1,
+  "dateUTC": "2026-10-26",
+  "branch": "codex/cosmaker-goal-viii-capacidade-free",
+  "baseCommit": "06b9241e987829ac96eb206998ba740fabdf8796",
+  "newDistinctTests": 20,
+  "testMethod": "12unit/guards +8new workerd/Auth/Firestore integration tests. Windows repeats the12, not extra scenarios.127forecasts are not127test PASS. Expected strict denials do not approve CPU/hosted operation.",
+  "runtime": {
+    "runtime": "workerd-local",
+    "limitsRequested": {
+      "cpuMs": 10,
+      "subrequests": 50
+    },
+    "limitsRetainedInNativeV5Config": true,
+    "metadataInventory": {
+      "assetJsonBytes": 330,
+      "notFirestoreBilledBytes": true,
+      "noBlobBytesInFirestore": true
+    },
+    "hosted": false,
+    "cutover": false,
+    "observations": [
+      {
+        "scope": "calibration",
+        "result": {
+          "n": -1322321664,
+          "cpuCounter": {
+            "availability": "UNAVAILABLE_LOCAL",
+            "trustedInvocationCounter": false
+          },
+          "workerClockDeltaMs": 390,
+          "limitsRequested": {
+            "cpuMs": 10,
+            "subrequests": 50,
+            "isolateBytes": 134217728,
+            "requestsPerDay": 100000,
+            "connections": 6
+          },
+          "subrequests": 0,
+          "openConnections": 0,
+          "subrequestsEnforced": true,
+          "connectionGuardEnforced": true,
+          "cpuEnforced": false,
+          "measuredInvocationCpuMs": null,
+          "memoryMeasuredByThisGuard": false,
+          "dailyAccountQuotaDistributed": false,
+          "hostedAcceptance": false
+        },
+        "metrics": {
+          "wallMs": 401.4961860000003,
+          "devToolsNonIdleSamplingWindowMs": 400.056,
+          "profileDurationMs": 437.921,
+          "before": {
+            "usedSize": 1648548,
+            "totalSize": 2883584,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 910766
+          },
+          "after": {
+            "usedSize": 1609428,
+            "totalSize": 4718592,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 910766
+          },
+          "exactInvocationCpuMs": null,
+          "hostedCpuMs": null,
+          "warning": "Samples include runtime/unknown frames; native crypto, I/O and profiler overhead prevent billing equivalence. Heap counters do not cover total isolate memory."
+        }
+      },
+      {
+        "scope": "20MiB-stream-verification",
+        "result": {
+          "limitsRequested": {
+            "cpuMs": 10,
+            "subrequests": 50,
+            "isolateBytes": 134217728,
+            "requestsPerDay": 100000,
+            "connections": 6
+          },
+          "subrequests": 16,
+          "openConnections": 2,
+          "subrequestsEnforced": true,
+          "connectionGuardEnforced": true,
+          "cpuEnforced": false,
+          "measuredInvocationCpuMs": null,
+          "memoryMeasuredByThisGuard": false,
+          "dailyAccountQuotaDistributed": false,
+          "hostedAcceptance": false,
+          "operation": "verify",
+          "size": 20971520,
+          "digest": "cc166a7dd750370388159b1767cf993428f1d04ff3f6bb5be3c88757da0fdb9b",
+          "logicalMemoryPeakReserved": 22020096,
+          "mode": "DIAGNOSTIC_ONLY_NO_READY_COMMIT"
+        },
+        "metrics": {
+          "wallMs": 802.4998299999997,
+          "devToolsNonIdleSamplingWindowMs": 754.75,
+          "profileDurationMs": 806.419,
+          "before": {
+            "usedSize": 1609428,
+            "totalSize": 4718592,
+            "embedderHeapUsedSize": 515872,
+            "backingStorageSize": 910766
+          },
+          "after": {
+            "usedSize": 11905380,
+            "totalSize": 14942208,
+            "embedderHeapUsedSize": 3739960,
+            "backingStorageSize": 4589387
+          },
+          "exactInvocationCpuMs": null,
+          "hostedCpuMs": null,
+          "warning": "Samples include runtime/unknown frames; native crypto, I/O and profiler overhead prevent billing equivalence. Heap counters do not cover total isolate memory."
+        }
+      },
+      {
+        "scope": "20MiB-buffered-download-diagnostic",
+        "result": {
+          "limitsRequested": {
+            "cpuMs": 10,
+            "subrequests": 50,
+            "isolateBytes": 134217728,
+            "requestsPerDay": 100000,
+            "connections": 6
+          },
+          "subrequests": 14,
+          "openConnections": 2,
+          "subrequestsEnforced": true,
+          "connectionGuardEnforced": true,
+          "cpuEnforced": false,
+          "measuredInvocationCpuMs": null,
+          "memoryMeasuredByThisGuard": false,
+          "dailyAccountQuotaDistributed": false,
+          "hostedAcceptance": false,
+          "operation": "download",
+          "size": 20971520,
+          "digest": "cc166a7dd750370388159b1767cf993428f1d04ff3f6bb5be3c88757da0fdb9b",
+          "logicalMemoryPeakReserved": 42991616,
+          "mode": "DIAGNOSTIC_ONLY_NO_READY_COMMIT"
+        },
+        "metrics": {
+          "wallMs": 624.8350220000011,
+          "devToolsNonIdleSamplingWindowMs": 485.737,
+          "profileDurationMs": 670.682,
+          "before": {
+            "usedSize": 11905380,
+            "totalSize": 14942208,
+            "embedderHeapUsedSize": 3739960,
+            "backingStorageSize": 4589387
+          },
+          "after": {
+            "usedSize": 1343164,
+            "totalSize": 15990784,
+            "embedderHeapUsedSize": 169744,
+            "backingStorageSize": 43021806
+          },
+          "exactInvocationCpuMs": null,
+          "hostedCpuMs": null,
+          "warning": "Samples include runtime/unknown frames; native crypto, I/O and profiler overhead prevent billing equivalence. Heap counters do not cover total isolate memory."
+        }
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "scope": "initialmodel",
+      "result": "6PASS2FAIL",
+      "cause": "Two assumptions ignored priorMEDIUMpromises and LOW no-auto-delete; tests corrected to approved policy, no policy change."
+    },
+    {
+      "scope": "initialruntime",
+      "result": "2PASS6FAIL",
+      "cause": "InspectorWSprotocol treated asHTTP and globalfetch this-binding. Specific harness fixes; no permission relaxation."
+    },
+    {
+      "scope": "runtimeinspectorport",
+      "result": "beforeHook60sTIMEOUT",
+      "cause": "Explicit transient inspector port startup stalled; returned to supported dynamic port0 and protocol-correct inspector URL."
+    },
+    {
+      "scope": "runtimecompatibleconfigretest",
+      "result": "8PASS0FAIL",
+      "cause": "NativeV5limits explicitly retained; processCPUcounter unavailable and strictCPUguard refuses; diagnostic integrity/security cases pass."
+    }
+  ],
+  "ciCheckpoints": [
+    {
+      "sha": "57c22e3e8318ad7124edc080cf1cf3c71b48f7a0",
+      "runId": 40257305295,
+      "conclusion": "SUCCESS",
+      "scope": "first8capacitytests and matrixLinux/Windows"
+    },
+    {
+      "sha": "9d1c514990011ec22f4e3a9bbeaa1bdbdc217312",
+      "runId": 40258965337,
+      "conclusion": "SUCCESS",
+      "scope": "12unit/guardsLinux/Windows plus8runtime; later report/schema changes require finalCI."
+    }
+  ],
+  "logs": [
+    {
+      "scope": "unitandguards",
+      "privateLogName": "cosmaker-viii-unit-final.log",
+      "sha256": "e703555d8e31f8593cbf0ac4fc1854ec776e9efddbc2307f67c020eaa6bdf4fe",
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "scope": "runtime-native-v5-config",
+      "privateLogName": "cosmaker-viii-runtime-native-config.log",
+      "sha256": "79f112e10866a22e5d2aad3a2754cc930727f33cd60513383ed1c9a67110a102",
+      "passed": 8,
+      "failed": 0
+    }
+  ],
+  "sourceHashes": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "9cc66ad0079efbff2245d90750ed24633a914a31c082fdb929117b1bd3a7aad4"
+    },
+    {
+      "file": "infrastructure/feasibility/package-lock.json",
+      "sha256": "8675209c2ee89833a16d091b4bc17c819ad42fa52c712ebec63a7cedd31aa7f1"
+    },
+    {
+      "file": "infrastructure/feasibility/package.json",
+      "sha256": "ced7fcffc52797cb01c3334e1335656028972190737e4a155527dc43eac32e96"
+    },
+    {
+      "file": "infrastructure/feasibility/run-runtime.mjs",
+      "sha256": "f20a60eabe9e3414e391684383b7303b709aa6e716487c41bd1ef70c656a52f0"
+    },
+    {
+      "file": "infrastructure/feasibility/simulate.mjs",
+      "sha256": "010503473e4fcec55c6ae05381fcee57c8101abbaea5a00bd349edb489f485fa"
+    },
+    {
+      "file": "infrastructure/feasibility/src/budget.mjs",
+      "sha256": "ab349f2bff01cdea6265f948c50f5623b4b245d879f5d94fc8a473ac49c5fd4d"
+    },
+    {
+      "file": "infrastructure/feasibility/src/capacity.mjs",
+      "sha256": "33347eb89f23751a34b6c613383fa61e763f32c7d017524fd76dc2055530da1c"
+    },
+    {
+      "file": "infrastructure/feasibility/src/worker.mjs",
+      "sha256": "9be91c8c600110eb5cbcc28e445dc34e9f18e6fdb5efc207ba95930284e78c36"
+    },
+    {
+      "file": "infrastructure/feasibility/test/budget.test.mjs",
+      "sha256": "9202fd9727e6d2bcf0793cf987a5e7ac2b3581c6070e533b19be6e67d97b6c10"
+    },
+    {
+      "file": "infrastructure/feasibility/test/capacity.test.mjs",
+      "sha256": "7ee9a50fbc9c8b20f6cdaa755fd9a23efef4deab50109e18bb855d804379d43e"
+    },
+    {
+      "file": "infrastructure/feasibility/test/profiler.mjs",
+      "sha256": "fe935d13893124d80c7a9fce00722f50de03105a0b6dd72f24ef12a1df7c8f3d"
+    },
+    {
+      "file": "infrastructure/feasibility/test/runtime.mjs",
+      "sha256": "2a6b9a9786673f77f0067cb1fa730f9276056101feec89f6449c93f3d7bad76a"
+    }
+  ],
+  "artifactHashes": [
+    {
+      "file": "docs/implementation/capacity-free/GOAL_VIII_MANDATE.txt",
+      "sha256": "97a5a103341da55f6ed337d0fe7fe64fdc1d271c37ad899f89957c20f7f3c128"
+    },
+    {
+      "file": "docs/implementation/capacity-free/PROVIDERS.json",
+      "sha256": "54947c0cd3f95f303efa16f84697ca227033eb20c1105dd2092cd8356abf6c9a"
+    },
+    {
+      "file": "docs/implementation/capacity-free/SCENARIOS.json",
+      "sha256": "4544c0025678cb9c7056c3d25f5841cf14cc3b08c3761616e8637d431e8b4401"
+    },
+    {
+      "file": "docs/implementation/capacity-free/SCENARIOS.csv",
+      "sha256": "18af0b99ac802d75bf32ff5d8f5d19bc95a59b3327d33a7e2936fa5dae3f77ec"
+    },
+    {
+      "file": "docs/implementation/capacity-free/DECISIONS.json",
+      "sha256": "2c953706f2fb236b8a91ec05c85486731735e3cac609d3e47a4e34d0d963f94e"
+    }
+  ],
+  "preservedLegacyUploadSourceHashes": [
+    {
+      "file": "app/api/upload/assinar/route.ts",
+      "sha256": "b901ea41a6d4660d26fbc0e84af1dc316b0921da365cccaf331aa8af3ecf1f2c"
+    },
+    {
+      "file": "components/commercial/tenant-commercial-banner.tsx",
+      "sha256": "94f7303e3e07c521d5cb105b0f5506038e238f44649e586140440b4bb6e30f0b"
+    },
+    {
+      "file": "components/layout/workspace-layout.tsx",
+      "sha256": "a550066c1b42d986fff91f04b7e624634338ec21f8e8970d7b84eb8177be6cba"
+    },
+    {
+      "file": "components/messages/messages-workspace.tsx",
+      "sha256": "f3e833186132c42d01cc05d49d0a6a519e46ea8739ebda208ba8bb2aacbfa91d"
+    },
+    {
+      "file": "components/orders/order-detail.tsx",
+      "sha256": "367e7d85204103d12f88c596cd779ad91931921c161b5af6ebe5aac3ac47c523"
+    },
+    {
+      "file": "components/orders/order-history.tsx",
+      "sha256": "dab4c34069a28ba9d1316e711fef5e9349de0153e3e6c60938edac25725a5664"
+    },
+    {
+      "file": "components/orders/order-files.tsx",
+      "sha256": "03fb0b62d69a9195659b77a083ea05fc8efbe9e38dd8a422bd72f14757af35b8"
+    },
+    {
+      "file": "components/portfolio/showcase-admin.tsx",
+      "sha256": "718c566489a33560ddc8c5986d8791ce6fbdd37ece2830738ab25105dcca760d"
+    },
+    {
+      "file": "components/production/production-stage-controls.tsx",
+      "sha256": "9066bf24782ce68071d8eb250448c16a26beae7368dd2ce24fbd29b70189783e"
+    },
+    {
+      "file": "components/production/production-photo-image.tsx",
+      "sha256": "d9b0e5bc3bb842e7588ca14dffb5dc6927738ad3322b58b5796b1e8242c6ad1f"
+    },
+    {
+      "file": "components/public/quote-request-form.tsx",
+      "sha256": "f4909639c922d5751eb5669dabf9ecbb6ac9ef1f6107a20cca0a33f5c3e39405"
+    },
+    {
+      "file": "components/ui/avatar.tsx",
+      "sha256": "a1616f5f8a8dfa1d6b9d61c7e2d3b574ef683e0325e1c7729c09811d4bbd581f"
+    },
+    {
+      "file": "services/firebase/auth.service.ts",
+      "sha256": "0bf2a30b5a8c67f889cf847c5767156079cca0a6f5f83fa2d5c07eedb75ea532"
+    },
+    {
+      "file": "services/firebase/storage.service.ts",
+      "sha256": "75099882be69f2ae4270de070301981b938277087b65b504f67015a3b114238a"
+    },
+    {
+      "file": "functions/src/index.ts",
+      "sha256": "47f74d08ff6d198cb2fd7760ed298aaff5107c37ca049ac72f39b0ae2d28e7ff"
+    },
+    {
+      "file": "functions/src/commercial/access.ts",
+      "sha256": "9ea2b4d57e8177b0ae1bb849de7d4aec6df5b3a769ed02de7d04958781762b9a"
+    },
+    {
+      "file": "functions/src/orders/create-order.ts",
+      "sha256": "7ba39a1b75a1dc4c56440339f2067b5b954876c81be2bebb82b680197c650626"
+    },
+    {
+      "file": "functions/src/orders/production-photos.ts",
+      "sha256": "b51c8e6b22921f290c8205152862838c3f2c802867978df0442f18f77c517822"
+    },
+    {
+      "file": "functions/src/orders/respond-to-production-approval.ts",
+      "sha256": "646dca932cf9c6fab5d44d106edc2f7835541d946f75aac10fb79049d52621e2"
+    },
+    {
+      "file": "functions/src/orders/update-production-stage.ts",
+      "sha256": "8e572fb696d7af654ec6e28bc86bd6f0537b4807e9ef1fc6682d74d0fd4bdd3c"
+    },
+    {
+      "file": "functions/src/orders/order-file-bytes.ts",
+      "sha256": "07fa0ef7e0978c0d5054c04f914d71d35fe78c2469e0703059451886bf7bd99f"
+    },
+    {
+      "file": "functions/src/orders/order-file-storage.ts",
+      "sha256": "baba14db72949412e703d65dacef95823fd252b254fa9bc5135035f852a22d30"
+    },
+    {
+      "file": "functions/src/orders/production-evidence.ts",
+      "sha256": "954f668e144c3aac65820454cd4478023fd78cb6d5748989e4d6dd6d6252622a"
+    },
+    {
+      "file": "functions/src/orders/production-photo-upload.ts",
+      "sha256": "9b5285c524915c078fc4e970a56f834813e600c4caae21cc804c7bf7aa41b7b2"
+    },
+    {
+      "file": "functions/src/orders/legacy-file-bytes.ts",
+      "sha256": "4b810e53cc08bb150c90a840834410d0a619fb4311eb9446784ddce5cf096d40"
+    },
+    {
+      "file": "functions/src/orders/production-photo-bytes.ts",
+      "sha256": "ccb08ef01fd7fc01230abf23676a0a4c28881cb687ff4ed4ecf41654dabaf48f"
+    },
+    {
+      "file": "functions/src/orders/order-files.ts",
+      "sha256": "f9d58aa601dfd99defad15817eb765337eca6a3985b38e7c398833b0a68b0f63"
+    },
+    {
+      "file": "functions/src/public/tenant.ts",
+      "sha256": "937a067e72e354557f35828d9255639a0d7c1cf211651318ddb4e68d8633d9bf"
+    },
+    {
+      "file": "functions/src/public/quote-reference-upload.ts",
+      "sha256": "bf87e70a1de24eb7636f6371ce29ea3e33d477ecadbf21f71c80a11bad3c3bc0"
+    },
+    {
+      "file": "functions/src/public/quote-reference-bytes.ts",
+      "sha256": "a0e83e2d076df62989917db155143ddde831f798a9765cd7eeefba34efda4254"
+    },
+    {
+      "file": "functions/src/messages/conversations.ts",
+      "sha256": "6044574cfbb75cca78a7a0f45cda78377215b27cd226794852049132e2f7c987"
+    },
+    {
+      "file": "functions/src/showcase/images.ts",
+      "sha256": "da669e61de1f76843db9779952381667a5d2a18fc439a77c220754ace831b510"
+    },
+    {
+      "file": "types/conversation.ts",
+      "sha256": "f3ebef6f408b8ef157a44c4fc2d8ae5a7c9102fefe434a108c7ae60e514f6c5f"
+    },
+    {
+      "file": "types/order.ts",
+      "sha256": "24cfdf2dfbdd97a59f40f3f6807a39ea2ee3139b4ce8e56e4f159d15da94c2dc"
+    },
+    {
+      "file": "types/production.ts",
+      "sha256": "5b57fc88087f43e16f1333cc890b38bd0654a21a3b49a4ba4aed7dad6f034425"
+    },
+    {
+      "file": "types/quote-request.ts",
+      "sha256": "c8333996a35140f6ac41551780a3f3dc60a59ad2fe1268c658055e28ad517c90"
+    },
+    {
+      "file": "types/user.ts",
+      "sha256": "44484ee2f05ba4b66ed9580a272d111e302f29e84b66166de0078587ac1bcace"
+    }
+  ],
+  "versions": {
+    "miniflare": "5.20261019.2-beta",
+    "workerd": "1.20261019.1",
+    "wrangler": "4.152.0",
+    "jose": "6.2.13"
+  },
+  "typesReviewed": "@cloudflare/workers-types@5.20261026.1",
+  "modelFinalNote": "127scenarios:120base +7stress. Egressnull explicitly means no fixed cap proven, never unlimited safe egress. B2partnerroute is documented but not provisioned or credited as end-to-end cost proof."
+}

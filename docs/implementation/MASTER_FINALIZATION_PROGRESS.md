@@ -1,5 +1,12 @@
 # Cosmaker Master Finalization — Progress
 
+## GOAL VIII — prova bloqueante Free entregue — 2026-10-26
+
+Branch isolada codex/cosmaker-goal-viii-capacidade-free desde06b9241.127cenários matemáticos reproduzíveis,5provedores, bytes de originais/versões/backups/pendentes/órfãos/egress, cenáriosLOW/holds/crescimento e guarda de admissão;20casos novos passaram (12unit/guards+8workerd/Auth/Firestore), comCIWindows/Linuxproporcional.20MiBverificados emworkerd comSHAcanônico e16subrequests; downloadcliente14subrequests. CPU10ms/RAM/quotas de conta não aceitos: diagnóstico separado e caminho estrito fechado, não uma implementaçãoHosted homologada. Não repetidas35GOALVII/104SDK/124unitários.
+
+Nenhum candidato completo de billing/capacidade/runtime aceito:0/7gates completos,6parciais/1bloqueado; há envelopes pequenos condicionais, não capacidade infinita. FaseDadiada expressamente pelos itens14/15doTXT, sem novo provider/adaptador/Functions/cutover. Branches anteriores,37fontes de upload e contratos20MiB/retencão/planos preservados. Handoff,[capacidade](CAPACITY_FEASIBILITY.md),[runtime](FREE_RUNTIME_BUDGET.md) e[decisões](capacity-free/DECISIONS.json) versionados. ComercialNOT_READY, Hostednãoexecutado; sem contas reais, cartão, billing, R2oudeploy.
+
+
 ## GOAL VII — prova local de mídia, substituição bloqueada — 2026-10-25
 
 Branch isolada `codex/cosmaker-goal-vii-media-lifecycle` desde d659faa; candidata cca4e23/GOALVI preservados. Implementados adaptadores locais20MiB, política v01, reservas globais/tenant, avisos, backup/restore RTDB, tombstones, cron privado DRY_RUN e UI técnica responsiva.35cenários distintos passaram (9unitários/15integrações/4StorageOSSoficial/7E2E), Next15/TypeScript/lint/audit novos aprovados. Tentativas falhas/retestes explícitos no ledger, sem repetir104SDK/124unitários. CI final deve ser conferido no SHA exato.

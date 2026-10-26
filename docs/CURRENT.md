@@ -1,5 +1,7 @@
 > Nesta branch GOAL VI, consultar [Spark/Workers Free WIP](implementation/spark/README.md). A candidata GOAL V e seus aceites foram preservados; não autorizam billing ou publicação desta adaptação.
 
+GOALVIII: [prova de capacidade Free e resource budget](implementation/GOAL_VIII_HANDOFF.md).127cenários matemáticos/20casos novos locais, sem contas/billing/deploy. Pequenos envelopes condicionais existem; volume de referência e garantiasCPU/operacionais continuam bloqueando cutover. FlagsOFF, NOT_READY; métricas antigas preservadas.
+
 GOALVII em branch isolada: [handoff de mídia20MiB/retenção](implementation/GOAL_VII_HANDOFF.md). Prova local implementada e testada; substituição de infraestrutura bloqueada, flags OFF e comercial NOT_READY. Não herda os percentuais da candidata antiga nem altera a versão canônica.
 
 # Documentação técnica vigente

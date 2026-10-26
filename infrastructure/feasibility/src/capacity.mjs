@@ -128,5 +128,5 @@ export function simulate(options, { guarded = false } = {}) {
     firstStorageBlockDay: firstStorageBlock, firstEgressBlockDay: firstEgressBlock, warningDay, peakProjectedBytes: peak,
     peakOccupiedBytes: Math.max(...records.map(r => r.occupied)), p95OccupiedBytes: p95(records.map(r => r.occupied)), last: records.at(-1), months, tierChanges,
     activeTenantRecords: tenant.filter(t => t.activity !== null).length,
-    providerTelemetry: false, realDeletes: false };
+    egressGuardModel: o.monthlyEgress===null?'NO_FIXED_CAP_PROVEN_PROVIDER_RULE_ONLY':'FIXED_SYNTHETIC_APP_GUARD', providerTelemetry: false, realDeletes: false };
 }

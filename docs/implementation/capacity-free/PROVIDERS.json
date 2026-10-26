@@ -64,8 +64,10 @@
         "https://www.backblaze.com/docs/cloud-storage-create-and-manage-caps-and-alerts",
         "https://www.backblaze.com/docs/cloud-storage-file-versions",
         "https://www.backblaze.com/docs/cloud-storage-lifecycle-rules",
-        "https://www.backblaze.com/company/policy/terms-of-service"
-      ]
+        "https://www.backblaze.com/company/policy/terms-of-service",
+        "https://www.backblaze.com/docs/cloud-storage-deliver-private-backblaze-b2-content-through-cloudflare-cdn"
+      ],
+      "partnerRoute": "Official private B2→Cloudflare Workers route documents free transfer, without public bucket. Not deployed/observed here; it can reduce egress exposure but does not expand10GB or prove cardless caps/CPU/RAM/recovery."
     },
     {
       "id": "tigris",

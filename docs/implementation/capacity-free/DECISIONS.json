@@ -1,0 +1,571 @@
+{
+  "schemaVersion": 1,
+  "reviewDateUTC": "2026-10-26",
+  "baseCommit": "06b9241e987829ac96eb206998ba740fabdf8796",
+  "branch": "codex/cosmaker-goal-viii-capacidade-free",
+  "decision": "BLOCKED_FOR_CUTOVER",
+  "commercial": "NOT_READY",
+  "newProviderSelected": null,
+  "phaseDAllowed": false,
+  "phaseDReason": "No consistent zero-billing+capacity+CPU/RAM candidate accepted; items14/15explicitly defer migration work.",
+  "flags": {
+    "migration": false,
+    "liveDeletion": false,
+    "realAccountWrites": false,
+    "deploy": false
+  },
+  "counts": {
+    "newDistinctTestCases": 20,
+    "unitAndResourceGuardTests": 12,
+    "runtimeIntegrationTests": 8,
+    "mathematicalScenarios": 127,
+    "migrationGatesAccepted": 0,
+    "migrationGatesPartial": 6,
+    "migrationGatesBlocked": 1,
+    "migrationGateDenominator": 7,
+    "wholeOperationsAccepted": 0,
+    "operationDenominator": 47
+  },
+  "historicalOnly": {
+    "goalVIIUniqueScenarios": 35,
+    "legacyFunctional": "182/184",
+    "legacyFormal": "10/16"
+  },
+  "gates": [
+    {
+      "id": 1,
+      "name": "Private exact 20 MiB bytes",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "RTDB Emulator and official local Storage OSS, full SHA-256, interrupted TUS resume, original download; UI RTDB.",
+      "remaining": "Full verification/read path within Workers Free CPU/subrequests; hosted gateway/auth and token semantics.",
+      "goalVIIINewEvidence": "New workerd diagnostic verifies20971520bytes with16subrequests and downloads for authorized client with14. Strict path refuses because CPU/RAM hosted not accepted; no provider replaced."
+    },
+    {
+      "id": 2,
+      "name": "Tenant A/B and negative RBAC",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "Canonical UID/member/order checks, client sharing, revocation; provider raw deny; official bucket default-deny roles.",
+      "remaining": "Hosted Firebase JWT or privileged broker identity, minimal secrets and end-to-end revocation/cache. Default-deny OSS RLS does not prove Firestore membership visible to Supabase.",
+      "goalVIIINewEvidence": "Actual Auth/Firestore negative tests cover tenantB, fake/expired token, current member/Auth revocation during read and revision/PENDING. Provider hosted URLs/cache/RLS still not accepted."
+    },
+    {
+      "id": 3,
+      "name": "No-billing viable capacity",
+      "state": "BLOCKED",
+      "evidence": "Official Free/Spark limits documented; 21 tenants/42 reservations,28 admitted14 denied, no deletion.",
+      "remaining": "1GB global saturates before37days even1tenant at2x20MiB/day. Account eligibility/card/billing not verified; cannot promise unchanged growing multi-tenant operation. No paid upgrade applied.",
+      "goalVIIINewEvidence": "127forecasts: useful small conditional envelopes exist, but20tenantsx2originals20MiB/day plus backup requirep95=87241523200bytes. B2privateCloudflareegressroute documented, no account/hard-stop/zero-liability proof."
+    },
+    {
+      "id": 4,
+      "name": "Cross-store crash and restore",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "RTDB20MiB+metadata snapshot/restore interrupted/resumed, SHA, preserved dates, orphan reservation/positive absence, tombstone, API delete recovery.",
+      "remaining": "Native Supabase restore, pending/orphan collection protocol, hosted inventory/accounting and independent operational backup/restore. No automatic abandoned upload collector accepted.",
+      "goalVIIINewEvidence": "No phaseDimplementation: nativeSupabase restore/orphan collection remain deferred under explicit items14/15, not relabeled as external-only."
+    },
+    {
+      "id": 5,
+      "name": "Auditable safe retention",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "Classes, UTC windows, hysteresis, no shortening, canonical closures, holds/legacy, all-recipient internal notices, leases,110invalid records and revision fence. DRY_RUN only.",
+      "remaining": "Snapshot do TXT é fonte autorizada; arquivo77 ausente registrado sem inventar conteúdo. Worker scheduled alcança broker Node local; processamento integral Free e operação hospedada ainda não aceitos.",
+      "goalVIIINewEvidence": "Canonical policy unchanged; simulator tests LOW/holds/notices/closure/priorMEDIUMpromise and protects against early deletion. Full cron strict CPU guard refuses execution."
+    },
+    {
+      "id": 6,
+      "name": "Download and notice UX",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "7 distinct E2E:320/375/768/1440,20MiB original hashes, oversize error, optional bounded PNG thumbnail, canonical notices, global pause and old public route smoke.",
+      "remaining": "Technical lab only, RTDB. Direct native/hosted TUS browser/CORS and all original upload consumers remain uncut; no silent functional replacement.",
+      "goalVIIINewEvidence": "GOALVIIresponsive proof preserved; no changed UI or hosted/browserTUS work inGOALVIII."
+    },
+    {
+      "id": 7,
+      "name": "Rollback to previous adapter",
+      "state": "PARTIAL_LOCAL",
+      "evidence": "Separate branch/namespaces, flags OFF default guards,37baseline source hashes unchanged, old public routes render; both prior remote branches preserved.",
+      "remaining": "No data migration performed. Old6MiB reader does not read new20MiB objects; dual-reader/export and migration rollback must be proven before any future cutover.",
+      "goalVIIINewEvidence": "Earlier branches and37uploadsourcehashes preserved. No migration/cutover, dual20MiBreader rollback remains deferred."
+    }
+  ],
+  "findings": {
+    "capacity": "Small mathematical envelopes exist;20tenants×1–5photos20MiB/day plus protected growth not covered. Never equate finite capacity with unlimited net growth.",
+    "billing": "Spark documented no-card/no-billing but finite/restricted;B2andImageKitcardless documented, strict excess safety not accepted. Tigrismeteredoverage not strict zero billing.",
+    "runtime": "Exact20MiB diagnostics with16verification/14client-download subrequests; signature/hash/authorization not weakened. NativeV5config10ms retained but no trusted CPU enforcer; defaultHTTP/cron fail closed.",
+    "providerFixture": "Private loopback HTTP byte fixture only; not a new cloud storage adapter or provider acceptance.",
+    "operations47": "No full operation reapproved or ported; reference hashes preserved; no101Functions expansion."
+  },
+  "operations47": [
+    {
+      "id": "auth-session",
+      "domain": "Conta",
+      "goalVIIState": "PARTIAL_LOCAL_MEDIA_ONLY",
+      "goalVIII": "PARTIAL_MEDIA_DIAGNOSTIC",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "auth-recovery",
+      "domain": "Conta",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "crm-records",
+      "domain": "CRM",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "crm-context",
+      "domain": "CRM",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "team-members",
+      "domain": "Equipe",
+      "goalVIIState": "PARTIAL_LOCAL_MEDIA_RBAC",
+      "goalVIII": "PARTIAL_MEDIA_DIAGNOSTIC",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "team-invitations",
+      "domain": "Equipe",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "team-ownership",
+      "domain": "Equipe",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "tenant-public",
+      "domain": "Público",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "quote-intake",
+      "domain": "Orçamentos",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "quote-references",
+      "domain": "Orçamentos",
+      "goalVIIState": "NOT_PORTED_DOMAIN_MAPPING_ONLY",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "quote-authoring",
+      "domain": "Orçamentos",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "quote-response",
+      "domain": "Orçamentos",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "quote-order",
+      "domain": "Pedidos",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "quote-expiration",
+      "domain": "Orçamentos",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "measurement-profiles",
+      "domain": "Medidas",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "measurement-values",
+      "domain": "Medidas",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "client-orders",
+      "domain": "Pedidos",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "production-configuration",
+      "domain": "Produção",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "production-progress",
+      "domain": "Produção",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "production-photos",
+      "domain": "Produção",
+      "goalVIIState": "NOT_PORTED_DOMAIN_MAPPING_ONLY",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "order-revisions",
+      "domain": "Pedidos",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "order-files",
+      "domain": "Pedidos",
+      "goalVIIState": "PARTIAL_LOCAL_ISOLATED_20MIB",
+      "goalVIII": "PARTIAL_MEDIA_DIAGNOSTIC",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "scheduling-planning",
+      "domain": "Agenda",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "scheduling-events",
+      "domain": "Agenda",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "inventory-catalog",
+      "domain": "Estoque",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "inventory-movements",
+      "domain": "Estoque",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "finance-ledger",
+      "domain": "Financeiro",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "finance-payments",
+      "domain": "Financeiro",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "finance-legacy",
+      "domain": "Financeiro",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "showcase-catalog",
+      "domain": "Serviços e portfólio",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "showcase-images",
+      "domain": "Serviços e portfólio",
+      "goalVIIState": "NOT_PORTED_PERSISTENT_PROTECTED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "messages",
+      "domain": "Comunicação",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "notifications",
+      "domain": "Comunicação",
+      "goalVIIState": "PARTIAL_LOCAL_RETENTION_NOTICES_ONLY",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "reports",
+      "domain": "Relatórios",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "tenant-preferences",
+      "domain": "Configurações",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "order-delivery",
+      "domain": "Entrega",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "platform-workspace",
+      "domain": "Plataforma",
+      "goalVIIState": "PARTIAL_LOCAL_MEDIA_GOVERNANCE",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "platform-users",
+      "domain": "Plataforma",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "commercial-standard",
+      "domain": "Comercial",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "commercial-trial-demo",
+      "domain": "Comercial",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "portal-home",
+      "domain": "Portal",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "portal-profile",
+      "domain": "Portal",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "portal-payments",
+      "domain": "Portal",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "public-navigation",
+      "domain": "Público",
+      "goalVIIState": "UNCHANGED_NOT_REVALIDATED",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "local-runtime",
+      "domain": "Operação local",
+      "goalVIIState": "PARTIAL_LOCAL_MEDIA_RUNTIME",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "synthetic-recovery",
+      "domain": "Operação local",
+      "goalVIIState": "PARTIAL_LOCAL_RTDB_MEDIA_ONLY",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    },
+    {
+      "id": "legacy-file-compat",
+      "domain": "Arquivos",
+      "goalVIIState": "PRESERVED_NO_CUTOVER",
+      "goalVIII": "UNCHANGED_NOT_REVALIDATED",
+      "wholeOperationAccepted": false,
+      "persistenceAndFinancialHistoryPreserved": true,
+      "cpuHostedAccepted": false,
+      "cutover": false
+    }
+  ]
+}
