@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, Eye, EyeOff, LockKeyhole, Mail, Sparkles } from 
 import { loginSchema, passwordResetSchema, registrationSchema } from '@/schemas/auth.schema';
 import { loginWithEmail, loginWithGoogle, registerWithEmail, requestPasswordReset } from '@/services/firebase/auth.service';
 import { useAuth } from '@/providers/auth-provider';
+import { loginDestination } from '@/lib/navigation/workspace';
 import { firebaseConfigured } from '@/services/firebase/firebase.client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,7 +29,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
   const title = mode === 'login' ? 'Entre na sua conta' : mode === 'register' ? 'Crie sua conta' : 'Recupere sua senha';
   const description = mode === 'login'
-    ? 'Acompanhe seus projetos e converse com seu ateliê.'
+    ? 'Acesse sua área de cliente, equipe ou administração com a mesma conta.'
     : mode === 'register'
       ? 'Comece a acompanhar seus projetos em um só lugar.'
       : 'Enviaremos um link para redefinir sua senha.';
@@ -46,6 +47,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       const nextErrors: Record<string, string> = {};
       for (const issue of parsed.error.issues) nextErrors[String(issue.path[0] ?? 'form')] = issue.message;
       setFieldErrors(nextErrors);
+      requestAnimationFrame(() => document.getElementById(Object.keys(nextErrors)[0])?.focus());
       return;
     }
     setPending(true);
@@ -58,10 +60,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
       } else if (mode === 'login') {
         const data = parsed.data as { email: string; password: string };
         await loginWithEmail(data.email, data.password);
-        await refreshUser();
-        const requestedPath = new URLSearchParams(window.location.search).get('next');
-        const safePath = requestedPath?.startsWith('/') && !requestedPath.startsWith('//') && !requestedPath.includes('\\') ? requestedPath : '/cliente';
-        router.push(safePath);
+        const profile = await refreshUser();
+        if (!profile) throw new Error('Não foi possível carregar sua conta. Tente entrar novamente.');
+        router.push(loginDestination(new URLSearchParams(window.location.search).get('next'), profile.accountType));
       } else {
         const data = parsed.data as { email: string };
         await requestPasswordReset(data.email);
@@ -79,8 +80,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
     setPending(true);
     try {
       await loginWithGoogle();
-      await refreshUser();
-      router.push('/cliente');
+      const profile = await refreshUser();
+      if (!profile) throw new Error('Não foi possível carregar sua conta. Tente entrar novamente.');
+      router.push(loginDestination(new URLSearchParams(window.location.search).get('next'), profile.accountType));
     } catch (googleError) {
       setError(googleError instanceof Error ? googleError.message : 'Não foi possível entrar com o Google.');
     } finally {
@@ -93,10 +95,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
     <CardHeader className="pb-3 pt-7 sm:px-7"><div className="mb-3 grid size-11 place-items-center rounded-2xl bg-violet-100 text-violet-700"><Sparkles size={20} /></div><CardTitle className="text-2xl">{title}</CardTitle><CardDescription>{description}</CardDescription></CardHeader>
     <CardContent className="sm:px-7">
       {!firebaseConfigured ? <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-5 text-amber-900">O Firebase ainda não está conectado neste ambiente. As credenciais precisam ser configuradas antes de entrar.</div> : null}
-      <form className="grid gap-4" method="post" noValidate onSubmit={submit}>
+      <form aria-busy={pending} className="grid gap-4" method="post" noValidate onSubmit={submit}>
         {mode === 'register' ? <Field label="Seu nome" name="name" error={fieldErrors.name} autoComplete="name" placeholder="Como podemos chamar você?" /> : null}
         <Field label="E-mail" name="email" error={fieldErrors.email} autoComplete="email" type="email" placeholder="voce@exemplo.com" icon={<Mail size={16} />} />
-        {mode !== 'reset' ? <div><label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor="password">Senha</label><div className="relative"><Input autoComplete={mode === 'register' ? 'new-password' : 'current-password'} className="pr-12" id="password" minLength={mode === 'register' ? 8 : undefined} name="password" placeholder={mode === 'register' ? 'Pelo menos 8 caracteres' : 'Sua senha'} type={showPassword ? 'text' : 'password'} /> <button aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 hover:text-slate-700" onClick={() => setShowPassword(!showPassword)} type="button">{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>{fieldErrors.password ? <p className="mt-1 text-xs text-rose-700">{fieldErrors.password}</p> : null}</div> : null}
+        {mode !== 'reset' ? <div><label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor="password">Senha</label><div className="relative"><Input autoComplete={mode === 'register' ? 'new-password' : 'current-password'} aria-invalid={Boolean(fieldErrors.password)} aria-describedby={fieldErrors.password ? 'password-error' : undefined} className="pr-14" id="password" minLength={mode === 'register' ? 8 : undefined} name="password" placeholder={mode === 'register' ? 'Pelo menos 8 caracteres' : 'Sua senha'} type={showPassword ? 'text' : 'password'} /> <button aria-pressed={showPassword} aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'} className="absolute right-1 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-md text-slate-400 hover:text-slate-700" onClick={() => setShowPassword(!showPassword)} type="button">{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>{fieldErrors.password ? <p id="password-error" role="alert" className="mt-1 text-xs text-rose-700">{fieldErrors.password}</p> : null}</div> : null}
         {mode === 'register' ? <Field label="Confirme sua senha" name="confirmPassword" error={fieldErrors.confirmPassword} autoComplete="new-password" type="password" placeholder="Digite a senha novamente" /> : null}
         {error ? <p className="rounded-lg bg-rose-50 px-3.5 py-3 text-sm text-rose-800" role="alert">{error}</p> : null}
         {success ? <p className="rounded-lg bg-emerald-50 px-3.5 py-3 text-sm text-emerald-800" role="status">{success}</p> : null}
@@ -112,7 +114,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
 }
 
 function Field({ label, name, error, icon, ...props }: { label: string; name: string; error?: string; icon?: ReactNode; type?: string; autoComplete?: string; placeholder?: string }) {
-  return <div><label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor={name}>{label}</label><div className="relative">{icon ? <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">{icon}</span> : null}<Input className={icon ? 'pl-10' : ''} id={name} name={name} {...props} /></div>{error ? <p className="mt-1 text-xs text-rose-700">{error}</p> : null}</div>;
+  return <div><label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor={name}>{label}</label><div className="relative">{icon ? <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">{icon}</span> : null}<Input aria-invalid={Boolean(error)} aria-describedby={error ? `${name}-error` : undefined} className={icon ? 'pl-10' : ''} id={name} name={name} {...props} /></div>{error ? <p id={`${name}-error`} role="alert" className="mt-1 text-xs text-rose-700">{error}</p> : null}</div>;
 }
 
 function GoogleMark() { return <span aria-hidden="true" className="grid size-5 place-items-center rounded-full border border-slate-200 text-xs font-bold text-blue-600">G</span>; }

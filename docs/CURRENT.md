@@ -1,3 +1,5 @@
+> Atualização de usabilidade na main (2026-10-31): [pesquisa, escopo, validações e limites](implementation/UX_USABILITY_2026-10-31.md). Esta entrega não promove as branches experimentais nem herda suas métricas funcionais.
+
 # Documentação técnica vigente
 
 A versão documental atual do Cosmaker OS é **v0.2.0 — Global Standard v01**, correspondente à mecânica comercial validada localmente no Firebase Emulator.

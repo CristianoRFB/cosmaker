@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { PublicSiteMenu } from './public-site-menu';
 
 function Brand() {
   return <Link aria-label="Cosmaker OS, início" className="inline-flex items-center gap-2.5 text-lg font-bold tracking-tight text-slate-950" href="/"><span className="grid size-9 place-items-center rounded-xl bg-violet-700 text-white"><Sparkles aria-hidden="true" size={19} /></span>Cosmaker<span className="-ml-2 text-violet-700">OS</span></Link>;
@@ -9,18 +10,9 @@ function Brand() {
 export function SiteLayout({ children }: { children: ReactNode }) {
   return <div className="min-h-screen bg-[#fcfbff] text-slate-950">
     <header className="sticky top-0 z-40 border-b border-violet-100/80 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
+      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-2 px-4 sm:px-8">
         <Brand />
-        <nav aria-label="Navegação principal" className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex">
-          <Link className="transition hover:text-violet-700" href="/portfolio">Portfólio</Link>
-          <Link className="transition hover:text-violet-700" href="/servicos">Serviços</Link>
-          <Link className="transition hover:text-violet-700" href="/agenda">Agenda</Link>
-          <Link className="transition hover:text-violet-700" href="/sobre">Sobre</Link>
-        </nav>
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Link className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 sm:inline-flex" href="/login">Entrar</Link>
-          <Link className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-violet-700 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800" href="/login">Acessar o sistema<ArrowRight aria-hidden="true" size={16} /></Link>
-        </div>
+        <div className="flex shrink-0 items-center gap-1 sm:gap-3"><PublicSiteMenu /><Link className="inline-flex min-h-11 items-center rounded-xl bg-violet-700 px-3 text-sm font-semibold text-white hover:bg-violet-800 sm:px-4" href="/login">Entrar</Link></div>
       </div>
     </header>
     {children}

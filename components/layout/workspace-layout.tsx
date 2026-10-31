@@ -1,69 +1,91 @@
 'use client';
 
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { ArrowUpRight, Bell, CalendarDays, ChartNoAxesCombined, CircleUserRound, ClipboardList, CreditCard, FileText, Home, Layers3, LogOut, MessageCircle, Package, Ruler, Scissors, Settings, Sparkles, Users, Tags, ReceiptText } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Bell, CircleHelp, LogOut, Menu, Search, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { currentSection, navigationFor, searchNavigation, type WorkspaceItem } from '@/lib/navigation/workspace';
 import { Avatar } from '@/components/ui/avatar';
+import { Dialog } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { AuthGuard, type Audience } from './auth-guard';
 import { useAuth } from '@/providers/auth-provider';
 import { useTenant } from '@/providers/tenant-provider';
 import { TenantCommercialBanner } from '@/components/commercial/tenant-commercial-banner';
 
-const clientNavigation = [
-  { href: '/cliente', label: 'Início', icon: Home },
-  { href: '/cliente/pedidos', label: 'Meus pedidos', icon: Package },
-  { href: '/cliente/orcamentos', label: 'Orçamentos', icon: FileText },
-  { href: '/cliente/medidas', label: 'Minhas medidas', icon: Ruler },
-  { href: '/cliente/pagamentos', label: 'Pagamentos', icon: CreditCard },
-  { href: '/cliente/mensagens', label: 'Mensagens', icon: MessageCircle },
-  { href: '/cliente/notificacoes', label: 'Notificações', icon: Bell },
-  { href: '/cliente/perfil', label: 'Meu perfil', icon: CircleUserRound },
-];
-const atelierNavigation = [
-  { href: '/atelier', label: 'Visão geral', icon: Home },
-  { href: '/atelier/solicitacoes', label: 'Solicitações', icon: ClipboardList },
-  { href: '/atelier/orcamentos', label: 'Orçamentos', icon: FileText },
-  { href: '/atelier/pedidos', label: 'Pedidos', icon: Package },
-  { href: '/atelier/producao', label: 'Produção', icon: Scissors },
-  { href: '/atelier/agenda', label: 'Agenda e capacidade', icon: CalendarDays },
-  { href: '/atelier/clientes', label: 'Clientes', icon: Users },
-  { href: '/atelier/financeiro', label: 'Financeiro', icon: CreditCard },
-  { href: '/atelier/estoque', label: 'Estoque', icon: Layers3 },
-  { href: '/atelier/relatorios', label: 'Relatórios', icon: ChartNoAxesCombined },
-  { href: '/atelier/configuracoes', label: 'Configurações', icon: Settings },
-];
-const adminNavigation = [
-  { href: '/admin', label: 'Visão geral', icon: Home },
-  { href: '/admin/ateliers', label: 'Ateliês', icon: Scissors },
-  { href: '/admin/planos', label: 'Planos', icon: Tags },
-  { href: '/admin/assinaturas', label: 'Assinaturas', icon: ReceiptText },
-  { href: '/admin/logs', label: 'Auditoria', icon: FileText },
-];
+function AreaLinks({ items, activeHref, onNavigate, descriptions = false }: { items: WorkspaceItem[]; activeHref?: string; onNavigate?: () => void; descriptions?: boolean }) {
+  return <div className="grid gap-5">{[...new Set(items.map((item) => item.group))].map((group) => <div key={group}>
+    <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">{group}</p>
+    <ul className="grid gap-1">{items.filter((item) => item.group === group).map(({ href, label, description }) => <li key={href}>
+      <Link aria-current={activeHref === href ? 'page' : undefined} className={cn('flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm transition', activeHref === href ? 'bg-violet-100 font-semibold text-violet-900' : 'text-slate-700 hover:bg-slate-50')} href={href} onClick={onNavigate}>
+        <span><span className="block font-medium">{label}</span>{descriptions ? <span className="mt-1 block text-xs leading-5 text-slate-600">{description}</span> : null}</span>
+        {descriptions ? <ArrowUpRight aria-hidden="true" className="shrink-0" size={16} /> : null}
+      </Link>
+    </li>)}</ul>
+  </div>)}</div>;
+}
 
 export function WorkspaceLayout({ audience, title, children }: { audience: Audience; title: string; children: ReactNode }) {
   const { user } = useAuth();
   const { hasPermission } = useTenant();
   const pathname = usePathname();
-  const navigation = audience === 'client' ? clientNavigation : audience === 'atelier'
-    ? atelierNavigation.filter((item) =>
-      (item.href !== '/atelier/pedidos' || hasPermission('orders:read'))
-      && (item.href !== '/atelier/producao' || hasPermission('orders:read')))
-    : adminNavigation;
-  const pageTitle = audience === 'admin'
-    ? pathname === '/admin' ? 'Visão geral' : pathname === '/admin/logs' ? 'Auditoria' : pathname === '/admin/ateliers' ? 'Ateliês' : pathname === '/admin/planos' ? 'Planos' : pathname === '/admin/assinaturas' ? 'Assinaturas' : pathname.startsWith('/admin/ateliers/') ? 'Detalhes do ateliê' : 'Administração'
-    : title;
+  const [panel, setPanel] = useState<{ type: 'menu' | 'help'; pathname: string } | null>(null);
+  const [query, setQuery] = useState('');
+  const menuId = useId(); const helpId = useId(); const searchId = useId();
+  const navigation = navigationFor(audience, hasPermission);
+  const section = currentSection(navigation, pathname);
+  const pageTitle = section?.label ?? title;
+  const home = audience === 'client' ? '/cliente' : audience === 'atelier' ? '/atelier' : '/admin';
+  const profile = audience === 'client' ? '/cliente/perfil' : audience === 'atelier' && hasPermission('atelier:settings') ? '/atelier/configuracoes' : home;
+  const area = audience === 'client' ? 'Área do cliente' : audience === 'atelier' ? 'Painel do ateliê' : 'Administração da plataforma';
+  const openPanel = (type: 'menu' | 'help') => { setQuery(''); setPanel({ type, pathname }); };
+  const closePanel = () => setPanel(null);
+  const visible = searchNavigation(navigation, query);
+  // A route change makes an existing panel inactive without a state update during render.
+  const menuOpen = panel?.type === 'menu' && panel.pathname === pathname;
+  const helpOpen = panel?.type === 'help' && panel.pathname === pathname;
+
   return <AuthGuard audience={audience}><div className="min-h-screen bg-[#f8f7fc] lg:grid lg:content-start lg:grid-cols-[248px_minmax(0,1fr)]">
-    {process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' ? <div className="border-b border-amber-300 bg-amber-100 px-4 py-2 text-center text-xs font-bold tracking-wide text-amber-950 lg:col-span-2">AMBIENTE LOCAL · dados isolados nos emuladores Firebase</div> : null}
+    <a className="skip-link" href="#workspace-content">Pular para o conteúdo</a>
+    {process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' ? <div className="border-b border-amber-300 bg-amber-100 px-4 py-2 text-center text-xs font-bold text-amber-950 lg:col-span-2">AMBIENTE LOCAL · dados fictícios nos emuladores Firebase</div> : null}
     <aside className="hidden border-r border-violet-100 bg-white lg:fixed lg:inset-y-0 lg:flex lg:w-[248px] lg:flex-col">
-      <Link className="flex h-[76px] items-center gap-2 border-b border-violet-100 px-6 text-lg font-bold text-slate-950" href="/"><span className="grid size-9 place-items-center rounded-xl bg-violet-700 text-white"><Sparkles size={18} /></span>Cosmaker<span className="-ml-2 text-violet-700">OS</span></Link>
-      <div className="px-4 py-5"><p className="px-3 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">{audience === 'client' ? 'Minha conta' : audience === 'atelier' ? 'Ateliê' : 'Plataforma'}</p><nav aria-label="Navegação da área" className="mt-3 grid gap-1">{navigation.map(({ href, label, icon: Icon }) => { const active = pathname === href || (href !== '/cliente' && href !== '/atelier' && href !== '/admin' && pathname.startsWith(`${href}/`)); return <Link className={cn('flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition', active ? 'bg-violet-100 text-violet-900' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900')} href={href} key={href}><Icon aria-hidden="true" size={17} strokeWidth={1.8} />{label}</Link>; })}</nav></div>
-      <div className="mt-auto border-t border-slate-100 p-4"><Link className="flex items-center gap-3 rounded-xl p-2 hover:bg-slate-50" href="/cliente/perfil"><Avatar className="size-9" name={user?.name ?? 'Cosmaker'} src={user?.photoURL} /><span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold">{user?.name}</span><span className="block text-xs text-slate-500">{user?.email}</span></span><ArrowUpRight aria-hidden="true" className="text-slate-400" size={15} /></Link><Link className="mt-2 flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50" href="/logout"><LogOut size={16} />Sair</Link></div>
+      <Link aria-label="Cosmaker OS, minha área" className="flex h-[76px] shrink-0 items-center gap-2 border-b border-violet-100 px-6 text-lg font-bold text-slate-950" href={home}><span className="grid size-9 place-items-center rounded-xl bg-violet-700 text-white"><Sparkles aria-hidden="true" size={18} /></span>Cosmaker<span className="-ml-2 text-violet-700">OS</span></Link>
+      <nav aria-label="Navegação da área" className="min-h-0 flex-1 overflow-y-auto px-4 py-5"><AreaLinks activeHref={section?.href} items={navigation} /></nav>
+      <div className="shrink-0 border-t border-slate-100 p-4">
+        <Link className="flex min-h-11 items-center gap-3 rounded-xl p-2 hover:bg-slate-50" href={profile}><Avatar className="size-9 shrink-0" name={user?.name ?? 'Cosmaker'} src={user?.photoURL} /><span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold">{user?.name}</span><span className="block truncate text-xs text-slate-500">{user?.email}</span></span><ArrowUpRight aria-hidden="true" className="shrink-0 text-slate-400" size={15} /></Link>
+        <Link className="mt-2 flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50" href="/logout"><LogOut aria-hidden="true" size={16} />Sair da conta</Link>
+      </div>
     </aside>
-      <div className="min-w-0 lg:col-start-2 lg:pl-0"><header className="sticky top-0 z-30 flex h-[68px] items-center justify-between border-b border-violet-100 bg-white/90 px-4 backdrop-blur-lg sm:px-7"><div><p className="text-xs font-medium text-slate-500">{audience === 'client' ? 'Área do cliente' : audience === 'atelier' ? 'Painel do ateliê' : 'Administração SaaS'}</p><p className="text-sm font-semibold text-slate-900">{pageTitle}</p></div><div className="flex items-center gap-2"><Link aria-label={audience === 'admin' ? 'Abrir auditoria' : 'Abrir notificações'} className="grid size-10 place-items-center rounded-xl text-slate-500 hover:bg-violet-50" href={audience === 'client' ? '/cliente/notificacoes' : audience === 'atelier' ? '/atelier/configuracoes/notificacoes' : '/admin/logs'}><Bell size={18} /></Link><Link aria-label="Abrir minha área" href={audience === 'admin' ? '/admin' : audience === 'client' ? '/cliente/perfil' : '/atelier/configuracoes'}><Avatar className="size-9" name={user?.name ?? 'Cosmaker'} src={user?.photoURL} /></Link><span className="hidden max-w-36 truncate text-sm font-semibold text-slate-700 sm:inline">{user?.name}</span></div></header>
-      <nav aria-label="Navegação rápida" className="flex gap-1 overflow-x-auto border-b border-violet-100 bg-white px-3 py-2 lg:hidden">{navigation.map(({ href, label, icon: Icon }) => <Link className={cn('flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium', pathname === href ? 'bg-violet-100 text-violet-900' : 'text-slate-600')} href={href} key={href}><Icon size={15} />{label}</Link>)}</nav>
-      <main className="mx-auto w-full max-w-[1500px] p-4 sm:p-7"><h1 className="mb-6 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{pageTitle}</h1>{audience === 'atelier' ? <TenantCommercialBanner /> : null}{children}</main>
+    <div className="min-w-0 lg:col-start-2">
+      <header className="sticky top-0 z-30 flex min-h-[68px] items-center justify-between gap-2 border-b border-violet-100 bg-white/95 px-4 py-2 backdrop-blur-lg sm:px-7">
+        <div className="min-w-0"><p className="truncate text-xs font-medium text-slate-500">{area}</p><p className="truncate text-sm font-semibold text-slate-900">{pageTitle}</p></div>
+        <div className="flex shrink-0 items-center gap-1">
+          <button aria-label="Abrir menu de navegação" aria-controls={menuId} aria-expanded={menuOpen} aria-haspopup="dialog" className="flex min-h-11 items-center gap-1.5 rounded-xl px-2 text-sm font-semibold text-violet-800 hover:bg-violet-50 lg:hidden" onClick={() => openPanel('menu')} type="button"><Menu aria-hidden="true" size={20} />Menu</button>
+          {audience === 'client' || audience === 'admin' ? <Link aria-label={audience === 'admin' ? 'Abrir auditoria' : 'Abrir notificações'} className="grid size-11 place-items-center rounded-xl text-slate-600 hover:bg-violet-50" href={audience === 'client' ? '/cliente/notificacoes' : '/admin/logs'}><Bell aria-hidden="true" size={18} /></Link> : null}
+          <Link aria-label="Abrir minha área" className="grid size-11 place-items-center rounded-xl hover:bg-violet-50" href={profile}><Avatar className="size-9" name={user?.name ?? 'Cosmaker'} src={user?.photoURL} /></Link>
+        </div>
+      </header>
+      <Dialog id={menuId} open={menuOpen} onClose={closePanel} title="Navegação">
+        <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-700" htmlFor={searchId}><Search aria-hidden="true" size={16} />Encontrar uma área</label>
+        <Input autoComplete="off" id={searchId} onChange={(event) => setQuery(event.target.value)} placeholder="Ex.: orçamento, pedidos…" type="search" value={query} />
+        <p aria-live="polite" className="my-3 text-xs text-slate-500">{visible.length ? `${visible.length} áreas disponíveis para sua conta` : 'Nenhuma área encontrada'}</p>
+        {!visible.length ? <button className="mb-4 min-h-11 text-sm font-semibold text-violet-700" type="button" onClick={() => setQuery('')}>Limpar busca</button> : null}
+        <nav aria-label="Todas as áreas da conta"><AreaLinks activeHref={section?.href} descriptions items={visible} onNavigate={closePanel} /></nav>
+        <div className="mt-5 grid gap-2 border-t border-slate-100 pt-4"><Link className="flex min-h-11 items-center gap-2 px-3 text-sm font-semibold text-slate-700" href={profile} onClick={closePanel}>Abrir minha área</Link><Link className="flex min-h-11 items-center gap-2 px-3 text-sm text-slate-700" href="/logout" onClick={closePanel}><LogOut aria-hidden="true" size={16} />Sair da conta</Link></div>
+      </Dialog>
+      <Dialog id={helpId} open={helpOpen} onClose={closePanel} title="Como usar esta área">
+        <p className="mb-5 text-sm leading-6 text-slate-600">{audience === 'client' ? 'Use os orçamentos para conferir propostas e os pedidos para acompanhar projetos confirmados.' : audience === 'atelier' ? 'O atendimento começa nas solicitações. As propostas ficam em Orçamentos; os projetos confirmados, em Pedidos e Produção.' : 'Gerencie ateliês, acompanhe atribuições comerciais e confira o histórico em Auditoria.'} As opções abaixo seguem as permissões da sua conta.</p>
+        <nav aria-label="Guia das áreas"><AreaLinks activeHref={section?.href} descriptions items={navigation} onNavigate={closePanel} /></nav>
+      </Dialog>
+      <main className="mx-auto w-full max-w-[1500px] p-4 sm:p-7" id="workspace-content" tabIndex={-1}>
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-3"><div className="min-w-0">
+          {section && pathname !== section.href ? <Link className="mb-2 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-violet-700" href={section.href}><ArrowLeft aria-hidden="true" size={16} />Voltar para {section.label}</Link> : null}
+          <h1 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{pageTitle}</h1>
+          {section ? <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">{section.description}</p> : null}
+        </div><button aria-controls={helpId} aria-haspopup="dialog" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-violet-200 bg-white px-3 text-sm font-semibold text-violet-800 hover:bg-violet-50" onClick={() => openPanel('help')} type="button"><CircleHelp aria-hidden="true" size={17} />Como usar esta área</button></div>
+        {audience === 'atelier' ? <TenantCommercialBanner /> : null}{children}
+      </main>
     </div>
   </div></AuthGuard>;
 }

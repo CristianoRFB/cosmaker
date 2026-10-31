@@ -1,5 +1,7 @@
 name: CI
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -10,5 +12,32 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm test
+      - run: npm run test:usability:preflight
       - run: npm run build
-      - run: npm test -- --run
+  usability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm --prefix functions ci
+      - run: npm run functions:build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:usability
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: usability-browser-evidence
+          path: test-results/
+          retention-days: 7

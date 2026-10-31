@@ -12,7 +12,7 @@ interface AuthContextValue {
   user: User | null;
   loading: boolean;
   profileError: string | null;
-  refreshUser: () => Promise<void>;
+  refreshUser: () => Promise<User | null>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       const data = profile.data();
-      setUser({
+      const loadedUser = {
         id: current.uid,
         name: typeof data.name === 'string' ? data.name : current.displayName || 'Usuário',
         email: typeof data.email === 'string' ? data.email : current.email || '',
@@ -54,8 +54,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ...(typeof data.role === 'string' ? { role: data.role } : {}),
         permissions: Array.isArray(data.permissions) ? data.permissions.filter((item): item is string => typeof item === 'string') : [],
         active: data.active !== false,
-      } as User);
+      } as User;
+      setUser(loadedUser);
       setProfileError(null);
+      return loadedUser;
     } catch {
       if (revision !== authRevision.current || auth?.currentUser?.uid !== current.uid) return;
       setUser(null);
@@ -67,8 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const current = auth?.currentUser ?? null;
     const revision = ++authRevision.current;
     setLoading(Boolean(current));
-    await loadUserProfile(current, revision);
+    const profile = await loadUserProfile(current, revision);
     if (revision === authRevision.current) setLoading(false);
+    return profile ?? null;
   }, [loadUserProfile]);
 
   useEffect(() => {
