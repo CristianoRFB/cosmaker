@@ -114,3 +114,33 @@ test('cliente continua sem acesso ao painel administrativo após login', async (
   await expect(page.getByRole('heading', { name: 'Acesso não permitido' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Navegação da área', exact: true })).toHaveCount(0);
 });
+
+test('proprietário retorna à própria área depois de acesso incompatível', async ({ page }) => {
+  const account = accounts.find((entry) => entry.kind === 'owner')!;
+  await page.goto('/login?next=%2Fcliente');
+  await expect(page.locator('meta[name="cosmaker-firebase-mode"]')).toHaveAttribute('content', 'emulator');
+  await expect(page.locator('meta[name="cosmaker-firebase-project"]')).toHaveAttribute('content', 'demo-cosmaker');
+  await page.locator('#email').fill(account.email); await page.locator('#password').fill(password);
+  await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Acesso não permitido' })).toBeVisible();
+  const recovery = page.getByRole('link', { name: 'Ir para minha área' });
+  await expect(recovery).toHaveAttribute('href', '/atelier');
+  await recovery.click(); await expect(page).toHaveURL(/\/atelier$/);
+  await expect(page.getByRole('button', { name: 'Como usar esta área' })).toBeVisible();
+});
+
+test('membro sem vínculo ativo recebe saída sem ciclo de navegação', async ({ page }) => {
+  const account = accounts.find((entry) => entry.kind === 'owner')!;
+  const member = db.doc(`ateliers/${tenant}/members/${account.uid}`);
+  await member.update({ active: false });
+  try {
+    await page.goto('/login?next=%2Fatelier');
+    await expect(page.locator('meta[name="cosmaker-firebase-mode"]')).toHaveAttribute('content', 'emulator');
+    await expect(page.locator('meta[name="cosmaker-firebase-project"]')).toHaveAttribute('content', 'demo-cosmaker');
+    await page.locator('#email').fill(account.email); await page.locator('#password').fill(password);
+    await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Ateliê não vinculado' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Voltar ao início' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('navigation', { name: 'Navegação da área', exact: true })).toHaveCount(0);
+  } finally { await member.update({ active: true }); }
+});

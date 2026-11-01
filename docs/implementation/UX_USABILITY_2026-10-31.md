@@ -69,3 +69,11 @@ Revisão independente do diff executada, com as correções acima para largura, 
 A main continua com páginas e funcionalidades estruturais anteriores fora desta revisão. Esta entrega melhora componentes compartilhados e o acesso, não declara o sistema completo ou pronto para produção. A candidata funcional, as provas de arquitetura gratuita e seus inventários permanecem preservados nas branches anteriores.
 
 Rollback de código: reverter o commit desta entrega em um novo commit, após conferir a main mais recente; não usar reset nem force push. Nenhuma migração de dados ou Rules é necessária.
+
+## Continuação — 2026-11-01: recuperação de acesso
+
+Base `a55d76a`. O ambiente foi confirmado operacional após o provisionamento; fetch sem commits posteriores e working tree inicialmente limpa.
+
+Corrigido o retorno de área incompatível: equipe/proprietário vai para `/atelier`, administrador para `/admin` e cliente para `/cliente`, a partir do perfil canônico existente. Quando o próprio acesso está indisponível (ex.: membership desativada), oferece saída pública em vez de um ciclo para a mesma área bloqueada. Nenhuma condição de autorização foi alterada. Carregamento agora tem texto e região de status; falha ao carregar perfil oferece `Tentar novamente`, reutilizando `refreshUser` e suas verificações. A falha de conexão do perfil não foi injetada neste ensaio; não é declarada homologação de recuperação de rede.
+
+Evidências: teste Emulator inicialmente FALHOU porque o href era `/` em vez de `/atelier`; após a correção, regressão dirigida **3/3**: cliente impedido de acessar administração, proprietário retornando à área correta, membro com vínculo desativado recebendo saída sem acesso à navegação protegida. Revisão independente identificou e levou à correção do caso de ciclo na própria área. Lint e **87/87** unitários aprovados. Build Next com TypeScript validado antes da publicação; CI do commit publicado deve confirmar também os **9** cenários totais de usabilidade. Não foram repetidas as integrações dos domínios nem realizadas alterações em Rules, dados reais, billing, infraestrutura ou deploy.
