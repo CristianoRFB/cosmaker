@@ -1,30 +1,23 @@
-# DESIGN — NandaRin Ateliê (prévia conceitual, não oficial)
-Data: 2026-11-02 · Vertical: Cosmaker OS · Estabelecimento: @nandarin.atelie
+# DESIGN — NandaRin Ateliê · V2 UX sem código
 
-## Evidência e limites
-Perfil fornecido pelo usuário: “NandaRin • Cosmaker”, 45 posts, 840 seguidores, “Cosmaker e Designer de Moda”, “Cosplays e figurinos sob medida”, “Envio para todo o Brasil”. Fotografia visível de figurinos em manequins, com predominância de tecidos rosa, lavanda, amarelo e ornamentos. Contagens são um instantâneo da captura, não métricas atualizadas. Sem confirmação independente de cidade, agenda, preço, materiais, processo interno, vagas, ferramenta de gestão, autorização de uso de imagens ou parceria. Comparação pública setorial: vários ateliês solicitam referências, personagem e datas antes de orçar, mas isso não confirma o processo da NandaRin.
+## Evidências (captura enviada em 02/11/2026)
+Perfil: “NandaRin • Cosmaker”; designer de moda, cosplays e figurinos sob medida, envio nacional anunciado. Imagens mostram trabalhos em manequins, tecidos rosa, lavanda, amarelo, laços e acabamentos; números de seguidores/posts representam apenas a captura. **Não** foram confirmados preços, localização, disponibilidade, catálogo oficial, processos internos, uso de sistemas, ou autorização de marca/portfólio.
 
-## Objetivo e públicos
-Visitante: explorar uma vitrine que valorize o acabamento e entender como seria enviar referência para orçamento. Comprador: visualizar o andamento de uma encomenda fictícia sem precisar perguntar pelo Direct. Gestor: visualizar pedidos e atualizar etapas em sandbox. Tarefa principal: simular pedido e consultar código, em 90 segundos.
+## Objetivo da V2
+O visitante entende **o que ganha** com um acompanhamento visual sem ter que digitar códigos ou entender termos técnicos. A sequência agora é:
+1. Portfólio com imagens ilustrativas e CTA "Simular esta peça".
+2. Acompanhamento abre automaticamente com um exemplo visível, etapa atual e linha do tempo.
+3. Com um clique, avançar etapa; ou abrir a gestão e atualizar a etapa/nota, voltando ao acompanhamento na mesma janela.
+4. Gerar nova solicitação de exemplo em um clique se desejar; sem formulário obrigatório, login, código de pesquisa ou cópia/colagem.
 
-## Direção de arte
-Personalidade: artesanal, delicada, editorial. Não é identidade oficial.
-Papel → cores: canvas #fffaf6; surface #ffffff; tint #fff2e9; ink #43283d; primary #b24f79; muted #775c6d; stroke #ead9d9; success #38654c; warning #fff8e9. Tipografia local Georgia para títulos (editorial) e system-ui para leitura e formulários. Ritmo 4/8/12/16/24/32/48/80px. Layout de 4 colunas mobile e 12 desktop, cartões 2 colunas mobile 390px e 3 desktop. Cantos menores para enquadrar imagem, CTA em pílula para calor humano. Sem fontes importadas.
+## Direção visual
+Artístico, delicado, editorial. Paleta proposta, **não oficial**: marfim #fffaf6, superfície #fff, plum #43283d, rosa #b24f79, rosa claro #f6d6db, linhas #ead9d9. Títulos Georgia, UI system font. Responsivo; foco visível; botões grandes; reduced motion; conteúdo direto. Artes de manequins são SVGs originais e peças fictícias, não fotos do Instagram.
 
-## Componentes e imagens
-Header sticky + navegação por três visões; hero em duas colunas; card visual com ilustração SVG artesanal; filtros por categoria; formulário; código do pedido; timeline; fila operacional; editor de estágio e nota; aviso DEMO. Arte original vetorial gerada em código com temas cromáticos; nomes e trajes inventados. Não replica fotos, logos ou obras protegidas do Instagram. O estilo conversa com a foto enviada, mas não reivindica fidelidade oficial.
+## Modelo de demo
+Somente HTML/CSS/JS. Prefixo isolado localStorage: 77-demo:nandarin-atelie:v2. ID interno técnico não é exibido na UI. Nenhum pedido real, coleta de dados, autenticação, cobrança, status sincronizado, webhook, e-mail ou contato externo. Aviso "prévia não oficial" sempre visível. Gestão liberada só porque é uma simulação desconectada.
 
-## Microinterações e estados
-Troca de visões/filtragem, seleção de card pré-preenche referência, confirmação com código, consulta de etapa, edição administrativa atualiza rastreio no mesmo navegador. Estados: sem código, código inexistente, formulário inválido, pedido criado, lista de pedidos, reset com confirmação. Touch targets tipicamente >=44px. Foco visível; rótulos em todos os campos; ARIA live para resultados; reduced motion suportado.
+## Qualidade e risco residual
+Fluxos: botão do portfólio gera exemplo; acompanhamento já populado; avançar etapa; nova solicitação em um clique; gestão altera nota e etapa; reset confirma. Revisão de sintaxe JS e estrutura realizada. Pendências antes de declarar homologado: capturas/testes em 320/360/390/430/768/1024/1440, teclado e navegação E2E por navegador.
 
-## Segurança e implementação
-O arquivo demos/nandarin-atelie/index.html é HTML/CSS/JS standalone, sem SDK ou backend. Tenant demo isolado por prefixo localStorage 77-demo:nandarin-atelie:v1; dados fictícios. Sem autorização de atendimento real, sem WhatsApp, e-mail, pagamento, login, upload, coleta de contatos, API nem contas reais. O acesso ao painel é público exclusivamente porque não há backend/segredos. Não afirmar sincronização entre dispositivos ou processamento real.
-
-## Adoção futura na vertical
-GLOBAL: layout acessível, estados, UX. VERTICAL: portfólio, solicitação de orçamento, medição, acompanhamento da produção. LOCAL: cores, marca textual, perfil, portfólio (após autorização), regras e disponibilidade. Antes de conectar ao Cosmaker OS, migrar para componentes Next.js, usar atelierId resolvido no backend e autenticação/permissões por papel; rever Firestore/Storage Rules, upload, antifraude, consentimento e LGPD.
-
-## Checklist de aceite / ainda não homologado
-- Filtros e detalhes; formulário/validação/código; acompanhamento; gestão e reset.
-- Conferir visual e overflow em 320, 360, 390, 430, 768, 1024, 1440px.
-- Auditar teclado/leitor de tela, servidor, rota e preview quando publicado.
-- Sem preço de venda, avaliações, prazos ou garantias fictícios apresentados como fatos.
+## Integração futura
+Não migrar demonstração para produção nem criar tenant real sem contratação e autorização. Produto canônico Cosmaker OS: resolver atelierId no backend, role-based permissions, isolamento de pedidos/medidas, autenticação e LGPD.
