@@ -17,7 +17,7 @@ main{min-height:65vh}.view[hidden]{display:none!important}.wrap{width:min(1190px
 .banner{border-radius:25px;padding:38px;background:var(--plum);color:white;display:flex;gap:30px;justify-content:space-between;align-items:center}.banner h2{color:white;max-width:550px}.banner p{max-width:550px;color:#f5dbe5}.banner .btn{background:white;color:var(--plum)}
 .panel-head{padding:60px 0 30px;background:linear-gradient(110deg,#fff7f2,#f8e6ed)}.panel-head h1{font-size:clamp(36px,5vw,60px);margin-bottom:10px}.workspace{padding:40px 0 90px;display:grid;grid-template-columns:1fr .82fr;gap:25px;align-items:start}.box{background:white;border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 6px 25px #3f26350c}.box + .box{margin-top:18px}.box h3{margin-top:0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:6px;margin:0 0 16px}.field label{font-weight:750;font-size:14px}.field input,.field textarea,.field select{width:100%;border:1px solid #bda8b2;border-radius:10px;background:#fff;padding:12px;color:var(--plum);min-height:46px}.field textarea{min-height:110px;resize:vertical}.field small{font-size:12px;color:var(--muted)}.field input:focus,.field textarea:focus{border-color:var(--pink)}.notice{border:1px solid #ecd3bd;background:#fff8e9;border-radius:12px;padding:13px 16px;color:#694a2d;font-size:13px}.success{background:#e9f4eb;border:1px solid #b0d2b5;color:#25573c;padding:15px;border-radius:12px}.output{margin-top:20px}.output[hidden]{display:none}.code{display:inline-flex;background:#f6e5ef;border:1px dashed #b5739b;border-radius:9px;padding:12px 15px;color:#633650;font-size:24px;font-weight:850;letter-spacing:.07em}.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:850;color:var(--pink)}
 .timeline{list-style:none;margin:20px 0;padding:0}.timeline li{display:flex;gap:14px;position:relative;padding:0 0 21px}.timeline li:before{content:"";background:#e9d9df;position:absolute;width:2px;left:12px;top:27px;bottom:0}.timeline li:last-child:before{display:none}.dot{width:26px;height:26px;flex:0 0 26px;border-radius:50%;background:#e8d7dd;border:6px solid white;box-shadow:0 0 0 1px #d8b5c4}.timeline li.done .dot{background:#4f946a;box-shadow:0 0 0 1px #4f946a}.timeline li.current .dot{background:var(--pink);box-shadow:0 0 0 2px var(--pink)}.timeline strong{display:block}.timeline small{color:var(--muted)}.empty{padding:24px;border:1px dashed #d6b9c6;border-radius:12px;background:#fff8fb;color:var(--muted)}
-.admin-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}.orders{display:grid;gap:10px}.order-row{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:left;background:#fffaf9;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:66px;color:var(--plum)}.order-row[aria-current=true]{border-color:#a5527d;background:#fff0f5}.order-row small{display:block;color:var(--muted)}.pill{font-size:11px;padding:6px 9px;background:#f5dde5;border-radius:30px;font-weight:700}.admin-actions{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0}.hint{font-size:12px;color:var(--muted)}.divider{height:1px;background:var(--line);margin:24px 0}
+.admin-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}.orders{display:grid;gap:10px}.order-row{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:left;background:#fffaf9;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:66px;color:var(--plum)}.order-row[aria-current=true]{border-color:#a5527d;background:#fff0f5}.order-row small{display:block;color:var(--muted)}.pill{font-size:11px;padding:6px 9px;background:#f5dde5;border-radius:30px;font-weight:700}.admin-actions{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0}.hint{font-size:12px;color:var(--muted)}.divider{height:1px;background:var(--line);margin:24px 0}.order-selector{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}.order-choice{border:1px solid var(--line);background:#fff6f5;color:var(--plum);min-height:46px;border-radius:12px;padding:10px 13px;font-weight:700;text-align:left;max-width:100%}.order-choice[aria-pressed=true]{border-color:var(--pink);background:#f7dfeb;box-shadow:0 0 0 1px var(--pink)}.order-choice small{display:block;font-weight:400;color:var(--muted)}.demo-actions{margin-top:22px}.track-stage{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);padding-top:18px}.track-current{background:#f5dbe7;color:#6b2c55;border-radius:20px;font-size:12px;font-weight:800;padding:7px 12px}
 footer{background:#382438;color:#f8e5ee;padding:35px 24px;font-size:13px}footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px}footer p{max-width:540px}footer a{color:#fff}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 @media(max-width:850px){.hero-grid,.workspace,.admin-layout{grid-template-columns:1fr}.hero-grid{padding-top:50px}.hero-art{min-height:390px}.gallery{grid-template-columns:repeat(2,1fr)}.process{grid-template-columns:1fr}.art-frame{width:320px}.banner{display:block}.banner .btn{margin-top:12px}}
 @media(max-width:560px){.top{padding:9px 12px;gap:8px;flex-wrap:wrap}.brand{font-size:23px}.top nav{width:100%;order:3;display:flex;justify-content:space-around}.nav-button{padding:9px 8px;font-size:13px}.demo-tag{font-size:10px}.wrap{width:min(calc(100% - 30px),1190px)}.hero-grid{min-height:0;padding-top:32px;padding-bottom:30px}.hero h1{font-size:44px}.hero-art{min-height:340px}.art-frame{width:250px}.art-sticker{font-size:16px;left:0;bottom:15%}.art-badge{right:0}.gallery{grid-template-columns:1fr 1fr;gap:10px}.product-info{padding:13px}.product-info h3{font-size:17px}.product-info p{font-size:12px}.product-info .btn{font-size:12px;padding:10px 12px;min-height:44px}.section{padding:55px 0}.section-intro{display:block}.box{padding:18px}.form-grid{grid-template-columns:1fr}.banner{padding:24px}.panel-head{padding:35px 0 18px}footer .wrap{display:block}}
@@ -32,7 +32,7 @@ footer{background:#382438;color:#f8e5ee;padding:35px 24px;font-size:13px}footer 
 <span class="demo-tag">PRÉVIA NÃO OFICIAL</span>
 <nav aria-label="Visões da demonstração">
 <button class="nav-button" data-view="vitrine" aria-selected="true">Portfólio</button>
-<button class="nav-button" data-view="acompanhar" aria-selected="false">Meu pedido</button>
+<button class="nav-button" data-view="acompanhar" aria-selected="false">Acompanhamento</button>
 <button class="nav-button" data-view="gestao" aria-selected="false">Gestão demo</button>
 </nav></div></header>
 <main id="main">
@@ -40,7 +40,7 @@ footer{background:#382438;color:#f8e5ee;padding:35px 24px;font-size:13px}footer 
 <div class="hero"><div class="wrap hero-grid">
 <div><div class="eyebrow">Criado fio a fio, para cada história</div><h1>Do personagem que você ama à peça que é <em>sua.</em></h1>
 <p>Uma vitrine conceitual para descobrir trabalhos de figurino e imaginar como solicitar uma encomenda feita sob medida, com cada detalhe pensado em conjunto.</p>
-<div class="btn-group"><button class="btn pink" data-go="acompanhar">Simular um orçamento <span aria-hidden="true">↗</span></button><a class="btn ghost" href="#colecao">Explorar a coleção <span aria-hidden="true">↓</span></a></div>
+<div class="btn-group"><button class="btn pink" data-go="acompanhar">Ver acompanhamento <span aria-hidden="true">↗</span></button><a class="btn ghost" href="#colecao">Explorar a coleção <span aria-hidden="true">↓</span></a></div>
 <div class="mini"><span>Cosplays & figurinos</span><span>Peças sob medida</span><span>Envio nacional*</span></div>
 <p class="hint">* Informações sobre serviços e envio extraídas do perfil apresentado. Imagens e peças abaixo são exemplos ilustrativos, não catálogo oficial.</p>
 </div><div class="hero-art" aria-label="Ilustração original de um vestido cosplay rosa sobre manequim">
@@ -54,29 +54,28 @@ footer{background:#382438;color:#f8e5ee;padding:35px 24px;font-size:13px}footer 
 <article><span class="step">02</span><h3>Alinhe os detalhes</h3><p class="muted">No serviço real, materiais, medidas, custo e disponibilidade seriam confirmados pelo ateliê.</p></article>
 <article><span class="step">03</span><h3>Acompanhe as etapas</h3><p class="muted">Em uma versão contratada, os avanços poderiam ser vistos sem depender de mensagens soltas.</p></article>
 </div></div></section>
-<section class="section"><div class="wrap"><div class="banner"><div><div class="eyebrow" style="color:#f8b9ca">A sua próxima criação</div><h2>Uma ideia incrível começa por uma conversa.</h2><p>Experimente o pedido ilustrativo e veja também como seria o acompanhamento de produção.</p></div><button class="btn" data-go="acompanhar">Experimentar agora ↗</button></div></div></section>
+<section class="section"><div class="wrap"><div class="banner"><div><div class="eyebrow" style="color:#f8b9ca">A sua próxima criação</div><h2>Uma ideia incrível começa por uma conversa.</h2><p>Conheça uma encomenda ilustrativa e veja como seria o acompanhamento de produção, sem digitar nada.</p></div><button class="btn" data-go="acompanhar">Ver acompanhamento ↗</button></div></div></section>
 </section>
 <section class="view" id="acompanhar" hidden>
-<div class="panel-head"><div class="wrap"><div class="eyebrow">Área do cliente • simulação</div><h1>Seu projeto, do início ao último ponto.</h1><p class="muted">Solicite um orçamento fictício e acompanhe o progresso neste navegador. Nenhum pedido real é enviado.</p></div></div>
-<div class="wrap workspace"><div>
-<div class="box"><h3>Simular solicitação de orçamento</h3><div class="notice">Esta prévia não envia mensagens ao ateliê nem coleta contatos. Não informe dados pessoais ou medidas reais.</div>
-<form id="quoteForm">
-<div class="form-grid" style="margin-top:22px"><div class="field"><label for="alias">Como identificar o pedido?</label><input id="alias" name="alias" maxlength="32" placeholder="Ex.: Cosplayer 77" required><small>Use um apelido fictício.</small></div><div class="field"><label for="character">Personagem / referência</label><input id="character" maxlength="70" name="character" placeholder="Ex.: personagem de fantasia" required></div></div>
-<div class="field"><label for="type">Tipo de peça</label><select id="type" name="type"><option>Vestido e figurino</option><option>Traje completo</option><option>Uniforme temático</option><option>Ajustes e detalhes (exemplo)</option></select></div>
-<div class="form-grid"><div class="field"><label for="date">Data desejada</label><input id="date" name="date" type="date" required></div><div class="field"><label for="budget">Faixa de orçamento (opcional)</label><select id="budget"><option value="">Prefiro conversar</option><option>Até R$ 500 (ilustrativo)</option><option>R$ 500 a R$ 1.000 (ilustrativo)</option><option>Acima de R$ 1.000 (ilustrativo)</option></select></div></div>
-<div class="field"><label for="details">Detalhes da ideia</label><textarea id="details" maxlength="400" placeholder="Ex.: cores, acabamento ou partes da roupa que deseja incluir. Apenas exemplos fictícios."></textarea></div>
-<button class="btn pink" type="submit">Criar pedido de demonstração →</button>
-</form><div class="output" id="quoteOutput" hidden role="status" aria-live="polite"></div></div>
-</div><div>
-<div class="box"><div class="kicker">Acompanhamento</div><h3>Consulte por código</h3><p class="muted">Exemplo para testar: <strong>DEMO-2401</strong>. Pedidos criados aqui aparecem no painel Gestão demo deste mesmo navegador.</p>
-<div class="field"><label for="tracking">Código do pedido</label><input id="tracking" placeholder="DEMO-2401" autocomplete="off"></div><button class="btn" id="searchOrder">Consultar andamento</button>
-<div class="output" id="trackOutput" aria-live="polite"><div class="empty">Informe um código acima para visualizar as etapas do projeto.</div></div></div>
-<div class="box"><h3>Antes de encomendar de verdade</h3><p class="muted">A disponibilidade, os prazos, as medidas, o valor, as condições de pagamento e o frete precisam ser definidos diretamente com o ateliê.</p><p class="hint">Demonstração sem login, sem pagamento e sem integração com o Instagram.</p></div></div></div>
+<div class="panel-head"><div class="wrap"><div class="eyebrow">Visão do cliente • demonstração interativa</div><h1>Uma encomenda, cada detalhe acompanhado.</h1><p class="muted">Veja a evolução de um figurino de exemplo. Não precisa de cadastro nem de código.</p></div></div>
+<div class="wrap workspace">
+<div>
+<div class="box"><div class="kicker">Acompanhamento ilustrativo</div><h3>Como estaria a sua encomenda</h3><p class="muted">Escolha um projeto de exemplo ou avance a produção. É só tocar — sem preencher nada.</p>
+<div class="order-selector" id="orderSwitch" role="group" aria-label="Escolher encomenda de exemplo"></div>
+<div id="trackOutput" class="output" role="status" aria-live="polite"></div>
+<div class="btn-group demo-actions"><button class="btn pink" id="sampleNext" type="button">Avançar uma etapa →</button><button class="btn ghost" data-go="gestao" type="button">Ver gestão do ateliê</button></div>
+</div></div>
+<div>
+<div class="box"><div class="kicker">Sem necessidade de digitar</div><h3>Quer testar uma nova encomenda?</h3><p class="muted">Crie outra solicitação fictícia com um clique e veja como ela entraria na fila de produção.</p>
+<button class="btn" id="createExample" type="button">Criar encomenda de exemplo ↗</button><div id="quoteOutput" class="output" hidden role="status" aria-live="polite"></div>
+</div>
+<div class="box"><h3>Como funcionaria no ateliê</h3><p class="muted">Em um sistema contratado, a pessoa veria atualizações autorizadas de sua própria encomenda, e o ateliê controlaria quais informações compartilhar.</p><div class="notice">Tudo aqui é fictício e funciona somente no mesmo navegador. Não há contato, pagamento ou pedido real.</div></div>
+</div></div>
 </section>
 <section class="view" id="gestao" hidden>
-<div class="panel-head"><div class="wrap"><div class="eyebrow">Painel de gestão • somente sandbox</div><h1>Mais tempo para criar.<br>Menos tempo procurando mensagens.</h1><p class="muted">Visualização fictícia da operação. Todos os pedidos ficam exclusivamente no armazenamento deste navegador.</p></div></div>
+<div class="panel-head"><div class="wrap"><div class="eyebrow">Painel de gestão • somente sandbox</div><h1>Mais tempo para criar.<br>Menos tempo procurando mensagens.</h1><p class="muted">Visualização fictícia da operação. Todos os exemplos ficam somente neste navegador e não são pedidos reais.</p></div></div>
 <div class="wrap section"><div class="admin-layout">
-<div class="box"><div class="kicker">Fila de encomendas</div><h3>Pedidos em andamento</h3><p class="muted" id="countOrders"></p><div id="orderList" class="orders"></div><div class="divider"></div><button class="btn ghost small" id="resetDemo">Restaurar dados de exemplo</button></div>
+<div class="box"><div class="kicker">Fila de encomendas</div><h3>Pedidos em andamento</h3><p class="muted" id="countOrders"></p><div id="orderList" class="orders"></div><div class="divider"></div><button class="btn ghost small" id="resetDemo">Recomeçar a demonstração</button></div>
 <div class="box"><div class="kicker">Controle de produção</div><h3 id="editorTitle">Selecione um pedido</h3><div id="adminDetail" class="empty">Escolha uma encomenda à esquerda para ver suas informações e atualizar o status.</div></div></div>
 <div class="box" style="margin-top:20px"><h3>O que o sistema real poderia acrescentar?</h3><p class="muted">Com aprovação da empresa: gestão de medidas protegidas, fotos por etapa, orçamento formal, permissões de equipe, mensagens e histórico sincronizado. Nada disso está conectado nesta demonstração.</p></div>
 </div></section>
@@ -85,7 +84,7 @@ footer{background:#382438;color:#f8e5ee;padding:35px 24px;font-size:13px}footer 
 <script>
 "use strict";
 (function(){
-const tenant={id:"nandarin-atelie",name:"NandaRin Ateliê",kind:"demo",storageKey:"77-demo:nandarin-atelie:v1"};
+const tenant={id:"nandarin-atelie",name:"NandaRin Ateliê",kind:"demo",storageKey:"77-demo:nandarin-atelie:v2"};
 const stages=["Solicitação recebida","Em análise","Orçamento preparado","Aguardando aprovação","Em produção","Acabamentos","Pronto para envio"];
 const products=[
 {id:1,title:"Jardim de Primavera",cat:"Vestidos",desc:"Vestido ilustrativo de mangas amplas e detalhes florais.",a:"#efb4c1",b:"#ba648d",bg:"#f9e5e8"},
@@ -97,35 +96,67 @@ const products=[
 function dressSvg(p){let shirt=p.cat==="Uniformes", shirtPath=shirt?"M138 177 L230 177 L247 250 L214 258 L216 284 L150 284 L150 256 L115 249Z":"M139 177 Q180 156 226 177 L249 261 L215 282 L214 310 L151 310 L150 279 L116 260Z";return '<svg viewBox="0 0 360 400" role="img" aria-label="Ilustração de figurino '+esc(p.title)+'" xmlns="http://www.w3.org/2000/svg"><rect width="360" height="400" fill="'+p.bg+'"/><circle cx="300" cy="65" r="75" fill="#fff" opacity=".26"/><path d="M54 0L75 400M290 0L315 400" stroke="#fff" stroke-width="8" opacity=".24"/><path d="M180 80v49" stroke="#9f817c" stroke-width="5"/><path d="M180 80q-40 0-25 18h50q15-18-25-18" fill="none" stroke="#9f817c" stroke-width="4"/><path d="M169 124h22l9 30-8 20h-24l-8-20Z" fill="#ddc6bc"/><path d="'+shirtPath+'" fill="'+p.a+'" stroke="'+p.b+'" stroke-width="4"/><path d="M151 278Q180 295 214 278L259 366Q180 395 104 366Z" fill="'+p.a+'" stroke="'+p.b+'" stroke-width="4"/><path d="M149 289Q180 307 215 289" fill="none" stroke="'+p.b+'" stroke-width="13"/><path d="M180 282v101" stroke="#fff" stroke-width="2" opacity=".7"/><path d="M149 185L116 249M218 185L249 249" fill="none" stroke="'+p.b+'" stroke-width="10" stroke-linecap="round"/><path d="M160 176Q182 198 205 176" fill="none" stroke="#fff8eb" stroke-width="9"/><path d="M162 288q-38-22-33 2q-2 18 33-2q36-23 35-1q0 20-35 1" fill="'+p.b+'"/><circle cx="162" cy="287" r="9" fill="#fff1e7"/><path d="M85 385h190" stroke="#c7ada9" stroke-width="4" stroke-linecap="round"/><g fill="#fff" opacity=".6"><circle cx="71" cy="100" r="3"/><circle cx="282" cy="175" r="4"/><path d="M268 103l5 14 14 5-14 5-5 14-5-14-14-5 14-5Z"/></g></svg>'}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 document.getElementById("heroIllustration").innerHTML=dressSvg(products[1]);
-function show(view){document.querySelectorAll(".view").forEach(el=>el.hidden=el.id!==view);document.querySelectorAll(".nav-button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));history.replaceState(null,"","#"+view);window.scrollTo({top:0,behavior:"auto"});if(view==="gestao")renderAdmin()}
+function show(view){document.querySelectorAll(".view").forEach(el=>el.hidden=el.id!==view);document.querySelectorAll(".nav-button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));history.replaceState(null,"","#"+view);window.scrollTo({top:0,behavior:"auto"});if(view==="gestao")renderAdmin();if(view==="acompanhar")renderTrack()}
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
-document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{show(b.dataset.go);if(b.dataset.go==="acompanhar")document.getElementById("alias").focus()}));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{show(b.dataset.go);}));
 document.getElementById("homeBrand").addEventListener("click",e=>{e.preventDefault();show("vitrine")});
-function renderGallery(filter="Todos"){document.getElementById("gallery").innerHTML=products.filter(p=>filter==="Todos"||p.cat===filter).map(p=>'<article class="product"><div class="visual">'+dressSvg(p)+'</div><div class="product-info"><div class="meta">'+esc(p.cat)+' • exemplo</div><h3>'+esc(p.title)+'</h3><p>'+esc(p.desc)+'</p><button class="btn ghost small" data-product="'+p.id+'">Pedir algo parecido ↗</button></div></article>').join("");document.querySelectorAll("[data-product]").forEach(b=>b.addEventListener("click",()=>{let p=products.find(x=>x.id===Number(b.dataset.product));show("acompanhar");document.getElementById("character").value="Referência visual: "+p.title;document.getElementById("details").value="Gostaria de conversar sobre uma peça semelhante a esta referência ilustrativa.";document.getElementById("alias").focus()}))}
+function renderGallery(filter="Todos"){document.getElementById("gallery").innerHTML=products.filter(p=>filter==="Todos"||p.cat===filter).map(p=>'<article class="product"><div class="visual">'+dressSvg(p)+'</div><div class="product-info"><div class="meta">'+esc(p.cat)+' • exemplo</div><h3>'+esc(p.title)+'</h3><p>'+esc(p.desc)+'</p><button class="btn ghost small" data-product="'+p.id+'">Simular esta peça ↗</button></div></article>').join("");document.querySelectorAll("[data-product]").forEach(b=>b.addEventListener("click",()=>{let p=products.find(x=>x.id===Number(b.dataset.product));createIllustrativeOrder("Encomenda inspirada em "+p.title,p.cat);show("acompanhar")}))}
 document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-filter]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));renderGallery(b.dataset.filter)}));renderGallery();
-const sample={code:"DEMO-2401",alias:"Cosplayer Demo",character:"Figurino Flor de Cerejeira",type:"Vestido e figurino",date:"2026-12-20",budget:"Prefiro conversar",details:"Modelo fictício para testar o acompanhamento.",stage:4,updated:"Exemplo de atualização: corte e costura em andamento."};
+const sample={code:"sample-nandarin",alias:"Cliente ilustrativo",character:"Figurino Flor de Cerejeira",type:"Vestido e figurino",date:"A combinar",budget:"Não se aplica",details:"Exemplo fictício para conhecer o acompanhamento.",stage:4,updated:"Corte e costura em andamento. Este é apenas um exemplo ilustrativo."};
 let orders;
-try{let raw=JSON.parse(localStorage.getItem(tenant.storageKey));orders=Array.isArray(raw)&&raw.length?raw:[sample]}catch(_){orders=[sample]}
-function save(){try{localStorage.setItem(tenant.storageKey,JSON.stringify(orders))}catch(_){/* sandbox sem armazenamento disponível */}}
-function randomCode(){let c;do{c="NR-"+Math.random().toString(36).slice(2,7).toUpperCase()}while(orders.some(o=>o.code===c));return c}
-function findOrder(c){return orders.find(o=>o.code.toUpperCase()===String(c).trim().toUpperCase())}
-let selected=sample.code;
-document.getElementById("quoteForm").addEventListener("submit",function(e){e.preventDefault();const f=this;if(!f.reportValidity())return;const alias=document.getElementById("alias").value.trim(),character=document.getElementById("character").value.trim(),date=document.getElementById("date").value;
-if(alias.length<2||character.length<2){alert("Preencha um apelido e um personagem com pelo menos 2 caracteres.");return}
-if(date<new Date().toISOString().slice(0,10)){alert("Escolha uma data futura para esta simulação.");return}
-const o={code:randomCode(),alias,character,type:document.getElementById("type").value,date,budget:document.getElementById("budget").value,details:document.getElementById("details").value.trim(),stage:0,updated:"Solicitação de demonstração criada neste navegador."};
-orders.unshift(o);save();selected=o.code;document.getElementById("quoteOutput").hidden=false;
-document.getElementById("quoteOutput").innerHTML='<div class="success"><strong>Pedido fictício criado!</strong><p>Copie seu código para testar o acompanhamento.</p><div class="code">'+esc(o.code)+'</div><p class="hint">Nenhum dado foi enviado ao ateliê. Tudo fica apenas neste dispositivo.</p><button class="btn ghost small" id="trackNew" type="button">Acompanhar agora →</button></div>';
-document.getElementById("trackNew").addEventListener("click",()=>{document.getElementById("tracking").value=o.code;track();document.getElementById("trackOutput").scrollIntoView({behavior:"smooth",block:"center"})});
-f.reset()});
-function track(){const c=document.getElementById("tracking").value,o=findOrder(c),target=document.getElementById("trackOutput");if(!o){target.innerHTML='<div class="empty">Código não encontrado neste navegador. Use DEMO-2401 ou crie um pedido de simulação.</div>';return}
-target.innerHTML='<div class="kicker">'+esc(o.code)+'</div><h3>'+esc(o.character)+'</h3><p class="muted">Identificação: '+esc(o.alias)+'<br>Data solicitada (fictícia): '+esc(o.date||"A combinar")+'</p><ol class="timeline">'+stages.map((s,i)=>'<li class="'+(i<o.stage?"done":i===o.stage?"current":"")+'"><span class="dot" aria-hidden="true"></span><div><strong>'+esc(s)+'</strong><small>'+(i===o.stage?"Etapa atual":i<o.stage?"Etapa concluída":"Etapa futura")+'</small></div></li>').join("")+'</ol><div class="notice"><strong>Última observação de demo:</strong><br>'+esc(o.updated)+'</div><p class="hint" style="margin-top:12px">Esta consulta não usa servidor. Funciona somente no mesmo navegador.</p>'}
-document.getElementById("searchOrder").addEventListener("click",track);document.getElementById("tracking").addEventListener("keydown",e=>{if(e.key==="Enter")track()});
-function renderAdmin(){document.getElementById("countOrders").textContent=orders.length+" pedido(s) fictício(s) neste navegador.";document.getElementById("orderList").innerHTML=orders.map(o=>'<button class="order-row" data-code="'+esc(o.code)+'" aria-current="'+(o.code===selected)+'"><span><strong>'+esc(o.character)+'</strong><small>'+esc(o.code)+' · '+esc(o.alias)+'</small></span><span class="pill">'+esc(stages[o.stage])+'</span></button>').join("");
-document.querySelectorAll("[data-code]").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.code;renderAdmin()}));const o=findOrder(selected)||orders[0];if(!o){document.getElementById("adminDetail").innerHTML="Sem pedidos.";return}selected=o.code;
-document.getElementById("editorTitle").textContent=o.character;document.getElementById("adminDetail").className="";document.getElementById("adminDetail").innerHTML='<p class="muted"><strong>'+esc(o.code)+'</strong> · '+esc(o.alias)+'</p><p><strong>Tipo:</strong> '+esc(o.type)+'</p><p><strong>Data desejada:</strong> '+esc(o.date||"Não informada")+'</p><p><strong>Detalhes:</strong> '+esc(o.details||"Não informados")+'</p><div class="divider"></div><div class="field"><label for="adminStage">Etapa da produção</label><select id="adminStage">'+stages.map((s,i)=>'<option value="'+i+'" '+(i===o.stage?"selected":"")+'>'+esc(s)+'</option>').join("")+'</select></div><div class="field"><label for="adminNote">Nota de andamento</label><textarea id="adminNote" maxlength="300" placeholder="Escreva uma atualização fictícia...">'+esc(o.updated)+'</textarea></div><button class="btn pink" id="saveOrder">Salvar atualização demo</button><p id="adminMessage" role="status" class="hint" style="margin-top:12px"></p>';
-document.getElementById("saveOrder").addEventListener("click",()=>{o.stage=Number(document.getElementById("adminStage").value);o.updated=document.getElementById("adminNote").value.trim()||"Etapa atualizada na demonstração.";save();renderAdmin();document.getElementById("adminMessage").textContent="Atualização salva somente neste navegador. Consulte "+o.code+" em Meu pedido.";});}
-document.getElementById("resetDemo").addEventListener("click",()=>{if(!confirm("Restaurar os dados fictícios desta demonstração neste navegador?"))return;orders=[{...sample}];selected=sample.code;save();renderAdmin()});
+try{const raw=JSON.parse(localStorage.getItem(tenant.storageKey));orders=Array.isArray(raw)&&raw.length?raw:[{...sample}]}catch(_){orders=[{...sample}]}
+function save(){try{localStorage.setItem(tenant.storageKey,JSON.stringify(orders))}catch(_){/* sandbox sem persistência disponível */}}
+function randomCode(){let c;do{c="nr-interno-"+Math.random().toString(36).slice(2,10)}while(orders.some(o=>o.code===c));return c}
+function findOrder(c){return orders.find(o=>o.code===c)}
+let selected=orders[0].code;
+function createIllustrativeOrder(name,type){
+  const o={code:randomCode(),alias:"Cliente ilustrativo",character:name,type:type||"Traje personalizado",date:"A combinar",budget:"Não se aplica",details:"Solicitação fictícia criada com um clique nesta demonstração.",stage:0,updated:"Nova solicitação ilustrativa recebida. Nenhuma mensagem foi enviada ao ateliê."};
+  orders.unshift(o);selected=o.code;save();
+  const output=document.getElementById("quoteOutput");output.hidden=false;
+  output.innerHTML='<div class="success"><strong>Exemplo criado!</strong><p>Ele já aparece no acompanhamento ao lado e na fila de gestão. Não foi enviado a ninguém.</p></div>';
+  return o;
+}
+document.getElementById("createExample").addEventListener("click",()=>{
+  createIllustrativeOrder("Cosplay personalizado — novo exemplo","Traje completo");
+  renderTrack();document.getElementById("trackOutput").scrollIntoView({behavior:"smooth",block:"center"});
+});
+function renderTrack(){
+  const active=findOrder(selected)||orders[0];
+  const switcher=document.getElementById("orderSwitch"),target=document.getElementById("trackOutput"),next=document.getElementById("sampleNext");
+  if(!active){switcher.innerHTML="";target.innerHTML='<div class="empty">Sem exemplos no momento.</div>';next.disabled=true;return}
+  selected=active.code;
+  switcher.innerHTML=orders.slice(0,8).map((o,i)=>'<button class="order-choice" type="button" data-view-order="'+esc(o.code)+'" aria-pressed="'+(o.code===selected)+'"><span>'+esc(o.character)+'</span><small>'+(i===0?"Exemplo recente":"Outra encomenda de exemplo")+'</small></button>').join("");
+  switcher.querySelectorAll("[data-view-order]").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.viewOrder;renderTrack()}));
+  target.innerHTML='<div class="track-stage"><div><div class="kicker">Etapa atual da encomenda</div><h3 style="margin-bottom:8px">'+esc(active.character)+'</h3></div><span class="track-current">'+esc(stages[active.stage])+'</span></div><p class="muted" style="margin-top:14px">Acompanhe o passo a passo de uma confecção fictícia.</p><ol class="timeline">'+stages.map((s,i)=>'<li class="'+(i<active.stage?"done":i===active.stage?"current":"")+'"><span class="dot" aria-hidden="true"></span><div><strong>'+esc(s)+'</strong><small>'+(i===active.stage?"Estamos nesta etapa":i<active.stage?"Etapa concluída":"Próxima etapa")+'</small></div></li>').join("")+'</ol><div class="notice"><strong>Última atualização ilustrativa:</strong><p style="margin:5px 0 0">'+esc(active.updated)+'</p></div>';
+  next.disabled=active.stage===stages.length-1;
+  next.textContent=next.disabled?"Etapas concluídas ✓":"Avançar uma etapa →";
+}
+document.getElementById("sampleNext").addEventListener("click",()=>{
+  const o=findOrder(selected);if(!o||o.stage>=stages.length-1)return;
+  o.stage++;o.updated="A produção de exemplo avançou para: "+stages[o.stage]+".";
+  save();renderTrack();
+});
+function renderAdmin(){
+  document.getElementById("countOrders").textContent=orders.length+" encomenda(s) ilustrativa(s) neste navegador.";
+  document.getElementById("orderList").innerHTML=orders.map(o=>'<button class="order-row" data-order="'+esc(o.code)+'" aria-current="'+(o.code===selected)+'"><span><strong>'+esc(o.character)+'</strong><small>'+esc(o.alias)+' · exemplo fictício</small></span><span class="pill">'+esc(stages[o.stage])+'</span></button>').join("");
+  document.querySelectorAll("[data-order]").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.order;renderAdmin()}));
+  const o=findOrder(selected)||orders[0];
+  if(!o){document.getElementById("adminDetail").innerHTML="Nenhuma encomenda de exemplo.";return}
+  selected=o.code;
+  document.getElementById("editorTitle").textContent=o.character;
+  document.getElementById("adminDetail").className="";
+  document.getElementById("adminDetail").innerHTML='<p class="muted">'+esc(o.alias)+' · somente demonstração</p><p><strong>Tipo:</strong> '+esc(o.type)+'</p><p><strong>Detalhes:</strong> '+esc(o.details||"Não informados")+'</p><div class="divider"></div><div class="field"><label for="adminStage">Etapa da produção</label><select id="adminStage">'+stages.map((s,i)=>'<option value="'+i+'" '+(i===o.stage?"selected":"")+'>'+esc(s)+'</option>').join("")+'</select></div><div class="field"><label for="adminNote">Nota de andamento</label><textarea id="adminNote" maxlength="300" placeholder="Escreva uma atualização fictícia...">'+esc(o.updated)+'</textarea></div><button class="btn pink" id="saveOrder">Salvar atualização de exemplo</button><p id="adminMessage" role="status" class="hint" style="margin-top:12px"></p>';
+  document.getElementById("saveOrder").addEventListener("click",()=>{
+    o.stage=Number(document.getElementById("adminStage").value);
+    o.updated=document.getElementById("adminNote").value.trim()||"Etapa atualizada na demonstração.";
+    save();renderAdmin();
+    document.getElementById("adminMessage").textContent="Atualizado! Vá em Acompanhamento para ver a mudança. Não foi enviada nenhuma notificação.";
+  });
+}
+document.getElementById("resetDemo").addEventListener("click",()=>{
+  if(!confirm("Recomeçar esta demonstração? Isso apaga apenas os exemplos deste navegador."))return;
+  orders=[{...sample}];selected=sample.code;save();renderAdmin();
+});
 const start=location.hash.slice(1);show(["vitrine","acompanhar","gestao"].includes(start)?start:"vitrine");
 })();
 </script>
