@@ -4,3 +4,6 @@
 @media(min-width:761px) and (max-width:900px){.board{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* WCAG AA: legible helper labels on light backgrounds */
 .sample-divider{color:#745c65}.stat-bottom{color:#715d65}
+/* The art tile is a block so CSS aspect-ratio contributes to grid row sizing. */
+.project-card{display:block;width:100%}.art-wrap{display:block}
+.gallery .project-card:nth-child(2),.gallery .project-card:nth-child(5){transform:none}

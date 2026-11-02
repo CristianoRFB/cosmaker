@@ -51,7 +51,8 @@ with sync_playwright() as pw:
     p.keyboard.press('Escape')
     assert not p.locator('#project-dialog').evaluate('(e)=>e.open')
     correct_images(p)
-    p.evaluate('window.scrollTo(0,0)')
+    p.evaluate("() => {document.documentElement.style.scrollBehavior='auto'; window.scrollTo({top:0,behavior:'instant'})}")
+    p.wait_for_timeout(120)
     p.screenshot(path=str(ROOT/'tests/portfolio-desktop.png'),full_page=True)
     render(p,'acompanhamento.html')
     p.get_by_role('button',name='Usar projeto de exemplo: DEMO-042').click()
@@ -88,7 +89,8 @@ with sync_playwright() as pw:
     assert p.locator('[data-edit]').count()==4
     assert 'Viajante das estrelas' not in p.locator('#board').inner_text()
     correct_images(p)
-    p.evaluate('window.scrollTo(0,0)')
+    p.evaluate("() => {document.documentElement.style.scrollBehavior='auto'; window.scrollTo({top:0,behavior:'instant'})}")
+    p.wait_for_timeout(120)
     p.screenshot(path=str(ROOT/'tests/atelie-desktop.png'),full_page=True)
     ctx.close()
     for w,h in [(320,720),(360,780),(390,844),(430,932),(768,1024),(1024,800),(1440,900)]:
@@ -100,7 +102,8 @@ with sync_playwright() as pw:
             render(p,name)
             if w==390:
                 if name=='acompanhamento.html':p.locator('#try-sample').click();correct_images(p)
-                p.evaluate('window.scrollTo(0,0)')
+                p.evaluate("() => {document.documentElement.style.scrollBehavior='auto'; window.scrollTo({top:0,behavior:'instant'})}")
+                p.wait_for_timeout(120)
                 p.screenshot(path=str(ROOT/'tests'/({'index.html':'portfolio-mobile','acompanhamento.html':'cliente-mobile','atelie.html':'atelie-mobile'}[name]+'.png')),full_page=True)
         if w<=430:
             render(p,'index.html')
