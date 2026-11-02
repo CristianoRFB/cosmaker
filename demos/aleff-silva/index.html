@@ -27,6 +27,7 @@
 @media(max-width:620px){.brand-badge{width:38px;height:38px;font-size:15px}}
 
 
+[hidden]{display:none!important}
 /* 77: adaptação da fala real do prospect — portfólio aberto + referência */
 .possibility-section{background:linear-gradient(140deg,#21292a,#171e20);border-top:1px solid #56635d;border-bottom:1px solid #56635d}
 .possibility-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:52px;align-items:center}
@@ -108,7 +109,7 @@ document.getElementById("request-form").addEventListener("submit",function(e){e.
 var category=document.getElementById("category").value||"Peça a definir",idea=document.getElementById("idea").value.trim(),hasReference=!!(referenceInput.files&&referenceInput.files[0]),id=generateId();
 state.orders.unshift({id:id,character:character.slice(0,80),category:category,finish:document.getElementById("finish").value,priority:document.getElementById("priority").value,idea:idea.slice(0,420)||"Detalhes a combinar após avaliação.",referenceOnly:hasReference,step:0,created:"Solicitação fictícia — sem envio"});save();
 document.getElementById("success-message").textContent="Código: "+id+" · Personagem ou ideia: "+character+". Dados de texto ficam somente neste navegador. "+(hasReference?"A foto foi apenas visualizada e NÃO foi anexada ao pedido. ":"")+"Nada foi enviado ao Aleff Silva.";
-document.getElementById("request-success").style.display="block";document.getElementById("track-code").value=id;renderBoard();renderAdmin();clearReference(true);this.reset();document.getElementById("request-success").scrollIntoView({block:"nearest"});notify("Solicitação de teste "+id+" criada.");
+document.getElementById("request-success").style.display="block";document.getElementById("track-code").value=id;document.querySelector("#request-success a[href=\"/acompanhar\"]").href="/acompanhar?codigo="+encodeURIComponent(id);renderBoard();renderAdmin();clearReference(true);this.reset();document.getElementById("request-success").scrollIntoView({block:"nearest"});notify("Solicitação de teste "+id+" criada.");
 });
 function findOrder(code){return state.orders.find(function(o){return o.id.toUpperCase()===code.toUpperCase().trim();});}
 function track(code){var order=findOrder(code);var err=document.getElementById("track-error"),res=document.getElementById("track-result"),placeholder=document.getElementById("track-placeholder");if(!order){res.classList.remove("visible");placeholder.style.display="block";err.textContent="Código não encontrado neste navegador. Use AS-DEMO ou crie um pedido na vitrine.";return;}err.textContent="";placeholder.style.display="none";res.classList.add("visible");document.getElementById("track-title").textContent=order.category;document.getElementById("track-character").textContent="Personagem ou ideia: "+(order.character||"Ainda não informado");document.getElementById("track-code-label").textContent=order.id;document.getElementById("track-status").textContent=labels[order.step];var root=document.getElementById("timeline");clear(root);labels.forEach(function(label,i){var row=node("div","milestone "+(i<order.step?"done":i===order.step?"current":""));var n=node("span","node",i<order.step?"✓":i===order.step?"•":"");var body=node("div");body.appendChild(node("strong","",label));body.appendChild(node("p","",i<order.step?"Etapa concluída na simulação":i===order.step?"Fase atual no exemplo":"Ainda não iniciada"));row.appendChild(n);row.appendChild(body);root.appendChild(row);});}
@@ -120,7 +121,7 @@ document.getElementById("reset-atelier").addEventListener("click",function(){sta
 document.getElementById("reset-all").addEventListener("click",function(){state=initial();save();renderCatalog();renderBoard();renderAdmin();notify("Demonstração restaurada.");});
 document.getElementById("copy-reply").addEventListener("click",function(){var field=document.getElementById("quick-reply");if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(field.value).then(function(){notify("Resposta copiada.");}).catch(function(){field.focus();field.select();notify("Selecione e copie a resposta acima.");});}else{field.focus();field.select();try{notify(document.execCommand("copy")?"Resposta copiada.":"Selecione e copie a resposta acima.");}catch(e){notify("Selecione e copie a resposta acima.");}}});
 var path=window.location.pathname.split("/").filter(Boolean)[0]||"home";if(!["home","acompanhar","atelier","gestao"].includes(path))path="home";document.getElementById(path).classList.add("active");document.querySelectorAll("[data-nav]").forEach(function(a){if(a.dataset.nav===path)a.setAttribute("aria-current","page");});
-renderCatalog();renderBoard();renderAdmin();if(path==="acompanhar"){var saved=document.getElementById("track-code").value;track(saved);} 
+renderCatalog();renderBoard();renderAdmin();if(path==="acompanhar"){var saved=new URLSearchParams(window.location.search).get("codigo")||document.getElementById("track-code").value;document.getElementById("track-code").value=saved;track(saved);} 
 })();
 </script>
 </body></html>
