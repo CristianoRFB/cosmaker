@@ -1,19 +1,20 @@
-# NandaRin — Demonstração de portfólio e encomendas
+# NandaRin Ateliê — prévia interativa de encomendas
 
-## Status
-**Prévia conceitual não oficial e isolada.** Lead @nandarin.atelie, não cliente contratado. Esta implementação não acessa a aplicação principal nem armazena informações reais do ateliê.
+## Escopo
+Demonstração comercial **não oficial** e isolada de @nandarin.atelie. Não é serviço contratado, não transmite pedidos e não usa fotos ou logotipo do perfil.
 
-## Como experimentar
-Abra index.html em um navegador moderno (ou preview estático autorizado). 
-1. Portfólio: explore os 6 trajes fictícios, filtre e clique em “Pedir algo parecido”.
-2. Meu pedido: preencha somente dados fictícios, gere um código e acompanhe. Também há o exemplo DEMO-2401.
-3. Gestão demo: selecione o pedido, altere a etapa, salve uma nota, retorne a “Meu pedido” e consulte o mesmo código.
+## Como testar — zero digitação
+1. **Portfólio:** explore 6 ilustrações originais de peças fictícias, filtre estilos e selecione **Simular esta peça**. A própria demonstração cria uma encomenda de exemplo e abre seu acompanhamento.
+2. **Acompanhamento:** a tela já abre com um pedido de exemplo e as etapas visíveis. Toque em **Avançar uma etapa** para visualizar o progresso ou **Criar encomenda de exemplo** para gerar outra simulação com um toque.
+3. **Gestão demo:** selecione uma encomenda, altere a etapa e toque em **Salvar atualização de exemplo**; na mesma janela do navegador, volte à tela Acompanhamento para ver a mudança. **Recomeçar a demonstração** restaura o estado inicial.
 
-## Estado dos dados e privacidade
-Os pedidos são simulados e ficam apenas em localStorage do navegador (77-demo:nandarin-atelie:v1). Sem servidor, login, checkout, e-mail, WhatsApp, APIs ou integração com o ateliê; não funciona entre dispositivos. Reset limpa os pedidos locais fictícios. Não usar medidas, nomes completos ou dados reais na demo.
+Não há códigos para buscar, copiar ou digitar, cadastro ou campos obrigatórios. Os exemplos têm IDs internos que não aparecem para o visitante.
 
-## Engenharia e incorporação
-Feito em arquivo HTML standalone para preview comercial sem tocar produção. Produto canônico permanece no Next.js Cosmaker OS. Para incorporar após contratação: configurar marca e portfólio em tenant, referenciar atelierId no backend, permissões owner/customer, uploads protegidos, solicitação formal, auditoria de status e revisão de segurança.
+## Limites e segurança
+Tudo é simulado e fica exclusivamente em localStorage com prefixo 77-demo:nandarin-atelie:v2, sem servidor, sincronização entre aparelhos, autenticação, pagamento, nome completo, medidas reais, contato ou mensagens. A visão Gestão demo só é aberta porque não tem acesso a dados reais.
 
-## Validações
-Revisar manualmente e via browser antes de declarar a URL pronta: viewport 320, 360, 390, 430, 768, 1024, 1440; foco/teclado; estado inválido/ausente; não há envio de encomenda. Link público de preview é pendência até deploy verificado. Documentação visual em DESIGN.md.
+## Engenharia
+Arquivo: demos/nandarin-atelie/index.html. Projeto isolado, sem tocar na aplicação Next.js multi-tenant canônica. Para transformar em produto, exigir autorização e adaptar tenant, permissões e isolamento de dados. Ver DESIGN.md.
+
+## Aceite
+Checagem de sintaxe JS passou. Preview Cloudflare é autônomo; publicação verificada por rota e título. Teste visual por viewport e teste end-to-end de interações continuam sujeitos a checagem no navegador; não afirmar homologação plena sem estes checks.
