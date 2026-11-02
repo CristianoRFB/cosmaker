@@ -34,3 +34,13 @@ Publique esta pasta como diretório raiz em Cloudflare Pages / GitHub Pages / qu
 
 - Fluxos e documentação: `DESIGN.md`.
 - Testes automatizados de interação com Playwright: `tests/smoke.py` (requer `playwright` e Chromium).
+
+## Preview publicado e verificado — 02/11/2026
+
+- Portfólio: https://77-sakurai-cosmaker-demo.on7.workers.dev/
+- Cliente: https://77-sakurai-cosmaker-demo.on7.workers.dev/acompanhamento.html
+- Ateliê (sandbox): https://77-sakurai-cosmaker-demo.on7.workers.dev/atelie.html
+
+Cloudflare Worker está isolado sob `77-sakurai-cosmaker-demo`, na subzona `on7.workers.dev`. As três páginas foram acessadas externamente após a publicação; o comportamento interativo foi validado em Chromium local usando inserção de conteúdo (`set_content`), pois o ambiente de testes bloqueia navegação direta por política de rede. Essa limitação não equivale a teste E2E remoto completo.
+
+Código de demonstração: `DEMO-042`. Conta de GitHub: `CristianoRFB`; PR de implementação: https://github.com/CristianoRFB/cosmaker/pull/10 (em revisão, sem merge na `main`).
