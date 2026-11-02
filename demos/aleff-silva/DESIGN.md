@@ -29,3 +29,15 @@ GLOBAL: reutilizar os contratos de tenant e roles do Cosmaker OS. VERTICAL: mapa
 ## QA
 
 Testar URL, formulário, código, status, visibilidade, reset, 320–1440px, teclado, reduced-motion, CSP e noindex. CI da branch é referencial; HTML independente requer validação adicional.
+
+## Design brief — Revisão após feedback do prospect
+
+**Problema observado:** pessoas confundem trabalhos já publicados com a lista completa de personagens possíveis; repetem perguntas sobre orçamentos e personagens, mesmo existindo uma página. **Fonte:** transcrição enviada pelo usuário do áudio do Aleff Silva no Instagram (02/11/2026). **Limite:** sem contrato, sem comprovação de prazo/preços/capacidade ilimitada, e o lead sinalizou que investimento não é prioridade.
+
+**Promessa de interface:** "O portfólio mostra técnicas, não um catálogo fechado de personagens". A possibilidade real de fabricação é sempre avaliada. **Ação principal:** "Enviar uma ideia de personagem"; nunca "comprar" ou "enviar orçamento" como se houvesse backend.
+
+**Personas:** interessado que nunca viu seu personagem no portfólio; Aleff que responde muitas dúvidas; cliente com encomenda hipotética. **Arquitetura:** hero / possibilidade / galeria ilustrativa / etapas / FAQ / solicitação por personagem e foto de prévia / acompanhamento / quadro de oficina / gestão de categorias e resposta pronta.
+
+**Layout:** 360–430px prioritário e desktop em duas colunas, hierarquia tipográfica expressiva, cobre+grafite já definidos, detalhes em HTML nativo sem JS complexo no FAQ. Alvos de toque >=44px, foco visível, labels persistentes, erros legíveis, modos sem motion. **Foto:** input local JPG/PNG/WEBP até 5 MB, prévia com URL blob; URL revogada na remoção, conclusão e pagehide; não armazenar nem enviar, inclusive via código do pedido.
+
+**Condições de aceite:** personagem não presente no catálogo, upload opcional, aviso do caráter local, código e stage sincrônicos no mesmo navegador, FAQ nativo expansível, resposta de Direct copiável; não há envio real. Não apresentar o upload como funcionalidade de produção.
