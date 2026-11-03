@@ -64,7 +64,7 @@ function viewTo(view){
  byId("customer-view").hidden=admin;byId("admin-view").hidden=!admin;
  document.title=(admin?"Gestão demo":"Vitrine demo")+" | Nexus 3D";
  if(admin)renderAdmin();else renderProducts();
- closeModal();window.scrollTo({top:0,behavior:"instant"});
+ closeModal();if(admin||location.hash==="#inicio")window.scrollTo({top:0,behavior:"instant"});
 }
 function route(){viewTo(location.hash==="#gestao"?"admin":"customer");}
 function goTo(view){const hash=view==="admin"?"#gestao":"#inicio";if(location.hash===hash)route();else location.hash=hash;}
