@@ -50,3 +50,22 @@ Antes de produto: validar preços, fotos e autorização; integrar vertical cust
 
 ## Testes pendentes
 Screenshot real nos viewports indicados, revisão de contraste AA para texto miúdo, checagem de overflow/teclado/touch, e CI para o SHA final. Browser Rendering Cloudflare falhou com HTTP 429 e não deve ser reportado como captura aprovada.
+
+## Adaptação a esboço fornecido — 04/11/2026
+
+A foto de um desenho manual, fornecida na conversa, detalha três propostas de skins para bonés com lema "Estilo não late. Morde":
+
+- **Épica** — vermelho, bordas diagonais e emblema triangular;
+- **Lendária** — roxo, losangos encadeados e emblema em forma de diamante;
+- **Ultimate** — rosa, manchas orgânicas e pequeno emblema.
+
+A demo V3 converteu essa composição em ilustrações SVG vetoriais e ornamentos originais. Não foram usadas fotos oficiais do cliente nem a imagem bruta no repositório. A categoria de exibição "Monster Cap" passou a "Ultimate" como **proposta derivada do esboço**, pendente da confirmação do catálogo definitivo. Internamente o id legacy `monster` foi preservado para não descartar pedidos fictícios persistidos em localStorage; deve ser migrado com cuidado se o produto real for implementado.
+
+### Testes da V3
+- Três ilustrações de fundo distintas renderizadas na vitrine (mock DOM).
+- Produção e gestão mantidas.
+- Briefing Ultimate selecionável e pedido fictício gravado no navegador.
+- JavaScript validado sintaticamente no runtime V8.
+- Deploy Cloudflare Worker confirmado; **ainda sem screenshot e revisão visual real multi-viewport**.
+
+A existência do esboço não implica autorização para vender produtos, usar preços reais, anunciar parceria ou substituir a aprovação da Dogstar.
