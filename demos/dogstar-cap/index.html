@@ -90,6 +90,64 @@ h1,h2,h3,.editorial-display,.data-big{font-family:'Barlow Condensed','Arial Narr
 .look h3{max-width:100%;overflow-wrap:break-word;text-wrap:balance}.brand-title{font-size:19px}.look:first-child h3{font-size:63px}.look h3{font-size:43px}.ed-actions .btn{width:100%;flex:auto}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
+
+/* Mobile typography + overflow correction after customer feedback on 03/11/2026. */
+html,body{max-width:100%;overflow-x:clip}
+#app,.wrap,.ed-copy,.page-top,.config-layout,.insight-grid,.story,.story-head,.story-steps,.look,.look-copy,.look-visual,.panel,.metric{min-width:0}
+.ed-title,.look h3,.story h2,.page-title,.section h2,.story-step h3{overflow-wrap:normal;word-break:normal}
+.ed-title{line-height:.86}
+.look h3,.story h2,.page-title,.section h2{line-height:1.04}
+.look-copy p,.section-intro,.ed-text,.page-top p,.notice,.ticket p,.story-step p{overflow-wrap:break-word}
+@media(max-width:800px){
+ .ed-copy{min-height:0}
+ .ed-title{font-size:clamp(64px,13vw,110px)}
+ .look-grid{grid-template-rows:none}
+ .look{min-height:310px}
+ .look:first-child{min-height:420px}
+}
+@media(max-width:600px){
+ .ed-copy{padding:28px 22px 30px;min-height:0}
+ .ed-title{font-size:clamp(56px,16.4vw,94px);letter-spacing:-.052em;line-height:.93;margin:23px 0 15px}
+ .ed-title span:nth-child(2){padding-left:3%}
+ .ed-actions{display:grid;grid-template-columns:minmax(0,1fr);width:100%}
+ .ed-actions .btn{width:100%;min-width:0;white-space:normal;text-align:center}
+ .ed-photo{min-height:300px}
+ .ed-photo .serial{font-size:clamp(26px,10vw,43px)}
+ .look-heading{grid-template-columns:minmax(0,1fr)}
+ .look-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:none;gap:14px}
+ .look,.look:first-child{grid-column:auto;grid-row:auto;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(170px,220px);min-height:0;overflow:hidden}
+ .look .look-copy,.look:first-child .look-copy{padding:22px 22px 6px;min-width:0;gap:10px}
+ .look h3,.look:first-child h3{font-size:clamp(46px,13vw,70px);line-height:1.01;overflow-wrap:normal;max-width:none;margin:12px 0}
+ .look p{max-width:40ch;font-size:12px;line-height:1.55;margin-bottom:14px}
+ .look-visual,.look:first-child .look-visual{min-height:170px;overflow:hidden;align-items:center}
+ .look .look-visual .cap-svg,.look:first-child .look-visual .cap-svg{width:min(92%,370px);max-width:370px;transform:rotate(-9deg) translate(0,3%);filter:drop-shadow(8px 12px 3px #0004)}
+ .look .look-visual:after,.look:first-child .look-visual:after{width:230px;height:230px}
+ .story-head{padding:25px 22px}
+ .story h2{font-size:clamp(49px,14.4vw,77px);line-height:1.03}
+ .story-steps{padding:7px 18px}
+ .story-step{grid-template-columns:32px minmax(0,1fr);gap:14px}
+ .story-step h3{font-size:19px;line-height:1.07}
+ .page-title{font-size:clamp(42px,12.3vw,68px);line-height:1.03}
+ .page-top{gap:12px}
+ .panel{max-width:100%}
+ .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .metric{min-width:0}
+ .metric strong{font-size:clamp(39px,12vw,55px)}
+ .metric span{overflow-wrap:break-word}
+ .status-track{grid-template-columns:repeat(5,minmax(0,1fr))}
+ .status-item{overflow-wrap:break-word;line-height:1.35}
+ .footer-inner>div{min-width:0;overflow-wrap:break-word}
+}
+@media(max-width:360px){
+ .ed-title{font-size:clamp(51px,15.8vw,64px)}
+ .ed-copy{padding-inline:18px}
+ .look .look-copy,.look:first-child .look-copy{padding:20px 18px 4px}
+ .look h3,.look:first-child h3{font-size:clamp(43px,12.8vw,53px)}
+ .section h2{font-size:clamp(44px,12.8vw,58px)}
+ .story h2{font-size:clamp(43px,13vw,56px)}
+ .page-title{font-size:clamp(39px,12vw,48px)}
+ .metric{padding:14px}
+}
 </style></head>
 <body>
 <div class="banner">Conceito independente • não oficial • todos os pedidos são fictícios</div>
