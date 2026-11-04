@@ -48,3 +48,12 @@ Data 2026-11-02. Classificação: **APRESENTÁVEL COM LIMITAÇÕES EXPLÍCITAS**
 - Worker Cloudflare atualizado em 04/11/2026, subdomínio ativo e 3 URLs respondendo via TinyFish fetch.
 - **Falta QA visual em navegadores reais e nas larguras 320/360/390/430/768/1024/1440**; não afirmar ausência de overflow sem screenshots e auditoria de foco, zoom e contraste.
 - Antes da entrega final: aprovar códigos hex e versão oficial dos cartões; obter imagens reais/autorização para uso; substituir localStorage por backend seguro e multi-tenant se contratado.
+
+
+## Correção validada em navegador real — 04/11/2026
+
+- Cloudflare Browser Rendering capturou a versão nova em viewport mobile **320 × 900** (mobile+touch).
+- Auditoria sobre bounding boxes de títulos, categorias, Monster Cap e CTAs: largura do viewport 320px, documento 320px, **zero elementos avaliados para fora da tela**.
+- Inicialmente o título Monster Cap e o botão do cartão ultrapassavam 320px; CSS foi corrigido e o mesmo teste foi reexecutado com resultado PASS.
+- Auditoria visual em 360, 390, 430, 768, 1024 e 1440 px e contraste completo ainda pendentes.
+- Os itens, pedidos e atributos demonstrativos não representam peças oficiais da Dogstar.
