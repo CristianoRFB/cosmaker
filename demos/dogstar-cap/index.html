@@ -148,6 +148,23 @@ html,body{max-width:100%;overflow-x:clip}
  .page-title{font-size:clamp(39px,12vw,48px)}
  .metric{padding:14px}
 }
+
+/* Esboço enviado: cores e ornamentos exclusivos para cada skin */
+.look:nth-child(1){background:#f2eee9;border-color:#ac3140}
+.look:nth-child(2){background:#ece6f2;border-color:#6d3798}
+.look:nth-child(3){background:#f8e6ee;border-color:#c64287}
+.look:nth-child(1) .look-note,.look:nth-child(1) .look-num{color:#a82d39}
+.look:nth-child(2) .look-note,.look:nth-child(2) .look-num{color:#66328e}
+.look:nth-child(3) .look-note,.look:nth-child(3) .look-num{color:#b22d71}
+.look:nth-child(1) .btn.dark{background:#ad313e}
+.look:nth-child(2) .btn.dark{background:#62308e}
+.look:nth-child(3) .btn.dark{background:#b63679}
+.look .look-visual{overflow:hidden}
+.look .look-visual .cap-svg{position:relative;z-index:3}
+.skin-motif{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.look .look-visual:after{z-index:0;background:#ffffff66}
+@media(max-width:600px){.look .look-visual,.look:first-child .look-visual{min-height:190px}.look .look-visual .cap-svg,.look:first-child .look-visual .cap-svg{width:min(90%,370px);transform:rotate(-9deg) translate(0,2%)}}
+
 </style></head>
 <body>
 <div class="banner">Conceito independente • não oficial • todos os pedidos são fictícios</div>
@@ -159,9 +176,10 @@ html,body{max-width:100%;overflow-x:clip}
 (function(){
 'use strict';
 var stages=['Recebido','Criação da arte','Aprovação','Produção','Pronto'];
-var collections=[{id:'epica',title:'Skins Épicas',tag:'Arte com personalidade',desc:'Para ideias intensas, traços marcantes e uma peça que não passa despercebida.',bg:'orange',color:'#ed694e',symbol:'✦'},
-{id:'lendaria',title:'Skins Lendárias',tag:'Edição de atitude',desc:'Visual de presença para quem curte customização com identidade própria.',bg:'night',color:'#1c2030',symbol:'★'},
-{id:'monster',title:'Monster Cap',tag:'Inspiração autoral',desc:'Uma proposta irreverente para transformar sua referência em estilo.',bg:'lemon',color:'#e6d777',symbol:'✳'}];
+var collections=[
+{id:'epica',title:'Épica',tag:'SKIN 01 / VERMELHO',desc:'Composição de impacto com traços vermelhos e emblema triangular.',bg:'orange',color:'#e8e5de',symbol:'▲'},
+{id:'lendaria',title:'Lendária',tag:'SKIN 02 / ROXO',desc:'Geometria em losangos, contraste roxo e patch central de destaque.',bg:'night',color:'#eceae4',symbol:'◆'},
+{id:'monster',title:'Ultimate',tag:'SKIN 03 / ROSA',desc:'Manchas orgânicas em rosa e emblema próprio para uma composição única.',bg:'lemon',color:'#f1edeb',symbol:'⬟'}];
 var key='dogstar-77-demo-v1',seed=[{id:'DS-DEMO-041',collection:'epica',color:'#ed694e',note:'Arte conceitual de exemplo',stage:1},{id:'DS-DEMO-042',collection:'lendaria',color:'#1c2030',note:'Exemplo: aguardando aprovação',stage:2},{id:'DS-DEMO-043',collection:'monster',color:'#e6d777',note:'Exemplo: em produção',stage:3},{id:'DS-DEMO-044',collection:'epica',color:'#f4f0e7',note:'Exemplo: pronto',stage:4}];
 function stored(){try{var v=JSON.parse(localStorage.getItem(key)||'null');if(v&&Array.isArray(v.orders)&&v.orders.length<100){return v}}catch(e){}return {orders:seed.slice(),settings:{catalog:true,custom:true,tracking:true},last:null}}
 var data=stored(),page=new URLSearchParams(location.search).get('view')||'loja',mode='home',selected='epica',selectedColor='#111316';
@@ -186,7 +204,7 @@ document.addEventListener('submit',function(e){if(e.target.id!=='orderForm')retu
 
 /* DOGSTAR V2 — live views, no data leaves device */
 var drawCap=function(color,symbol){
-  var c=esc(color),accent=(symbol==='★'?'#f1df41':symbol==='✦'?'#ef7448':'#dbec7e');
+  var c=esc(color),accent=(symbol==='▲'?'#ca3846':symbol==='◆'?'#672b96':symbol==='⬟'?'#da3e82':symbol==='★'?'#f1df41':symbol==='✦'?'#ef7448':'#dbec7e');
   return '<svg class="cap-svg" viewBox="0 0 540 420" role="img" aria-label="Ilustração conceitual de um boné com costuras e patch"><defs>'+
   '<linearGradient id="capbody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".48" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>'+
   '<linearGradient id="visor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".48"/></linearGradient>'+
@@ -203,12 +221,19 @@ var drawCap=function(color,symbol){
   '<path d="M92 309Q267 258 468 309M100 321Q272 271 463 319" stroke="#f3e3c7" stroke-dasharray="4 6" stroke-width="2" fill="none" opacity=".48"/>'+
   '<g transform="translate(267 187) rotate(-7)"><path d="M-66 -55Q0 -79 66 -55L70 45Q0 78 -70 45Z" fill="#111310" stroke="'+accent+'" stroke-width="5"/>'+
   '<path d="M-57 -47Q0 -66 57 -47L60 39Q0 65 -60 39Z" fill="none" stroke="#eee6cb" stroke-dasharray="3 5" stroke-width="2" opacity=".7"/>'+
-  '<text x="0" y="20" text-anchor="middle" font-size="78" font-weight="900" fill="'+accent+'">'+esc(symbol)+'</text></g>'+
+  (symbol==='▲'?'<path d="M0 -30L30 25H-30Z" fill="'+accent+'" stroke="#eee5d7" stroke-width="3"/><path d="M0 -14L14 14H-14Z" fill="#20201d"/>':symbol==='◆'?'<path d="M0 -28L28 0L0 28L-28 0Z" fill="'+accent+'" stroke="#eee5d7" stroke-width="3"/><path d="M0 -14L14 0L0 14L-14 0Z" fill="#20201d"/>':symbol==='⬟'?'<path d="M0 -28L23 -14L19 19L0 29L-19 19L-23 -14Z" fill="'+accent+'" stroke="#eee5d7" stroke-width="3"/><path d="M0 -12L10 -4L8 12L0 17L-8 12L-10 -4Z" fill="#20201d"/>':'<text x="0" y="20" text-anchor="middle" font-size="78" font-weight="900" fill="'+accent+'">'+esc(symbol)+'</text>')+'</g>'+
   '<circle cx="270" cy="61" r="13" fill="'+c+'" stroke="#121310" stroke-width="5"/>'+
   '<path d="M393 191l34 14-7 16-31-12Z" fill="#161712" stroke="#e9e9ce" stroke-width="2"/><text x="404" y="208" text-anchor="middle" font-size="8" fill="#ffe16e" font-weight="900">77</text>'+
   '</svg>';
 };
 cap=drawCap;
+
+function skinMotif(id){
+ if(id==='epica')return '<svg class="skin-motif" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M0 0H170L145 22L127 15L110 42L92 32L70 65L52 57L20 110L0 114Z" fill="#c83140"/><path d="M400 260L376 276L360 268L340 299L320 289L300 334L278 325L244 400H400Z" fill="#c83140"/><path d="M0 31L79 0M0 60L56 0M305 400L400 310M335 400L400 337" stroke="#ffd5d5" stroke-width="5" opacity=".68"/></svg>';
+ if(id==='lendaria')return '<svg class="skin-motif" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" stroke="#672e97" stroke-width="8"><path d="M-20 -20L140 140M10 -20L176 147M-20 77L75 173" stroke-width="5" fill="none" opacity=".55"/><path d="M36 18l23 23-23 23-23-23Z" fill="#672e97"/><path d="M107 62l25 25-25 25-25-25Z" fill="none"/><path d="M19 119l23 23-23 23-23-23Z" fill="#672e97"/><path d="M302 269l26 26-26 26-26-26Z" fill="#672e97"/><path d="M356 310l25 25-25 25-25-25Z" fill="none"/><path d="M310 354l23 23-23 23-23-23Z" fill="none"/><path d="M359 365L414 420M289 315L382 408" fill="none" stroke-width="5"/></svg>';
+ return '<svg class="skin-motif" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="#e83d89"><path d="M-20 5Q14 -15 45 4Q77 -10 93 17Q126 30 101 56Q106 85 68 77Q47 102 27 79Q-12 96 -20 56Z"/><path d="M0 140Q32 119 48 147Q76 151 70 174Q57 194 24 189Q-2 180 0 140Z"/><path d="M269 334Q292 309 313 329Q334 314 354 342Q382 342 382 368Q406 392 375 409Q353 435 325 412Q294 426 281 398Q260 381 269 334Z"/><path d="M361 379Q391 359 410 386V410H361Z"/><ellipse cx="139" cy="71" rx="19" ry="14"/><ellipse cx="228" cy="330" rx="16" ry="13"/></svg>';
+}
+
 store=function(){
  if(!data.settings.catalog){var hiddenCatalog=true}else{var hiddenCatalog=false}
  return '<section class="editorial-hero"><div class="ed-copy"><div><div class="ed-meta">SANTA FÉ DO SUL · CUSTOM CULTURE</div>'+
@@ -218,11 +243,11 @@ store=function(){
  (data.last?'<button class="btn soft" data-action="track">Ver meu pedido-demo ↗</button>':'')+'</div></div>'+
  '<p class="ed-legal">Estudo de experiência independente para a Dogstar. Peças, desenhos, preços e pedidos desta página são conceituais.</p></div>'+
  '<div class="ed-photo"><div class="edge-label">DOGSTAR / CONCEPT STUDIO / 2026</div><div class="orbit" aria-hidden="true"></div>'+
- cap('#141718','★')+'<div class="orb">YOUR IDEA<br>YOUR<br>CAP ✦</div><div class="serial">01 / 03<span>CUSTOM CAPS — PREVIEW ONLY</span></div></div></section>'+
+ cap('#e8e5de','▲')+'<div class="orb">YOUR IDEA<br>YOUR<br>CAP ✦</div><div class="serial">01 / 03<span>CUSTOM CAPS — PREVIEW ONLY</span></div></div></section>'+
  '<div class="ed-bottom"><span><span class="dot">✳</span> SKINS DE PERSONALIDADE</span><span>DA REFERÊNCIA À PRODUÇÃO</span><span>FEITO PRA SER DIFERENTE <span class="dot">↗</span></span></div>'+
  '<section class="section" id="colecoes"><div class="look-heading"><div><div class="eyebrow">01 / A primeira escolha</div><h2>QUAL É A SUA<br>PRÓXIMA SKIN?</h2></div>'+
- '<p class="section-intro">Três caminhos para começar. As categorias vêm dos destaques da Dogstar; as peças abaixo são ilustrações criadas apenas para esta demonstração.</p></div>'+
- '<div class="look-grid">'+collections.map(function(c,i){return '<article class="look"><div class="look-copy"><span class="look-num">NO. 0'+(i+1)+' / INSPO FILE</span><div><span class="look-note">'+esc(c.tag)+'</span><h3>'+esc(c.title)+'</h3><p>'+esc(c.desc)+'</p><button class="btn dark" data-action="choose" data-id="'+esc(c.id)+'">Escolher estilo ↗</button></div></div><div class="look-visual">'+cap(c.color,c.symbol)+'</div></article>'}).join('')+'</div></section>'+
+ '<p class="section-intro">Épica, Lendária e Ultimate. Cores, formas e emblemas reinterpretados a partir do esboço recebido; os bonés ainda são representações conceituais.</p></div>'+
+ '<div class="look-grid">'+collections.map(function(c,i){return '<article class="look"><div class="look-copy"><span class="look-num">NO. 0'+(i+1)+' / INSPO FILE</span><div><span class="look-note">'+esc(c.tag)+'</span><h3>'+esc(c.title)+'</h3><p>'+esc(c.desc)+'</p><button class="btn dark" data-action="choose" data-id="'+esc(c.id)+'">Escolher estilo ↗</button></div></div><div class="look-visual">'+skinMotif(c.id)+cap(c.color,c.symbol)+'</div></article>'}).join('')+'</div></section>'+
  '<section class="story"><div class="story-head"><span class="eyebrow" style="color:#d7d9c9">02 / O caminho da ideia</span><h2>VOCÊ CRIA.<br>A GENTE<br>ORGANIZA.</h2><p style="font-size:12px;color:#d3d4c8;max-width:320px">Uma jornada digital proposta para encomendas de bonés customizados.</p></div>'+
  '<div class="story-steps"><div class="story-step"><b>01</b><div><h3>Uma referência.</h3><p>Escolha uma linha visual e conte o que imagina — sem cadastro ou formulário gigante.</p></div></div>'+
  '<div class="story-step"><b>02</b><div><h3>Um briefing claro.</h3><p>O pedido vira uma ficha organizada para reduzir informações perdidas em conversas.</p></div></div>'+
