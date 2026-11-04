@@ -214,6 +214,16 @@ html,body{max-width:100%;overflow-x:clip}
 .monster-ops p{font-size:12px;line-height:1.6;color:#e5dcea;max-width:650px}.monster-ops .btn{flex-shrink:0;border:1px solid #FFD400}
 @media(max-width:600px){.monster-ops{padding:20px;flex-direction:column;align-items:flex-start}.monster-ops .btn{width:100%}}
 
+
+/* QA 320px — avoid min-content grid overflow in Monster Cap module */
+.monster-section,.monster-copy,.monster-showcase,#monsterCardVisual,.monster-face,.monster-art,.monster-details{min-width:0;max-width:100%;box-sizing:border-box}
+.monster-section{grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr)}
+.monster-flip{min-width:0;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;padding:9px 12px}
+.monster-card-header span{min-width:0;overflow-wrap:anywhere}
+@media(max-width:980px){.monster-section{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.monster-copy h2{font-size:clamp(54px,14vw,76px);line-height:1}.monster-showcase{padding:14px}.monster-details h3{font-size:clamp(38px,10.5vw,47px);line-height:.98}}
+@media(max-width:359px){.monster-copy h2{font-size:47px}.monster-details h3{font-size:38px}.monster-showcase{padding:12px}.monster-card-header{font-size:8px;line-height:1.4}}
+
 </style></head>
 <body>
 <div class="banner">Conceito independente • não oficial • todos os pedidos são fictícios</div>
