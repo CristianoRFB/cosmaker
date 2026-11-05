@@ -4,6 +4,7 @@ import { httpsCallable } from 'firebase/functions';
 import { ref, uploadBytes } from 'firebase/storage';
 import { requireFirebase } from '@/services/firebase/firebase.client';
 import type { QuoteRequestFormData } from '@/schemas/quote-request.schema';
+import type { CapQuotePayload } from '@/schemas/cap-request.schema';
 
 export const MAX_REFERENCE_FILE_SIZE = 10 * 1024 * 1024;
 export const MAX_REFERENCE_FILES = 5;
@@ -47,7 +48,7 @@ interface CreatePublicRequestResponse {
   references: Array<{ uploadId: string; storagePath: string }>;
 }
 
-export async function createPublicQuoteRequest(tenantSlug: string, input: QuoteRequestFormData, files: File[] = []) {
+export async function createPublicQuoteRequest(tenantSlug: string, input: QuoteRequestFormData | CapQuotePayload, files: File[] = []) {
   const { functions, storage } = requireFirebase();
   const createRequest = httpsCallable<{
     tenantSlug: string;

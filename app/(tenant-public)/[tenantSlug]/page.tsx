@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight, Scissors, Sparkles } from 'lucide-react';
 import { usePublicTenant } from '@/providers/public-tenant-provider';
+import { CapTenantLanding } from '@/components/public/cap-tenant-landing';
 
 function TenantMessage({ title, detail }: { title: string; detail: string }) {
   return <main className="mx-auto flex min-h-[58vh] max-w-3xl items-center px-5 py-16 sm:px-8"><section className="w-full rounded-3xl border border-violet-100 bg-white p-7 shadow-sm sm:p-10"><p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">Página do ateliê</p><h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">{title}</h1><p className="mt-4 text-sm leading-6 text-slate-600">{detail}</p></section></main>;
@@ -17,6 +18,7 @@ export default function TenantLandingPage() {
   if (status === 'error') return <TenantMessage detail="Não foi possível carregar esta página agora. Tente novamente em instantes." title="Falha ao carregar o ateliê" />;
   if (!tenant?.published) return <TenantMessage detail={tenant?.quoteRequestsEnabled ? 'Esta página ainda não foi publicada. Se recebeu o link do formulário, use-o para continuar.' : 'Esta página ainda não foi publicada pelo ateliê.'} title="Página ainda não publicada" />;
 
+  if (tenant.businessType === 'caps') return <CapTenantLanding tenant={tenant} />;
   const brandColor = tenant.brandColor;
   return <main>
     <section className="relative isolate overflow-hidden bg-[linear-gradient(120deg,#fbf9ff_0%,#f7f1ff_47%,#fff2f7_100%)]">
