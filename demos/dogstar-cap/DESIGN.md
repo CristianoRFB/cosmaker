@@ -206,3 +206,25 @@ Problema reportado pelo usuário: “quando cê altera algo, a parte de trás vo
 **Evidências**: 11/11 testes em DOM simulado para controle do lado, mudança de cor, ambos os controles de categoria, permanência do texto, reabertura, atualização da página, sugestões e migração de dados antigos. Mais 5 verificações do fluxo de inspiração por raridade. Browser Rendering real em largura **390px**: todos os estados (“traseira”, cor, select, botão e reabertura) permaneceram na traseira; textos voltaram corretamente; `scrollWidth=390`, sem erro. Cloudflare Browser Rendering retornou HTTP 429 nas tentativas adicionais de 320px e 1440px nesta rodada (limitação do serviço), então esses dois tamanhos NÃO foram revalidados neste ajuste.
 
 **Deploy**: Cloudflare Worker `77-dogstar-cap-conceito` atualizado, GitHub branch `demo/dogstar-cap-conceito`; `main` preservada, PR draft. Sem backend, pagamentos ou pedidos reais.
+
+
+## Correção de regressão no personalizador — 05/11/2026
+
+**Relato recebido:** “quando cê altera algo, a parte de trás volta pra parte da frente, entre outros”.
+
+### Resultado
+- A versão analisada já preservava o lado no estado do editor e em localStorage. Uma reprodução inicial real na demo (390 px) passou em **23 interações consecutivas**: verso selecionado, as 15 cores, as 3 categorias, select, texto e reabrir a ficha.
+- Mesmo sem reproduzir o erro no código atual, reforçamos a persistência: a função de salvar rascunho lê diretamente os campos da interface, quando presentes, para capturar alterações vindas de autofill/alterações sem evento input. Também escuta change em campos de texto, guarda explicitamente side=front/back e reflete esse estado no atributo data-side da prévia. A escolha visual recebe destaque quando o verso está ativo.
+- A demo foi republicada no Worker com **Cache-Control: no-store** para impedir que usuários recebam uma versão HTML antiga durante os ajustes.
+- Não foi alterado o backend do Cosmaker, a autenticação, preços ou tenant; estes recursos continuam simulados.
+
+### Testes
+- Teste V8/DOM do novo código: 11/11 verificações aprovadas, incluindo 3 telas, frente/trás, troca de cor e categoria, entrada textual, preenchimento por change sem input, fechamento/reabertura, recarga (nova instância com o mesmo localStorage) e ausência de regressão das visões gestão/produção.
+- Browser Rendering anterior do Worker: **390 px**, 23 interações com a vista traseira preservada.
+- Browser Rendering da **nova publicação**: **320 px**, 22 verificações com o verso preservado, campo de traseira retido, data.draft íntegro e document.scrollWidth=320.
+- Tentativa adicional em 390 px na publicação mais recente: indisponível por **HTTP 429** do serviço de navegador, então este breakpoint não foi confirmado outra vez após a atualização final.
+- 1440 px: testado anteriormente para a prévia de trás, mas não nesta última publicação. Revisão completa 360/430/768/1024 e teste assistido no aparelho do cliente permanecem pendentes.
+
+### Observações de uso
+- A vista traseira é **um SVG ilustrativo** com regulagem e painéis, não um modelo 3D ou arte gerada automaticamente. O texto da customização da parte traseira é salvo como backNote na simulação, sem envio para a Dogstar.
+- Para validar no mesmo endereço, basta abrir a demo; a versão HTTP HTML passou a ser entregue com política sem cache.
