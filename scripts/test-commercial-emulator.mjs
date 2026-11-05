@@ -39,7 +39,7 @@ try {
       '--config', configName,
       '--project', 'demo-cosmaker',
       '--only', 'auth,firestore,functions,pubsub',
-      'vitest run tests/integration/commercial-functions.test.ts',
+      'vitest run tests/integration/commercial-functions.test.ts tests/integration/cap-intake.test.ts',
     ], {
       stdio: 'inherit',
       env: {
