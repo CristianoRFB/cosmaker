@@ -130,3 +130,18 @@ O Hipnotizante foi **sorteado no anime.fest**, logo não está indicado como pro
 - Ainda faltam QA multi-viewport 360/430/768/1024, revisão visual manual completa, acessibilidade com teclado e aprovação do cliente das classificações de raridade.
 - Fotos fornecidas pelo cliente para demonstração, mas liberação contratual para produção e autorização de imagem de todos os modelos ou marcas de terceiros **não verificadas**. Solicitar antes de converter em site real.
 - Estado final: **APRESENTÁVEL COM LIMITAÇÕES EXPLÍCITAS**. PR draft, não mesclar em main até aceite.
+
+
+## Vista traseira — feedback direto em 05/11/2026
+
+Cliente pediu: “Nessa parte da personalização, tem como colocar a opção ‘parte de traz do boné’?”
+
+Implementação no Studio:
+- Controle interativo Frente / Parte de trás com estados de seleção aria-pressed, foco visível e alvos mínimos de 48px.
+- SVG vetorial original da parte traseira com painéis, costuras, recorte e regulagem; a mesma cor escolhida atualiza ambas as vistas. É referência visual, NÃO renderização de artes ou molde de fabricação real.
+- Campo opcional "Parte de trás do boné" (até 160 caracteres) para anotar personalização traseira. O formulário DEMO persiste em localStorage como backNote; aparece na confirmação e na produção fictícia. Pedidos antigos sem esse campo continuam compatíveis.
+- Preview mantém título de categoria; texto explica frente/trás sem falsas promessas de fidelidade.
+- Código em branch demo/dogstar-cap-conceito, PR rascunho, Worker público atualizado. Main sem alterações.
+
+Testes: 8/8 smoke tests V8/DOM passaram (3 visões, alternância de lado, troca de cor com verso selecionado, retorno à frente, armazenamento e exibição na produção).
+Cloudflare Browser Rendering: 320, 390 e 1440 px: scrollWidth igual à largura do viewport; vista traseira correta; campo presente; nenhum overflow nos elementos inspecionados. 360/430/768/1024 px, navegação por teclado e aprovação visual do cliente ainda pendentes.
