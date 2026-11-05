@@ -185,3 +185,7 @@ Problema reportado pelo usuário: “quando cê altera algo, a parte de trás vo
 ### Observações de uso
 - A vista traseira é **um SVG ilustrativo** com regulagem e painéis, não um modelo 3D ou arte gerada automaticamente. O texto da customização da parte traseira é salvo como backNote na simulação, sem envio para a Dogstar.
 - Para validar no mesmo endereço, basta abrir a demo; a versão HTTP HTML passou a ser entregue com política sem cache.
+
+
+## Classificação corrigida após feedback do cliente — 05/11/2026
+**Ivsoy (DPS) / Dino Punk = 💗 Ultimate**, confirmado pelo cliente com a mensagem “Esse aqui é ‘Ultimate’”. O filtro Ultimate deve exibir **uma** peça, Épica **duas**, Lendária **duas** e Todos **cinco**; não pode mais exibir estado vazio da categoria Ultimate. Raridades restantes ainda dependem de confirmação individual. Sem mudança de preços, disponibilidade ou tenant.

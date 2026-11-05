@@ -9,3 +9,7 @@
 - Demo: /?view=loja; /?view=atelier; /?view=gestao (alvo Cloudflare independente). Todos os produtos, desenhos, pedidos e métricas são ilustrativos; zero atendimento/pedido real.
 - Decisão: não tentar copiar cosplay SaaS como produto retail nem modificar schema/banco do Cosmaker. Prova de conceito como HTML em diretório separado na branch, com futura absorção em vertical custom-made/multi-tenant.
 - Sem contato comercial realizado. Apresentar apenas como estudo independente, pedindo opinião/validação primeiro.
+
+
+## Confirmação de raridade — 05/11/2026
+O responsável respondeu ao envio da demonstração “Ficou bonitinho, amei” e, citando o cartão de Ivsoy (classe DPS), informou: **“Esse aqui é ‘Ultimate’”**. Consequência: a peça demonstrativa vinculada, **Dino Punk / Ivsoy**, foi movida de ❤️ Épica para **💗 Ultimate** no catálogo e no filtro. O cliente não confirmou outras classificações nesta mensagem; aquelas continuam preliminares. Nada foi convertido para tenant real.
