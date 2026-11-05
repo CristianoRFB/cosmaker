@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { capRequestSchema, toCapQuotePayload } from '@/schemas/cap-request.schema';
-import { parseCapCustomization, describeCapCustomization } from '@/functions/src/public/cap-policy';
+import { parseCapCustomization, describeCapCustomization, categoryMatchesBusinessType } from '@/functions/src/public/cap-policy';
 
 const valid = {
   name: 'Cliente Teste', email: ' CLIENTE@EXAMPLE.COM ', model: 'Modelo autoral',
@@ -9,6 +9,12 @@ const valid = {
 };
 
 describe('contrato de personalização de bonés', () => {
+  it('nega bonés em tenants de cosplay e vice-versa', () => {
+    expect(categoryMatchesBusinessType('custom_cap', 'caps')).toBe(true);
+    expect(categoryMatchesBusinessType('custom_cap', 'cosmaker')).toBe(false);
+    expect(categoryMatchesBusinessType('full_cosplay', 'caps')).toBe(false);
+    expect(categoryMatchesBusinessType('full_cosplay', 'cosmaker')).toBe(true);
+  });
   it('normaliza formulário e preserva dados estruturados', () => {
     const parsed = capRequestSchema.parse(valid);
     expect(parsed.email).toBe('cliente@example.com');

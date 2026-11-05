@@ -44,3 +44,8 @@ export function describeCapCustomization(cap: CapCustomization): string {
     `Quantidade: ${cap.quantity}.`,
   ].join(' ');
 }
+
+/** Allow custom caps only on explicit cap-brand tenants, leaving legacy cosplay unchanged. */
+export function categoryMatchesBusinessType(category: string, businessType: 'cosmaker' | 'caps'): boolean {
+  return category === 'custom_cap' ? businessType === 'caps' : businessType === 'cosmaker';
+}

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { FieldValue } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb, adminStorage } from '../admin';
-import { describeCapCustomization, parseCapCustomization } from './cap-policy';
+import { categoryMatchesBusinessType, describeCapCustomization, parseCapCustomization } from './cap-policy';
 
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -110,7 +110,7 @@ function validateQuoteInput(value: unknown, businessType: 'cosmaker' | 'caps', t
   const category = data.category;
   if (typeof category !== 'string' || !validCategories.has(category)) throw new HttpsError('invalid-argument', 'A categoria informada é inválida.');
   const isCap = category === 'custom_cap';
-  if (isCap !== (businessType === 'caps')) throw new HttpsError('invalid-argument', 'Categoria não permitida neste ateliê.');
+  if (!categoryMatchesBusinessType(category, businessType)) throw new HttpsError('invalid-argument', 'Categoria não permitida neste ateliê.');
   let cap: ReturnType<typeof parseCapCustomization> | undefined;
   if (isCap) {
     try { cap = parseCapCustomization(data.capCustomization); }
@@ -188,6 +188,9 @@ export const createPublicQuoteRequest = onCall(async (call) => {
   const atelierId = assertIntakeAvailable(lookup);
   const quoteRequest = validateQuoteInput(call.data?.input, lookup.tenant!.businessType, lookup.tenant?.name);
   const descriptors = validateReferenceDescriptors(call.data?.references);
+  if (lookup.tenant?.demoWorkspace === true && descriptors.length) {
+    throw new HttpsError('failed-precondition', 'A demonstração não permite anexos de clientes.');
+  }
   const requestRef = adminDb.collection('ateliers').doc(atelierId).collection('quoteRequests').doc();
   const batch = adminDb.batch();
   batch.create(requestRef, quoteRequest);
@@ -222,6 +225,7 @@ function hasValidImageSignature(contentType: string, bytes: Uint8Array) {
 export const completePublicQuoteReferenceUpload = onCall(async (call) => {
   const lookup = await lookupTenant(call.data?.tenantSlug);
   const atelierId = assertIntakeAvailable(lookup);
+  if (lookup.tenant?.demoWorkspace === true) throw new HttpsError('failed-precondition', 'A demonstração não aceita anexos.');
   const requestId = typeof call.data?.requestId === 'string' ? call.data.requestId : '';
   const uploadId = typeof call.data?.uploadId === 'string' ? call.data.uploadId : '';
   if (!/^[A-Za-z0-9_-]{10,150}$/.test(requestId) || !/^[0-9a-f-]{36}$/i.test(uploadId)) {
