@@ -12,6 +12,8 @@ export interface PublicTenantConfig {
   brandColor?: string;
   published: boolean;
   quoteRequestsEnabled: boolean;
+  businessType?: 'cosmaker' | 'caps';
+  demoWorkspace?: boolean;
 }
 
 export interface PublicTenantResolution {

@@ -22,7 +22,7 @@ export function TenantPublicLayout({ children }: { children: ReactNode }) {
     <footer className="border-t border-violet-100 bg-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-8">
         <Link className="inline-flex items-center gap-2 text-sm font-semibold" href={`/${encodeURIComponent(tenantSlug)}`}><Sparkles className="text-violet-700" size={16} />{tenant?.name ?? 'Ateliê'}</Link>
-        <span className="text-xs text-slate-500">Página pública do ateliê no Cosmaker OS</span>
+        <span className="text-xs text-slate-500">{tenant?.businessType === 'caps' ? 'Marca de bonés no Cosmaker OS' : 'Página pública do ateliê no Cosmaker OS'}</span>
       </div>
     </footer>
   </div>;

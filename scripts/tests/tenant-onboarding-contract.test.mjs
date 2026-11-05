@@ -41,3 +41,9 @@ test('preserva perfis existentes e recusa colisão de tenant',()=>{
  assert.equal(decideExisting({atelierId:'x'},{name:'Ateliê Exemplo',ownerId:'owner-user-123'},
    {active:true,accountType:'atelier_member',atelierId:'x'},cfg()),'already_provisioned');
 });
+
+ test('tipo de negócio é validado e não altera o core cosplay', () => {
+  assert.equal(validateArguments({...raw, 'business-type': 'caps'}).businessType, 'caps');
+  assert.equal(validateArguments(raw).businessType, 'cosmaker');
+  assert.throws(() => validateArguments({...raw, 'business-type': 'ecommerce'}), /negócio/);
+});

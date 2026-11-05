@@ -17,7 +17,7 @@ export function parseArguments(argv) {
 }
 export function validateArguments(args) {
   const accepted = new Set(['mode','project-id','name','slug','owner-uid','owner-email',
-    'operator-uid','tagline','brand-color','production-apply','confirm-project',
+    'operator-uid','tagline','brand-color','business-type','production-apply','confirm-project',
     'confirm-slug','confirm-owner-uid']);
   if (Object.keys(args).some((key) => !accepted.has(key))) throw new Error('Parâmetro não reconhecido.');
   const mode = args.mode || 'preflight';
@@ -35,13 +35,15 @@ export function validateArguments(args) {
       || ownerUid === operatorUid) throw new Error('UIDs inválidos.');
   const email = String(args['owner-email'] || '').trim().toLowerCase();
   if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('E-mail inválido.');
+  const businessType = args['business-type'] || 'cosmaker';
+  if (!['cosmaker', 'caps'].includes(businessType)) throw new Error('Tipo de negócio inválido.');
   const brandColor = args['brand-color'] || '#6d28d9';
   if (!/^#[0-9A-Fa-f]{6}$/.test(brandColor)) throw new Error('Cor inválida.');
   const tagline = String(args.tagline || '').trim();
   if (tagline.length > 180 || /[\u0000-\u001f]/.test(tagline)) throw new Error('Tagline inválida.');
   if (args['production-apply'] !== undefined && args['production-apply'] !== 'true')
     throw new Error('Flag de produção inválida.');
-  return {mode,projectId,name,slug,ownerUid,operatorUid,email,brandColor,tagline,
+  return {mode,projectId,name,slug,ownerUid,operatorUid,email,brandColor,tagline,businessType,
     productionApply:args['production-apply']==='true',confirmProject:args['confirm-project'],
     confirmSlug:args['confirm-slug'],confirmOwnerUid:args['confirm-owner-uid']};
 }

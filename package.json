@@ -28,7 +28,8 @@
     "test:usability": "node scripts/test-usability.mjs",
     "test:usability:preflight": "node --test tests/operations/usability-preflight.test.mjs",
     "tenant:onboard": "node scripts/onboard-real-tenant.mjs",
-    "test:onboarding": "node --test scripts/tests/tenant-onboarding-contract.test.mjs"
+    "test:onboarding": "node --test scripts/tests/tenant-onboarding-contract.test.mjs",
+    "seed:dogstar-preview": "node scripts/seed-dogstar-preview.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.0",

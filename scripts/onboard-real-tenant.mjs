@@ -26,6 +26,7 @@ async function main() {
     const existing=mapped ? (await db.doc('ateliers/'+mapped.atelierId).get()).data() : null;
     const publicData=mapped ? (await db.doc('publicAteliers/'+mapped.atelierId).get()).data() : null;
     if (mapped && !publicData) throw new Error('Configuração pública ausente para tenant existente.');
+    if (mapped && (publicData.businessType || 'cosmaker') !== values.businessType) throw new Error('O tipo do tenant existente não corresponde ao solicitado.');
     const state=decideExisting(mapped,existing,profileSnap.data(),values);
     const report={mode:values.mode,emulator,projectId:values.projectId,
       slug:values.slug,state,publicPublished:publicData?.published===true,
@@ -58,7 +59,7 @@ async function main() {
         active:true,createdAt:now,updatedAt:now});
       tx.create(slugRef,{slug:values.slug,atelierId:atelierRef.id,createdAt:now,updatedAt:now});
       tx.create(publicRef,{name:values.name,slug:values.slug,tagline:values.tagline,
-        brandColor:values.brandColor,published:false,quoteRequestsEnabled:false,
+        brandColor:values.brandColor,businessType:values.businessType,published:false,quoteRequestsEnabled:false,
         demoWorkspace:false,createdAt:now,updatedAt:now});
       tx.create(configRef,{featureConfig:{},createdAt:now});
       tx.create(auditRef,{actorId:values.operatorUid,atelierId:atelierRef.id,

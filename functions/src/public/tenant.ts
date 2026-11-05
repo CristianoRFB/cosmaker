@@ -2,12 +2,13 @@ import { randomUUID } from 'node:crypto';
 import { FieldValue } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { adminDb, adminStorage } from '../admin';
+import { describeCapCustomization, parseCapCustomization } from './cap-policy';
 
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const maxReferenceSize = 10 * 1024 * 1024;
 const maxReferenceFiles = 5;
-const validCategories = new Set(['full_cosplay', 'wig', 'armor', 'prop', 'accessory', 'other']);
+const validCategories = new Set(['full_cosplay', 'wig', 'armor', 'prop', 'accessory', 'other', 'custom_cap']);
 
 type TenantStatus = 'available' | 'unpublished' | 'suspended' | 'not_found' | 'invalid_slug';
 
@@ -21,6 +22,8 @@ interface TenantLookup {
     brandColor?: string;
     published: boolean;
     quoteRequestsEnabled: boolean;
+    businessType: 'cosmaker' | 'caps';
+    demoWorkspace: boolean;
   };
 }
 
@@ -59,6 +62,8 @@ async function lookupTenant(tenantSlug: unknown): Promise<TenantLookup> {
     ...(typeof publicData.brandColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(publicData.brandColor) ? { brandColor: publicData.brandColor } : {}),
     published,
     quoteRequestsEnabled,
+    businessType: publicData.businessType === 'caps' ? 'caps' as const : 'cosmaker' as const,
+    demoWorkspace: atelierSnapshot.data()?.demoWorkspace === true,
   };
 
   return {
@@ -96,7 +101,7 @@ function readDate(data: Record<string, unknown>, key: string, optional = false) 
   return value;
 }
 
-function validateQuoteInput(value: unknown) {
+function validateQuoteInput(value: unknown, businessType: 'cosmaker' | 'caps', tenantName?: string) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new HttpsError('invalid-argument', 'Os dados do formulário são inválidos.');
   const data = value as Record<string, unknown>;
   if ('atelierId' in data) throw new HttpsError('invalid-argument', 'O ateliê é resolvido pelo endereço público.');
@@ -104,6 +109,15 @@ function validateQuoteInput(value: unknown) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new HttpsError('invalid-argument', 'Informe um e-mail válido.');
   const category = data.category;
   if (typeof category !== 'string' || !validCategories.has(category)) throw new HttpsError('invalid-argument', 'A categoria informada é inválida.');
+  const isCap = category === 'custom_cap';
+  if (isCap !== (businessType === 'caps')) throw new HttpsError('invalid-argument', 'Categoria não permitida neste ateliê.');
+  let cap: ReturnType<typeof parseCapCustomization> | undefined;
+  if (isCap) {
+    try { cap = parseCapCustomization(data.capCustomization); }
+    catch (error) { throw new HttpsError('invalid-argument', error instanceof Error ? error.message : 'Personalização inválida.'); }
+  } else if ('capCustomization' in data) {
+    throw new HttpsError('invalid-argument', 'Personalização de boné não permitida para esta categoria.');
+  }
   const urgency = data.urgency;
   if (urgency !== 'normal' && urgency !== 'urgent') throw new HttpsError('invalid-argument', 'A urgência informada é inválida.');
 
@@ -122,10 +136,11 @@ function validateQuoteInput(value: unknown) {
     name: readText(data, 'name', 2, 100),
     email,
     ...(phone ? { phone } : {}),
-    character: readText(data, 'character', 2, 120),
-    franchise: readText(data, 'franchise', 2, 120),
+    character: cap ? cap.model : readText(data, 'character', 2, 120),
+    franchise: cap ? (tenantName?.trim().slice(0, 120) || 'Marca de bonés') : readText(data, 'franchise', 2, 120),
     category,
-    description: readText(data, 'description', 20, 2000),
+    description: cap ? describeCapCustomization(cap) : readText(data, 'description', 20, 2000),
+    ...(cap ? { capCustomization: cap } : {}),
     ...(eventDate ? { eventDate } : {}),
     desiredDeliveryDate: readDate(data, 'desiredDeliveryDate'),
     ...(budgetMin !== undefined ? { budgetMin } : {}),
@@ -171,7 +186,7 @@ export const createPublicQuoteRequest = onCall(async (call) => {
   }
   const lookup = await lookupTenant(call.data?.tenantSlug);
   const atelierId = assertIntakeAvailable(lookup);
-  const quoteRequest = validateQuoteInput(call.data?.input);
+  const quoteRequest = validateQuoteInput(call.data?.input, lookup.tenant!.businessType, lookup.tenant?.name);
   const descriptors = validateReferenceDescriptors(call.data?.references);
   const requestRef = adminDb.collection('ateliers').doc(atelierId).collection('quoteRequests').doc();
   const batch = adminDb.batch();

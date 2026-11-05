@@ -10,7 +10,7 @@ export const requestStatusLabel: Record<QuoteRequestStatus, string> = {
 };
 
 export const categoryLabel: Record<string, string> = {
-  full_cosplay: 'Cosplay completo', wig: 'Peruca', armor: 'Armadura', prop: 'Prop', accessory: 'Acessório', other: 'Outro',
+  full_cosplay: 'Cosplay completo', wig: 'Peruca', armor: 'Armadura', prop: 'Prop', accessory: 'Acessório', other: 'Outro', custom_cap: 'Boné personalizado',
 };
 
 export const itemCategoryLabel = { material: 'Material', labor: 'Mão de obra', other: 'Outro' } as const;
