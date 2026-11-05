@@ -207,3 +207,10 @@ Problema reportado pelo usuário: “quando cê altera algo, a parte de trás vo
 - Depois da publicação, em 1440px: cards 330px, conteúdos 328px; os 3 botões íntegros, textos não ultrapassam as imagens, scrollWidth igual a 1440px.
 - Sintaxe JS válida. O serviço de navegador bloqueou uma tentativa adicional a 390px com HTTP 429, então esse tamanho ainda não foi revalidado após a correção.
 - Somente a demo/PR draft foi alterada; main e tenant reais não foram modificados.
+
+
+### Revalidação responsiva adicional (mesma publicação, 05/11/2026)
+- **390px:** os três cards foram medidos em navegador real. Épica 480px; Lendária 472px; Ultimate 472px. Os três CTAs ficaram visíveis, nenhum título colidiu com a área da ilustração e o documento apresentou largura exatamente 390px.
+- **768px:** três CTAs visíveis, títulos dentro das áreas corretas e document.scrollWidth igual a 768px.
+- **1440px:** validação desktop anterior permanece vigente (3 cards sem corte nem sobreposição).
+- Tentativa de 320px interrompida por limite temporário HTTP 429 do serviço de renderização; não alegar teste final desse tamanho nesta alteração.
