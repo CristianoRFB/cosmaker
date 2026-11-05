@@ -189,3 +189,21 @@ Problema reportado pelo usuário: “quando cê altera algo, a parte de trás vo
 
 ## Classificação corrigida após feedback do cliente — 05/11/2026
 **Ivsoy (DPS) / Dino Punk = 💗 Ultimate**, confirmado pelo cliente com a mensagem “Esse aqui é ‘Ultimate’”. O filtro Ultimate deve exibir **uma** peça, Épica **duas**, Lendária **duas** e Todos **cinco**; não pode mais exibir estado vazio da categoria Ultimate. Raridades restantes ainda dependem de confirmação individual. Sem mudança de preços, disponibilidade ou tenant.
+
+
+## Correção de layout da seção Próxima skin? — 05/11/2026
+
+**Bug observado em screenshot:** Lendária comprimida visualmente contra a ilustração e CTA de Ultimate cortado na base. Navegador em 1440px revelou cards com altura fixa de 260px, porém conteúdos de 285px e 305px. A máscara de overflow escondia parte dos elementos.
+
+**Correção direcionada ao seletor #colecoes:**
+- Grid desktop com duas linhas de altura mínima fluida de 330px, sem corte por causa de conteúdo maior.
+- Tipografia proporcional para os dois cards menores, largura segura de título, texto e CTA (44px de alvo de toque).
+- Ilustração SVG contida na sua área, sem cruzar a coluna do texto.
+- Até 1100px, grid vira coluna com texto e imagem lado a lado; até 600px, os cards ficam verticais, com texto de altura automática e imagem abaixo.
+- Preservação da identidade, das raridades, do customizador e do fluxo de encomenda fictício.
+
+**Verificação:**
+- Antes, em 1440px: Lendária 260px externo / 285px conteúdo; Ultimate 260px / 305px; botão cortado.
+- Depois da publicação, em 1440px: cards 330px, conteúdos 328px; os 3 botões íntegros, textos não ultrapassam as imagens, scrollWidth igual a 1440px.
+- Sintaxe JS válida. O serviço de navegador bloqueou uma tentativa adicional a 390px com HTTP 429, então esse tamanho ainda não foi revalidado após a correção.
+- Somente a demo/PR draft foi alterada; main e tenant reais não foram modificados.
