@@ -70,3 +70,30 @@ Fonte: imagens e mensagens encaminhadas pelo responsável da Dogstar na conversa
 - **QA**: testes sintáticos e DOM das três visões + galeria e exemplos passaram. Browser Rendering na viewport **390 × 844** confirmou todas as 4 imagens verificadas com largura natural >0 e `scrollWidth=390`.
 - **Pendências**: validar outros viewports, autorização final para publicar imagem da pessoa/modelo e eventual marca de terceiro visível no boné, origem/direitos da referência 3D e conteúdo oficial da lore. O material foi compartilhado para demo, mas isso não prova liberação contratual para uso comercial permanente.
 - **Estado**: demo não oficial, localStorage com pedidos sintéticos, sem pagamento/backend ou indicação de produto à venda.
+
+
+## Horoz — novo personagem enviado em 05/11/2026
+
+**Fonte:** screenshot de WhatsApp e foto do esboço entregues pelo usuário neste chat. A foto da conversa contém informações pessoais e **não** foi publicada. Somente a imagem original do desenho foi acrescentada a \`assets/horoz-concept-art.jpg\`.
+
+Informações efetivamente fornecidas pelo cliente:
+- Nome do personagem: **Horoz**
+- Classe: **Guardião**
+- Vida: **7/13**
+- Ataque: **6/13**
+- Resistência: **6/13**
+- A anotação visível no topo do esboço diz **“Hipnotizante — Monstro Corrompido”**.
+- O desenho retrata uma criatura preta com chifres, espinhos e uma boca com dentes.
+- **Lore não enviada**: não atribuir biografia, habilidades, poderes, lançamento, preço ou disponibilidade.
+
+**Interpretação de escopo:** o cliente compartilhou o personagem na sequência da discussão do Projeto 2 (futuros bonecos dos monstros). Como **não confirmou que Horoz já seja um cartão do brinde Monster Cap**, o personagem e seus atributos foram colocados na seção **Projeto 2**, preservando separação explícita entre as iniciativas. Confirmar posteriormente se há vínculo entre ambas.
+
+**UI realizada:**
+- Novo perfil de personagem: nome, classe, atributos com escalas de 13 e explicação textual.
+- Galeria alternável entre a referência visual anterior e o desenho original do Horoz; o desenho inicia selecionado.
+- Alto contraste dos dados, medidores com valores acessíveis via \`role=meter\`, botões acessíveis com \`aria-pressed\`.
+- Código isolado na branch \`demo/dogstar-cap-conceito\`, não na \`main\`.
+- Worker expõe exclusivamente as 4 imagens aprovadas da demo via allowlist em \`/assets/\`.
+- O desenho aparece como **estudo original**, não como figura comercializável nem arte final digitalizada.
+
+**QA:** JavaScript sintaticamente válido, 9 smoke tests DOM passaram (3 visões, personagem/atributos, brinde separado, controles de imagem). Cloudflare Browser Rendering validou largura de **390 px**, \`scrollWidth=390\`, imagem \`horoz-concept-art.jpg\` carregada em resolução 1536×1536, atributos corretos e nenhum overflow nos elementos inspecionados. Tentativa adicional em 320 px bloqueada temporariamente por HTTP 429; demais breakpoints não revalidados nesta iteração.
