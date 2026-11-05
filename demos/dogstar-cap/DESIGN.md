@@ -253,3 +253,7 @@ Problema reportado pelo usuário: “quando cê altera algo, a parte de trás vo
 - **768px:** três CTAs visíveis, títulos dentro das áreas corretas e document.scrollWidth igual a 768px.
 - **1440px:** validação desktop anterior permanece vigente (3 cards sem corte nem sobreposição).
 - Tentativa de 320px interrompida por limite temporário HTTP 429 do serviço de renderização; não alegar teste final desse tamanho nesta alteração.
+
+
+### Validação adicional de 320px — 05/11/2026
+Após o limite temporário do navegador ser liberado, a seção foi testada novamente em viewport 320px. Resultado: document.scrollWidth=320px; os botões das três categorias permaneceram completamente dentro de cada card; nenhum título cruzou o painel visual; Épica, Lendária e Ultimate passaram. Ainda não revalidados nesta alteração: 360/430/1024px.
