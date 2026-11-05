@@ -145,3 +145,21 @@ Implementação no Studio:
 
 Testes: 8/8 smoke tests V8/DOM passaram (3 visões, alternância de lado, troca de cor com verso selecionado, retorno à frente, armazenamento e exibição na produção).
 Cloudflare Browser Rendering: 320, 390 e 1440 px: scrollWidth igual à largura do viewport; vista traseira correta; campo presente; nenhum overflow nos elementos inspecionados. 360/430/768/1024 px, navegação por teclado e aprovação visual do cliente ainda pendentes.
+
+
+## Correção de preservação de estado do editor — 05/11/2026
+
+Problema reportado pelo usuário: “quando cê altera algo, a parte de trás volta pra parte da frente, entre outros”.
+
+**Causas verificadas no código**: os eventos de seleção de cor e o `change` do menu de categoria invocavam diretamente a renderização frontal de `cap(...)`, ignorando `previewSide`. A ação “Personalizar” também forçava `previewSide='front'` ao reabrir.
+
+**Correções aplicadas**:
+- Os três caminhos (troca de cor, alteração de categoria por `select` e por botão) passam pelo método único `refreshCapPreview()`, mantendo o lado selecionado.
+- Reabrir a personalização não força a vista frontal. O `editorDraft` fica salvo apenas no `localStorage` do navegador, com categoria, cor, lado, descrição principal e traseira (comprimentos limitados). Entrada de texto não causa rerender. Se reabrir ou recarregar no mesmo navegador, os valores retornam. O texto não é enviado à Dogstar.
+- `use-idea` e `cap-inspire` agora preservam o rascunho; no fluxo de inspiração, a categoria segue a raridade da peça selecionada em vez de forçar Épica.
+- Ao alterar categoria via menu, os botões correspondentes recebem `aria-pressed` sincronizado.
+- O botão de reset também limpa o estado do rascunho de forma coerente. Dados anteriores sem `draft` continuam compatíveis.
+
+**Evidências**: 11/11 testes em DOM simulado para controle do lado, mudança de cor, ambos os controles de categoria, permanência do texto, reabertura, atualização da página, sugestões e migração de dados antigos. Mais 5 verificações do fluxo de inspiração por raridade. Browser Rendering real em largura **390px**: todos os estados (“traseira”, cor, select, botão e reabertura) permaneceram na traseira; textos voltaram corretamente; `scrollWidth=390`, sem erro. Cloudflare Browser Rendering retornou HTTP 429 nas tentativas adicionais de 320px e 1440px nesta rodada (limitação do serviço), então esses dois tamanhos NÃO foram revalidados neste ajuste.
+
+**Deploy**: Cloudflare Worker `77-dogstar-cap-conceito` atualizado, GitHub branch `demo/dogstar-cap-conceito`; `main` preservada, PR draft. Sem backend, pagamentos ou pedidos reais.
