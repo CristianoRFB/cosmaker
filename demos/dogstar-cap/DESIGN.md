@@ -140,3 +140,36 @@ Informações efetivamente fornecidas pelo cliente:
 - O desenho aparece como **estudo original**, não como figura comercializável nem arte final digitalizada.
 
 **QA:** JavaScript sintaticamente válido, 9 smoke tests DOM passaram (3 visões, personagem/atributos, brinde separado, controles de imagem). Cloudflare Browser Rendering validou largura de **390 px**, \`scrollWidth=390\`, imagem \`horoz-concept-art.jpg\` carregada em resolução 1536×1536, atributos corretos e nenhum overflow nos elementos inspecionados. Tentativa adicional em 320 px bloqueada temporariamente por HTTP 429; demais breakpoints não revalidados nesta iteração.
+
+
+## Curadoria de cinco obras e cinco personagens — 05/11/2026
+**Fonte:** fotos originais, desenhos e prints de WhatsApp encaminhados pelo usuário, com mensagens do criador. Os prints e telefone NÃO são publicados.
+
+O responsável informou que quer **apenas esses cinco exemplos na demonstração**, diferenciando a raridade por ❤️ Épica, 💜 Lendária e 💗 Ultimate. Não pediu ativação de tenant real.
+
+| Boné (exemplo de portfólio) | Desenho / personagem | Classe | Vida | Ataque | Resistência | Reação observada nas mensagens |
+| --- | --- | --- | --- | --- | --- | --- |
+| Hipnotizante | Horoz | Guardião | 7/13 | 6/13 | 6/13 | ❤️ |
+| Rosário d’Ouro | Acoril | Curadora | 6/13 | 7/13 | 9/13 | 💜 |
+| Persistência | Ynatir | Tanque | 7/13 | 3/13 | 10/13 | ❤️ |
+| Maldito Verme | Avral | Tanque | 7/13 | 3/13 | 6/13 | 💜 |
+| Dino Punk | Ivsoy | DPS | 11/13 | 11/13 | 1/13 | ❤️ |
+
+As reações foram usadas como **classificação demonstrativa preliminar**; nenhuma das cinco artes apresenta ❤️/💜/💗 inequívoco para Ultimate nas capturas disponíveis. O filtro 💗 Ultimate oferece mensagem de estado vazio em vez de inventar um exemplo dessa categoria. O criador deverá revisar/confirmar a atribuição por peça.
+
+O Hipnotizante foi **sorteado no anime.fest**, logo não está indicado como produto disponível. Nenhum dos demais recebe preço, estoque, disponibilidade ou prazo inventados. O portfólio mostra fotografias originais e fotos com modelos, enquanto o **Projeto 2** mostra os cinco desenhos autorais e atributos comunicados pelo criador. As histórias/lore ainda estão pendentes e não foram fabricadas na demo. **Monster Cap** permanece seção separada do brinde de bonés autorais, sem confundir com Projeto 2.
+
+### Trabalho entregue
+- 11 novas imagens JPEG no diretório \`assets/\`, somando-se às 4 existentes. Proibido publicar as capturas de conversa, o número de telefone ou outros dados privados.
+- Galeria editorial de 5 bonés, filtros por raridade, seleção de peça, miniaturas quando houver fotos alternativas e CTA para briefing original com referência preenchida.
+- Seção de 5 personagens com desenho original e as escalas de atributos /13.
+- Hero atualizado para usar foto real do Rosário d’Ouro em vez de boné fictício.
+- Mesmo \`Worker\` independente de demonstração, com proxy **allowlist** restrito às 15 imagens. Sem modificação da \`main\`, conta real, banco de dados, cobrança ou submissão efetiva de encomendas.
+
+### Testes / aceite técnico
+- JavaScript V8: sintaxe PASS.
+- 11 testes de lógica em DOM simulado: três visões; cinco bonés; cinco personagens; atributos; corações; imagens; seleção de boné/personagem; filtro 💜; estado vazio 💗; CTA inspirado para briefing — PASS.
+- Browser Rendering Cloudflare real: \`320 px\` -> \`scrollWidth=320\` e 0 elementos avaliados com overflow; \`390 px\` -> \`scrollWidth=390\`, 5 cards, 5 personagens, fotos e desenhos carregados com largura natural >0; \`1440 px\` -> \`scrollWidth=1440\`, 0 elementos avaliados com overflow.
+- Ainda faltam QA multi-viewport 360/430/768/1024, revisão visual manual completa, acessibilidade com teclado e aprovação do cliente das classificações de raridade.
+- Fotos fornecidas pelo cliente para demonstração, mas liberação contratual para produção e autorização de imagem de todos os modelos ou marcas de terceiros **não verificadas**. Solicitar antes de converter em site real.
+- Estado final: **APRESENTÁVEL COM LIMITAÇÕES EXPLÍCITAS**. PR draft, não mesclar em main até aceite.
