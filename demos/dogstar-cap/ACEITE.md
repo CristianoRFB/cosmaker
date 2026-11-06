@@ -218,3 +218,14 @@ Problema reportado pelo usuário: “quando cê altera algo, a parte de trás vo
 
 ### Validação adicional de 320px — 05/11/2026
 Após o limite temporário do navegador ser liberado, a seção foi testada novamente em viewport 320px. Resultado: document.scrollWidth=320px; os botões das três categorias permaneceram completamente dentro de cada card; nenhum título cruzou o painel visual; Épica, Lendária e Ultimate passaram. Ainda não revalidados nesta alteração: 360/430/1024px.
+
+
+## Atualização visual baseada em frames do vídeo de 06/11/2026
+
+**Fonte:** vídeo de WhatsApp fornecido pelo usuário nesta conversa (91,4 s, 576 × 1024). O material privado não foi versionado/publicado. A **fala do vídeo não foi transcrita com segurança** nesta execução; portanto, as instruções orais não podem ser consideradas implementadas ou homologadas.
+
+**Mudança realmente feita:** adição de um estudo gráfico responsivo com três composições presentes no desenho filmado: base semicircular amarela com selo D★, detalhe inferior laranja e terceira variação com laterais escuras e estrela laranja. O novo bloco «Do rascunho ao detalhe» está integrado à visão Loja, imediatamente antes de Monster Cap. Não altera as cinco peças existentes, seus personagens, os filtros ❤️ Épica / 💜 Lendária / 💗 Ultimate, o Studio, os pedidos locais nem as visões Produção/Gestão.
+
+**Provas:** código na branch `demo/dogstar-cap-conceito`, commit `f94b27d6d40fbc09677e731131c6a039fa68f70f`. Publicação efetuada no Worker existente `77-dogstar-cap-conceito`, preservando o proxy de imagens e sem bindings. A revisão da resposta é `f94b27d6d40f`. Três URLs (`?view=loja`, `?view=atelier`, `?view=gestao`) foram verificadas por fetch externo sem erro; captura real do bloco a 390 px confirmou a composição; renderização DOM completa da Loja a 320 px confirmou três desenhos, cinco cartões do catálogo e Monster Cap. **CI run #462 passou.** Novo teste de 1440 px e das visões Produção/Gestão pelo Browser Rendering ficou bloqueado pelo limite HTTP 429 e não é alegado como aprovado; as rotas responderam em fetch.
+
+**Pendente:** confirmar o conteúdo falado do vídeo e quais dos desenhos representam etapas, peças ou classificações oficiais antes de reescrever os módulos existentes. O novo bloco permanece explicitamente classificado como estudo ilustrativo, não produto oficial.
