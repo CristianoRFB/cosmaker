@@ -72,12 +72,12 @@
 <script>
 (function(){
 'use strict';
-var KEY='atelier-formas-demo-v1', selectedId='DEMO-1042';
+var KEY='atelier-formas-demo-v1', selectedId='DEMO-1042';try{selectedId=sessionStorage.getItem(KEY+'-selected')||selectedId;}catch(e){}
 var stages=['Ideia recebida','Orçamento em análise','Detalhes aprovados','Em produção','Finalização e envio'];
 var descriptions=['A referência chegou e aguarda avaliação.','Materiais, tamanho e detalhes estão sendo considerados.','Tudo alinhado para começar a modelagem.','A peça está ganhando forma, camada por camada.','A peça está pronta para combinar o envio.'];
 var defaults=[{id:'DEMO-1042',title:'Uma cena a dois',detail:'Dupla em base decorada · paleta suave',step:3},{id:'DEMO-1041',title:'Meu pet em miniatura',detail:'Gatinho com coleira verde',step:1},{id:'DEMO-1040',title:'Personagem especial',detail:'Personagem com chapéu e acessórios',step:0}];
 function load(){try{var x=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(x)&&x.length)return x;}catch(e){}return JSON.parse(JSON.stringify(defaults));}
-var orders=load();function save(){try{localStorage.setItem(KEY,JSON.stringify(orders));}catch(e){toast('O navegador não permitiu salvar.');}}
+var orders=load();function save(){try{localStorage.setItem(KEY,JSON.stringify(orders));sessionStorage.setItem(KEY+'-selected',selectedId);}catch(e){toast('O navegador não permitiu salvar.');}}
 function safe(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]});}
 function toast(msg){var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(function(){el.classList.remove('show')},2600);}
 function current(){return orders.find(function(x){return x.id===selectedId})||orders[0];}
@@ -92,7 +92,7 @@ document.getElementById('quoteForm').addEventListener('submit',function(e){e.pre
 document.getElementById('copyOrder').addEventListener('click',function(){var v=document.getElementById('newOrderId').textContent;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(function(){toast('Código copiado!')},function(){toast('Código: '+v)})}else{toast('Código: '+v)}});
 document.getElementById('demoReset').addEventListener('click',function(){orders=JSON.parse(JSON.stringify(defaults));selectedId='DEMO-1042';save();renderTrack();toast('Demonstração reiniciada.');});
 document.getElementById('newDemoOrder').addEventListener('click',function(){openQuote('')});
-document.getElementById('kanban').addEventListener('click',function(e){var btn=e.target.closest('[data-advance],[data-track]');if(!btn)return;var id=btn.getAttribute('data-advance')||btn.getAttribute('data-track');var o=orders.find(function(x){return x.id===id});if(!o)return;if(btn.hasAttribute('data-track')){selectedId=id;location.href='/acompanhar';return;}o.step=Math.min(4,o.step+1);selectedId=id;save();renderKanban();toast('Etapa atualizada: '+stages[o.step]);});
+document.getElementById('kanban').addEventListener('click',function(e){var btn=e.target.closest('[data-advance],[data-track]');if(!btn)return;var id=btn.getAttribute('data-advance')||btn.getAttribute('data-track');var o=orders.find(function(x){return x.id===id});if(!o)return;if(btn.hasAttribute('data-track')){selectedId=id;save();location.href='/acompanhar';return;}o.step=Math.min(4,o.step+1);selectedId=id;save();renderKanban();toast('Etapa atualizada: '+stages[o.step]);});
 document.querySelectorAll('[data-filter]').forEach(function(b){b.addEventListener('click',function(){var f=b.getAttribute('data-filter');document.querySelectorAll('[data-filter]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});document.querySelectorAll('.product').forEach(function(p){p.hidden=!(f==='all'||p.getAttribute('data-type')===f)});});});
 document.getElementById('menuToggle').addEventListener('click',function(){var el=document.getElementById('nav');var open=el.classList.toggle('open');this.setAttribute('aria-expanded',String(open));this.setAttribute('aria-label',open?'Fechar menu':'Abrir menu');});
 showView();
