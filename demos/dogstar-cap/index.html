@@ -523,6 +523,23 @@ html,body{max-width:100%;overflow-x:clip}
  #colecoes .look h3,#colecoes .look:first-child h3{font-size:clamp(42px,12.7vw,49px)}
 }
 
+
+/* Esboço de 06/11: progressão visual separada das raridades oficiais. */
+.sketch-proof{margin:64px 0 72px;scroll-margin-top:88px}
+.sketch-proof-heading{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:end;gap:24px;border-top:3px solid #20211c;padding-top:25px;margin-bottom:20px}
+.sketch-proof-heading h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(48px,6.5vw,90px);font-weight:900;line-height:.9;letter-spacing:-.035em;margin:12px 0 0}
+.sketch-proof-heading>p{max-width:40ch;font-size:13px;line-height:1.75;color:#4b4c44}
+.sketch-proof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sketch-proof-card{margin:0;min-width:0;background:#f7f5ee;border:1px solid #bcb9ad}
+.sketch-proof-art{display:grid;place-items:center;aspect-ratio:360/290;overflow:hidden;background:#f1eee4}
+.sketch-proof-art svg{width:100%;height:100%;max-height:310px;display:block}
+.sketch-proof-card figcaption{padding:16px 18px 20px;border-top:3px solid #ffd400}
+.sketch-proof-card figcaption span{display:block;font-size:10px;font-weight:850;letter-spacing:.1em;color:#67695c}
+.sketch-proof-card figcaption strong{display:block;margin-top:8px;font-family:'Barlow Condensed',Impact,sans-serif;font-size:30px;line-height:1.05;color:#20211c}
+.sketch-proof-card figcaption p{font-size:12px;line-height:1.6;margin:7px 0 0;color:#4b4b44}
+@media(max-width:800px){.sketch-proof-heading{grid-template-columns:minmax(0,1fr)}.sketch-proof-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sketch-proof-card:last-child{grid-column:span 2}.sketch-proof-card:last-child .sketch-proof-art{aspect-ratio:2/1}}
+@media(max-width:530px){.sketch-proof{margin:42px 0 52px}.sketch-proof-heading{gap:12px}.sketch-proof-heading h2{font-size:clamp(50px,13vw,70px)}.sketch-proof-grid{grid-template-columns:minmax(0,1fr);gap:11px}.sketch-proof-card:last-child{grid-column:auto}.sketch-proof-card:last-child .sketch-proof-art{aspect-ratio:360/290}.sketch-proof-art{max-height:250px}.sketch-proof-card figcaption{padding:13px 16px 17px}}
+
 </style></head>
 <body>
 <div class="banner">Conceito independente • não oficial • todos os pedidos são fictícios</div>
@@ -596,6 +613,28 @@ function skinMotif(id){
 }
 
 
+
+/* Visual concept from the 06/11/2026 video; not an official product tier. */
+function sketchEmblem(stage){
+ var orange=stage>1?'<path d="M86 141Q180 199 274 141L267 188Q182 226 93 188Z" fill="#ef782a" stroke="#29271e" stroke-width="4"/>':'';
+ var wings=stage>2?'<path d="M119 150L70 182L91 213L139 202Z M241 150L290 182L269 213L221 202Z" fill="#252623" stroke="#151613" stroke-width="4"/>':'';
+ var star=stage>2?'<path d="M180 152L199 197L247 202L210 233L223 278L180 253L137 278L150 233L113 202L161 197Z" fill="#ef782a" stroke="#24241e" stroke-width="6"/><text x="180" y="234" font-size="17" text-anchor="middle" font-weight="900" fill="#29251e">D★</text>':'';
+ var emblem=stage===1?'<path d="M52 81H86" stroke="#35352b" stroke-width="3"/><rect x="15" y="63" width="37" height="36" fill="#f7db52" stroke="#272720" stroke-width="3"/><text x="33" y="87" font-size="15" font-weight="900" text-anchor="middle" fill="#24251f">D★</text>':'';
+ return '<svg viewBox="0 0 360 290" role="img" aria-label="'+(['','Base amarela com selo D estrela','Emblema amarelo com base laranja','Emblema amarelo com detalhes pretos e estrela laranja'][stage])+'" xmlns="http://www.w3.org/2000/svg">'
+  +'<rect width="360" height="290" fill="#f1eee4"/>'
+  +'<path d="M30 86H330" stroke="#b9b8aa" stroke-dasharray="5 7" stroke-width="2"/>'
+  +wings+orange
+  +'<path d="M76 75H284Q281 149 180 161Q79 149 76 75Z" fill="#ffd400" stroke="#2a2a23" stroke-width="4"/>'
+  +'<path d="M82 81H278M180 84V149" fill="none" stroke="#f8e46b" stroke-width="3"/>'
+  +emblem+star+'</svg>';
+}
+function sketchProof(){
+ var labels=[['01 / BASE','Selo e formato','Forma amarela com a marca lateral.'],['02 / CAMADAS','Acabamento','A mesma base com o volume laranja.'],['03 / ESTRELA','Destaque final','Estrela laranja com detalhes pretos.']];
+ return '<section class="sketch-proof" aria-labelledby="sketchProofTitle"><div class="sketch-proof-heading"><div><span class="eyebrow">ESTUDO VISUAL / DESENHO ENVIADO EM 06.11</span><h2 id="sketchProofTitle">DO RASCUNHO<br>AO DETALHE.</h2></div><p>Três variações ilustrativas reconstruídas a partir do esboço mostrado no vídeo. São estudos visuais, não novos produtos ou raridades confirmadas.</p></div><div class="sketch-proof-grid">'
+  +labels.map(function(x,i){return '<figure class="sketch-proof-card"><div class="sketch-proof-art">'+sketchEmblem(i+1)+'</div><figcaption><span>'+x[0]+'</span><strong>'+x[1]+'</strong><p>'+x[2]+'</p></figcaption></figure>'}).join('')
+  +'</div></section>';
+}
+
 function monsterFace(back){
  if(back)return '<div class="monster-face"><div class="monster-art monster-photo"><div class="eyebrow">FOTO DO BONÉ AUTORAL</div>'+cap('#ece7da','▲')+'<small>ESPAÇO RESERVADO PARA FOTO REAL</small></div><div class="monster-details"><span class="eyebrow">VERSO DO CARTÃO</span><h3>MODELO<br>ORIGINAL.</h3><p>Fotografia do boné e nome específico do modelo são adicionados com o material fornecido pela Dogstar.</p><small>Nenhuma foto oficial foi recebida.</small></div></div>';
  return '<div class="monster-face"><div class="monster-art"><span class="eyebrow">VERSÃO MONSTRO · EXEMPLO</span><svg viewBox="0 0 280 230" role="img" aria-label="Criatura fictícia com aparência de boné, olhos e dentes"><path d="M50 145Q35 35 144 36Q248 40 238 148L214 177L75 177Z" fill="#d44355" stroke="#f3d399" stroke-width="8"/><path d="M57 151Q150 125 234 154Q272 181 238 191Q130 228 43 188Q24 170 57 151Z" fill="#601b3a" stroke="#f3d399" stroke-width="6"/><path d="M76 102L111 114L104 137L82 136Z M178 114L212 102L207 136L183 137Z" fill="#ffd435"/><path d="M111 149Q145 174 177 150L170 187L155 177L144 191L131 179L116 188Z" fill="#282026" stroke="#e3c18a" stroke-width="4"/><path d="M119 156L130 177L142 161L153 178L168 155" fill="none" stroke="#f7ede0" stroke-width="7"/><path d="M80 43L62 15L102 39M197 42L227 17L215 54" fill="#ffcb3b" stroke="#f3d399" stroke-width="5"/></svg><small>Ilustração criada só para a demonstração</small></div><div class="monster-details"><span class="eyebrow">CARTÃO FICTÍCIO / 001</span><h3>MONSTER<br>CAP.</h3><p class="monster-name">NOME DO MONSTRO · EXEMPLO</p><div class="monster-stat"><span>VIDA</span><b>100</b></div><div class="monster-stat"><span>ATAQUE</span><b>75</b></div><div class="monster-stat"><span>RESISTÊNCIA</span><b>60</b></div><small>Valores inventados para ilustrar o cartão; não representam peças oficiais.</small></div></div>';
@@ -662,7 +701,7 @@ portfolioSection()+
  '<section class="section" id="colecoes"><div class="look-heading"><div><div class="eyebrow">01 / A primeira escolha</div><h2>QUAL É A SUA<br>PRÓXIMA SKIN?</h2></div>'+
  '<p class="section-intro">Épica, Lendária e Ultimate. Cores, formas e emblemas reinterpretados a partir do esboço recebido; os bonés ainda são representações conceituais.</p></div>'+
  '<div class="look-grid">'+collections.map(function(c,i){return '<article class="look"><div class="look-copy"><span class="look-num">NO. 0'+(i+1)+' / INSPO FILE</span><div><span class="look-note">'+esc(c.tag)+'</span><h3>'+esc(c.title)+'</h3><p>'+esc(c.desc)+'</p><button class="btn dark" data-action="choose" data-id="'+esc(c.id)+'">Escolher estilo ↗</button></div></div><div class="look-visual">'+skinMotif(c.id)+cap(c.color,c.symbol)+'</div></article>'}).join('')+'</div></section>'+
- monsterSection()+projectTwoSection()+
+ sketchProof()+monsterSection()+projectTwoSection()+
  '<section class="story"><div class="story-head"><span class="eyebrow" style="color:#d7d9c9">02 / O caminho da ideia</span><h2>VOCÊ CRIA.<br>A GENTE<br>ORGANIZA.</h2><p style="font-size:12px;color:#d3d4c8;max-width:320px">Uma jornada digital proposta para encomendas de bonés customizados.</p></div>'+
  '<div class="story-steps"><div class="story-step"><b>01</b><div><h3>Uma referência.</h3><p>Escolha uma linha visual e conte o que imagina — sem cadastro ou formulário gigante.</p></div></div>'+
  '<div class="story-step"><b>02</b><div><h3>Um briefing claro.</h3><p>O pedido vira uma ficha organizada para reduzir informações perdidas em conversas.</p></div></div>'+
