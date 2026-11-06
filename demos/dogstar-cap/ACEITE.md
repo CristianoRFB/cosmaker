@@ -229,3 +229,21 @@ Após o limite temporário do navegador ser liberado, a seção foi testada nova
 **Provas:** código na branch `demo/dogstar-cap-conceito`, commit `f94b27d6d40fbc09677e731131c6a039fa68f70f`. Publicação efetuada no Worker existente `77-dogstar-cap-conceito`, preservando o proxy de imagens e sem bindings. A revisão da resposta é `f94b27d6d40f`. Três URLs (`?view=loja`, `?view=atelier`, `?view=gestao`) foram verificadas por fetch externo sem erro; captura real do bloco a 390 px confirmou a composição; renderização DOM completa da Loja a 320 px confirmou três desenhos, cinco cartões do catálogo e Monster Cap. **CI run #462 passou.** Novo teste de 1440 px e das visões Produção/Gestão pelo Browser Rendering ficou bloqueado pelo limite HTTP 429 e não é alegado como aprovado; as rotas responderam em fetch.
 
 **Pendente:** confirmar o conteúdo falado do vídeo e quais dos desenhos representam etapas, peças ou classificações oficiais antes de reescrever os módulos existentes. O novo bloco permanece explicitamente classificado como estudo ilustrativo, não produto oficial.
+
+
+## Revisão guiada pelas transcrições do responsável — 06/11/2026
+
+**Origem:** usuário forneceu transcrições temporizadas de dois vídeos (1000184690.mp4 e VID-20261106-WA0013.mp4) e imagem com símbolo Dogstar. Trechos reconhecidos como pouco claros não foram convertidos em fatos definitivos.
+
+**Alterações de fato executadas:**
+- A página Loja ganhou um destaque com a imagem circular recortada do cachorro com boné (logo enviada pelo usuário; somente arte central, sem telefone/imagem completa); tipografia mais evidente e três opções de exploração: **Bonés**, **Capes (Projeto 2)** e **Spoiler (Projeto 3)**. Hover, foco e toque atualizam a descrição da área e cada opção possui âncora navegável.
+- **Bonés:** os quatro itens com foto do modelo passam a usar essa fotografia no cartão/na imagem principal inicial; **Maldito Verme** mantém fotografia do boné porque não foi fornecida foto de modelo. Miniaturas apresentam modelo primeiro quando disponível.
+- Imagem principal do portfólio pode ser ampliada por botão **Ampliar foto** em diálogo nativo, fechável com botão, Escape ou clique fora. Nome da peça e detalhes existentes preservados.
+- Botão **Ver versão monstro** abre, na mesma página, o perfil do personagem correspondente em Projeto 2, sem confundi-lo com o cartão-brinde **Monster Cap**.
+- Identificadores de raridade por forma: **▲ Épica, ◆ Lendária, ⬡ Ultimate**, preservadas classificações anteriores — apenas **Ivsoy Ultimate** confirmado. Emblema do editor também ajustado para hexágono.
+- **Spoiler/Projeto 3:** seção conceitual de futuro jogo de cartas, sem fingir personagens, imagens oficiais, data de lançamento ou regras. **Capes** é o nome transcrito do menu; sua nomenclatura definitiva requer confirmação do criador.
+- Vistas Produção e Gestão, simulações locais e cinco obras originais preservadas, sem alterar a `main`, registros reais, pagamentos ou autenticação.
+
+**Publicação e verificações:** código commitado na branch `demo/dogstar-cap-conceito` com última alteração `7fdcdeabadee63d0eb4890c6313def17ee98fead` e atualizado o mesmo Worker `77-dogstar-cap-conceito`; `x-demo-revision: 7fdcdeabadee`. Ambos os scripts inline passaram na validação sintática JS. Cloudflare Browser Rendering executou a página a **390 px**: novo menu, marca circular recortada, três opções, seção do Projeto 3, cinco cartões, foto inicial do modelo e Monster Cap presentes. Screenshot da navegação foi revisado. Screenshot adicional bloqueado por **HTTP 429**; não afirmar QA final de todos os breakpoints nem teste automatizado do diálogo. Testes restantes: 320/360/430/768/1440, fluxo completo de ampliação no touch/teclado, transição Bonés→Criaturas e fotos originais em todos os itens.
+
+**Próximo aceite comercial:** validar com o responsável os nomes do menu (especialmente 'Capes'), se o foco 'mount' da fala diz respeito à seção Monster Cap/Projeto 2, se a marca circular pode ser publicada permanentemente e obter descrições/imagens de Projeto 3 antes de enriquecer.
