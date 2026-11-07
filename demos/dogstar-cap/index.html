@@ -568,6 +568,47 @@ html,body{max-width:100%;overflow-x:clip}
 #dogUniverse:hover .dog-u-tabs,#dogUniverse:hover .dog-u-preview,
 #dogUniverse:focus-within .dog-u-tabs,#dogUniverse:focus-within .dog-u-preview{max-height:270px;opacity:1}
 }
+
+/* Dogstar / esboço do criador 07.11: modelo grande, boné em miniatura, raridade e monstro */
+#fiveDetail{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);align-items:stretch}
+#fiveDetail .dog-model-gallery{padding:0;min-width:0;background:#171a16}
+.dog-model-stage{display:flex;flex-direction:column;height:100%;min-height:590px;min-width:0}
+.dog-expand-photo{border:0;padding:0;position:relative;display:block;cursor:zoom-in;width:100%;background:#161917;color:#fff;text-align:left;overflow:hidden}
+.dog-expand-photo:focus-visible{outline:3px solid #ffe16e;outline-offset:-4px;z-index:2}
+.dog-model-photo{flex:1 1 auto;min-height:500px;display:grid;place-items:center}
+.dog-model-photo img{display:block;width:100%;height:100%;min-height:500px;max-height:700px;object-fit:contain;object-position:center}
+.dog-zoom-indicator{position:absolute;bottom:15px;right:15px;background:#ffd400;color:#191b17;padding:10px 13px;font-weight:900;font-size:10px;letter-spacing:.05em}
+.dog-model-foot{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;align-items:center;background:#ffd400;color:#1d1c17;padding:12px 17px;font-size:11px;line-height:1.4}
+.dog-model-foot strong{font-size:10px;letter-spacing:.08em}
+#fiveDetail .dog-detail-layout{padding:clamp(22px,3.2vw,48px);display:flex;flex-direction:column;justify-content:space-between;gap:22px;min-width:0}
+#fiveDetail .dog-detail-layout h3{font-size:clamp(47px,5vw,91px);line-height:.92;letter-spacing:-.035em;overflow-wrap:anywhere;margin:13px 0 18px}
+.dog-rarity-band{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid #595d52;border-bottom:1px solid #595d52;padding:11px 0}
+.dog-rarity-band>.tier-tag{min-height:34px}
+.dog-rarity-band>span:last-child{font-size:9px;letter-spacing:.065em;color:#d0cdc1;font-weight:800;line-height:1.4}
+.dog-hat-block{display:grid;grid-template-columns:minmax(142px,.8fr) minmax(0,1fr);gap:20px;align-items:center}
+.dog-hat-figure{border:1px dashed #979a8e;padding:9px;min-width:0}
+.dog-hat-label{display:block;font-size:9px;letter-spacing:.075em;color:#f7e8c2;font-weight:900;margin:0 0 9px}
+.dog-hat-photo{aspect-ratio:1/1;display:grid;place-items:center}
+.dog-hat-photo img{width:100%;height:100%;object-fit:contain;display:block}
+.dog-hat-expand{position:absolute;right:0;bottom:0;font-size:10px;background:#ffd400;color:#161913;font-weight:900;padding:7px 9px}
+.dog-hat-info p{font-size:12px;line-height:1.7;color:#ebe7d9;margin:0 0 13px;overflow-wrap:break-word}
+.dog-hat-info small{display:block;font-size:10px;color:#ffdc69;line-height:1.5}
+.dog-monster-link{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:14px;align-items:center;background:#35382f;color:#f8f3df;border:1px solid #858879;min-height:91px;padding:10px;text-decoration:none;transition:background .18s,border-color .18s}
+.dog-monster-link:hover,.dog-monster-link:focus-visible{background:#41473a;border-color:#ffd400}
+.dog-monster-link img{width:62px;height:68px;object-fit:cover;background:#ece5d8}
+.dog-monster-link>span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dog-monster-link>span>small{font-size:10px;line-height:1.45;color:#d3d2c2}
+.dog-monster-link>span>strong{font-family:'Barlow Condensed',Impact,sans-serif;font-size:30px;line-height:1;color:#ffde52}
+.dog-monster-link>b{font-size:25px;color:#ffe267;padding-right:9px}
+.dog-detail-footer{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.dog-detail-footer .btn{flex:0 1 auto}
+.dog-detail-footer .five-footnote{flex:1 1 210px;min-width:0}
+@media(max-width:1070px){.dog-hat-block{grid-template-columns:minmax(110px,.77fr) minmax(0,1fr);gap:12px}#fiveDetail .dog-detail-layout{padding:22px}.dog-model-stage{min-height:540px}.dog-model-photo,.dog-model-photo img{min-height:460px}}
+@media(max-width:800px){#fiveDetail{grid-template-columns:minmax(0,1fr)}.dog-model-stage{min-height:0}.dog-model-photo,.dog-model-photo img{min-height:0;height:clamp(350px,74vw,520px)}#fiveDetail .dog-detail-layout h3{font-size:clamp(55px,9vw,83px)}}
+@media(max-width:480px){#fiveDetail .dog-detail-layout{gap:17px;padding:22px 18px}#fiveDetail .dog-detail-layout h3{font-size:clamp(48px,12vw,69px)}.dog-model-photo,.dog-model-photo img{height:clamp(290px,87vw,410px)}.dog-hat-block{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:start}.dog-hat-info p{font-size:11px}.dog-hat-info small{font-size:9px}.dog-monster-link{grid-template-columns:52px minmax(0,1fr) auto;gap:9px;padding:8px}.dog-monster-link img{width:52px;height:63px}.dog-monster-link>span>strong{font-size:27px}.dog-monster-link>span>small{font-size:9px}.dog-detail-footer .btn{width:100%}}
+@media(max-width:350px){.dog-hat-block{grid-template-columns:minmax(0,1fr)}.dog-hat-photo{max-height:220px}.dog-hat-photo img{height:220px}#fiveDetail .dog-detail-layout{padding:20px 14px}}
+@media(prefers-reduced-motion:reduce){.dog-monster-link{transition:none}}
+
 </style></head>
 <body>
 <div class="banner">Conceito independente • não oficial • todos os pedidos são fictícios</div>
@@ -690,10 +731,28 @@ function cardGrid(){
  return items.map(function(x){var w=x.w,i=x.i;return '<article class="five-card"><button class="five-select" data-action="cap-select" data-index="'+i+'" aria-label="Ver o boné '+esc(w.name)+' e seu monstro '+esc(w.monster)+'" aria-pressed="'+(i===chosenCap)+'"><div class="five-img"><img src="'+photoRoot+w.photos[0][0]+'" alt="'+esc(w.photos[0][1])+'" loading="lazy" decoding="async"/><small>0'+(i+1)+' / 05</small></div><div class="five-info"><div>'+tierBadge(w.tier)+'<h3>'+esc(w.name)+'</h3><p>'+esc(w.subtitle)+'</p></div><b aria-hidden="true">↗</b></div></button></article>'}).join('');
 }
 function capDetail(){
- var w=sampleWorks[chosenCap],shot=w.photos[chosenShot]||w.photos[0];
- return '<div class="five-detail-gallery"><div class="five-stage"><img id="capDetailImage" src="'+photoRoot+shot[0]+'" alt="'+esc(shot[1])+'" loading="lazy" decoding="async"/><small>FOTO ORIGINAL · PORTFÓLIO</small></div><div class="five-shots" role="group" aria-label="Fotos do boné '+esc(w.name)+'">'+w.photos.map(function(ph,i){return '<button type="button" class="five-shot" data-action="cap-photo" data-index="'+i+'" aria-pressed="'+(chosenShot===i)+'"><img src="'+photoRoot+ph[0]+'" alt="" loading="lazy" decoding="async"/><span>'+(i===0?'Boné':'Modelo')+'</span></button>'}).join('')+'</div></div>'+
- '<div class="five-detail-copy"><span class="eyebrow">0'+(chosenCap+1)+' / 05 · EXEMPLO DE TRABALHO</span><h3>'+esc(w.name).toUpperCase()+'.</h3>'+tierBadge(w.tier)+'<p>'+esc(w.text)+'</p><div class="five-monster-inline"><img src="'+photoRoot+w.art+'" alt="Desenho de '+esc(w.monster)+'" loading="lazy" decoding="async"/><div><span>PERSONAGEM RELACIONADO</span><strong>'+esc(w.monster)+'</strong><small>'+esc(w.classe)+' · VIDA '+w.v+'/13 · ATAQUE '+w.a+'/13 · RESISTÊNCIA '+w.r+'/13</small></div></div><p class="five-footnote">Raridade Ultimate do Ivsoy confirmada diretamente pelo criador. As demais classificações seguem provisórias. Não há estoque, valores ou encomendas reais nesta demo.</p><button class="btn dark" data-action="cap-inspire" data-index="'+chosenCap+'">Quero descrever uma ideia própria ↗</button></div>';
+ var w=sampleWorks[chosenCap];
+ var modelIndex=w.photos.findIndex(function(p){return /-modelo\.(jpg|jpeg|png|webp)$/i.test(p[0])});
+ var model=modelIndex>=0?w.photos[modelIndex]:w.photos[0];
+ var hat=w.photos[0];
+ var hasModel=modelIndex>=0;
+ return '<div class="five-detail-gallery dog-model-gallery"><div class="dog-model-stage">'+
+ '<button type="button" class="dog-expand-photo dog-model-photo" data-expand-photo="'+(hasModel?modelIndex:0)+'" aria-label="Ampliar '+esc(hasModel?'foto do modelo usando o boné '+w.name:'foto do boné '+w.name)+'">'+
+ '<img src="'+photoRoot+model[0]+'" alt="'+esc(model[1])+'" loading="lazy" decoding="async"/>'+
+ '<span class="dog-zoom-indicator" aria-hidden="true">AMPLIAR IMAGEM ↗</span></button>'+
+ '<div class="dog-model-foot"><strong>'+(hasModel?'FOTO DO MODELO':'FOTO DO BONÉ')+'</strong><span>'+(hasModel?'Clique para visualizar em tamanho maior.':'Foto com modelo ainda não disponibilizada.')+'</span></div>'+
+ '</div></div>'+
+ '<div class="five-detail-copy dog-detail-layout"><div><span class="eyebrow">0'+(chosenCap+1)+' / 05 · BONÉ DO PORTFÓLIO</span>'+
+ '<h3>'+esc(w.name).toUpperCase()+'.</h3><div class="dog-rarity-band">'+tierBadge(w.tier)+'<span>RARIDADE DA SKIN · '+esc(w.tier==='ultimate'?'CONFIRMADA':'CLASSIFICAÇÃO PROVISÓRIA')+'</span></div></div>'+
+ '<div class="dog-hat-block"><div class="dog-hat-figure">'+
+ '<span class="dog-hat-label">FOTO DO BONÉ</span><button type="button" class="dog-expand-photo dog-hat-photo" data-expand-photo="0" aria-label="Ampliar a foto do boné '+esc(w.name)+'">'+
+ '<img src="'+photoRoot+hat[0]+'" alt="'+esc(hat[1])+'" loading="lazy" decoding="async"/><span class="dog-hat-expand">AMPLIAR ↗</span></button></div>'+
+ '<div class="dog-hat-info"><p>'+esc(w.text)+'</p><small>Toque na imagem para ver os detalhes do boné.</small></div></div>'+
+ '<a href="#projeto-2" class="dog-monster-link" data-see-monster="'+chosenCap+'" aria-label="Ver a versão monstro '+esc(w.monster)+' no Projeto 2">'+
+ '<img src="'+photoRoot+w.art+'" alt="" loading="lazy" decoding="async"/><span><small>PROJETO 2 · VERSÃO MONSTRO</small><strong>'+esc(w.monster)+'</strong><small>'+esc(w.classe)+' · VIDA '+w.v+'/13 · ATAQUE '+w.a+'/13 · RESISTÊNCIA '+w.r+'/13</small></span><b aria-hidden="true">↗</b></a>'+
+ '<div class="dog-detail-footer"><button class="btn dark" data-action="cap-inspire" data-index="'+chosenCap+'">Descrever uma ideia própria ↗</button><p class="five-footnote">Portfólio demonstrativo. Não indica estoque, preço ou disponibilidade para compra.</p></div></div>';
 }
+
 function portfolioSection(){
  return '<section id="portfolio" class="five-portfolio" aria-labelledby="five-title"><header class="five-header"><div><span class="eyebrow">01 / SELEÇÃO DEMONSTRATIVA</span><h2 id="five-title">CINCO PEÇAS.<br>UMA IDENTIDADE.</h2></div><p>Uma seleção de cinco trabalhos reais compartilhados pelo criador. Explore as fotografias, descubra os personagens e descreva sua própria referência.</p></header>'+
  '<div class="five-tiers"><span>RARIDADE DAS SKINS</span><span>▲ Épica</span><span>◆ Lendária</span><span>⬡ Ultimate</span></div>'+
@@ -850,16 +909,20 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-univ
 document.addEventListener('mouseover',function(e){var root=e.target.closest('#dogUniverse');if(root){var b=root.querySelector('[data-universe-handle]');if(b)b.setAttribute('aria-expanded','true')}});
 document.addEventListener('mouseout',function(e){var root=e.target.closest('#dogUniverse');if(root&&!root.contains(e.relatedTarget)&&root.getAttribute('data-open')!=='true'){var b=root.querySelector('[data-universe-handle]');if(b)b.setAttribute('aria-expanded','false')}});
 function ensureModelFirst(){
-  document.querySelectorAll('.five-select').forEach(function(btn){var i=Number(btn.dataset.index),work=['hipnotizante','rosario','persistencia','maldito','dino'][i];if(!modelWorks[work])return;var img=btn.querySelector('.five-img img');if(img&&!img.dataset.modelFirst){img.dataset.modelFirst='1';img.src=img.src.replace('-bone.jpg','-modelo.jpg');img.alt='Modelo apresentando o boné '+(btn.querySelector('h3')?.textContent||'')}})
-  var detail=document.getElementById('fiveDetail');if(!detail||!detail.firstElementChild||stageSeen.has(detail.firstElementChild))return;stageSeen.add(detail.firstElementChild);
-  var current=document.querySelector('.five-select[aria-pressed="true"]'),index=current?Number(current.dataset.index):0;
-  var modelBtn=detail.querySelector('.five-shot[data-index="1"]');if(index!==3&&modelBtn&&modelBtn.getAttribute('aria-pressed')!=='true')modelBtn.click();
-  var stage=detail.querySelector('.five-stage');if(stage&&!stage.querySelector('.five-photo-open')){var zoom=document.createElement('button');zoom.type='button';zoom.className='five-photo-open';zoom.setAttribute('aria-label','Ampliar fotografia do boné');zoom.innerHTML='<span>AMPLIAR FOTO ↗</span>';zoom.addEventListener('click',function(){var img=detail.querySelector('#capDetailImage'),dlg=document.getElementById('dogstarLightbox');if(!dlg||!img)return;dlg.querySelector('img').src=img.src;dlg.querySelector('img').alt=img.alt;dlg.querySelector('p').textContent=img.alt;dlg.showModal()});stage.appendChild(zoom)}
-  var copy=detail.querySelector('.five-detail-copy');if(copy&&!copy.querySelector('.dog-detail-actions')){var actions=document.createElement('div');actions.className='dog-detail-actions';var indexTxt=String(index);actions.innerHTML='<button type="button" class="btn dark" data-see-monster="'+indexTxt+'">Ver versão monstro ↗</button>';copy.appendChild(actions)}
- }
- function ensure(){ensureHub();ensureProject3();ensureModelFirst()}
+ document.querySelectorAll('.five-select').forEach(function(btn){
+  var i=Number(btn.dataset.index),work=['hipnotizante','rosario','persistencia','maldito','dino'][i];
+  if(!modelWorks[work])return;
+  var img=btn.querySelector('.five-img img');
+  if(img&&!img.dataset.modelFirst){
+   img.dataset.modelFirst='1';
+   img.src=img.src.replace('-bone.jpg','-modelo.jpg');
+   img.alt='Modelo apresentando o boné '+(btn.querySelector('h3')?.textContent||'');
+  }
+ });
+}
+function ensure(){ensureHub();ensureProject3();ensureModelFirst()}
  var dlg=document.createElement('dialog');dlg.id='dogstarLightbox';dlg.className='dog-lightbox';dlg.setAttribute('aria-label','Fotografia ampliada');dlg.innerHTML='<div><img alt="" /><footer><p></p><button type="button" data-close-photo>Fechar ×</button></footer></div>';document.body.appendChild(dlg);
- document.addEventListener('click',function(e){if(e.target.closest('[data-close-photo]')){dlg.close();return}var more=e.target.closest('[data-see-monster]');if(more){var idx=Number(more.dataset.seeMonster);var tab=document.querySelector('.five-monster-tab[data-index="'+idx+'"]');if(tab){tab.click();document.getElementById('projeto-2')?.scrollIntoView({behavior:'smooth',block:'start'})}}});
+ document.addEventListener('click',function(e){if(e.target.closest('[data-close-photo]')){dlg.close();return}var zoom=e.target.closest('[data-expand-photo]');if(zoom){var index=Number(zoom.dataset.expandPhoto),img=zoom.querySelector('img'),view=dlg.querySelector('img');if(!img||!Number.isInteger(index)||index<0||index>1)return;view.src=img.src;view.alt=img.alt;dlg.querySelector('p').textContent=img.alt;if(typeof dlg.showModal==='function')dlg.showModal();return}var more=e.target.closest('[data-see-monster]');if(more){e.preventDefault();var idx=Number(more.dataset.seeMonster);var tab=document.querySelector('.five-monster-tab[data-index="'+idx+'"]');if(tab){tab.click();document.getElementById('projeto-2')?.scrollIntoView({behavior:'smooth',block:'start'})}}});
  dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
  document.addEventListener('mouseover',function(e){var tab=e.target.closest('[data-universe]');if(tab)preview(tab.dataset.universe)});
  document.addEventListener('focusin',function(e){var tab=e.target.closest('[data-universe]');if(tab)preview(tab.dataset.universe)});
