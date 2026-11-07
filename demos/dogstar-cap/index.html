@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101113"><meta name="description" content="Demonstração conceitual não oficial de catálogo, encomendas e gestão para Dogstar Cap."><title>Dogstar Cap — Experiência conceito | 77</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+:root{--black:#111316;--ink:#1e2225;--yellow:#ffd347;--cream:#f7f5ee;--paper:#fffdf7;--gray:#697076;--line:#e2ded5;--accent:#f36b52;--focus:#1676d2;--radius:20px;--font:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font);line-height:1.5}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--focus);outline-offset:3px}h1,h2,h3,p{margin-top:0}.banner{background:var(--yellow);color:var(--black);padding:9px 18px;text-align:center;text-transform:uppercase;font-size:10px;font-weight:850;letter-spacing:.12em}.header{background:var(--black);color:white}.header-inner{max-width:1220px;margin:auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px;color:white;text-decoration:none}.seal{width:46px;height:46px;background:var(--yellow);color:var(--black);border-radius:50%;display:grid;place-items:center;font-weight:1000;transform:rotate(-10deg);font-size:20px;letter-spacing:-3px;border:2px dashed var(--black);box-shadow:0 0 0 2px var(--yellow)}.brand-title{font-weight:950;font-size:19px;letter-spacing:-.08em;line-height:1}.brand-sub{display:block;color:#cbc7b8;font-size:9px;letter-spacing:.19em;margin-top:5px;font-weight:850}.nav{display:flex;gap:6px;flex-wrap:wrap}.nav button{background:transparent;color:#d9d9d5;border:1px solid #444647;border-radius:100px;padding:10px 16px;font-size:13px;font-weight:750;min-height:44px}.nav button[aria-current=page]{background:var(--yellow);color:var(--black);border-color:var(--yellow)}.nav button:not([aria-current=page]):hover{background:#2b2d2d}.wrap{max-width:1220px;padding:0 24px;margin:auto}.mast{padding:27px 0 0}.eyebrow{font-weight:900;letter-spacing:.17em;text-transform:uppercase;font-size:11px}.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid currentColor;border-radius:100px;padding:5px 10px;font-size:10px;font-weight:850;letter-spacing:.05em;text-transform:uppercase}.tag.yellow{background:var(--yellow);border-color:var(--yellow);color:var(--black)}.tag.dark{background:var(--black);border-color:var(--black);color:white}.tag.light{background:#efede5;border-color:#efede5}.hero{display:grid;grid-template-columns:1fr 1fr;min-height:530px;background:var(--black);color:white;border-radius:28px;overflow:hidden;margin:22px 0 0}.hero-copy{padding:clamp(30px,5vw,68px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start}.hero h1{font-family:Impact,"Arial Black",var(--font);font-weight:950;font-stretch:condensed;line-height:.94;font-size:clamp(55px,6.6vw,96px);letter-spacing:-.045em;margin:21px 0}.hero h1 em{color:var(--yellow);font-style:normal}.hero-copy>p{max-width:420px;color:#d7d6d0;font-size:15px;line-height:1.7}.hero-visual{background:var(--yellow);position:relative;display:flex;align-items:center;justify-content:center;isolation:isolate;min-height:380px;overflow:hidden}.hero-visual:before{content:"";position:absolute;width:520px;height:520px;border:2px solid rgba(17,19,22,.15);border-radius:50%;transform:rotate(-15deg)}.hero-visual:after{content:"CUSTOM CULTURE";position:absolute;bottom:22px;right:-16px;color:rgba(17,19,22,.16);font-size:clamp(45px,6vw,98px);font-weight:1000;white-space:nowrap;letter-spacing:-.09em;transform:rotate(-8deg)}.hero-visual .cap-svg{width:min(105%,520px);transform:rotate(-11deg) translateX(-12px);filter:drop-shadow(22px 29px 2px rgba(11,15,15,.2));z-index:1}.burst{position:absolute;z-index:2;top:30px;right:28px;width:115px;height:115px;background:var(--black);color:var(--yellow);display:flex;align-items:center;justify-content:center;text-align:center;border-radius:50%;font-size:18px;font-weight:1000;line-height:1.05;transform:rotate(12deg)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:100px;padding:14px 21px;min-height:48px;font-size:13px;font-weight:880;text-decoration:none;border:1px solid transparent;transition:transform .17s,background .17s}.btn:hover{transform:translateY(-2px)}.btn.primary{background:var(--yellow);color:var(--black)}.btn.dark{background:var(--black);color:white}.btn.outline{background:transparent;color:inherit;border-color:currentColor}.btn.soft{background:#efede5;color:var(--ink)}.btn.secondary{background:white;color:var(--black)}.btn.small{min-height:40px;padding:10px 15px}.section{padding:67px 0 15px}.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px}.section h2,.page-title{font-family:Impact,"Arial Black",var(--font);font-size:clamp(36px,4.3vw,62px);line-height:1.05;letter-spacing:-.025em;font-weight:950;margin:9px 0 0}.section-intro{color:var(--gray);font-size:14px;max-width:360px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.product{border:1px solid var(--line);background:var(--paper);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-width:0}.product-visual{min-height:260px;display:grid;place-items:center;position:relative;overflow:hidden}.product-visual .cap-svg{width:84%;max-width:310px;transform:rotate(-8deg);filter:drop-shadow(11px 16px 1px rgba(0,0,0,.15))}.product-visual.orange{background:#f4a37d}.product-visual.night{background:#383844}.product-visual.lemon{background:#dce2a4}.product-visual .product-number{position:absolute;top:18px;left:18px;font-weight:950;opacity:.65;font-size:12px}.product-body{padding:23px;display:flex;flex-direction:column;flex:1}.product-body h3{font-size:22px;letter-spacing:-.055em;margin:14px 0 6px;font-weight:950}.product-body p{font-size:13px;color:var(--gray);line-height:1.65;flex:1}.product-footer{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.price{font-size:11px;color:var(--gray);font-weight:850;text-transform:uppercase;letter-spacing:.07em}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0 50px}.step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px}.step span{display:inline-flex;background:var(--yellow);width:34px;height:34px;border-radius:50%;align-items:center;justify-content:center;font-weight:950;font-size:12px}.step h3{margin:20px 0 7px;font-size:18px;letter-spacing:-.035em}.step p{margin:0;color:var(--gray);font-size:13px}.footer{background:var(--black);color:#f1f1ed;margin-top:70px;padding:40px 0}.footer-inner{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}.footer p{color:#aaa;font-size:12px;margin:6px 0}.footer a{font-weight:850;text-decoration-color:var(--yellow);text-underline-offset:4px}.page-top{padding:51px 0 24px;display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap}.page-top p{font-size:14px;color:var(--gray);max-width:520px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:24px}.config-layout{display:grid;grid-template-columns:1.2fr .8fr;align-items:start;gap:22px}.field{display:block;margin-bottom:21px}.field>span,.field>label{display:block;font-weight:850;font-size:12px;margin-bottom:9px}.field small{color:var(--gray)}.field input:not([type=radio]),.field textarea,.field select{width:100%;min-height:49px;border-radius:11px;border:1px solid #cfcac1;background:white;padding:13px 14px;color:var(--ink)}.field textarea{min-height:105px;resize:vertical}.swatches{display:flex;flex-wrap:wrap;gap:10px}.swatch{width:50px;height:50px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px #bbb;position:relative}.swatch[aria-pressed=true]{box-shadow:0 0 0 3px var(--black)}.swatch[aria-pressed=true]:after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:900;color:white;text-shadow:0 1px 2px black}.preview{background:#efeacf;border-radius:16px;padding:20px;position:sticky;top:20px}.preview-image{display:grid;place-items:center;min-height:250px;background:var(--yellow);border-radius:12px;overflow:hidden}.preview-image .cap-svg{width:min(100%,390px);filter:drop-shadow(14px 17px 2px rgba(0,0,0,.2))}.preview h3{font-weight:950;font-size:21px;letter-spacing:-.045em;margin:18px 0 5px}.preview p{font-size:13px;color:#4d524c}.notice{border-left:4px solid var(--yellow);background:#fff9de;padding:14px 16px;font-size:12px;line-height:1.6;border-radius:0 12px 12px 0}.status-track{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:25px 0}.status-item{font-size:11px;min-width:0;text-align:center;color:var(--gray)}.status-dot{width:25px;height:25px;border-radius:50%;border:2px solid #dad8cf;background:white;margin:0 auto 10px;display:grid;place-items:center;font-size:12px}.status-item.done .status-dot{background:var(--yellow);border-color:var(--yellow);color:var(--black)}.status-item.current{color:var(--black);font-weight:900}.success-top{display:flex;gap:15px;align-items:center}.success-icon{height:54px;width:54px;display:grid;place-items:center;border-radius:50%;background:#d9edcd;font-size:25px}.board{display:grid;grid-template-columns:repeat(5,minmax(185px,1fr));gap:12px;overflow-x:auto;padding-bottom:12px}.lane{background:#eae8e0;border-radius:17px;padding:13px;min-height:285px}.lane-head{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;font-weight:900;letter-spacing:.01em;margin-bottom:15px}.count{background:white;border-radius:99px;padding:3px 9px;font-size:11px}.ticket{background:white;border:1px solid #dcd8cf;padding:15px;border-radius:13px;margin-bottom:12px;box-shadow:0 2px 3px #00000008}.ticket strong{font-weight:950;font-size:13px}.ticket p{margin:7px 0 13px;font-size:12px;color:var(--gray)}.ticket .ticket-label{font-size:10px;letter-spacing:.07em;font-weight:850;color:#796a42}.ticket button{width:100%;min-height:40px;background:var(--black);color:white;border:0;border-radius:10px;font-size:11px;font-weight:900}.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:13px 0 22px}.metric{background:var(--paper);padding:22px;border-radius:17px;border:1px solid var(--line)}.metric strong{display:block;font-family:Impact,"Arial Black";font-size:45px;letter-spacing:-.05em}.metric span{font-size:12px;color:var(--gray);font-weight:750}.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.bar-row{margin:17px 0}.bar-label{display:flex;justify-content:space-between;font-size:12px;font-weight:850;margin-bottom:9px}.bar-bg{height:10px;border-radius:99px;background:#edeae1;overflow:hidden}.bar-fill{height:100%;background:var(--black);border-radius:99px}.setting{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:17px 0;border-bottom:1px solid var(--line)}.setting:last-child{border:0}.setting strong{font-size:13px}.setting p{font-size:11px;color:var(--gray);margin:4px 0 0}.toggle{min-width:50px;min-height:30px;border:0;border-radius:40px;background:#c5c5bc;position:relative}.toggle[aria-pressed=true]{background:var(--black)}.toggle:before{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;background:#fff;border-radius:50%;transition:transform .2s}.toggle[aria-pressed=true]:before{transform:translateX(20px)}.empty{border:1px dashed #c7c1b4;border-radius:12px;padding:18px;font-size:13px;color:var(--gray);background:#ffffffa8}.back{background:none;border:0;font-weight:850;text-decoration:underline;text-underline-offset:4px;font-size:13px;margin-bottom:10px}.inline-link{font-size:13px;font-weight:850;text-decoration:underline;text-underline-offset:4px;border:0;background:none;padding:12px 0}.mobile-cta{display:none}.hide,[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:840px){.hero{grid-template-columns:1fr}.hero-visual{min-height:340px}.hero-copy{padding:40px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.config-layout,.insight-grid{grid-template-columns:1fr}.preview{position:static}.metric-grid{grid-template-columns:repeat(2,1fr)}.board{grid-template-columns:repeat(5,215px)}}
+@media(max-width:560px){.mobile-cta.is-visible{display:flex}.wrap{padding:0 16px}.header-inner{padding:14px 16px}.brand-title{font-size:18px}.nav{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}.nav button{padding:9px 6px;font-size:11px;min-width:0}.hero{border-radius:20px;margin-top:14px}.hero-copy{padding:31px 23px 26px}.hero h1{font-size:62px}.hero-visual{min-height:265px}.hero-visual .cap-svg{width:90%}.burst{width:82px;height:82px;right:12px;top:13px;font-size:13px}.section{padding-top:46px}.section-heading{align-items:start;flex-direction:column;gap:4px}.cards,.steps{grid-template-columns:1fr}.product-visual{min-height:220px}.steps{margin-bottom:30px}.page-top{padding-top:34px}.page-title{font-size:43px}.panel{padding:17px}.metric-grid{gap:9px}.metric{padding:17px 13px}.metric strong{font-size:38px}.footer{margin-top:40px;padding-bottom:90px}.mobile-cta{position:fixed;bottom:0;left:0;right:0;display:flex;padding:10px 15px calc(10px + env(safe-area-inset-bottom));background:#f7f5eefa;box-shadow:0 -8px 30px #00000015;z-index:10}.mobile-cta button{width:100%;height:48px}.status-item{font-size:9px}.status-track{gap:2px}.status-dot{height:21px;width:21px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.toggle:before{transition:none}.btn:hover{transform:none}}
+
+/* DOGSTAR / ART DIRECTION V2 — editorial streetwear */
+
+:root{--black:#141513;--ink:#171815;--yellow:#fbd332;--cream:#f1efe8;--paper:#f7f6f1;--line:#c8c7be;--gray:#54574f;--radius:2px;--font:'DM Sans',system-ui,sans-serif}
+body{background:#eae9e1;letter-spacing:-.01em}body::selection{background:#fbd332;color:#111}
+h1,h2,h3,.editorial-display,.data-big{font-family:'Barlow Condensed','Arial Narrow',Impact,sans-serif;letter-spacing:-.032em;font-weight:900}
+.wrap{max-width:1320px;padding:0 32px}.banner{font-size:10px;padding:8px 12px;background:#e8e7db;color:#20211d;letter-spacing:.085em;font-weight:800;border-bottom:1px solid #cfcfc4}
+.header{position:sticky;top:0;z-index:20;background:#171816;border-bottom:1px solid #35362f;box-shadow:0 8px 18px #00000016}
+.header-inner{max-width:1320px;padding:13px 32px}.brand{gap:15px}.seal{border:0;border-radius:2px;width:43px;height:43px;transform:rotate(-7deg);font-family:'Barlow Condensed';font-size:23px;letter-spacing:-.06em;box-shadow:none;background:#fbd332}
+.brand-title{font-family:'Barlow Condensed';font-size:26px;font-weight:900;letter-spacing:-.035em}.brand-sub{letter-spacing:.15em;color:#b5b5a8}
+.nav{gap:4px}.nav button{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;border-color:transparent;border-radius:2px;padding:11px 18px;min-height:44px}.nav button[aria-current=page]{background:#fbd332;color:#141513;border-color:#fbd332}.nav button:hover{background:#292a25}
+.footer{background:#161715;border-top:5px solid #fbd332;margin-top:80px;padding:42px 0}.footer strong{font-family:'Barlow Condensed';font-size:22px;letter-spacing:.02em}
+.btn{border-radius:2px;text-transform:uppercase;letter-spacing:.05em;font-size:11px;padding:14px 19px;font-weight:900;min-height:50px;box-shadow:3px 3px 0 #0000001e;transition:transform .16s,box-shadow .16s,background .16s}.btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 #00000028}.btn:active{transform:translate(0,0);box-shadow:none}.btn.primary{background:#fbd332;color:#171815}.btn.dark{background:#171815;color:white}.btn.soft{background:#e1e0d6}.btn.outline{border-color:#171815;color:#171815;background:transparent}
+.eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em}.tag{border-radius:2px;font-size:10px;letter-spacing:.07em;font-weight:850}.tag.dark{background:#20211e}.tag.light{background:#e7e4d9}
+#app{min-height:65vh}.editorial-hero{position:relative;margin-top:24px;display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);min-height:640px;border:1px solid #181917;box-shadow:11px 11px 0 #20211b1f}
+.ed-copy{padding:58px clamp(28px,5vw,76px) 43px;display:flex;align-items:flex-start;flex-direction:column;justify-content:space-between;background:#f1efe5;position:relative;overflow:hidden}
+.ed-copy:after{content:'07';font-family:'Barlow Condensed',Impact,sans-serif;font-size:280px;font-weight:900;line-height:1;color:#15151507;position:absolute;right:-13px;bottom:-110px;pointer-events:none}
+.ed-meta{display:flex;align-items:center;gap:12px;color:#54574e;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.ed-meta:before{content:'';height:8px;width:8px;background:#e4412e;border-radius:100%}
+.ed-title{margin:30px 0 18px;font-size:clamp(76px,8.7vw,150px);line-height:.73;font-weight:900;letter-spacing:-.065em;text-transform:uppercase;color:#191a17;position:relative;z-index:1}
+.ed-title span{display:block}.ed-title span:nth-child(2){padding-left:12%}.ed-title span:last-child{color:#d84732;letter-spacing:-.075em}
+.ed-text{max-width:395px;font-size:15px;line-height:1.75;color:#44463f;position:relative;z-index:1}
+.ed-actions{display:flex;gap:10px;flex-wrap:wrap;margin:21px 0 0;position:relative;z-index:1}
+.ed-legal{margin-top:24px;font-size:10px;max-width:360px;color:#6d6d61}
+.ed-photo{background:#20231e;position:relative;overflow:hidden;min-height:490px;display:grid;place-items:center;isolation:isolate}
+.ed-photo:before{content:'';inset:0;position:absolute;background:radial-gradient(ellipse at 45% 50%,#525647 0%,#292c26 50%,#121410 92%);z-index:-1}
+.ed-photo:after{content:'';inset:0;position:absolute;background:repeating-linear-gradient(0deg,transparent 0,transparent 6px,#fff1 7px);opacity:.21;pointer-events:none}
+.ed-photo .cap-svg{width:106%;max-width:660px;transform:rotate(-12deg) translate(-3%,3%);filter:drop-shadow(23px 34px 7px #0008)}
+.ed-photo .orb{position:absolute;top:9%;right:9%;border:1px solid #e4e3cd66;border-radius:50%;width:130px;height:130px;display:grid;place-items:center;color:#e3dabe;font-family:'Barlow Condensed';font-size:20px;font-weight:800;line-height:.95;text-align:center;transform:rotate(13deg);z-index:3}
+.ed-photo .orbit{position:absolute;width:78%;aspect-ratio:1;border:1px solid #fff2;border-radius:50%;transform:rotate(-18deg)}.ed-photo .orbit:after{content:'';position:absolute;inset:26px;border:1px solid #fff1;border-radius:50%}
+.ed-photo .edge-label{position:absolute;top:25px;left:27px;color:#d1d1c1;letter-spacing:.15em;font-size:10px;font-weight:900;z-index:3}
+.ed-photo .serial{position:absolute;bottom:30px;left:30px;color:#fff;font-family:'Barlow Condensed';font-size:52px;font-weight:900;line-height:.75;z-index:3}
+.ed-photo .serial span{display:block;font-family:'DM Sans';font-size:10px;letter-spacing:.15em;color:#c8c4b7;margin-top:11px}
+.ed-bottom{background:#171815;color:#e7e6db;min-height:52px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;padding:12px 24px;gap:12px;flex-wrap:wrap;font-size:10px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+.ed-bottom .dot{color:#fbd332}.look-heading{display:grid;grid-template-columns:1fr 290px;align-items:end;gap:24px;padding:20px 0 25px;border-bottom:2px solid #171815}
+.section{padding-top:80px}.section h2,.page-title{font-size:clamp(48px,6vw,90px);line-height:.89;text-transform:uppercase;letter-spacing:-.04em}
+.section-intro{font-size:13px;line-height:1.8;color:#4d5046}
+.look-grid{display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:repeat(2,260px);gap:12px;margin-top:22px}
+.look{min-width:0;position:relative;overflow:hidden;background:#cfd2ba;display:grid;grid-template-columns:1fr .95fr;border:1px solid #171815}
+.look:first-child{grid-row:span 2}.look:nth-child(2){background:#eab284}.look:nth-child(3){background:#b3b1bb}
+.look .look-copy{position:relative;z-index:3;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;padding:25px 26px;background:linear-gradient(90deg,#0000000f 0%,transparent 90%)}
+.look:first-child .look-copy{padding:38px}
+.look-num{font-family:'Barlow Condensed';font-size:16px;font-weight:900;opacity:.7}
+.look h3{font-family:'Barlow Condensed';font-size:clamp(35px,4vw,70px);line-height:.83;max-width:230px;letter-spacing:-.03em;text-transform:uppercase;margin:15px 0}
+.look:first-child h3{font-size:clamp(60px,7vw,104px)}.look p{font-size:12px;line-height:1.7;max-width:200px;color:#35352e;margin-bottom:16px}
+.look .look-visual{display:grid;place-items:center;position:relative;isolation:isolate}
+.look .look-visual:after{content:'';width:210px;height:210px;border-radius:50%;background:#fff3;position:absolute;z-index:-1}
+.look:first-child .look-visual:after{width:340px;height:340px}
+.look .look-visual .cap-svg{width:140%;max-width:420px;transform:rotate(-9deg) translate(-3%,8%);filter:drop-shadow(10px 15px 4px #0004)}
+.look:first-child .look-visual .cap-svg{width:180%;max-width:600px;transform:rotate(-13deg) translate(-14%,8%)}
+.look .btn{font-size:10px;min-height:40px;padding:10px 13px}.look .look-note{font-size:9px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+.story{display:grid;grid-template-columns:1.1fr .9fr;background:#1b1d19;color:#f3f1e8;min-height:335px;margin-top:64px}
+.story-head{padding:44px 52px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;border-right:1px solid #fff3}.story h2{color:#f6d533;font-size:clamp(47px,6.1vw,86px);margin:24px 0}
+.story-steps{padding:24px 42px}.story-step{display:grid;grid-template-columns:44px 1fr;gap:18px;padding:26px 0;border-bottom:1px solid #ffffff33}.story-step:last-child{border:0}
+.story-step b{font-family:'Barlow Condensed';font-weight:900;font-size:30px;color:#fbd332}.story-step h3{font-size:20px;line-height:1;margin:0 0 8px;text-transform:uppercase}.story-step p{font-size:12px;color:#bfc1b6;line-height:1.6;max-width:345px;margin:0}
+.footnote{font-size:11px;line-height:1.8;color:#676a61;margin:28px 0}
+.page-top{padding-top:55px;border-bottom:2px solid #171815;padding-bottom:28px;margin-bottom:22px}.page-top .page-title{margin:10px 0 16px;max-width:850px}.page-top p{line-height:1.7}.page-top .back{text-decoration:none;padding-left:0}
+.panel{background:#f6f5ef;border:1px solid #c7c6b9;border-radius:2px;box-shadow:5px 5px 0 #1718150d}.config-layout{grid-template-columns:1fr .86fr;gap:18px}
+.config-layout .panel{padding:32px}.config-layout .preview{border-radius:2px;box-shadow:6px 6px 0 #17181518;position:sticky;top:92px;padding:28px;background:#1b1c19;color:white}
+.preview-image{min-height:350px;border:1px solid #60625b;border-radius:2px;background:radial-gradient(circle at 48% 52%,#62624b,#31322b 58%,#181916 90%)}.preview-image .cap-svg{width:min(113%,480px);transform:rotate(-8deg);filter:drop-shadow(18px 23px 3px #0008)}
+.config-layout .preview p{color:#c1c2b7}.config-layout .preview h3{font-family:'Barlow Condensed';text-transform:uppercase;font-size:40px}
+.field>span,.field>label{font-size:11px;letter-spacing:.045em;text-transform:uppercase}.field input:not([type=radio]),.field textarea,.field select{border-radius:2px;border-color:#aeb0a5;background:#fff;padding:15px;font-size:13px;min-height:53px}.field textarea{min-height:125px}
+.swatch{width:44px;height:44px;border-radius:2px;box-shadow:0 0 0 1px #777}.swatch[aria-pressed=true]{box-shadow:0 0 0 3px #171815}
+.field small{display:block;font-size:11px;margin-top:7px}.notice{background:#fff8df;border:1px solid #dccf95;border-left:4px solid #ba9d1a;border-radius:0;padding:14px 16px}
+.micro-step{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:9px;margin-bottom:12px}.micro-step b{font-family:'Barlow Condensed';font-size:25px}.micro-step span{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.editor-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:17px}.editor-choice{padding:14px 9px;text-transform:uppercase;background:#eae9e2;border:1px solid #bdbdb1;font-size:10px;font-weight:900;line-height:1.3;color:#262822}.editor-choice[aria-pressed=true]{background:#fbd332;border-color:#171815;box-shadow:3px 3px 0 #171815}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.barcode{font-family:ui-monospace,monospace;letter-spacing:3px;color:#fbd332;font-size:11px}
+.ops-bar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:14px 0 24px;background:#171815;color:white;padding:17px 22px;font-size:11px}
+.ops-bar strong{font-family:'Barlow Condensed';font-size:22px}
+.board{grid-template-columns:repeat(5,minmax(215px,1fr));gap:8px}.lane{background:#dfded5;border-radius:0;padding:12px;min-height:400px;border-top:4px solid #85877d}.lane:first-child{border-top-color:#cf603f}.lane:nth-child(2){border-top-color:#a77c30}.lane:nth-child(3){border-top-color:#e4b52d}.lane:nth-child(4){border-top-color:#758f72}.lane:last-child{border-top-color:#333}
+.lane-head{font-size:12px;text-transform:uppercase;letter-spacing:.04em}.count{background:#171815;color:white;border-radius:2px;padding:4px 8px}.ticket{border:1px solid #c0c0b5;border-radius:2px;box-shadow:3px 3px 0 #0000000a;background:#f9f9f4}.ticket strong{font-family:'Barlow Condensed';font-size:20px;text-transform:uppercase}.ticket .ticket-label{font-size:10px}.ticket p{line-height:1.55}.ticket button{border-radius:2px;text-transform:uppercase;letter-spacing:.05em}.ticket button:hover{background:#d3a319;color:#171815}.empty{border-radius:2px;background:#f4f3ec;border-style:dashed;font-size:12px}
+.metric-grid{gap:9px}.metric{border-radius:2px;border-top:4px solid #171815;box-shadow:4px 4px 0 #00000009;padding:25px}.metric:first-child{border-top-color:#d5a525}.metric strong{font-family:'Barlow Condensed';font-size:65px}.metric span{font-size:11px;text-transform:uppercase;letter-spacing:.045em}.metric::after{content:'DEMO / LOCAL';font-size:9px;font-weight:800;letter-spacing:.1em;color:#85877c;display:block;margin-top:16px}
+.insight-grid .panel{padding:30px}.insight-grid h2{font-family:'Barlow Condensed';font-size:31px!important;text-transform:uppercase}.bar-bg{border-radius:0;background:#dfded4}.bar-fill{border-radius:0;background:#d9ac29}.bar-row{margin:24px 0}
+.toggle{border-radius:2px}.status-dot{border-radius:2px}.status-item.done .status-dot{background:#fbd332}
+@media(max-width:1060px){.ed-title{font-size:clamp(75px,9.2vw,125px)}.look-grid{grid-template-rows:repeat(2,270px)}.look h3{font-size:51px}.look:first-child h3{font-size:79px}.ed-copy{padding:44px 35px}.look:first-child .look-copy{padding:25px}}
+@media(max-width:800px){.wrap{padding:0 20px}.header-inner{padding:12px 20px}.editorial-hero{grid-template-columns:1fr;min-height:0}.ed-copy{padding:40px 31px;min-height:485px}.ed-title{font-size:clamp(84px,14vw,135px)}.ed-photo{min-height:420px}.look-grid{grid-template-columns:1fr 1fr;grid-template-rows:410px 240px}.look:first-child{grid-column:span 2;grid-row:1}.look h3{font-size:49px}.look:first-child h3{font-size:95px}.look .look-visual .cap-svg{width:175%}.story{grid-template-columns:1fr}.story-head{padding:32px;border-right:0;border-bottom:1px solid #fff4}.story-steps{padding:10px 32px}.look-heading{grid-template-columns:1fr}.board{grid-template-columns:repeat(5,220px)}.config-layout{grid-template-columns:1fr}.config-layout .preview{position:static}.metric-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:550px){.wrap{padding:0 15px}.header-inner{padding:10px 15px}.brand-title{font-size:22px}.brand-sub{font-size:8px}.seal{height:40px;width:40px}.nav{grid-template-columns:repeat(3,1fr);gap:5px}.nav button{font-size:10px;padding:10px 1px}.editorial-hero{margin-top:14px;box-shadow:5px 5px 0 #0002}.ed-copy{padding:32px 25px 25px;min-height:420px}.ed-title{font-size:clamp(64px,18vw,97px);margin:24px 0 10px}.ed-title span:nth-child(2){padding-left:7%}.ed-text{font-size:13px}.ed-actions{width:100%}.ed-actions .btn{flex:1;min-width:175px}.ed-photo{min-height:320px}.ed-photo .cap-svg{width:115%}.ed-photo .orb{width:84px;height:84px;font-size:13px}.ed-photo .serial{font-size:40px}.ed-bottom{padding:12px 15px;font-size:9px;gap:5px}.ed-bottom span:last-child{display:none}.section{padding-top:53px}.section h2{font-size:clamp(55px,14vw,83px)}.look-grid{display:flex;flex-direction:column;gap:10px}.look{min-height:285px;grid-template-columns:1fr .95fr}.look:first-child{min-height:400px}.look:first-child h3{font-size:72px}.look h3{font-size:51px}.look p{font-size:11px}.look .look-copy{padding:21px 16px}.look:first-child .look-copy{padding:28px 20px}.look .look-visual .cap-svg{width:215%;transform:rotate(-10deg) translate(-20%,7%)}.look:first-child .look-visual .cap-svg{width:220%;transform:rotate(-10deg) translate(-20%,7%)}.look .look-visual:after{width:170px;height:170px}.story{margin-top:42px}.story-head{padding:27px}.story h2{font-size:61px;margin:19px 0}.story-steps{padding:8px 25px}.story-step{padding:19px 0}.page-top{padding-top:32px}.page-title{font-size:clamp(49px,14vw,70px)}.config-layout .panel,.config-layout .preview{padding:20px}.preview-image{min-height:255px}.metric-grid .metric{padding:17px}.metric strong{font-size:50px}.ops-bar{padding:15px}.footer{margin-top:45px}.mobile-cta{background:#f1efe5;box-shadow:0 -3px 18px #0002}.mobile-cta button{background:#171815;box-shadow:3px 3px 0 #e4ba2c}}
+@media(max-width:359px){.ed-title{font-size:59px}
+/* editorial long-word safeguard */
+.look h3{max-width:100%;overflow-wrap:break-word;text-wrap:balance}.brand-title{font-size:19px}.look:first-child h3{font-size:63px}.look h3{font-size:43px}.ed-actions .btn{width:100%;flex:auto}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+
+/* Mobile typography + overflow correction after customer feedback on 03/11/2026. */
+html,body{max-width:100%;overflow-x:clip}
+#app,.wrap,.ed-copy,.page-top,.config-layout,.insight-grid,.story,.story-head,.story-steps,.look,.look-copy,.look-visual,.panel,.metric{min-width:0}
+.ed-title,.look h3,.story h2,.page-title,.section h2,.story-step h3{overflow-wrap:normal;word-break:normal}
+.ed-title{line-height:.86}
+.look h3,.story h2,.page-title,.section h2{line-height:1.04}
+.look-copy p,.section-intro,.ed-text,.page-top p,.notice,.ticket p,.story-step p{overflow-wrap:break-word}
+@media(max-width:800px){
+ .ed-copy{min-height:0}
+ .ed-title{font-size:clamp(64px,13vw,110px)}
+ .look-grid{grid-template-rows:none}
+ .look{min-height:310px}
+ .look:first-child{min-height:420px}
+}
+@media(max-width:600px){
+ .ed-copy{padding:28px 22px 30px;min-height:0}
+ .ed-title{font-size:clamp(56px,16.4vw,94px);letter-spacing:-.052em;line-height:.93;margin:23px 0 15px}
+ .ed-title span:nth-child(2){padding-left:3%}
+ .ed-actions{display:grid;grid-template-columns:minmax(0,1fr);width:100%}
+ .ed-actions .btn{width:100%;min-width:0;white-space:normal;text-align:center}
+ .ed-photo{min-height:300px}
+ .ed-photo .serial{font-size:clamp(26px,10vw,43px)}
+ .look-heading{grid-template-columns:minmax(0,1fr)}
+ .look-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:none;gap:14px}
+ .look,.look:first-child{grid-column:auto;grid-row:auto;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(170px,220px);min-height:0;overflow:hidden}
+ .look .look-copy,.look:first-child .look-copy{padding:22px 22px 6px;min-width:0;gap:10px}
+ .look h3,.look:first-child h3{font-size:clamp(46px,13vw,70px);line-height:1.01;overflow-wrap:normal;max-width:none;margin:12px 0}
+ .look p{max-width:40ch;font-size:12px;line-height:1.55;margin-bottom:14px}
+ .look-visual,.look:first-child .look-visual{min-height:170px;overflow:hidden;align-items:center}
+ .look .look-visual .cap-svg,.look:first-child .look-visual .cap-svg{width:min(92%,370px);max-width:370px;transform:rotate(-9deg) translate(0,3%);filter:drop-shadow(8px 12px 3px #0004)}
+ .look .look-visual:after,.look:first-child .look-visual:after{width:230px;height:230px}
+ .story-head{padding:25px 22px}
+ .story h2{font-size:clamp(49px,14.4vw,77px);line-height:1.03}
+ .story-steps{padding:7px 18px}
+ .story-step{grid-template-columns:32px minmax(0,1fr);gap:14px}
+ .story-step h3{font-size:19px;line-height:1.07}
+ .page-title{font-size:clamp(42px,12.3vw,68px);line-height:1.03}
+ .page-top{gap:12px}
+ .panel{max-width:100%}
+ .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .metric{min-width:0}
+ .metric strong{font-size:clamp(39px,12vw,55px)}
+ .metric span{overflow-wrap:break-word}
+ .status-track{grid-template-columns:repeat(5,minmax(0,1fr))}
+ .status-item{overflow-wrap:break-word;line-height:1.35}
+ .footer-inner>div{min-width:0;overflow-wrap:break-word}
+}
+@media(max-width:360px){
+ .ed-title{font-size:clamp(51px,15.8vw,64px)}
+ .ed-copy{padding-inline:18px}
+ .look .look-copy,.look:first-child .look-copy{padding:20px 18px 4px}
+ .look h3,.look:first-child h3{font-size:clamp(43px,12.8vw,53px)}
+ .section h2{font-size:clamp(44px,12.8vw,58px)}
+ .story h2{font-size:clamp(43px,13vw,56px)}
+ .page-title{font-size:clamp(39px,12vw,48px)}
+ .metric{padding:14px}
+}
+
+/* Esboço enviado: cores e ornamentos exclusivos para cada skin */
+.look:nth-child(1){background:#f2eee9;border-color:#ac3140}
+.look:nth-child(2){background:#ece6f2;border-color:#6d3798}
+.look:nth-child(3){background:#f8e6ee;border-color:#c64287}
+.look:nth-child(1) .look-note,.look:nth-child(1) .look-num{color:#a82d39}
+.look:nth-child(2) .look-note,.look:nth-child(2) .look-num{color:#66328e}
+.look:nth-child(3) .look-note,.look:nth-child(3) .look-num{color:#b22d71}
+.look:nth-child(1) .btn.dark{background:#ad313e}
+.look:nth-child(2) .btn.dark{background:#62308e}
+.look:nth-child(3) .btn.dark{background:#b63679}
+.look .look-visual{overflow:hidden}
+.look .look-visual .cap-svg{position:relative;z-index:3}
+.skin-motif{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.look .look-visual:after{z-index:0;background:#ffffff66}
+@media(max-width:600px){.look .look-visual,.look:first-child .look-visual{min-height:190px}.look .look-visual .cap-svg,.look:first-child .look-visual .cap-svg{width:min(90%,370px);transform:rotate(-9deg) translate(0,2%)}}
+
+
+/* Confirmed Dogstar motto, palette and mobile contrast */
+:root{--yellow:#FFD400;--primary-canary:#FFD400;--red-vivid:#F22025}
+.ed-title.official-motto{font-size:clamp(61px,6.45vw,108px);line-height:.9;letter-spacing:-.047em;margin:25px 0 23px;max-width:100%}
+.ed-title.official-motto span:nth-child(2){padding-left:5%}.ed-title.official-motto span:last-child{color:#e24b38}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:10px;margin-top:11px}
+.swatch{height:46px;width:46px;max-width:100%;border-radius:3px;border:2px solid white;cursor:pointer;box-shadow:0 0 0 1px #92938a}
+.swatch:focus-visible{outline:3px solid #3861d4;outline-offset:3px}.swatch[aria-pressed=true]{box-shadow:0 0 0 3px #141513}
+.color-feedback{margin-top:16px;margin-bottom:8px;font-size:12px;color:#242621}.color-feedback strong{font-size:14px}
+@media(max-width:800px){.ed-title.official-motto{font-size:clamp(64px,12.2vw,104px);line-height:.92}}
+@media(max-width:600px){.ed-title.official-motto{font-size:clamp(52px,14vw,78px);line-height:.96;letter-spacing:-.04em}.ed-title.official-motto span:nth-child(2){padding-left:2%}.swatches{grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:11px}}
+@media(max-width:359px){.ed-title.official-motto{font-size:clamp(47px,13.7vw,53px)}}
+
+
+/* Monster Cap is an authorial-cap gift, not a shop collection */
+.monster-section{margin-top:72px;display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);background:#1a1b19;border-top:5px solid #FFD400;color:#f6f0e2}
+.monster-copy{padding:clamp(24px,4.2vw,58px);display:flex;flex-direction:column;justify-content:center}
+.monster-copy .eyebrow{color:#d9d3aa}.monster-kicker{font-size:10px;font-weight:900;color:#FFD400;letter-spacing:.12em;margin-top:28px}
+.monster-copy h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(70px,9vw,125px);line-height:.86;letter-spacing:-.04em;color:#FFD400;margin:14px 0 25px}
+.monster-copy p{font-size:14px;line-height:1.8;color:#d8d6c8;max-width:440px}.monster-copy p strong{color:#fff}
+.monster-features{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0}.monster-features span{font-size:9px;font-weight:850;letter-spacing:.06em;padding:8px 9px;border:1px solid #747668}
+.monster-copy .monster-fine{font-size:11px;color:#adafa2}
+.monster-showcase{min-width:0;padding:35px;background:radial-gradient(circle at 55% 35%,#3d3d38,#20211f 75%);display:flex;flex-direction:column;justify-content:center;gap:15px}
+.monster-card-header{display:flex;justify-content:space-between;gap:10px;font-size:10px;font-weight:850;letter-spacing:.08em;color:#e7deb3}
+#monsterCardVisual{border:1px solid #eee0b7;box-shadow:7px 7px 0 #0005;background:#f1efe8;color:#171815}
+.monster-face{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.94fr);min-height:375px}
+.monster-art{min-width:0;padding:21px 10px;background:radial-gradient(circle,#dfbaab,#ac666c);display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center}
+.monster-art .eyebrow{color:#3c2930}.monster-art svg{width:100%;max-width:315px;max-height:270px;filter:drop-shadow(10px 13px 3px #0003)}
+.monster-art small{font-size:10px;color:#4b3935}.monster-details{padding:23px 23px;display:flex;flex-direction:column;justify-content:center}
+.monster-details h3{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(42px,5vw,66px);line-height:.87;margin:13px 0 20px}
+.monster-details .eyebrow{color:#76564a}.monster-name{font-size:10px!important;font-weight:850;letter-spacing:.05em}
+.monster-details p{font-size:12px;line-height:1.7}.monster-details small{font-size:10px;line-height:1.6;color:#62635c}
+.monster-stat{padding:9px 0;border-top:1px solid #c9c5bc;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.monster-stat span{font-weight:850;font-size:11px;letter-spacing:.06em}.monster-stat b{font-family:'Barlow Condensed',Impact,sans-serif;font-size:29px}
+.monster-photo{background:#c3c1b5}.monster-photo .cap-svg{max-width:325px;width:100%;filter:grayscale(.55)}.monster-photo small{color:#4b4c44;font-size:10px;font-weight:900;letter-spacing:.04em}
+.monster-flip{min-height:48px;background:transparent;color:#FFD400;border:1px solid #FFD400;font-size:11px;font-weight:900;letter-spacing:.07em;cursor:pointer;text-transform:uppercase}
+.monster-flip:hover{background:#FFD400;color:#181817}.monster-flip:focus-visible{outline:3px solid #93c5fd;outline-offset:3px}
+@media(max-width:980px){.monster-section{grid-template-columns:1fr}.monster-showcase{padding:24px}.monster-copy{padding:35px}.monster-copy h2{font-size:95px}}
+@media(max-width:600px){.monster-section{margin-top:42px}.monster-copy{padding:27px 21px}.monster-copy h2{font-size:clamp(68px,19vw,98px)}.monster-showcase{padding:18px}.monster-face{grid-template-columns:1fr}.monster-art{min-height:235px}.monster-art svg{max-height:210px}.monster-details{padding:22px}.monster-details h3{font-size:52px}.monster-card-header{font-size:9px;flex-wrap:wrap}}
+
+
+.authorial-indicator{margin:10px 0 6px;padding:9px;font-size:10px;letter-spacing:.05em;font-weight:900;background:#e7e4d9;color:#212321;border-left:3px solid #b98b24}
+.authorial-button{width:100%;padding:11px 7px;border:1px solid #56574f;color:#222;background:#f8f7ed;font-size:10px;font-weight:850;cursor:pointer;min-height:44px}
+.authorial-button[aria-pressed=true]{background:#322f39;color:#fbd53e}.authorial-button:focus-visible{outline:3px solid #60a5fa;outline-offset:3px}
+.monster-ops{margin:16px 0 26px;padding:24px 29px;background:#2e2835;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:17px}
+.monster-ops strong{font-family:'Barlow Condensed',Impact,sans-serif;font-size:37px;display:block;line-height:1.1;color:#FFD400}
+.monster-ops p{font-size:12px;line-height:1.6;color:#e5dcea;max-width:650px}.monster-ops .btn{flex-shrink:0;border:1px solid #FFD400}
+@media(max-width:600px){.monster-ops{padding:20px;flex-direction:column;align-items:flex-start}.monster-ops .btn{width:100%}}
+
+
+/* QA 320px — avoid min-content grid overflow in Monster Cap module */
+.monster-section,.monster-copy,.monster-showcase,#monsterCardVisual,.monster-face,.monster-art,.monster-details{min-width:0;max-width:100%;box-sizing:border-box}
+.monster-section{grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr)}
+.monster-flip{min-width:0;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:break-word;padding:9px 12px}
+.monster-card-header span{min-width:0;overflow-wrap:anywhere}
+@media(max-width:980px){.monster-section{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.monster-copy h2{font-size:clamp(54px,14vw,76px);line-height:1}.monster-showcase{padding:14px}.monster-details h3{font-size:clamp(38px,10.5vw,47px);line-height:.98}}
+@media(max-width:359px){.monster-copy h2{font-size:47px}.monster-details h3{font-size:38px}.monster-showcase{padding:12px}.monster-card-header{font-size:8px;line-height:1.4}}
+
+
+/* Portfolio / customer-supplied authentic photos */
+.portfolio-section{padding-top:85px;scroll-margin-top:120px}
+.portfolio-header{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:25px;align-items:end;border-bottom:2px solid #181915;padding-bottom:22px}
+.portfolio-header h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(58px,7vw,100px);line-height:.88;letter-spacing:-.04em;margin:15px 0 0}
+.portfolio-header p{font-size:13px;line-height:1.75;color:#55594f}
+.portfolio-grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);margin-top:16px;background:#191a17;border:1px solid #171815}
+.portfolio-images{min-width:0;background:#1e201b;padding:13px}
+.portfolio-large{height:clamp(420px,47vw,600px);position:relative;overflow:hidden;background:#0b0c0a}
+.portfolio-large>img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 49%}
+.portfolio-large>span{position:absolute;left:13px;top:13px;background:#FFD400;color:#171815;padding:8px 10px;font-size:9px;font-weight:900;letter-spacing:.07em}
+.portfolio-thumbs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.portfolio-thumb{min-width:0;display:flex;align-items:center;gap:9px;border:1px solid #66665b;background:#30312b;color:#eee;padding:7px;text-align:left;font-size:10px;font-weight:850;min-height:62px;cursor:pointer}
+.portfolio-thumb[aria-pressed=true]{border-color:#FFD400;box-shadow:inset 0 0 0 1px #FFD400;color:#FFD400}
+.portfolio-thumb img{width:50px;height:46px;object-fit:cover;flex-shrink:0}
+.portfolio-thumb:focus-visible,.idea-examples button:focus-visible{outline:3px solid #3b82f6;outline-offset:3px}
+.portfolio-content{background:#eeece4;padding:clamp(24px,4.5vw,60px);display:flex;flex-direction:column;justify-content:center;min-width:0}
+.portfolio-content h3{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(78px,9.2vw,140px);line-height:.78;letter-spacing:-.055em;margin:25px 0}
+.portfolio-content>p{font-size:13px;line-height:1.75;color:#494a43}
+.portfolio-facts{border-block:1px solid #b8baaf;margin:24px 0}
+.portfolio-facts>div{padding:13px 0;display:grid;grid-template-columns:105px minmax(0,1fr);gap:10px;border-bottom:1px solid #d1d0c6;align-items:center}
+.portfolio-facts>div:last-child{border:0}.portfolio-facts span{font-size:9px;font-weight:850;letter-spacing:.06em;color:#63655c}.portfolio-facts b{font-size:11px;line-height:1.4}
+.portfolio-content .portfolio-note{font-size:11px;color:#646459;margin:0 0 17px}.portfolio-content .btn{align-self:flex-start}
+.project2-section{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:#282729;color:#f6f0e9;margin-top:68px;min-height:450px}
+.project2-image{position:relative;min-height:420px;overflow:hidden}.project2-image img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.project2-image>span{position:absolute;bottom:17px;left:17px;right:17px;width:max-content;max-width:calc(100% - 34px);background:#171716e8;color:#f7f2e5;font-size:9px;font-weight:900;letter-spacing:.07em;padding:11px}
+.project2-copy{min-width:0;padding:clamp(28px,4.5vw,60px);display:flex;flex-direction:column;justify-content:center}
+.project2-overline{font-size:10px;color:#fac09d;letter-spacing:.12em;font-weight:900;margin-top:24px}
+.project2-copy h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(54px,6.5vw,104px);line-height:.86;letter-spacing:-.043em;margin:15px 0 23px}
+.project2-copy p{font-size:13px;line-height:1.9;color:#e5d8d0}.project2-copy strong{color:white}
+.project2-lore{border-block:1px solid #746a67;margin:22px 0;padding:16px 0}.project2-lore b{color:#FFD400;font-size:12px;letter-spacing:.07em}.project2-lore p{font-size:11px;margin-top:10px}.project2-copy small{font-size:10px;line-height:1.7;color:#bab1ac}
+.idea-suggestions{margin:4px 0 20px;padding:16px;background:#eae8dd;border:1px solid #c6c5ba}
+.idea-suggestions p{font-size:12px;line-height:1.55;margin:9px 0 15px}
+.idea-examples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.idea-examples button{min-width:0;display:flex;flex-direction:column;gap:12px;justify-content:space-between;background:#faf9f3;border:1px solid #a6a599;color:#24241f;text-align:left;padding:11px;cursor:pointer;min-height:88px}
+.idea-examples button:hover{background:#fff7dc;border-color:#55574b}
+.idea-examples strong{font-size:11px;line-height:1.3}.idea-examples small{font-size:9px;color:#705e29;font-weight:850}.idea-suggestions .idea-status{font-size:10px;color:#636258;margin:13px 0 0}
+@media(max-width:800px){.portfolio-section{padding-top:60px}.portfolio-header{grid-template-columns:minmax(0,1fr)}.portfolio-grid,.project2-section{grid-template-columns:minmax(0,1fr)}.portfolio-large{height:520px}.portfolio-content h3{font-size:clamp(88px,15vw,140px)}.project2-image{min-height:330px;max-height:520px}.project2-copy h2{font-size:clamp(65px,12vw,94px)}}
+@media(max-width:600px){.portfolio-section{padding-top:43px}.portfolio-header h2{font-size:clamp(53px,13vw,77px);line-height:.98}.portfolio-images{padding:8px}.portfolio-large{height:380px}.portfolio-thumb{gap:5px;padding:5px;font-size:9px}.portfolio-thumb img{width:44px;height:47px}.portfolio-content{padding:28px 22px}.portfolio-content h3{font-size:clamp(70px,17.5vw,100px);line-height:.84;margin:19px 0}.portfolio-facts>div{grid-template-columns:85px minmax(0,1fr)}.project2-section{margin-top:40px}.project2-image{min-height:260px}.project2-copy{padding:29px 22px}.project2-copy h2{font-size:clamp(53px,13vw,80px);line-height:.98}.idea-examples{grid-template-columns:1fr}.idea-examples button{min-height:48px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px}}
+@media(max-width:359px){.portfolio-large{height:320px}.portfolio-content h3{font-size:65px}.portfolio-content{padding:20px 15px}.portfolio-facts>div{grid-template-columns:72px minmax(0,1fr)}.project2-copy h2{font-size:52px}}
+
+
+/* Horoz character sheet, concept art and responsive gallery (Nov 2026) */
+.project2-section{align-items:stretch}
+.project2-image{display:flex;flex-direction:column;justify-content:stretch;background:#171817;overflow:visible}
+.project2-media-stage{position:relative;flex:1 1 auto;min-height:440px;display:grid;place-items:center;background:#ebe5d9;overflow:hidden}
+.project2-media-stage img{display:block;width:100%;height:100%;position:absolute;inset:0;object-fit:contain;object-position:center}
+.project2-media-stage[data-type="reference"]{background:#252525}
+.project2-media-stage[data-type="reference"] img{object-fit:cover}
+.project2-image-stamp{position:absolute;bottom:18px;left:18px;max-width:calc(100% - 36px);font-weight:850;letter-spacing:.075em;font-size:9px;background:#141413e8;color:#fff4db;padding:10px 12px;z-index:1}
+.project2-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:14px;background:#1d1e1c}
+.project2-switch button{border:1px solid #585a50;background:#282924;color:#ece9dc;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:850;min-height:48px;cursor:pointer;padding:10px}
+.project2-switch button[aria-pressed="true"]{color:#181a14;border-color:#FFD400;background:#FFD400}
+.project2-switch button:focus-visible{outline:3px solid #87b5ff;outline-offset:2px}
+.project2-copy h2{margin-bottom:22px}
+.project2-character{border:1px solid #7b766e;background:#161718;padding:20px 23px;margin-bottom:26px;box-shadow:5px 5px 0 #0002}
+.project2-character-head{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-bottom:16px;margin-bottom:15px;border-bottom:1px solid #55544f}
+.project2-character-head>div{display:flex;flex-direction:column;gap:6px;min-width:0}
+.project2-character-head span{color:#c4bdb0;font-size:9px;letter-spacing:.12em;font-weight:800}
+.project2-character-head strong{font-family:'Barlow Condensed',Impact,sans-serif;font-weight:900;font-size:clamp(26px,3vw,42px);line-height:1;color:#FFD400}
+.project2-attribute{margin:12px 0}
+.project2-attribute-line{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+.project2-attribute-line span{color:#f2eee4;font-size:10px;font-weight:850;letter-spacing:.1em}
+.project2-attribute-line strong{font-family:'Barlow Condensed',Impact,sans-serif;font-size:26px;line-height:1;color:#FFD400}
+.project2-attribute-line strong small{font-family:'DM Sans',system-ui;font-size:11px;font-weight:650;color:#d2c9b7;letter-spacing:0}
+.project2-meter{height:7px;overflow:hidden;background:#42443e;border:1px solid #777970;max-width:100%}
+.project2-meter>span{display:block;background:#FFD400;height:100%;min-width:0}
+.project2-copy>.project2-lore{margin-top:14px}
+.project2-copy>small{font-size:10px;line-height:1.65}
+@media(max-width:800px){.project2-media-stage{min-height:460px}.project2-character-head strong{font-size:34px}}
+@media(max-width:600px){.project2-image{min-height:0;max-height:none}.project2-media-stage{min-height:330px}.project2-image img{min-height:0;max-height:none}.project2-media-stage img{min-height:0;max-height:none}.project2-copy{padding:30px 22px}.project2-copy h2{font-size:clamp(54px,13.5vw,79px);line-height:1}.project2-character{padding:16px}.project2-character-head strong{font-size:30px}.project2-image-stamp{font-size:8px}.project2-switch{padding:10px;gap:6px}.project2-switch button{padding:9px 5px}}
+@media(max-width:359px){.project2-copy h2{font-size:49px}.project2-media-stage{min-height:285px}.project2-character-head strong{font-size:26px}}
+
+
+/* Dogstar / edição 05: catálogo visual autoral (5 peças) e bestiário (5 personagens). */
+.ed-photo{background:#2a2a24}
+.ed-photo .hero-real-bone{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 48%;display:block;z-index:2}
+.ed-photo .edge-label{z-index:4;background:#121310dc;color:#fff;padding:8px 11px}
+.ed-photo .orbit{opacity:.08}
+.ed-photo .hero-real-label{position:absolute;left:20px;bottom:105px;z-index:5;background:#FFD400;color:#191b17;font-weight:900;letter-spacing:.07em;font-size:10px;padding:10px 12px}
+.ed-photo .serial{z-index:5;background:#181917e8;padding:9px 13px;color:#fff}
+.five-portfolio{scroll-margin-top:100px;margin:75px 0 25px;min-width:0}
+.five-header{display:grid;grid-template-columns:minmax(0,1.16fr) minmax(0,.84fr);gap:30px;align-items:end;border-bottom:2px solid #24251f;padding-bottom:26px}
+.five-header h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(58px,7.8vw,112px);line-height:.91;letter-spacing:-.04em;margin:14px 0 0}
+.five-header p{font-size:13px;line-height:1.75;color:#50534b;max-width:400px}
+.five-tiers{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:22px 0 12px;font-weight:800;font-size:11px}
+.five-tiers>span:first-child{font-size:10px;letter-spacing:.08em;color:#777970;margin-right:14px}
+.five-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.five-filters button{min-height:44px;background:#e5e4da;border:1px solid #a8a89b;color:#30322a;padding:10px 13px;font-weight:850;letter-spacing:.02em;font-size:11px;cursor:pointer}
+.five-filters button[aria-pressed=true]{background:#22231d;color:#fff;border-color:#22231d}
+.five-select:focus-visible,.five-filters button:focus-visible,.five-shot:focus-visible,.five-monster-tab:focus-visible{outline:3px solid #3167bc;outline-offset:3px}
+.five-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;min-width:0}
+.five-card{min-width:0;grid-column:span 2;border:1px solid #272823;background:#f6f4ea}
+.five-card:nth-child(1),.five-card:nth-child(2){grid-column:span 3}
+.five-select{min-width:0;width:100%;height:100%;background:transparent;border:0;cursor:pointer;padding:0;color:#1a1b17;text-align:left;display:flex;flex-direction:column}
+.five-select[aria-pressed=true]{box-shadow:inset 0 0 0 3px #262721}
+.five-img{height:clamp(225px,29vw,405px);width:100%;min-width:0;position:relative;overflow:hidden;background:#cac8b9}
+.five-img img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .18s ease}
+.five-select:hover .five-img img{transform:scale(1.025)}
+.five-img small{position:absolute;top:15px;left:14px;background:#171914e8;color:#f5f1dd;padding:8px 9px;font-size:10px;font-weight:900;letter-spacing:.06em}
+.five-info{padding:20px 20px 23px;width:100%;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;min-width:0}
+.five-info h3{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(33px,4.2vw,59px);line-height:1.05;margin:9px 0;letter-spacing:-.03em;overflow-wrap:break-word}
+.five-info p{font-size:11px;color:#66665e;line-height:1.5}
+.five-info>b{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;color:#FFD400;background:#23241e;font-size:21px}
+.tier-tag{display:inline-flex;align-items:center;gap:5px;border:1px solid #aaa;font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.045em;padding:6px 8px;white-space:nowrap}
+.tier-epica{border-color:#dd7982;color:#9f2d38;background:#fff0ee}
+.tier-lendaria{border-color:#9a7ac6;color:#5d378b;background:#f2ebfc}
+.tier-ultimate{border-color:#e793b5;color:#992967;background:#fae9f2}
+.five-empty{grid-column:1/-1;background:#f0eee3;padding:35px 26px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;border:1px dashed #99988d}
+.five-empty strong{font-size:19px}.five-empty p{font-size:13px;line-height:1.7}
+.five-detail{display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);min-width:0;background:#20211e;color:#f3f0e5;border-top:5px solid #FFD400;margin-top:20px}
+.five-detail-gallery{padding:15px;background:#2a2b26;min-width:0}
+.five-stage{height:clamp(355px,41vw,570px);position:relative;background:#111;overflow:hidden}
+.five-stage>img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+.five-stage>small{position:absolute;left:14px;top:14px;background:#FFD400;color:#171816;font-size:9px;font-weight:900;letter-spacing:.07em;padding:10px 12px}
+.five-shots{display:flex;align-items:stretch;gap:9px;flex-wrap:wrap;margin-top:10px}
+.five-shot{display:flex;align-items:center;gap:9px;background:#33352e;color:#ede9dc;border:1px solid #76766b;min-height:56px;padding:5px 12px 5px 5px;font-size:11px;font-weight:850;cursor:pointer}
+.five-shot[aria-pressed=true]{border-color:#FFD400;color:#FFD400}
+.five-shot img{height:46px;width:48px;object-fit:cover}
+.five-detail-copy{min-width:0;padding:clamp(23px,4vw,55px);display:flex;flex-direction:column;justify-content:center}
+.five-detail-copy .eyebrow{color:#d9d7ab}
+.five-detail-copy h3{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(58px,7vw,112px);line-height:.91;letter-spacing:-.04em;margin:20px 0;overflow-wrap:break-word}
+.five-detail-copy>p{font-size:13px;color:#e2dfd5;line-height:1.8;margin-top:20px}
+.five-detail-copy .five-footnote{font-size:10px;line-height:1.7;color:#aeaea2}
+.five-monster-inline{border-top:1px solid #6c6e64;border-bottom:1px solid #6c6e64;display:flex;gap:14px;padding:15px 0;margin-top:24px}
+.five-monster-inline img{flex-shrink:0;width:86px;height:94px;object-fit:cover;background:#e7e4df}
+.five-monster-inline>div{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.five-monster-inline span{font-size:9px;color:#c6c7b9;letter-spacing:.08em;font-weight:800}
+.five-monster-inline strong{font-size:30px;line-height:1;color:#FFD400;font-family:'Barlow Condensed',Impact,sans-serif}
+.five-monster-inline small{font-size:10px;line-height:1.6;color:#e7e4d8}
+.five-detail-copy>.btn{align-self:flex-start}
+.five-disclaimer{font-size:10px;color:#696a5e;line-height:1.7;margin-top:17px}
+.five-monsters{scroll-margin-top:100px;margin-top:64px;padding:clamp(24px,4vw,52px);background:#22241f;color:#f6f2e7;border-top:5px solid #FFD400}
+.five-monsters-header{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:28px;align-items:end;margin-bottom:26px}
+.five-monsters-header h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(57px,6.8vw,100px);line-height:.94;letter-spacing:-.035em;color:#FFD400;margin-top:15px}
+.five-monsters-header p{font-size:12px;line-height:1.8;color:#d1d0c7}
+.five-monster-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.five-monster-tab{display:flex;align-items:center;gap:9px;background:#30322c;color:#eeeade;border:1px solid #6a6c60;text-align:left;padding:7px;cursor:pointer;min-width:0;min-height:78px}
+.five-monster-tab[aria-pressed=true]{border-color:#FFD400;background:#FFD400;color:#191b15}
+.five-monster-tab>img{width:45px;height:59px;object-fit:cover;flex:0 0 45px}
+.five-monster-tab span{min-width:0;display:flex;flex-direction:column;gap:6px}
+.five-monster-tab strong{font-size:12px;overflow-wrap:break-word}
+.five-monster-tab small{font-size:10px;line-height:1.3}
+.five-monster-focus{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);background:#eeeae0;color:#262722;margin-top:15px;min-width:0}
+.five-monster-art{min-height:405px;min-width:0;position:relative;background:#ddd8ca}
+.five-monster-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.five-monster-art small{position:absolute;bottom:14px;left:14px;background:#191a18dd;color:#eee9db;font-size:9px;font-weight:900;letter-spacing:.07em;padding:9px}
+.five-monster-profile{padding:clamp(22px,3vw,45px);min-width:0}
+.five-monster-profile h3{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(58px,6.5vw,100px);line-height:.95;letter-spacing:-.035em;margin:12px 0 20px;overflow-wrap:break-word}
+.five-monster-profile>p{display:flex;gap:11px;justify-content:space-between;flex-wrap:wrap;border-top:1px solid #c4c1b4;font-size:12px;padding:15px 0;margin:5px 0}
+.five-monster-profile>small{color:#6d6c63;font-size:11px;line-height:1.6}
+.five-monster-profile .project2-attribute-line strong{color:#262722}
+.five-monster-profile .project2-meter>span{background:#c63a4b}
+.five-project2-note{display:flex;align-items:center;gap:17px;border-top:1px solid #6d6f60;padding-top:18px;margin-top:22px}
+.five-project2-note img{width:130px;height:85px;object-fit:cover;flex-shrink:0}
+.five-project2-note p{font-size:11px;line-height:1.8;color:#e1e2d6}
+@media(max-width:1100px){.five-monster-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:800px){.five-header,.five-monsters-header,.five-detail,.five-monster-focus{grid-template-columns:minmax(0,1fr)}.five-card:nth-child(n){grid-column:span 3}.five-monster-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.five-monster-art{min-height:440px}.five-detail-copy h3{font-size:80px}}
+@media(max-width:600px){.five-portfolio{margin-top:39px}.five-header h2{font-size:clamp(48px,13vw,76px);line-height:1.01}.five-header p{font-size:12px}.five-tiers{gap:9px}.five-tiers>span:first-child{width:100%;margin-right:0}.five-filters button{flex:1 1 auto;padding:9px 8px;font-size:10px}.five-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.five-card:nth-child(n){grid-column:span 1}.five-card:first-child{grid-column:span 2}.five-img{height:clamp(162px,38vw,232px)}.five-card:first-child .five-img{height:285px}.five-info{padding:12px 10px;gap:5px}.five-info h3{font-size:clamp(27px,7vw,38px);line-height:1.03;margin:9px 0}.five-info p{font-size:10px;line-height:1.45}.five-info>b{width:27px;height:27px;flex-basis:27px;font-size:16px}.tier-tag{font-size:9px;padding:5px 6px}.five-detail-gallery{padding:10px}.five-stage{height:355px}.five-detail-copy{padding:26px 20px}.five-detail-copy h3{font-size:clamp(52px,12.5vw,76px)}.five-monster-inline img{width:65px;height:77px}.five-monsters{padding:22px 14px;margin-top:39px}.five-monsters-header h2{font-size:clamp(47px,12vw,70px);line-height:1.04}.five-monster-tabs{gap:7px}.five-monster-tab{padding:6px;gap:6px;min-height:65px}.five-monster-tab>img{width:35px;height:48px;flex-basis:35px}.five-monster-tab strong{font-size:10px}.five-monster-tab small{font-size:9px}.five-monster-art{min-height:325px}.five-monster-profile{padding:23px 19px}.five-monster-profile h3{font-size:clamp(51px,13vw,73px)}.five-project2-note img{width:83px;height:86px}.ed-photo .hero-real-label{bottom:119px;left:13px;font-size:9px;max-width:75%;line-height:1.5}}
+@media(max-width:359px){.five-info h3{font-size:25px}.five-img{height:162px}.five-card:first-child .five-img{height:250px}.five-detail-copy h3{font-size:50px}.five-monster-profile h3{font-size:49px}.five-monsters-header h2{font-size:46px}.five-header h2{font-size:47px}}
+@media(prefers-reduced-motion:reduce){.five-img img{transition:none!important}}
+
+
+/* Personalização em dois ângulos — frente e parte de trás */
+.cap-side-toggle{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.cap-side-toggle button{border:1px solid #8a8e84;background:#30332e;color:#f2eede;min-height:48px;padding:10px 12px;font-size:11px;font-weight:850;letter-spacing:.02em;line-height:1.35;cursor:pointer}
+.cap-side-toggle button[aria-pressed=true]{background:#FFD400;color:#181b15;border-color:#FFD400;box-shadow:inset 0 -3px 0 #181b15}
+.cap-side-toggle button:hover:not([aria-pressed=true]){background:#474c42}
+.cap-side-toggle button:focus-visible{outline:3px solid #9ec4ff;outline-offset:3px}
+.cap-side-caption{display:flex;flex-direction:column;gap:6px;padding:12px 1px 3px}
+.cap-side-caption strong{font-size:12px;letter-spacing:.075em;text-transform:uppercase;color:#FFD400}
+.cap-side-caption small{font-size:11px;line-height:1.65;color:#dddcd1}
+.cap-back-svg{width:min(100%,390px);max-width:100%;height:auto}
+.back-detail-field{border-top:1px solid #d1d1c7;margin-top:4px;padding-top:16px}
+.back-detail-field textarea{min-height:84px}
+.ticket-rear{border-left:3px solid #be8a30;padding:7px 9px;background:#fbf3db;font-size:11px;line-height:1.55}
+@media(max-width:390px){.cap-side-toggle button{font-size:10px;padding:10px 8px}}
+@media(prefers-reduced-motion:reduce){.cap-side-toggle button{transition:none!important}}
+
+.rear-done-note{padding:12px 14px;background:#f4edce;border-left:3px solid #a88226;margin:12px 0 16px;font-size:12px;line-height:1.6;color:#313329}
+
+/* Explicit preview side follows stored draft; changes never silently flip to front. */
+.preview-image[data-side="back"]{outline:2px solid #FFD400;outline-offset:-3px}
+.preview-image[data-side="front"]{outline:2px solid transparent;outline-offset:-3px}
+
+
+/* UX FIX | cartões de raridade: nunca cortar títulos, ilustrações ou CTA.
+   Antes: linhas fixas em 260px; o conteúdo Ultimate media ~305px.
+   Solução: altura mínima fluida, tipografia proporcional e imagens confinadas ao próprio painel. */
+#colecoes .look-grid{
+ grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);
+ grid-template-rows:repeat(2,minmax(330px,auto));
+ align-items:stretch;
+ gap:14px;
+}
+#colecoes .look{
+ grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
+ min-height:0;
+}
+#colecoes .look .look-copy{
+ min-width:0;
+ min-height:0;
+ padding:27px 25px;
+ gap:16px;
+ justify-content:space-between;
+}
+#colecoes .look:first-child .look-copy{padding:38px}
+#colecoes .look .look-copy>div{width:100%;min-width:0;max-width:100%}
+#colecoes .look:not(:first-child) h3{
+ font-size:clamp(33px,2.8vw,46px);
+ line-height:.98;
+ max-width:100%;
+ margin:12px 0 11px;
+ overflow-wrap:normal;
+}
+#colecoes .look:not(:first-child) p{
+ max-width:26ch;
+ font-size:12px;
+ line-height:1.6;
+ margin-bottom:16px;
+}
+#colecoes .look .btn{
+ position:relative;
+ min-height:44px;
+ white-space:normal;
+ text-align:center;
+}
+#colecoes .look-visual{
+ min-width:0;
+ min-height:0;
+ overflow:hidden;
+}
+#colecoes .look:not(:first-child) .look-visual .cap-svg{
+ width:min(146%,330px);
+ max-width:none;
+ transform:rotate(-8deg) translate(-5%,4%);
+}
+#colecoes .look:first-child .look-visual .cap-svg{
+ width:min(170%,600px);
+ max-width:none;
+ transform:rotate(-11deg) translate(-11%,6%);
+}
+@media(max-width:1100px){
+ #colecoes .look-grid{
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:none;
+  gap:14px;
+ }
+ #colecoes .look,#colecoes .look:first-child{
+  grid-row:auto;
+  grid-column:auto;
+  grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
+  min-height:335px;
+ }
+ #colecoes .look:first-child{min-height:390px}
+ #colecoes .look:not(:first-child) h3{font-size:clamp(39px,5vw,59px)}
+ #colecoes .look .look-copy,#colecoes .look:first-child .look-copy{padding:28px}
+ #colecoes .look:not(:first-child) .look-visual .cap-svg{
+  width:min(132%,450px);
+  transform:rotate(-8deg) translate(-3%,4%);
+ }
+}
+@media(max-width:600px){
+ #colecoes .look-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:none}
+ #colecoes .look,#colecoes .look:first-child{
+  grid-column:auto;
+  grid-row:auto;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto minmax(200px,auto);
+  min-height:0;
+ }
+ #colecoes .look .look-copy,#colecoes .look:first-child .look-copy{
+  padding:23px 22px;
+  gap:13px;
+ }
+ #colecoes .look h3,#colecoes .look:first-child h3{
+  font-size:clamp(44px,11.3vw,68px);
+  line-height:1.02;
+  max-width:100%;
+  margin:12px 0;
+ }
+ #colecoes .look .look-copy p{max-width:38ch;margin-bottom:14px;font-size:12px;line-height:1.55}
+ #colecoes .look .look-visual,#colecoes .look:first-child .look-visual{
+  min-height:195px;
+  height:clamp(195px,53vw,275px);
+  overflow:hidden;
+ }
+ #colecoes .look .look-visual .cap-svg,#colecoes .look:first-child .look-visual .cap-svg{
+  width:min(94%,380px);
+  max-width:100%;
+  transform:rotate(-7deg) translate(0,2%);
+ }
+ #colecoes .look .btn{min-height:44px}
+}
+@media(max-width:359px){
+ #colecoes .look .look-copy,#colecoes .look:first-child .look-copy{padding:21px 18px}
+ #colecoes .look h3,#colecoes .look:first-child h3{font-size:clamp(42px,12.7vw,49px)}
+}
+
+
+/* Esboço de 06/11: progressão visual separada das raridades oficiais. */
+.sketch-proof{margin:64px 0 72px;scroll-margin-top:88px}
+.sketch-proof-heading{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:end;gap:24px;border-top:3px solid #20211c;padding-top:25px;margin-bottom:20px}
+.sketch-proof-heading h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(48px,6.5vw,90px);font-weight:900;line-height:.9;letter-spacing:-.035em;margin:12px 0 0}
+.sketch-proof-heading>p{max-width:40ch;font-size:13px;line-height:1.75;color:#4b4c44}
+.sketch-proof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sketch-proof-card{margin:0;min-width:0;background:#f7f5ee;border:1px solid #bcb9ad}
+.sketch-proof-art{display:grid;place-items:center;aspect-ratio:360/290;overflow:hidden;background:#f1eee4}
+.sketch-proof-art svg{width:100%;height:100%;max-height:310px;display:block}
+.sketch-proof-card figcaption{padding:16px 18px 20px;border-top:3px solid #ffd400}
+.sketch-proof-card figcaption span{display:block;font-size:10px;font-weight:850;letter-spacing:.1em;color:#67695c}
+.sketch-proof-card figcaption strong{display:block;margin-top:8px;font-family:'Barlow Condensed',Impact,sans-serif;font-size:30px;line-height:1.05;color:#20211c}
+.sketch-proof-card figcaption p{font-size:12px;line-height:1.6;margin:7px 0 0;color:#4b4b44}
+@media(max-width:800px){.sketch-proof-heading{grid-template-columns:minmax(0,1fr)}.sketch-proof-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sketch-proof-card:last-child{grid-column:span 2}.sketch-proof-card:last-child .sketch-proof-art{aspect-ratio:2/1}}
+@media(max-width:530px){.sketch-proof{margin:42px 0 52px}.sketch-proof-heading{gap:12px}.sketch-proof-heading h2{font-size:clamp(50px,13vw,70px)}.sketch-proof-grid{grid-template-columns:minmax(0,1fr);gap:11px}.sketch-proof-card:last-child{grid-column:auto}.sketch-proof-card:last-child .sketch-proof-art{aspect-ratio:360/290}.sketch-proof-art{max-height:250px}.sketch-proof-card figcaption{padding:13px 16px 17px}}
+
+
+/* Dogstar: revisão de apresentação e navegação por universos, 06/11 */
+.brand-title{font-size:clamp(27px,2.5vw,34px)}.brand-sub{font-size:10px}
+#dogUniverse{background:#181917;color:#f8f6eb;border-top:5px solid #ffd400;margin:24px 0 46px;padding:clamp(24px,4vw,50px);scroll-margin-top:100px}
+.dog-u-head{display:flex;align-items:center;gap:clamp(18px,4vw,42px)}.dog-u-logo{border:4px solid #f5ebcf;box-shadow:0 0 0 5px #ffd400;width:clamp(112px,14vw,176px);height:clamp(112px,14vw,176px);border-radius:50%;background:#ffd400;color:#171815;display:grid;place-items:center;flex-shrink:0;overflow:hidden}.dog-u-logo>svg,.dog-u-logo>img{width:100%;height:100%;object-fit:cover}.dog-u-head h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(52px,7vw,93px);line-height:.88;letter-spacing:-.035em;margin:14px 0}.dog-u-head p{font-size:13px;line-height:1.7;max-width:520px;color:#e2dfd2}
+.dog-u-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:28px}.dog-u-tab{background:#31332b;color:#f7f5e7;text-decoration:none;border:1px solid #747569;display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0;min-height:112px;padding:18px;transition:background .16s,transform .16s}.dog-u-tab b{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(28px,3.8vw,45px);line-height:1}.dog-u-tab small{font-size:11px;line-height:1.4}.dog-u-tab:hover,.dog-u-tab:focus-visible,.dog-u-tab[aria-current=true]{background:#ffd400;color:#161815;border-color:#ffd400;transform:translateY(-2px)}
+.dog-u-preview{border-top:1px solid #74766b;margin-top:21px;padding-top:18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center}.dog-u-preview strong{font-family:'Barlow Condensed',Impact,sans-serif;color:#ffd400;font-size:clamp(27px,3vw,40px);line-height:1}.dog-u-preview p{font-size:12px;color:#e3dfd1;margin:8px 0 0;line-height:1.65}.dog-u-preview a{color:#191a16;background:#ffd400;padding:13px;text-align:center;text-decoration:none;font-size:11px;font-weight:900;min-height:44px}
+.five-tiers .tier-mark,.tier-tag .tier-mark{font-size:17px;font-weight:900;margin-right:5px}.five-detail-copy h3{font-size:clamp(52px,6vw,100px)}
+.five-stage{height:clamp(340px,43vw,625px);position:relative}.five-photo-open{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;z-index:3;cursor:zoom-in;color:#ffd400}.five-photo-open span{position:absolute;right:12px;bottom:12px;background:#171816;padding:10px 14px;font-size:11px;font-weight:900}
+.dog-detail-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.dog-detail-actions button{flex:1 1 auto}
+.dog-lightbox{padding:0;border:0;background:#171816;color:#f5f2e7;width:min(96vw,1050px);max-height:95vh;box-shadow:0 30px 100px #000d}.dog-lightbox::backdrop{background:#08090ae0}.dog-lightbox>div{padding:15px;display:flex;flex-direction:column;gap:12px;align-items:center}.dog-lightbox img{max-height:74vh;max-width:100%;object-fit:contain}.dog-lightbox footer{display:flex;justify-content:space-between;gap:18px;align-items:center;width:100%}.dog-lightbox footer p{font-size:12px;line-height:1.5;margin:0}.dog-lightbox footer button{background:#ffd400;color:#191a16;border:0;min-height:44px;padding:9px 16px;font-weight:900}
+#projeto-3{margin:60px 0 16px;padding:clamp(25px,4vw,56px);background:#282329;color:#f9f0ef;border-top:5px solid #d778a8;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:24px;scroll-margin-top:100px}
+#projeto-3 h2{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(58px,8vw,102px);line-height:.9;color:#ffbfdf;margin:16px 0}
+#projeto-3 p{font-size:13px;line-height:1.75;max-width:48ch}#projeto-3 .card-art{min-height:300px;display:grid;place-items:center;background:radial-gradient(circle,#5d3a52,#131314)}#projeto-3 .card-art b{border:5px solid #f3c0d9;border-radius:14px;padding:16px 60px;font-family:'Barlow Condensed',Impact,sans-serif;font-size:145px;line-height:1;color:#f3c0d9;transform:rotate(-8deg)}
+@media(max-width:820px){#projeto-3{grid-template-columns:1fr}#projeto-3 .card-art{min-height:215px}}
+@media(max-width:600px){#dogUniverse{padding:23px 16px}.dog-u-head{flex-direction:column;align-items:flex-start}.dog-u-logo{width:118px;height:118px}.dog-u-head h2{font-size:clamp(55px,14vw,80px)}.dog-u-tabs{gap:6px}.dog-u-tab{min-height:88px;padding:12px 8px}.dog-u-tab b{font-size:clamp(23px,7vw,33px)}.dog-u-tab small{font-size:9px}.dog-u-preview{grid-template-columns:1fr}.five-stage{height:clamp(305px,82vw,410px)}.dog-detail-actions{flex-direction:column}.dog-detail-actions button{width:100%}.dog-lightbox footer{flex-direction:column;align-items:stretch}#projeto-3{margin-top:35px;padding:25px 19px}#projeto-3 h2{font-size:66px}}
+@media(prefers-reduced-motion:reduce){.dog-u-tab{transition:none}.dog-u-tab:hover{transform:none}}
+
+.five-shots .five-shot[data-index="1"]{order:-1}#portfolio,#projeto-2,#projeto-3{scroll-margin-top:95px}
+
+.dog-u-logo{cursor:pointer;padding:0;font:inherit}
+@media (hover:hover) and (min-width:821px){
+#dogUniverse .dog-u-tabs,#dogUniverse .dog-u-preview{transition:opacity .2s ease,max-height .24s ease,margin-top .24s ease}
+#dogUniverse:not(:hover):not(:focus-within):not([data-open=true]) .dog-u-tabs,
+#dogUniverse:not(:hover):not(:focus-within):not([data-open=true]) .dog-u-preview{max-height:0;overflow:hidden;opacity:0;pointer-events:none;margin-top:0;padding-top:0;border-top:0}
+#dogUniverse:hover .dog-u-tabs,#dogUniverse:hover .dog-u-preview,
+#dogUniverse:focus-within .dog-u-tabs,#dogUniverse:focus-within .dog-u-preview{max-height:270px;opacity:1}
+}
+
+/* Dogstar / esboço do criador 07.11: modelo grande, boné em miniatura, raridade e monstro */
+#fiveDetail{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);align-items:stretch}
+#fiveDetail .dog-model-gallery{padding:0;min-width:0;background:#171a16}
+.dog-model-stage{display:flex;flex-direction:column;height:100%;min-height:590px;min-width:0}
+.dog-expand-photo{border:0;padding:0;position:relative;display:block;cursor:zoom-in;width:100%;background:#161917;color:#fff;text-align:left;overflow:hidden}
+.dog-expand-photo:focus-visible{outline:3px solid #ffe16e;outline-offset:-4px;z-index:2}
+.dog-model-photo{flex:1 1 auto;min-height:500px;display:grid;place-items:center}
+.dog-model-photo img{display:block;width:100%;height:100%;min-height:500px;max-height:700px;object-fit:contain;object-position:center}
+.dog-zoom-indicator{position:absolute;bottom:15px;right:15px;background:#ffd400;color:#191b17;padding:10px 13px;font-weight:900;font-size:10px;letter-spacing:.05em}
+.dog-model-foot{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;align-items:center;background:#ffd400;color:#1d1c17;padding:12px 17px;font-size:11px;line-height:1.4}
+.dog-model-foot strong{font-size:10px;letter-spacing:.08em}
+#fiveDetail .dog-detail-layout{padding:clamp(22px,3.2vw,48px);display:flex;flex-direction:column;justify-content:space-between;gap:22px;min-width:0}
+#fiveDetail .dog-detail-layout h3{font-size:clamp(47px,5vw,91px);line-height:.92;letter-spacing:-.035em;overflow-wrap:anywhere;margin:13px 0 18px}
+.dog-rarity-band{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid #595d52;border-bottom:1px solid #595d52;padding:11px 0}
+.dog-rarity-band>.tier-tag{min-height:34px}
+.dog-rarity-band>span:last-child{font-size:9px;letter-spacing:.065em;color:#d0cdc1;font-weight:800;line-height:1.4}
+.dog-hat-block{display:grid;grid-template-columns:minmax(142px,.8fr) minmax(0,1fr);gap:20px;align-items:center}
+.dog-hat-figure{border:1px dashed #979a8e;padding:9px;min-width:0}
+.dog-hat-label{display:block;font-size:9px;letter-spacing:.075em;color:#f7e8c2;font-weight:900;margin:0 0 9px}
+.dog-hat-photo{aspect-ratio:1/1;display:grid;place-items:center}
+.dog-hat-photo img{width:100%;height:100%;object-fit:contain;display:block}
+.dog-hat-expand{position:absolute;right:0;bottom:0;font-size:10px;background:#ffd400;color:#161913;font-weight:900;padding:7px 9px}
+.dog-hat-info p{font-size:12px;line-height:1.7;color:#ebe7d9;margin:0 0 13px;overflow-wrap:break-word}
+.dog-hat-info small{display:block;font-size:10px;color:#ffdc69;line-height:1.5}
+.dog-monster-link{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:14px;align-items:center;background:#35382f;color:#f8f3df;border:1px solid #858879;min-height:91px;padding:10px;text-decoration:none;transition:background .18s,border-color .18s}
+.dog-monster-link:hover,.dog-monster-link:focus-visible{background:#41473a;border-color:#ffd400}
+.dog-monster-link img{width:62px;height:68px;object-fit:cover;background:#ece5d8}
+.dog-monster-link>span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dog-monster-link>span>small{font-size:10px;line-height:1.45;color:#d3d2c2}
+.dog-monster-link>span>strong{font-family:'Barlow Condensed',Impact,sans-serif;font-size:30px;line-height:1;color:#ffde52}
+.dog-monster-link>b{font-size:25px;color:#ffe267;padding-right:9px}
+.dog-detail-footer{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.dog-detail-footer .btn{flex:0 1 auto}
+.dog-detail-footer .five-footnote{flex:1 1 210px;min-width:0}
+@media(max-width:1070px){.dog-hat-block{grid-template-columns:minmax(110px,.77fr) minmax(0,1fr);gap:12px}#fiveDetail .dog-detail-layout{padding:22px}.dog-model-stage{min-height:540px}.dog-model-photo,.dog-model-photo img{min-height:460px}}
+@media(max-width:800px){#fiveDetail{grid-template-columns:minmax(0,1fr)}.dog-model-stage{min-height:0}.dog-model-photo,.dog-model-photo img{min-height:0;height:clamp(350px,74vw,520px)}#fiveDetail .dog-detail-layout h3{font-size:clamp(55px,9vw,83px)}}
+@media(max-width:480px){#fiveDetail .dog-detail-layout{gap:17px;padding:22px 18px}#fiveDetail .dog-detail-layout h3{font-size:clamp(48px,12vw,69px)}.dog-model-photo,.dog-model-photo img{height:clamp(290px,87vw,410px)}.dog-hat-block{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:start}.dog-hat-info p{font-size:11px}.dog-hat-info small{font-size:9px}.dog-monster-link{grid-template-columns:52px minmax(0,1fr) auto;gap:9px;padding:8px}.dog-monster-link img{width:52px;height:63px}.dog-monster-link>span>strong{font-size:27px}.dog-monster-link>span>small{font-size:9px}.dog-detail-footer .btn{width:100%}}
+@media(max-width:350px){.dog-hat-block{grid-template-columns:minmax(0,1fr)}.dog-hat-photo{max-height:220px}.dog-hat-photo img{height:220px}#fiveDetail .dog-detail-layout{padding:20px 14px}}
+@media(prefers-reduced-motion:reduce){.dog-monster-link{transition:none}}
+
+</style></head>
+<body>
+<div class="banner">Conceito independente • não oficial • todos os pedidos são fictícios</div>
+<header class="header"><div class="header-inner"><a class="brand" href="?view=loja" aria-label="Ir para vitrine Dogstar conceito"><span class="seal" aria-hidden="true">D★</span><span><span class="brand-title">DOGSTAR<span style="color:var(--yellow)">.CAP</span></span><span class="brand-sub">CUSTOM CAPS / CONCEITO 77</span></span></a><nav class="nav" aria-label="Três visões da demonstração"><button data-view="loja" aria-current="page">01 · Loja</button><button data-view="atelier">02 · Produção</button><button data-view="gestao">03 · Gestão</button></nav></div></header>
+<main id="app" class="wrap" tabindex="-1"></main>
+<footer class="footer"><div class="wrap footer-inner"><div><strong>DOGSTAR.CAP / CONCEITO DE EXPERIÊNCIA</strong><p>Proposta demonstrativa não oficial. Não há compras, estoque ou pedidos reais.</p></div><div><a href="https://www.instagram.com/dogstar.cap/" target="_blank" rel="noopener noreferrer">Instagram público da Dogstar ↗</a><p>Projeto conceitual desenvolvido por 77.</p></div></div></footer>
+<div class="mobile-cta" id="mobileCTA"><button class="btn dark" data-action="custom">Começar minha encomenda ↗</button></div>
+<script>
+(function(){
+'use strict';
+var stages=['Recebido','Criação da arte','Aprovação','Produção','Pronto'];
+var collections=[
+{id:'epica',title:'Épica',tag:'SKIN 01 / VERMELHO',desc:'Composição de impacto com traços vermelhos e emblema triangular.',bg:'orange',color:'#e8e5de',symbol:'▲'},
+{id:'lendaria',title:'Lendária',tag:'SKIN 02 / ROXO',desc:'Geometria em losangos, contraste roxo e patch central de destaque.',bg:'night',color:'#eceae4',symbol:'◆'},
+{id:'ultimate',title:'Ultimate',tag:'SKIN 03 / ROSA',desc:'Manchas orgânicas em rosa e emblema próprio para uma composição única.',bg:'lemon',color:'#f1edeb',symbol:'⬡'}];
+var colors=[["#111316","Preto carvão"],["#34363A","Cinza escuro"],["#1F422E","Verde escuro"],["#6A1735","Vinho"],["#00CED8","Ciano"],["#FF5E00","Laranja neon"],["#B88147","Caramelo"],["#5A3828","Marrom"],["#FF5AA7","Rosa"],["#6BFC1F","Verde neon"],["#F2EADB","Areia"],["#FFD400","Amarelo canário"],["#F22025","Vermelho vivo"],["#405E85","Azul petróleo"],["#ED694E","Terracota"]];
+var key='dogstar-77-demo-v1',seed=[{id:'DS-DEMO-041',collection:'epica',color:'#F22025',autoral:false,note:'Arte conceitual de exemplo',stage:1},{id:'DS-DEMO-042',collection:'lendaria',color:'#34363A',autoral:false,note:'Exemplo: aguardando aprovação',stage:2},{id:'DS-DEMO-043',collection:'ultimate',color:'#FFD400',autoral:true,note:'Exemplo: em produção',stage:3},{id:'DS-DEMO-044',collection:'epica',color:'#F2EADB',autoral:false,note:'Exemplo: pronto',stage:4}];
+function stored(){try{var v=JSON.parse(localStorage.getItem(key)||'null');if(v&&Array.isArray(v.orders)&&v.orders.length<100){v.orders.forEach(function(o){if(o.collection==='monster')o.collection='ultimate';if(typeof o.autoral!=='boolean')o.autoral=false});return v}}catch(e){}return {orders:seed.slice(),settings:{catalog:true,custom:true,tracking:true},last:null}}
+var monsterBack=false,data=stored(),page=new URLSearchParams(location.search).get('view')||'loja',mode='home',selected='epica',selectedColor='#111316';
+if(!['loja','atelier','gestao'].includes(page))page='loja';
+function save(){try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function item(id){return collections.find(function(c){return c.id===(id==='monster'?'ultimate':id)})||collections[0]}
+function colorName(hex){var found=colors.find(function(x){return x[0].toLowerCase()===String(hex).toLowerCase()});return found?found[1]:'Tom personalizado'}
+function cap(color,symbol){return '<svg class="cap-svg" viewBox="0 0 470 350" role="img" aria-label="Ilustração original de boné personalizado"><defs><linearGradient id="hatGradient" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#ffffff" stop-opacity=".25"/><stop offset="1" stop-color="#000000" stop-opacity=".18"/></linearGradient></defs><path d="M89 233Q80 72 228 57Q377 68 389 228L349 248Q235 187 111 253Z" fill="'+esc(color)+'" stroke="#151719" stroke-width="12" stroke-linejoin="round"/><path d="M231 64L231 199M110 232Q233 167 369 230" fill="none" stroke="#101112" stroke-width="7" opacity=".55"/><path d="M88 234Q220 189 388 231Q450 251 451 285Q311 316 193 299Q112 289 56 275Q30 266 88 234Z" fill="'+esc(color)+'" stroke="#151719" stroke-width="12" stroke-linejoin="round"/><path d="M120 226Q246 200 363 227" stroke="#ffffff" opacity=".35" stroke-width="5" fill="none"/><path d="M110 117Q233 46 353 115" stroke="#ffffff" opacity=".19" stroke-width="9" fill="none"/><g transform="translate(230 154) rotate(-8)"><circle r="49" fill="#111316" stroke="#f9e59c" stroke-width="4"/><text x="0" y="17" text-anchor="middle" font-size="55" font-weight="950" fill="#ffd347">'+esc(symbol)+'</text></g><path d="M100 250Q233 206 389 250" fill="none" stroke="url(#hatGradient)" stroke-width="12"/></svg>'}
+function nav(){document.querySelectorAll('[data-view]').forEach(function(b){if(b.getAttribute('data-view')===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});var m=document.getElementById('mobileCTA');m.classList.toggle('is-visible',page==='loja'&&mode==='home')}
+function render(){nav();var root=document.getElementById('app');root.innerHTML=page==='loja'?(mode==='custom'?custom():mode==='done'?done():store()):page==='atelier'?atelier():gestao();if(page==='loja'){var cat=document.getElementById('colecoes');if(cat)cat.hidden=!data.settings.catalog;document.querySelectorAll('[data-action="custom"],[data-action="choose"]').forEach(function(b){b.disabled=!data.settings.custom});if(!data.settings.tracking){var track=document.querySelector('.status-track');if(track)track.hidden=true}}document.title=(page==='loja'?'Loja':page==='atelier'?'Produção':'Gestão')+' — Dogstar Cap | Demo';window.scrollTo({top:0,behavior:'instant'})}
+function store(){return '<section class="hero"><div class="hero-copy"><span class="tag yellow">Sua ideia merece uma skin</span><h1>O ESTILO<br>QUE NÃO<br><em>LATE. MORDE.</em></h1><p>Bonés com personalidade e cultura pop. Escolha uma inspiração, imagine sua customização e veja como seria solicitar uma encomenda.</p><div class="actions"><button class="btn primary" data-action="custom">Quero personalizar ↗</button><a class="btn outline" href="#colecoes">Explorar inspirações ↓</a>'+(data.last?'<button class="btn outline" data-action="track">Acompanhar meu pedido-demo →</button>':'')+'</div><p style="font-size:11px;margin-top:20px;color:#b1b2a9">A arte, os produtos e o atendimento abaixo são apenas exemplos de interface.</p></div><div class="hero-visual">'+cap('#1b1e24','★')+'<div class="burst">FEITO<br>PRA<br>MARCAR ✳</div></div></section>'+
+'<section class="section" id="colecoes"><div class="section-heading"><div><div class="eyebrow">01 / Escolha uma direção</div><h2>ACHOU A SUA SKIN?</h2></div><p class="section-intro">Inspirações de catálogo baseadas nas categorias mostradas no perfil. Cores, desenhos e imagens aqui são ilustrativos.</p></div><div class="cards">'+collections.map(function(c,i){return '<article class="product"><div class="product-visual '+c.bg+'"><span class="product-number">/ 0'+(i+1)+'</span>'+cap(c.color,c.symbol)+'</div><div class="product-body"><span class="tag light">'+esc(c.tag)+'</span><h3>'+esc(c.title)+'</h3><p>'+esc(c.desc)+'</p><div class="product-footer"><span class="price">Valor sob consulta</span><button class="btn dark small" data-action="choose" data-id="'+c.id+'">Personalizar ↗</button></div></div></article>'}).join('')+'</div></section>'+
+'<section class="section"><div class="eyebrow">02 / Sem perder a ideia no direct</div><h2>DA IDEIA AO BONÉ.</h2><div class="steps"><div class="step"><span>01</span><h3>Escolha a referência</h3><p>O visitante seleciona um estilo e descreve o que quer personalizar.</p></div><div class="step"><span>02</span><h3>Organize o pedido</h3><p>A equipe recebe um briefing estruturado, sem precisar remontar a conversa.</p></div><div class="step"><span>03</span><h3>Acompanhe as etapas</h3><p>Arte, aprovação e produção ficam visíveis em uma linha do tempo conceitual.</p></div></div><div class="notice">Esta é uma demonstração independente para apresentar possibilidades. Não representa sistemas, preços, estoque, prazos ou pedidos oficiais da Dogstar.</div></section>'}
+function custom(){var c=item(selected);return '<div class="page-top"><div><button class="back" data-action="home">← Voltar para a vitrine</button><div class="eyebrow">Seu boné, sua ideia</div><h1 class="page-title">MONTE SEU BRIEFING.</h1><p>Um primeiro passo simples para transformar uma referência em pedido. Não envia informações para nenhuma loja.</p></div><span class="tag dark">Simulação interativa</span></div><div class="config-layout"><form id="orderForm" class="panel"><div class="field"><label for="collection">01 / Inspiração</label><select id="collection" name="collection">'+collections.map(function(x){return '<option value="'+x.id+'" '+(x.id===selected?'selected':'')+'>'+esc(x.title)+'</option>'}).join('')+'</select></div><div class="field"><span>02 / Cor base (ilustrativa)</span><div class="swatches" role="group" aria-label="Cor do boné">'+[['#111316','Preto'],['#f4f0e7','Areia'],['#ed694e','Coral'],['#405e85','Azul'],['#e6d777','Amarelo']].map(function(x){return '<button type="button" class="swatch" style="background:'+x[0]+'" aria-label="'+x[1]+'" aria-pressed="'+(x[0]===selectedColor)+'" data-action="color" data-color="'+x[0]+'"></button>'}).join('')+'</div></div><div class="field"><label for="note">03 / Sua ideia ou referência <small>(opcional)</small></label><textarea id="note" name="note" maxlength="240" placeholder="Ex.: tema, personagem ou detalhes desejados. Não informe dados pessoais."></textarea><small>Até 240 caracteres. Apenas para a simulação neste dispositivo.</small></div><div class="notice" style="margin-bottom:20px">Não é um pedido real. Nenhuma mensagem é enviada e não há cobrança, orçamento definitivo ou fabricação.</div><button class="btn dark" type="submit" style="width:100%">Simular solicitação ↗</button></form><aside class="preview"><span class="eyebrow">Prévia conceitual</span><div class="preview-image" id="capPreview">'+cap(selectedColor,c.symbol)+'</div><h3 id="previewTitle">'+esc(c.title)+'</h3><p>O desenho do boné é uma ilustração de exemplo, não um mockup de produção aprovado.</p><span class="tag dark">Preço a definir com a loja</span></aside></div>'}
+function done(){var o=data.orders.find(function(x){return x.id===data.last});if(!o){mode='home';return store()}var now=Math.min(4,Math.max(0,Number(o.stage)||0));return '<div class="page-top"><div><button class="back" data-action="home">← Explorar mais estilos</button><div class="eyebrow">Rastreamento ilustrativo</div><h1 class="page-title">SUA IDEIA TEM CAMINHO.</h1></div></div><div class="panel" style="max-width:810px;margin:auto"><div class="success-top"><div class="success-icon" aria-hidden="true">✓</div><div><div class="eyebrow">Simulação criada neste navegador</div><h2 style="margin:4px 0;font-size:25px">'+esc(o.id)+'</h2></div></div><p style="color:var(--gray);font-size:13px;margin-top:15px">Exemplo de encomenda: '+esc(item(o.collection).title)+'. Etapa atual: <strong>'+esc(stages[now])+'</strong>.</p>'+(o.backNote?'<p class="rear-done-note"><strong>Parte de trás:</strong> '+esc(o.backNote)+'</p>':'')+'<div class="status-track">'+stages.map(function(s,i){return '<div class="status-item '+(i<=now?'done ':'')+(i===now?'current':'')+'"><div class="status-dot">'+(i<=now?'✓':'·')+'</div>'+esc(s)+'</div>'}).join('')+'</div><div class="notice">Monster Cap é exclusivo dos bonés autorais da Dogstar e deve ser confirmado pela loja. Acompanhe a simulação pela aba Produção. As mudanças são salvas apenas neste navegador. A Dogstar não recebe dados.</div><div class="actions"><button class="btn dark" data-view="atelier" data-action="nav" data-target="atelier">Ver a produção ↗</button><button class="btn soft" data-action="reset">Reiniciar exemplo</button></div></div>'}
+function atelier(){return '<div class="page-top"><div><div class="eyebrow">02 / Fluxo da equipe</div><h1 class="page-title">O ATELIÊ, ORGANIZADO.</h1><p>Uma fila simples de encomendas: entender a ideia, revisar a arte, aprovar e produzir. Toque em avançar para acompanhar uma movimentação.</p></div><span class="tag dark">Painel de treinamento • sem login real</span></div><div class="notice" style="margin:0 0 24px">Pedidos fictícios e etapas locais. Este painel é público apenas como demonstração; não é um administrativo verdadeiro.</div><div class="board" aria-label="Quadro de andamento dos pedidos de exemplo">'+stages.map(function(stage,i){var orders=data.orders.filter(function(o){return Number(o.stage)===i});return '<section class="lane"><div class="lane-head"><span>'+esc(stage)+'</span><span class="count">'+orders.length+'</span></div>'+(orders.length?orders.map(function(o){return '<article class="ticket"><div class="ticket-label">'+esc(o.id)+'</div><strong>'+esc(item(o.collection).title)+'</strong><p>'+esc(o.note||'Briefing sem observações')+'</p>'+(i<4?'<button data-action="advance" data-id="'+esc(o.id)+'">Avançar etapa →</button>':'<span class="tag yellow">Finalizado ✓</span>')+'</article>'}).join(''):'<div class="empty">Nenhum pedido nesta etapa</div>')+'</section>'}).join('')+'</div><div class="actions"><button class="btn soft" data-action="reset">Restaurar dados de exemplo</button><button class="btn dark" data-view="gestao" data-action="nav" data-target="gestao">Ver visão do gestor →</button></div>'}
+function gestao(){var total=data.orders.length,creation=data.orders.filter(function(o){return o.stage===1||o.stage===2}).length,doing=data.orders.filter(function(o){return o.stage===3}).length,ready=data.orders.filter(function(o){return o.stage===4}).length;var counts=collections.map(function(c){return {title:c.title,count:data.orders.filter(function(o){return o.collection===c.id}).length}});var mx=Math.max(1,...counts.map(function(c){return c.count}));return '<div class="page-top"><div><div class="eyebrow">03 / Visão do proprietário</div><h1 class="page-title">VISÃO CLARA. SEM ACHISMO.</h1><p>Exemplo de operação focado em andamento de pedidos e temas solicitados. Não exibe faturamento nem métricas reais.</p></div><span class="tag dark">Indicadores dos pedidos fictícios</span></div><div class="metric-grid"><div class="metric"><strong>'+total+'</strong><span>Pedidos demonstrativos</span></div><div class="metric"><strong>'+creation+'</strong><span>Arte ou aprovação</span></div><div class="metric"><strong>'+doing+'</strong><span>Em produção</span></div><div class="metric"><strong>'+ready+'</strong><span>Prontos</span></div></div><div class="insight-grid"><section class="panel"><div class="eyebrow">Demanda ilustrativa</div><h2 style="font-size:23px;letter-spacing:-.04em;margin:8px 0 22px">Temas solicitados</h2>'+counts.map(function(c){return '<div class="bar-row"><div class="bar-label"><span>'+esc(c.title)+'</span><span>'+c.count+'</span></div><div class="bar-bg"><div class="bar-fill" style="width:'+(c.count/mx*100)+'%"></div></div></div>'}).join('')+'<p style="font-size:11px;color:var(--gray);margin-top:23px">Contagens calculadas sobre exemplos locais, sem dados comerciais.</p></section><section class="panel"><div class="eyebrow">Preferências de vitrine · simulação</div><h2 style="font-size:23px;letter-spacing:-.04em;margin:8px 0 15px">Controles para testar</h2>'+[['catalog','Mostrar inspirações','Estrutura de coleções na página cliente'],['custom','Permitir briefing','Simulação de encomenda sem checkout'],['tracking','Acompanhamento visual','Etapas ilustrativas para o visitante']].map(function(x){return '<div class="setting"><div><strong>'+x[1]+'</strong><p>'+x[2]+'</p></div><button class="toggle" data-action="toggle" data-key="'+x[0]+'" aria-pressed="'+Boolean(data.settings[x[0]])+'" aria-label="'+x[1]+'"></button></div>'}).join('')+'<p style="font-size:11px;color:var(--gray);margin:15px 0 0">Controles locais, sem alterar sistemas ou catálogo da Dogstar.</p></section></div><div class="actions"><button class="btn dark" data-view="atelier" data-action="nav" data-target="atelier">Abrir fila de produção →</button><button class="btn soft" data-action="reset">Restaurar demonstração</button></div>'}
+function goto(view){page=view;mode='home';history.pushState({},'',location.pathname+'?view='+view);render()}
+document.addEventListener('click',function(ev){var b=ev.target.closest('[data-action],[data-view]');if(!b)return;if(b.dataset.action==='nav'){goto(b.dataset.target);return}if(b.dataset.view&&!b.dataset.action){goto(b.dataset.view);return}var a=b.dataset.action;if(a==='home'){mode='home';render()}if(a==='preview-side'){var next=b.dataset.side;if(next==='front'||next==='back'){previewSide=next;refreshCapPreview();saveEditorDraft()}return}if(a==='track'&&data.last){mode='done';render()}if(a==='custom'||a==='choose'){selected=b.dataset.id||selected;mode='custom';saveEditorDraft();render()}if(a==='vibe'){selected=b.dataset.id;var x=document.getElementById('collection');if(x){x.value=selected;var title=document.getElementById('previewTitle');if(title)title.textContent=item(selected).title;refreshCapPreview()}document.querySelectorAll('.editor-choice').forEach(function(el){el.setAttribute('aria-pressed',String(el===b))});saveEditorDraft()}if(a==='color'){selectedColor=b.dataset.color;document.querySelectorAll('.swatch').forEach(function(el){el.setAttribute('aria-pressed',String(el===b))});refreshCapPreview();var colorLabel=document.getElementById('colorName'),previewLabel=document.getElementById('previewColor');if(colorLabel)colorLabel.textContent=colorName(selectedColor);if(previewLabel)previewLabel.textContent=colorName(selectedColor);saveEditorDraft()}if(a==='cap-filter'){capFilter=b.dataset.tier||'todos';var out=document.getElementById('fiveCards');if(out)out.innerHTML=cardGrid();document.querySelectorAll('.five-filters button').forEach(function(el){el.setAttribute('aria-pressed',String(el.dataset.tier===capFilter))});return}if(a==='cap-select'){var i=Number(b.dataset.index);if(i>=0&&i<sampleWorks.length){chosenCap=i;chosenShot=(sampleWorks[i].photos.length>1?1:0);var area=document.getElementById('fiveDetail');if(area)area.innerHTML=capDetail();document.querySelectorAll('.five-select').forEach(function(el){el.setAttribute('aria-pressed',String(Number(el.dataset.index)===i))})}return}if(a==='cap-photo'){var i=Number(b.dataset.index),w=sampleWorks[chosenCap];if(w&&i>=0&&i<w.photos.length){chosenShot=i;var img=document.getElementById('capDetailImage');if(img){img.src=photoRoot+w.photos[i][0];img.alt=w.photos[i][1]}document.querySelectorAll('.five-shot').forEach(function(el){el.setAttribute('aria-pressed',String(Number(el.dataset.index)===i))})}return}if(a==='monster-choice'){var i=Number(b.dataset.index);if(i>=0&&i<sampleWorks.length){chosenMonster=i;var area=document.getElementById('monsterFocus');if(area)area.innerHTML=monsterFocus();document.querySelectorAll('.five-monster-tab').forEach(function(el){el.setAttribute('aria-pressed',String(Number(el.dataset.index)===i))})}return}if(a==='cap-inspire'){var i=Number(b.dataset.index);if(i>=0&&i<sampleWorks.length){mode='custom';selected=sampleWorks[i].tier;saveEditorDraft();render();var note=document.getElementById('note');if(note){note.value='Gostaria de criar um boné original inspirado na proposta de '+sampleWorks[i].name+', mas com a minha própria arte, cores e detalhes. Minha ideia: ';draftNote=note.value;saveEditorDraft();note.focus()}}return}if(a==='project2-image'){var j=Number(b.dataset.index);if(j>=0&&j<project2Media.length){project2MediaIndex=j;var media=project2Media[j],img=document.getElementById('project2MainImage'),stage=document.getElementById('project2MediaStage');if(img){img.src=media.url;img.alt=media.alt}if(stage)stage.setAttribute('data-type',media.type);document.querySelectorAll('.project2-switch button').forEach(function(x){x.setAttribute('aria-pressed',String(Number(x.dataset.index)===j))})}return}if(a==='album-image'){var i=Number(b.dataset.index);if(i>=0&&i<photoAlbum.length){albumIndex=i;var ph=document.getElementById('portfolioPhoto');if(ph){ph.src=photoAlbum[i].url;ph.alt=photoAlbum[i].alt}document.querySelectorAll('.portfolio-thumb').forEach(function(el){el.setAttribute('aria-pressed',String(Number(el.dataset.index)===i))})}return}if(a==='use-idea'){var texts=['Quero boné preto com detalhes brancos e alguns elementos em relevo, mas com uma arte original. Podemos conversar sobre materiais?','Imagino um boné vinho com detalhes ciano e símbolo original na frente. Como seria o acabamento?','Tenho uma referência de personagem, mas quero uma interpretação autoral. Posso enviar imagens para discutir a ideia?'];var i=Number(b.dataset.index),t=document.getElementById('note');if(t&&i>=0&&i<texts.length){t.value=texts[i];draftNote=t.value;saveEditorDraft();t.focus();var f=document.getElementById('ideaFeedback');if(f)f.textContent='Exemplo inserido. Edite o texto para descrever sua ideia.'}return}if(a==='flip-monster'){var area=document.getElementById('monsterCardVisual');if(area){monsterBack=!monsterBack;area.innerHTML=monsterFace(monsterBack);b.textContent=monsterBack?'Ver desenho do monstro ↩':'Ver verso com foto do boné ↗';b.setAttribute('aria-pressed',String(monsterBack))}return}if(a==='autoral'){var ao=data.orders.find(function(o){return o.id===b.dataset.id});if(ao){ao.autoral=!ao.autoral;save();render()}return}if(a==='advance'){var o=data.orders.find(function(x){return x.id===b.dataset.id});if(o&&o.stage<4){o.stage++;save();render()}}if(a==='toggle'){var k=b.dataset.key;data.settings[k]=!data.settings[k];save();render()}if(a==='reset'){data={orders:seed.map(function(x){return Object.assign({},x)}),settings:{catalog:true,custom:true,tracking:true},last:null};selected='epica';selectedColor='#111316';previewSide='front';draftNote='';draftBackNote='';save();mode='home';render()}});
+document.addEventListener('change',function(e){if(e.target.id==='collection'){selected=e.target.value;var title=document.getElementById('previewTitle');if(title)title.textContent=item(selected).title;refreshCapPreview();document.querySelectorAll('.editor-choice').forEach(function(el){el.setAttribute('aria-pressed',String(el.dataset.id===selected))});saveEditorDraft()}else if(e.target.id==='note'||e.target.id==='backNote'){saveEditorDraft()}});
+document.addEventListener('input',function(e){if(e.target.id==='note'){draftNote=String(e.target.value||'').slice(0,240);saveEditorDraft()}else if(e.target.id==='backNote'){draftBackNote=String(e.target.value||'').slice(0,160);saveEditorDraft()}});
+document.addEventListener('submit',function(e){if(e.target.id!=='orderForm')return;e.preventDefault();var f=e.target;selected=f.elements.collection.value;var note=String(f.elements.note.value||'').trim().slice(0,240);var backNote=String(f.elements.backNote&&f.elements.backNote.value||'').trim().slice(0,160);draftNote=note;draftBackNote=backNote;saveEditorDraft();var num=String(Math.max(45,...data.orders.map(function(o){return Number((o.id.match(/(\d+)$/)||[])[1])||0}))+1).padStart(3,'0');var id='DS-DEMO-'+num;data.orders.push({id:id,collection:selected,color:selectedColor,note:note||'Personalização conceitual',backNote:backNote,stage:0,autoral:false});data.last=id;save();mode='done';render()});
+
+/* DOGSTAR V2 — live views, no data leaves device */
+var drawCap=function(color,symbol){
+  var c=esc(color),accent=(symbol==='▲'?'#ca3846':symbol==='◆'?'#672b96':symbol==='⬡'?'#da3e82':symbol==='★'?'#f1df41':symbol==='✦'?'#ef7448':'#dbec7e');
+  return '<svg class="cap-svg" viewBox="0 0 540 420" role="img" aria-label="Ilustração conceitual de um boné com costuras e patch"><defs>'+
+  '<linearGradient id="capbody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".48" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>'+
+  '<linearGradient id="visor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".48"/></linearGradient>'+
+  '<pattern id="fabric" patternUnits="userSpaceOnUse" width="5" height="5"><path d="M0 0L5 5" stroke="#fff" stroke-width=".5" opacity=".25"/><path d="M5 0L0 5" stroke="#000" stroke-width=".5" opacity=".22"/></pattern></defs>'+
+  '<ellipse cx="276" cy="365" rx="225" ry="28" fill="#000" opacity=".2"/>'+
+  '<path d="M87 272Q73 77 269 54Q453 69 455 270L395 292Q248 212 110 307Z" fill="'+c+'" stroke="#10110f" stroke-width="13"/>'+
+  '<path d="M87 272Q73 77 269 54Q453 69 455 270L395 292Q248 212 110 307Z" fill="url(#capbody)"/>'+
+  '<path d="M87 272Q73 77 269 54Q453 69 455 270L395 292Q248 212 110 307Z" fill="url(#fabric)" opacity=".6"/>'+
+  '<path d="M270 59Q264 155 267 257M111 269Q255 202 430 266" stroke="#111" stroke-width="5" fill="none" opacity=".5"/>'+
+  '<path d="M270 65Q266 157 270 245M128 274Q257 221 420 277" stroke="#f2edd8" stroke-width="2" stroke-dasharray="4 6" fill="none" opacity=".43"/>'+
+  '<path d="M108 143Q169 86 242 82M300 82Q365 91 408 139" fill="none" stroke="#fff" opacity=".28" stroke-width="5"/>'+
+  '<path d="M99 278Q257 218 446 275Q512 300 510 333Q353 382 220 360Q116 348 34 319Q14 305 99 278Z" fill="'+c+'" stroke="#10110f" stroke-width="13"/>'+
+  '<path d="M99 278Q257 218 446 275Q512 300 510 333Q353 382 220 360Q116 348 34 319Q14 305 99 278Z" fill="url(#visor)"/>'+
+  '<path d="M92 309Q267 258 468 309M100 321Q272 271 463 319" stroke="#f3e3c7" stroke-dasharray="4 6" stroke-width="2" fill="none" opacity=".48"/>'+
+  '<g transform="translate(267 187) rotate(-7)"><path d="M-66 -55Q0 -79 66 -55L70 45Q0 78 -70 45Z" fill="#111310" stroke="'+accent+'" stroke-width="5"/>'+
+  '<path d="M-57 -47Q0 -66 57 -47L60 39Q0 65 -60 39Z" fill="none" stroke="#eee6cb" stroke-dasharray="3 5" stroke-width="2" opacity=".7"/>'+
+  (symbol==='▲'?'<path d="M0 -30L30 25H-30Z" fill="'+accent+'" stroke="#eee5d7" stroke-width="3"/><path d="M0 -14L14 14H-14Z" fill="#20201d"/>':symbol==='◆'?'<path d="M0 -28L28 0L0 28L-28 0Z" fill="'+accent+'" stroke="#eee5d7" stroke-width="3"/><path d="M0 -14L14 0L0 14L-14 0Z" fill="#20201d"/>':symbol==='⬡'?'<path d="M0 -28L23 -14L19 19L0 29L-19 19L-23 -14Z" fill="'+accent+'" stroke="#eee5d7" stroke-width="3"/><path d="M0 -12L10 -4L8 12L0 17L-8 12L-10 -4Z" fill="#20201d"/>':'<text x="0" y="20" text-anchor="middle" font-size="78" font-weight="900" fill="'+accent+'">'+esc(symbol)+'</text>')+'</g>'+
+  '<circle cx="270" cy="61" r="13" fill="'+c+'" stroke="#121310" stroke-width="5"/>'+
+  '<path d="M393 191l34 14-7 16-31-12Z" fill="#161712" stroke="#e9e9ce" stroke-width="2"/><text x="404" y="208" text-anchor="middle" font-size="8" fill="#ffe16e" font-weight="900">77</text>'+
+  '</svg>';
+};
+cap=drawCap;
+
+function skinMotif(id){
+ if(id==='epica')return '<svg class="skin-motif" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M0 0H170L145 22L127 15L110 42L92 32L70 65L52 57L20 110L0 114Z" fill="#c83140"/><path d="M400 260L376 276L360 268L340 299L320 289L300 334L278 325L244 400H400Z" fill="#c83140"/><path d="M0 31L79 0M0 60L56 0M305 400L400 310M335 400L400 337" stroke="#ffd5d5" stroke-width="5" opacity=".68"/></svg>';
+ if(id==='lendaria')return '<svg class="skin-motif" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" stroke="#672e97" stroke-width="8"><path d="M-20 -20L140 140M10 -20L176 147M-20 77L75 173" stroke-width="5" fill="none" opacity=".55"/><path d="M36 18l23 23-23 23-23-23Z" fill="#672e97"/><path d="M107 62l25 25-25 25-25-25Z" fill="none"/><path d="M19 119l23 23-23 23-23-23Z" fill="#672e97"/><path d="M302 269l26 26-26 26-26-26Z" fill="#672e97"/><path d="M356 310l25 25-25 25-25-25Z" fill="none"/><path d="M310 354l23 23-23 23-23-23Z" fill="none"/><path d="M359 365L414 420M289 315L382 408" fill="none" stroke-width="5"/></svg>';
+ return '<svg class="skin-motif" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="#e83d89"><path d="M-20 5Q14 -15 45 4Q77 -10 93 17Q126 30 101 56Q106 85 68 77Q47 102 27 79Q-12 96 -20 56Z"/><path d="M0 140Q32 119 48 147Q76 151 70 174Q57 194 24 189Q-2 180 0 140Z"/><path d="M269 334Q292 309 313 329Q334 314 354 342Q382 342 382 368Q406 392 375 409Q353 435 325 412Q294 426 281 398Q260 381 269 334Z"/><path d="M361 379Q391 359 410 386V410H361Z"/><ellipse cx="139" cy="71" rx="19" ry="14"/><ellipse cx="228" cy="330" rx="16" ry="13"/></svg>';
+}
+
+
+
+/* Visual concept from the 06/11/2026 video; not an official product tier. */
+function sketchEmblem(stage){
+ var orange=stage>1?'<path d="M86 141Q180 199 274 141L267 188Q182 226 93 188Z" fill="#ef782a" stroke="#29271e" stroke-width="4"/>':'';
+ var wings=stage>2?'<path d="M119 150L70 182L91 213L139 202Z M241 150L290 182L269 213L221 202Z" fill="#252623" stroke="#151613" stroke-width="4"/>':'';
+ var star=stage>2?'<path d="M180 152L199 197L247 202L210 233L223 278L180 253L137 278L150 233L113 202L161 197Z" fill="#ef782a" stroke="#24241e" stroke-width="6"/><text x="180" y="234" font-size="17" text-anchor="middle" font-weight="900" fill="#29251e">D★</text>':'';
+ var emblem=stage===1?'<path d="M52 81H86" stroke="#35352b" stroke-width="3"/><rect x="15" y="63" width="37" height="36" fill="#f7db52" stroke="#272720" stroke-width="3"/><text x="33" y="87" font-size="15" font-weight="900" text-anchor="middle" fill="#24251f">D★</text>':'';
+ return '<svg viewBox="0 0 360 290" role="img" aria-label="'+(['','Base amarela com selo D estrela','Emblema amarelo com base laranja','Emblema amarelo com detalhes pretos e estrela laranja'][stage])+'" xmlns="http://www.w3.org/2000/svg">'
+  +'<rect width="360" height="290" fill="#f1eee4"/>'
+  +'<path d="M30 86H330" stroke="#b9b8aa" stroke-dasharray="5 7" stroke-width="2"/>'
+  +wings+orange
+  +'<path d="M76 75H284Q281 149 180 161Q79 149 76 75Z" fill="#ffd400" stroke="#2a2a23" stroke-width="4"/>'
+  +'<path d="M82 81H278M180 84V149" fill="none" stroke="#f8e46b" stroke-width="3"/>'
+  +emblem+star+'</svg>';
+}
+function sketchProof(){
+ var labels=[['01 / BASE','Selo e formato','Forma amarela com a marca lateral.'],['02 / CAMADAS','Acabamento','A mesma base com o volume laranja.'],['03 / ESTRELA','Destaque final','Estrela laranja com detalhes pretos.']];
+ return '<section class="sketch-proof" aria-labelledby="sketchProofTitle"><div class="sketch-proof-heading"><div><span class="eyebrow">ESTUDO VISUAL / DESENHO ENVIADO EM 06.11</span><h2 id="sketchProofTitle">DO RASCUNHO<br>AO DETALHE.</h2></div><p>Três variações ilustrativas reconstruídas a partir do esboço mostrado no vídeo. São estudos visuais, não novos produtos ou raridades confirmadas.</p></div><div class="sketch-proof-grid">'
+  +labels.map(function(x,i){return '<figure class="sketch-proof-card"><div class="sketch-proof-art">'+sketchEmblem(i+1)+'</div><figcaption><span>'+x[0]+'</span><strong>'+x[1]+'</strong><p>'+x[2]+'</p></figcaption></figure>'}).join('')
+  +'</div></section>';
+}
+
+function monsterFace(back){
+ if(back)return '<div class="monster-face"><div class="monster-art monster-photo"><div class="eyebrow">FOTO DO BONÉ AUTORAL</div>'+cap('#ece7da','▲')+'<small>ESPAÇO RESERVADO PARA FOTO REAL</small></div><div class="monster-details"><span class="eyebrow">VERSO DO CARTÃO</span><h3>MODELO<br>ORIGINAL.</h3><p>Fotografia do boné e nome específico do modelo são adicionados com o material fornecido pela Dogstar.</p><small>Nenhuma foto oficial foi recebida.</small></div></div>';
+ return '<div class="monster-face"><div class="monster-art"><span class="eyebrow">VERSÃO MONSTRO · EXEMPLO</span><svg viewBox="0 0 280 230" role="img" aria-label="Criatura fictícia com aparência de boné, olhos e dentes"><path d="M50 145Q35 35 144 36Q248 40 238 148L214 177L75 177Z" fill="#d44355" stroke="#f3d399" stroke-width="8"/><path d="M57 151Q150 125 234 154Q272 181 238 191Q130 228 43 188Q24 170 57 151Z" fill="#601b3a" stroke="#f3d399" stroke-width="6"/><path d="M76 102L111 114L104 137L82 136Z M178 114L212 102L207 136L183 137Z" fill="#ffd435"/><path d="M111 149Q145 174 177 150L170 187L155 177L144 191L131 179L116 188Z" fill="#282026" stroke="#e3c18a" stroke-width="4"/><path d="M119 156L130 177L142 161L153 178L168 155" fill="none" stroke="#f7ede0" stroke-width="7"/><path d="M80 43L62 15L102 39M197 42L227 17L215 54" fill="#ffcb3b" stroke="#f3d399" stroke-width="5"/></svg><small>Ilustração criada só para a demonstração</small></div><div class="monster-details"><span class="eyebrow">CARTÃO FICTÍCIO / 001</span><h3>MONSTER<br>CAP.</h3><p class="monster-name">NOME DO MONSTRO · EXEMPLO</p><div class="monster-stat"><span>VIDA</span><b>100</b></div><div class="monster-stat"><span>ATAQUE</span><b>75</b></div><div class="monster-stat"><span>RESISTÊNCIA</span><b>60</b></div><small>Valores inventados para ilustrar o cartão; não representam peças oficiais.</small></div></div>';
+}
+function monsterSection(){
+ return '<section class="monster-section" id="monster-cap"><div class="monster-copy"><div class="eyebrow">02 / BRINDE DOS BONÉS AUTORAIS</div><span class="monster-kicker">BRINDE EXCLUSIVO</span><h2>MONSTER<br>CAP.</h2><p>O <strong>Monster Cap não é uma coleção.</strong> É o brinde que acompanha os bonés autorais da Dogstar: um cartão exclusivo com a versão monstro do boné, nome e atributos, além da foto do modelo.</p><div class="monster-features"><span>DESENHO DO MONSTRO</span><span>VIDA</span><span>ATAQUE</span><span>RESISTÊNCIA</span><span>FOTO DO MODELO</span></div><p class="monster-fine">A arte e os atributos são definidos pela Dogstar. O cartão exibido ao lado é apenas uma simulação.</p></div><div class="monster-showcase"><div class="monster-card-header"><span>MONSTER CAP / CONCEPT CARD</span><span>EXEMPLO NÃO OFICIAL</span></div><div id="monsterCardVisual">'+monsterFace(monsterBack)+'</div><button data-action="flip-monster" class="monster-flip" aria-pressed="'+monsterBack+'" aria-controls="monsterCardVisual">'+(monsterBack?'Ver desenho do monstro ↩':'Ver verso com foto do boné ↗')+'</button></div></section>';
+}
+
+
+var photoRoot='assets/';
+
+var sampleWorks=[
+{id:'hipnotizante',name:'Hipnotizante',subtitle:'Detalhes em relevo',text:'Boné preto com elementos brancos e espinhos. A peça foi sorteada no evento anime.fest e aparece aqui apenas como portfólio.',photos:[['hipnotizante-bone.jpg','Boné Hipnotizante com detalhes em preto e branco'],['hipnotizante-modelo.jpg','Modelo usando o boné Hipnotizante']],monster:'Horoz',classe:'Guardião',v:7,a:6,r:6,art:'horoz-concept-art.jpg',tier:'epica'},
+{id:'rosario',name:'Rosário d’Ouro',subtitle:'Rosas e espinhos dourados',text:'Boné escuro com elementos tridimensionais de rosas e espinhos dourados. Exemplo real de customização; disponibilidade não informada.',photos:[['rosario-d-ouro-bone.jpg','Boné Rosário d’Ouro com rosas e espinhos dourados'],['rosario-d-ouro-modelo.jpg','Fotografia de modelo apresentando o Rosário d’Ouro']],monster:'Acoril',classe:'Curadora',v:6,a:7,r:9,art:'acoril-arte.jpg',tier:'lendaria'},
+{id:'persistencia',name:'Persistência',subtitle:'Vermelho e grafismo preto',text:'Boné vermelho com painel branco e grafismos pretos. Fotografias do produto e da apresentação com modelo.',photos:[['persistencia-bone.jpg','Boné Persistência vermelho e branco com grafismos'],['persistencia-modelo.jpg','Modelo usando o boné Persistência']],monster:'Ynatir',classe:'Tanque',v:7,a:3,r:10,art:'ynatir-arte.jpg',tier:'epica'},
+{id:'maldito',name:'Maldito Verme',subtitle:'Forma, cor e atitude',text:'Boné em amarelo esverdeado, com detalhes pretos e espinhos pretos e vermelhos. Exemplo de trabalho original da Dogstar.',photos:[['maldito-verme-bone.jpg','Boné Maldito Verme em tom amarelo esverdeado, com espinhos vermelhos e pretos']],monster:'Avral',classe:'Tanque',v:7,a:3,r:6,art:'avral-arte.jpg',tier:'lendaria'},
+{id:'dino',name:'Dino Punk',subtitle:'Verde neon e pontas vermelhas',text:'Boné verde com detalhes em verde neon e espinhos vermelhos. Inclui fotos do modelo e da peça.',photos:[['dino-punk-bone.jpg','Boné Dino Punk com detalhes verdes e espinhos vermelhos'],['dino-punk-modelo.jpg','Modelo usando um boné Dino Punk']],monster:'Ivsoy',classe:'DPS',v:11,a:11,r:1,art:'dino-punk-arte.jpg',tier:'ultimate'}
+];
+var chosenCap=0,chosenShot=1,chosenMonster=0,capFilter='todos';
+var tierMap={epica:['▲','Épica'],lendaria:['◆','Lendária'],ultimate:['⬡','Ultimate']};
+function tierBadge(key){var t=tierMap[key];return '<span class="tier-tag tier-'+key+'">'+t[0]+' '+t[1]+'</span>'}
+function cardGrid(){
+ var items=sampleWorks.map(function(w,i){return {w:w,i:i}}).filter(function(x){return capFilter==='todos'||x.w.tier===capFilter});
+ if(!items.length)return '<div class="five-empty"><strong>Nenhuma peça encontrada neste filtro.</strong><p>Confira os cinco trabalhos da demonstração ou selecione outra raridade.</p><button class="btn dark" data-action="cap-filter" data-tier="todos">Mostrar os cinco trabalhos ↗</button></div>';
+ return items.map(function(x){var w=x.w,i=x.i;return '<article class="five-card"><button class="five-select" data-action="cap-select" data-index="'+i+'" aria-label="Ver o boné '+esc(w.name)+' e seu monstro '+esc(w.monster)+'" aria-pressed="'+(i===chosenCap)+'"><div class="five-img"><img src="'+photoRoot+w.photos[0][0]+'" alt="'+esc(w.photos[0][1])+'" loading="lazy" decoding="async"/><small>0'+(i+1)+' / 05</small></div><div class="five-info"><div>'+tierBadge(w.tier)+'<h3>'+esc(w.name)+'</h3><p>'+esc(w.subtitle)+'</p></div><b aria-hidden="true">↗</b></div></button></article>'}).join('');
+}
+function capDetail(){
+ var w=sampleWorks[chosenCap];
+ var modelIndex=w.photos.findIndex(function(p){return /-modelo\.(jpg|jpeg|png|webp)$/i.test(p[0])});
+ var model=modelIndex>=0?w.photos[modelIndex]:w.photos[0];
+ var hat=w.photos[0];
+ var hasModel=modelIndex>=0;
+ return '<div class="five-detail-gallery dog-model-gallery"><div class="dog-model-stage">'+
+ '<button type="button" class="dog-expand-photo dog-model-photo" data-expand-photo="'+(hasModel?modelIndex:0)+'" aria-label="Ampliar '+esc(hasModel?'foto do modelo usando o boné '+w.name:'foto do boné '+w.name)+'">'+
+ '<img src="'+photoRoot+model[0]+'" alt="'+esc(model[1])+'" loading="lazy" decoding="async"/>'+
+ '<span class="dog-zoom-indicator" aria-hidden="true">AMPLIAR IMAGEM ↗</span></button>'+
+ '<div class="dog-model-foot"><strong>'+(hasModel?'FOTO DO MODELO':'FOTO DO BONÉ')+'</strong><span>'+(hasModel?'Clique para visualizar em tamanho maior.':'Foto com modelo ainda não disponibilizada.')+'</span></div>'+
+ '</div></div>'+
+ '<div class="five-detail-copy dog-detail-layout"><div><span class="eyebrow">0'+(chosenCap+1)+' / 05 · BONÉ DO PORTFÓLIO</span>'+
+ '<h3>'+esc(w.name).toUpperCase()+'.</h3><div class="dog-rarity-band">'+tierBadge(w.tier)+'<span>RARIDADE DA SKIN · '+esc(w.tier==='ultimate'?'CONFIRMADA':'CLASSIFICAÇÃO PROVISÓRIA')+'</span></div></div>'+
+ '<div class="dog-hat-block"><div class="dog-hat-figure">'+
+ '<span class="dog-hat-label">FOTO DO BONÉ</span><button type="button" class="dog-expand-photo dog-hat-photo" data-expand-photo="0" aria-label="Ampliar a foto do boné '+esc(w.name)+'">'+
+ '<img src="'+photoRoot+hat[0]+'" alt="'+esc(hat[1])+'" loading="lazy" decoding="async"/><span class="dog-hat-expand">AMPLIAR ↗</span></button></div>'+
+ '<div class="dog-hat-info"><p>'+esc(w.text)+'</p><small>Toque na imagem para ver os detalhes do boné.</small></div></div>'+
+ '<a href="#projeto-2" class="dog-monster-link" data-see-monster="'+chosenCap+'" aria-label="Ver a versão monstro '+esc(w.monster)+' no Projeto 2">'+
+ '<img src="'+photoRoot+w.art+'" alt="" loading="lazy" decoding="async"/><span><small>PROJETO 2 · VERSÃO MONSTRO</small><strong>'+esc(w.monster)+'</strong><small>'+esc(w.classe)+' · VIDA '+w.v+'/13 · ATAQUE '+w.a+'/13 · RESISTÊNCIA '+w.r+'/13</small></span><b aria-hidden="true">↗</b></a>'+
+ '<div class="dog-detail-footer"><button class="btn dark" data-action="cap-inspire" data-index="'+chosenCap+'">Descrever uma ideia própria ↗</button><p class="five-footnote">Portfólio demonstrativo. Não indica estoque, preço ou disponibilidade para compra.</p></div></div>';
+}
+
+function portfolioSection(){
+ return '<section id="portfolio" class="five-portfolio" aria-labelledby="five-title"><header class="five-header"><div><span class="eyebrow">01 / SELEÇÃO DEMONSTRATIVA</span><h2 id="five-title">CINCO PEÇAS.<br>UMA IDENTIDADE.</h2></div><p>Uma seleção de cinco trabalhos reais compartilhados pelo criador. Explore as fotografias, descubra os personagens e descreva sua própria referência.</p></header>'+
+ '<div class="five-tiers"><span>RARIDADE DAS SKINS</span><span>▲ Épica</span><span>◆ Lendária</span><span>⬡ Ultimate</span></div>'+
+ '<div class="five-filters" role="group" aria-label="Filtrar bonés por raridade">'+[['todos','Todos (5)'],['epica','▲ Épica'],['lendaria','◆ Lendária'],['ultimate','⬡ Ultimate']].map(function(x){return '<button type="button" data-action="cap-filter" data-tier="'+x[0]+'" aria-pressed="'+(capFilter===x[0])+'">'+x[1]+'</button>'}).join('')+'</div>'+
+ '<div id="fiveCards" class="five-grid">'+cardGrid()+'</div><div id="fiveDetail" class="five-detail" aria-live="polite">'+capDetail()+'</div>'+
+ '<p class="five-disclaimer">A raridade 💗 Ultimate do Ivsoy foi confirmada pela Dogstar. As demais classificações seguem preliminares, com base nas reações às artes. Este portfólio não indica disponibilidade para compra.</p></section>';
+}
+function projectStat(label,value){return '<div class="project2-attribute"><div class="project2-attribute-line"><span>'+esc(label)+'</span><strong>'+value+'<small>/13</small></strong></div><div class="project2-meter" role="meter" aria-label="'+esc(label)+': '+value+' de 13" aria-valuemin="0" aria-valuemax="13" aria-valuenow="'+value+'"><span style="width:'+(value/13*100).toFixed(2)+'%"></span></div></div>'}
+function monsterFocus(){
+ var w=sampleWorks[chosenMonster];
+ return '<div class="five-monster-art"><img src="'+photoRoot+w.art+'" alt="Desenho original de '+esc(w.monster)+'" loading="lazy" decoding="async"/><small>DESENHO ORIGINAL ENVIADO PELO CRIADOR</small></div><div class="five-monster-profile"><span class="eyebrow">PERSONAGEM 0'+(chosenMonster+1)+' / 05</span><h3>'+esc(w.monster).toUpperCase()+'.</h3><p>CLASSE <strong>'+esc(w.classe)+'</strong></p>'+projectStat('VIDA',w.v)+projectStat('ATAQUE',w.a)+projectStat('RESISTÊNCIA',w.r)+'<p>INSPIRADO EM <strong>'+esc(w.name)+'</strong></p><small>Os atributos são os números enviados pelo criador. A lore individual ainda não foi compartilhada.</small></div>';
+}
+function projectTwoSection(){
+ return '<section id="projeto-2" class="five-monsters" aria-labelledby="monster-five-title"><header class="five-monsters-header"><div><span class="eyebrow">03 / OUTRO UNIVERSO DA DOGSTAR</span><h2 id="monster-five-title">CINCO MONSTROS.<br>CINCO HISTÓRIAS.</h2></div><p>O Projeto 2 reúne os personagens desenhados pelo criador e a ideia de produzir bonecos, cada um com sua própria lore. Este projeto não é o brinde Monster Cap.</p></header><div class="five-monster-tabs" role="group" aria-label="Selecionar personagem">'+sampleWorks.map(function(w,i){return '<button class="five-monster-tab" data-action="monster-choice" data-index="'+i+'" aria-pressed="'+(chosenMonster===i)+'"><img src="'+photoRoot+w.art+'" alt="" loading="lazy" decoding="async"/><span><strong>'+esc(w.monster)+'</strong><small>'+esc(w.classe)+'</small></span></button>'}).join('')+'</div><div class="five-monster-focus" id="monsterFocus" aria-live="polite">'+monsterFocus()+'</div><div class="five-project2-note"><img src="'+photoRoot+'projeto2-criatura.jpg" alt="Referência tridimensional de monstro enviada pelo criador" loading="lazy" decoding="async"/><p>Referência tridimensional enviada pelo criador para explicar a ideia dos futuros bonecos. Ainda não é um produto anunciado nem uma história oficial.</p></div></section>';
+}
+function ideaSuggestions(){
+ var labels=['Detalhes 3D','Cores e símbolo','Inspiração autoral'];
+ return '<div class="idea-suggestions"><span class="eyebrow">NÃO SABE COMO DESCREVER?</span><p>Toque em um exemplo e depois personalize o texto com a sua ideia.</p><div class="idea-examples">'+labels.map(function(n,i){return '<button type="button" data-action="use-idea" data-index="'+i+'"><strong>'+n+'</strong><small>Usar exemplo ↗</small></button>'}).join('')+'</div><p class="idea-status" id="ideaFeedback" role="status" aria-live="polite">Sugestões de texto. Não há pedido ou orçamento real.</p></div>';
+}
+
+store=function(){
+ if(!data.settings.catalog){var hiddenCatalog=true}else{var hiddenCatalog=false}
+ return '<section class="editorial-hero"><div class="ed-copy"><div><div class="ed-meta">SANTA FÉ DO SUL · CUSTOM CULTURE</div>'+
+ '<h1 class="ed-title official-motto" aria-label="Estilo que não late, Morde!"><span aria-hidden="true">ESTILO</span><span aria-hidden="true">QUE NÃO</span><span aria-hidden="true">LATE,</span><span aria-hidden="true">MORDE!</span></h1>'+
+ '<p class="ed-text">Boné básico? Por aqui, a ideia é outra. Uma tela para você imaginar sua próxima customização, escolher uma direção e contar sua referência.</p>'+
+ '<div class="ed-actions"><button class="btn dark" data-action="custom">Criar meu boné <span aria-hidden="true">↗</span></button>'+ (!data.settings.catalog?'':'<a class="btn outline" href="#portfolio">Ver portfólio ↓</a>')+
+ (data.last?'<button class="btn soft" data-action="track">Ver meu pedido-demo ↗</button>':'')+'</div></div>'+
+ '<p class="ed-legal">Estudo de experiência independente para a Dogstar. Peças, desenhos, preços e pedidos desta página são conceituais.</p></div>'+
+ '<div class="ed-photo"><div class="edge-label">DOGSTAR / CONCEPT STUDIO / 2026</div><div class="orbit" aria-hidden="true"></div>'+
+ '<img class="hero-real-bone" src="assets/rosario-d-ouro-modelo.jpg" alt="Modelo apresentando o boné Rosário d’Ouro da Dogstar" loading="eager" fetchpriority="high"/><span class="hero-real-label">FOTOS REAIS · PEÇAS AUTORAIS</span><div class="serial">05 / 05<span>EXEMPLOS DEMONSTRATIVOS</span></div></div></section>'+
+ '<div class="ed-bottom"><span><span class="dot">✳</span> SKINS DE PERSONALIDADE</span><span>DA REFERÊNCIA À PRODUÇÃO</span><a href="#monster-cap" style="color:#fbd332;text-decoration:underline;text-underline-offset:3px">CONHEÇA O MONSTER CAP ↗</a></div>'+
+portfolioSection()+
+ '<section class="section" id="colecoes"><div class="look-heading"><div><div class="eyebrow">01 / A primeira escolha</div><h2>QUAL É A SUA<br>PRÓXIMA SKIN?</h2></div>'+
+ '<p class="section-intro">Épica, Lendária e Ultimate. Cores, formas e emblemas reinterpretados a partir do esboço recebido; os bonés ainda são representações conceituais.</p></div>'+
+ '<div class="look-grid">'+collections.map(function(c,i){return '<article class="look"><div class="look-copy"><span class="look-num">NO. 0'+(i+1)+' / INSPO FILE</span><div><span class="look-note">'+esc(c.tag)+'</span><h3>'+esc(c.title)+'</h3><p>'+esc(c.desc)+'</p><button class="btn dark" data-action="choose" data-id="'+esc(c.id)+'">Escolher estilo ↗</button></div></div><div class="look-visual">'+skinMotif(c.id)+cap(c.color,c.symbol)+'</div></article>'}).join('')+'</div></section>'+
+ sketchProof()+monsterSection()+projectTwoSection()+
+ '<section class="story"><div class="story-head"><span class="eyebrow" style="color:#d7d9c9">02 / O caminho da ideia</span><h2>VOCÊ CRIA.<br>A GENTE<br>ORGANIZA.</h2><p style="font-size:12px;color:#d3d4c8;max-width:320px">Uma jornada digital proposta para encomendas de bonés customizados.</p></div>'+
+ '<div class="story-steps"><div class="story-step"><b>01</b><div><h3>Uma referência.</h3><p>Escolha uma linha visual e conte o que imagina — sem cadastro ou formulário gigante.</p></div></div>'+
+ '<div class="story-step"><b>02</b><div><h3>Um briefing claro.</h3><p>O pedido vira uma ficha organizada para reduzir informações perdidas em conversas.</p></div></div>'+
+ '<div class="story-step"><b>03</b><div><h3>Etapas à vista.</h3><p>Acompanhe arte, aprovação e produção na simulação. Nada é enviado para a loja real.</p></div></div></div></section>'+
+ '<p class="footnote">* Demonstração não oficial e independente, sem estoque, compra ou prazo real. Ilustrações criadas para visualização de UX; não representam peças vendidas pela Dogstar.</p>';
+};
+
+/* Keep the customizer stable across edits, navigation and same-browser refresh. */
+var editorDraft=data.draft&&typeof data.draft==='object'?data.draft:{};
+if(collections.some(function(x){return x.id===editorDraft.collection}))selected=editorDraft.collection;
+if(colors.some(function(x){return x[0]===editorDraft.color}))selectedColor=editorDraft.color;
+var previewSide=editorDraft.side==='back'?'back':'front';
+var draftNote=typeof editorDraft.note==='string'?editorDraft.note.slice(0,240):'';
+var draftBackNote=typeof editorDraft.backNote==='string'?editorDraft.backNote.slice(0,160):'';
+function saveEditorDraft(){
+ // Keep real form values even if browser autofill or a change event skips `input`.
+ if(mode==='custom'){
+  var frontField=document.getElementById('note'),rearField=document.getElementById('backNote');
+  if(frontField)draftNote=String(frontField.value||'').slice(0,240);
+  if(rearField)draftBackNote=String(rearField.value||'').slice(0,160);
+ }
+ data.draft={collection:selected,color:selectedColor,side:previewSide==='back'?'back':'front',note:draftNote,backNote:draftBackNote};
+ save();
+}
+
+function capRear(color){
+ var c=esc(color);
+ return '<svg class="cap-svg cap-back-svg" viewBox="0 0 540 420" role="img" aria-label="Ilustração original da parte de trás do boné com abertura e regulagem">'+
+ '<defs><linearGradient id="rearShadow" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff" stop-opacity=".19"/><stop offset="1" stop-color="#000" stop-opacity=".27"/></linearGradient><pattern id="rearFabric" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 0L6 6M6 0L0 6" stroke="#fff" opacity=".16" stroke-width=".7"/></pattern></defs>'+
+ '<ellipse cx="271" cy="362" rx="212" ry="29" fill="#000" opacity=".21"/>'+
+ '<path d="M76 285Q65 91 266 57Q467 88 463 284Q415 326 338 327L331 278Q271 258 218 278L207 327Q122 327 76 285Z" fill="'+c+'" stroke="#151718" stroke-width="12" stroke-linejoin="round"/>'+
+ '<path d="M76 285Q65 91 266 57Q467 88 463 284Q415 326 338 327L331 278Q271 258 218 278L207 327Q122 327 76 285Z" fill="url(#rearShadow)"/>'+
+ '<path d="M76 285Q65 91 266 57Q467 88 463 284Q415 326 338 327L331 278Q271 258 218 278L207 327Q122 327 76 285Z" fill="url(#rearFabric)" opacity=".65"/>'+
+ '<path d="M268 64V265M106 281Q153 216 218 278M331 278Q397 218 439 282" fill="none" stroke="#141618" stroke-width="5" opacity=".42"/>'+
+ '<path d="M271 75V245M122 269Q154 240 181 255M356 256Q394 239 424 270" stroke="#f0ecdf" stroke-width="3" opacity=".46" stroke-dasharray="6 5" fill="none"/>'+
+ '<path d="M216 288Q274 248 330 288V321Q272 337 216 321Z" fill="#202422" stroke="#121514" stroke-width="7"/>'+
+ '<path d="M227 289Q272 269 319 290V318Q273 327 227 316Z" fill="#3b3c36" stroke="#d8d6c9" stroke-dasharray="5 5" stroke-width="2"/>'+
+ '<path d="M145 320Q172 344 218 328H325Q370 343 401 319" fill="none" stroke="#151718" stroke-width="9" stroke-linecap="round"/>'+
+ '<path d="M207 319H318V341H207Z" fill="'+c+'" stroke="#131715" stroke-width="5"/>'+
+ '<path d="M218 320H294V339H218Z" fill="#454b46" stroke="#f2e9ce" stroke-width="2"/>'+
+ '<rect x="295" y="317" width="22" height="25" rx="3" fill="none" stroke="#e7e3d5" stroke-width="5"/>'+
+ '<path d="M230 320V339M243 320V339M256 320V339M269 320V339" stroke="#fff" stroke-opacity=".44" stroke-width="2"/>'+
+ '<circle cx="266" cy="79" r="9" fill="'+c+'" stroke="#131715" stroke-width="4"/></svg>';
+}
+function activeCapPreview(){return previewSide==='back'?capRear(selectedColor):cap(selectedColor,item(selected).symbol)}
+function refreshCapPreview(){
+ var target=document.getElementById('capPreview');if(target){target.setAttribute('data-side',previewSide);target.innerHTML=activeCapPreview()}
+ var label=document.getElementById('previewSideText');if(label)label.textContent=previewSide==='back'?'Parte de trás do boné':'Frente do boné';
+ var hint=document.getElementById('previewSideHelp');if(hint)hint.textContent=previewSide==='back'?'Vista ilustrativa da abertura e regulagem. A arte traseira deve ser descrita no briefing.':'Vista frontal ilustrativa com símbolo da categoria.';
+ document.querySelectorAll('[data-action="preview-side"]').forEach(function(el){el.setAttribute('aria-pressed',String(el.dataset.side===previewSide))});
+}
+custom=function(){
+ var c=item(selected);
+ return '<div class="page-top"><div><button class="back" data-action="home">← Voltar para a loja</button><div class="eyebrow">01 / Studio de personalização</div><h1 class="page-title">SUA IDEIA. SEU BONÉ.</h1><p>Monte uma ficha visual para experimentar como funcionaria um pedido personalizado — sem enviar nada a terceiros.</p></div><span class="tag dark">CUSTOM LAB · DEMO</span></div>'+
+ '<div class="config-layout"><form id="orderForm" class="panel">'+
+ '<div class="micro-step"><b>01</b><span>Escolha a vibe</span></div>'+
+ '<div class="editor-row" id="vibeChoices">'+collections.map(function(x){return '<button type="button" class="editor-choice" data-action="vibe" data-id="'+esc(x.id)+'" aria-pressed="'+(x.id===selected)+'">'+esc(x.title)+'</button>'}).join('')+'</div>'+
+ '<div class="field"><label for="collection">Categoria selecionada</label><select id="collection" name="collection">'+collections.map(function(x){return '<option value="'+x.id+'" '+(x.id===selected?'selected':'')+'>'+esc(x.title)+'</option>'}).join('')+'</select></div>'+
+ '<div class="micro-step"><b>02</b><span>Escolha a cor base</span></div>'+
+ '<div class="field"><div class="swatches" role="group" aria-label="Cores da personalização">'+colors.map(function(x){return '<button type="button" class="swatch" style="background:'+x[0]+'" title="'+esc(x[1])+'" aria-label="Selecionar '+esc(x[1])+'" aria-pressed="'+(x[0]===selectedColor)+'" data-action="color" data-color="'+x[0]+'"></button>'}).join('')+'</div><div class="color-feedback" aria-live="polite">Cor selecionada: <strong id="colorName">'+esc(colorName(selectedColor))+'</strong></div><small>Tons digitais de referência; a tonalidade final precisa ser confirmada na produção.</small></div>'+
+ '<div class="micro-step"><b>03</b><span>Descreva sua personalização</span></div>'+
+ '<div class="field"><label for="note">Descrição da ideia (opcional)</label><textarea id="note" name="note" maxlength="240" placeholder="Ex.: bordado vermelho, símbolo na frente, vibe de anime...">'+esc(draftNote)+'</textarea><small>Descreva a ideia; evite incluir telefone, nome completo ou endereço.</small></div>'+
+ '<div class="field back-detail-field"><label for="backNote">Parte de trás do boné (opcional)</label><textarea id="backNote" name="backNote" maxlength="160" rows="2" placeholder="Ex.: iniciais bordadas atrás, detalhe na regulagem, frase pequena...">'+esc(draftBackNote)+'</textarea><small>Conte o que deseja na traseira. A prévia ilustra a estrutura, não a arte final. A descrição fica salva apenas neste navegador.</small></div>'+
+ ideaSuggestions()+
+ '<div class="notice" style="margin-bottom:12px"><strong>Monster Cap:</strong> brinde exclusivo de bonés autorais, sujeito à confirmação da Dogstar. Não é uma categoria nem um item adicional de pedido.</div><div class="notice" style="margin-bottom:17px"><strong>Somente uma prévia.</strong> Nada é enviado para a Dogstar e não existe pagamento nem orçamento nesta etapa.</div>'+
+ '<button class="btn dark" type="submit" style="width:100%">Simular minha encomenda ↗</button></form>'+
+ '<aside class="preview"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:18px"><span class="eyebrow" style="color:#e7e3d3">LIVE PREVIEW / 01</span><span class="barcode" aria-hidden="true">|||| ||| |||||</span></div>'+
+ '<div class="cap-side-toggle" role="group" aria-label="Escolher lado do boné"><button type="button" data-action="preview-side" data-side="front" aria-pressed="'+(previewSide==='front')+'">Frente</button><button type="button" data-action="preview-side" data-side="back" aria-pressed="'+(previewSide==='back')+'">Parte de trás</button></div>'+
+ '<div class="preview-image" id="capPreview" data-side="'+previewSide+'" aria-live="polite">'+activeCapPreview()+'</div><div class="cap-side-caption"><strong id="previewSideText">'+(previewSide==='back'?'Parte de trás do boné':'Frente do boné')+'</strong><small id="previewSideHelp">'+(previewSide==='back'?'Vista ilustrativa da abertura e regulagem. A arte traseira deve ser descrita no briefing.':'Vista frontal ilustrativa com símbolo da categoria.')+'</small></div><h3 id="previewTitle">'+esc(c.title)+'</h3>'+
+ '<p>Cor de referência: <strong id="previewColor">'+esc(colorName(selectedColor))+'</strong>. Visualização ilustrativa, sem fidelidade de tecido ou fabricação. A arte final depende da loja.</p>'+
+ '<div style="border-top:1px solid #ffffff33;padding-top:18px;margin-top:23px;display:flex;justify-content:space-between;gap:8px;align-items:center"><span class="tag yellow">CREATIVE CONCEPT</span><span class="eyebrow" style="color:#e6e0cc">VALOR SOB CONSULTA</span></div></aside></div>';
+};
+atelier=function(){
+ var inProgress=data.orders.filter(function(o){return o.stage>0&&o.stage<4}).length;
+ return '<div class="page-top"><div><div class="eyebrow">02 / Fluxo de produção</div><h1 class="page-title">DO BRIEFING<br>ATÉ O BONÉ.</h1><p>Visualização operacional de pedidos <strong>fictícios</strong>. Toque em “Avançar etapa” para simular como uma oficina controlaria o andamento.</p></div><span class="tag dark">PAINEL-DEMO · SEM LOGIN</span></div>'+
+ '<div class="ops-bar"><span><strong>'+data.orders.length+'</strong> FICHAS NA SIMULAÇÃO</span><span><strong>'+inProgress+'</strong> EM ANDAMENTO</span><span>ARRASTE A FILA NA HORIZONTAL <span aria-hidden="true">→</span></span></div>'+
+ '<div class="board" aria-label="Quadro de encomendas fictícias">'+stages.map(function(s,i){var list=data.orders.filter(function(o){return Number(o.stage)===i});return '<section class="lane"><div class="lane-head"><span>'+esc(s)+'</span><span class="count">'+list.length+'</span></div>'+ (list.length?list.map(function(o){return '<article class="ticket"><div class="ticket-label mono">'+esc(o.id)+'</div><strong>'+esc(item(o.collection).title)+'</strong><p>'+esc(o.note||'Briefing de demonstração')+'</p>'+(o.backNote?'<p class="ticket-rear"><strong>TRASEIRA:</strong> '+esc(o.backNote)+'</p>':'')+'<div class="authorial-indicator">'+(o.autoral?'AUTORAL · MONSTER CAP':'PERSONALIZADO · SEM BRINDE')+'</div><button class="authorial-button" data-action="autoral" data-id="'+esc(o.id)+'" aria-pressed="'+Boolean(o.autoral)+'">'+(o.autoral?'Desmarcar autoral':'Marcar como autoral')+'</button><div style="border-top:1px solid #ddd;padding-top:10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:10px"><span>COR</span><span style="width:22px;height:22px;background:'+esc(o.color)+';border:1px solid #999"></span></div>'+(i<4?'<button data-action="advance" data-id="'+esc(o.id)+'">Avançar para próxima fase →</button>':'<span class="tag yellow">Simulação concluída ✓</span>')+'</article>'}).join(''):'<div class="empty">Tudo em dia nesta etapa.</div>')+'</section>'}).join('')+'</div>'+
+ '<div class="actions" style="justify-content:space-between;margin-top:24px"><button class="btn soft" data-action="reset">Restaurar exemplos ↺</button><button class="btn dark" data-action="nav" data-target="gestao">Abrir visão do gestor ↗</button></div>'+
+ '<p class="footnote">O painel é público para apresentação e não contém pedidos, pessoas ou informações reais; as alterações ficam apenas no navegador.</p>';
+};
+gestao=function(){
+ var total=data.orders.length,art=data.orders.filter(function(o){return o.stage===1||o.stage===2}).length,production=data.orders.filter(function(o){return o.stage===3}).length,ready=data.orders.filter(function(o){return o.stage===4}).length;
+ var counts=collections.map(function(c){return {label:c.title,count:data.orders.filter(function(o){return o.collection===c.id}).length}});
+ var max=Math.max(1,...counts.map(function(c){return c.count}));
+ return '<div class="page-top"><div><div class="eyebrow">03 / Backoffice conceitual</div><h1 class="page-title">TUDO SOB<br>CONTROLE.</h1><p>Visão sintética da fila, com métricas calculadas somente sobre as fichas fictícias. Sem inventar vendas, faturamento ou clientes.</p></div><span class="tag dark">DADOS LOCAIS · NÃO OFICIAIS</span></div>'+
+ '<div class="metric-grid"><article class="metric"><strong>'+total+'</strong><span>Fichas criadas</span></article><article class="metric"><strong>'+art+'</strong><span>Arte e aprovação</span></article><article class="metric"><strong>'+production+'</strong><span>Em confecção</span></article><article class="metric"><strong>'+ready+'</strong><span>Prontos no exemplo</span></article></div>'+
+ '<div class="monster-ops"><div><span class="eyebrow">Brindes condicionados · Simulação</span><strong>MONSTER CAP</strong><p>Pedidos marcados como autorais nesta demo: <b>'+data.orders.filter(function(o){return o.autoral===true}).length+'</b>. Apenas bonés autorais recebem o cartão; as marcações são fictícias.</p></div><button class="btn dark" data-action="nav" data-target="atelier">Revisar fichas ↗</button></div><div class="insight-grid"><section class="panel"><div class="eyebrow">Mix de categorias · DEMO</div><h2 style="margin:11px 0 30px">O QUE CHEGA NO ESTÚDIO</h2>'+counts.map(function(c){return '<div class="bar-row"><div class="bar-label"><span>'+esc(c.label)+'</span><span class="mono">'+c.count+' / '+total+'</span></div><div class="bar-bg"><div class="bar-fill" style="width:'+(c.count/max*100)+'%"></div></div></div>'}).join('')+'<p class="footnote">Os valores se atualizam quando você cria ou avança um pedido nesta demonstração.</p></section>'+
+ '<section class="panel"><div class="eyebrow">Prévia do catálogo</div><h2 style="margin:11px 0 18px">ATIVAR. TESTAR. AJUSTAR.</h2>'+[['catalog','Mostrar catálogo','Exibir ou ocultar coleções da vitrine'],['custom','Habilitar personalização','Permitir iniciar um briefing ilustrativo'],['tracking','Mostrar acompanhamento','Linha do tempo no pedido simulado']].map(function(c){return '<div class="setting"><div><strong>'+c[1]+'</strong><p>'+c[2]+'</p></div><button class="toggle" data-action="toggle" data-key="'+c[0]+'" aria-pressed="'+Boolean(data.settings[c[0]])+'" aria-label="'+c[1]+'"></button></div>'}).join('')+'<div class="actions"><button class="btn dark" data-action="nav" data-target="loja">Conferir vitrine ↗</button></div><p class="footnote">Configurações apenas locais — não editam o Instagram, catálogo ou backend da Dogstar.</p></section></div>'+
+ '<div class="actions"><button class="btn soft" data-action="reset">Restaurar demonstração ↺</button><button class="btn dark" data-action="nav" data-target="atelier">Ver fila de produção ↗</button></div>';
+};
+
+window.addEventListener('popstate',function(){page=new URLSearchParams(location.search).get('view')||'loja';mode='home';render()});render();
+})();
+</script>
+<script>
+(function(){
+ 'use strict';
+ var stageSeen=new WeakSet();
+ var modelWorks={hipnotizante:true,rosario:true,persistencia:true,dino:true};
+ var universe={
+  bones:{title:'BONÉS · PORTFÓLIO',copy:'Modelos, peças produzidas e raridades de cada skin.',id:'portfolio',cta:'Ver os bonés'},
+  capes:{title:'CAPES · PROJETO 2',copy:'Criaturas e ideias de bonecos do criador. Lore individual ainda não enviada.',id:'projeto-2',cta:'Ver criaturas'},
+  spoiler:{title:'SPOILER · PROJETO 3',copy:'Prévia de um futuro jogo de cartas. Sem personagens, regras ou data de lançamento confirmados.',id:'projeto-3',cta:'Ver prévia'}
+ };
+ function preview(kind){var c=universe[kind]||universe.bones;var p=document.getElementById('dogUniversePreview');if(p)p.innerHTML='<div><strong>'+c.title+'</strong><p>'+c.copy+'</p></div><a href="#'+c.id+'">'+c.cta+' ↗</a>';document.querySelectorAll('[data-universe]').forEach(function(a){a.setAttribute('aria-current',String(a.dataset.universe===kind))})}
+ function ensureHub(){
+  var home=document.querySelector('.ed-bottom'),portfolio=document.getElementById('portfolio');
+  if(!home||!portfolio||document.getElementById('dogUniverse'))return;
+  var hub=document.createElement('section');hub.id='dogUniverse';hub.setAttribute('aria-labelledby','dogUniverseTitle');hub.setAttribute('data-open','false');
+  var brand='<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCACAAIADASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAAAAECAwQFBgf/xAA2EAACAgEBBQUGBgEFAQAAAAABAgADEQQFEiExURMyQWGBBiJxkaHBFCNCUnKxQxVTYtHwkv/EABoBAAMBAQEBAAAAAAAAAAAAAAACAwEEBQb/xAAlEQACAgEEAQUAAwAAAAAAAAAAAQIRAwQhMUESExQiUWEFFTL/2gAMAwEAAhEDEQA/AOohCE+WPTCEITQCLIbbcAhOJ5E9JSu2zo6dcmhe1vxLYG4qngcZ4nwnRj02SdUTlkS5NOE5Fvbin/HobWHVrAJJT7baQnF+jvQdVYN/1KPQZvoT14HVQlHZu1dHtRC2kt3yveQjDL8RL05Z45QdSVFVJNWghEhENCESLABYkIQAIQhA0JEzNY5rrOAO83TyHnF1LtXQxTvkhV+JOIjqKqFqryN47m8fPmfjKwj2I2MODUzIAFHuJ8+JnP8AtDpOz9otmaxeAtfsWPnggf3OjuUJVWijC76gD1mZ7VXU07HayxwtqOr1DxLg5AH1nbpcj9SNd2Ryx+LPNsFQFPMcIS1tSsV7T1Kr3C5df4t7w+hkFVT2uErRnc8lUZPynuHEO0mqu0WpTUadylqHII/o9RPTtj7STa2z01KAK3dsT9reInnh2TZVg6y+jSD9tjbz/wDwuT88S9svbOm2Gbfwi6nVGwAN2mK0yPEDiZy6rAs0KXPRXFPwf4ehwnEp7WbV1tvZaPRUlzxwqs2Pjx4Qf2j1umJGr19Jcc6tJSrkfFj7o9MzzV/HZO2jo9xE7aE4dvbTUgYp01ZA/Va2SflgTpdg7V/1fQdu1fZurFGUHIz5SWbRZMUfJ8DQzRk6RpwhCcZYIQhA0i1HFqFPI2r9Mn7RNZkadmHNCG+RzE1nu0dp/tsr/I8fpHX21jepYlnYEbijLfKWjfxoR9kOu1lOmzbe4Wqgb58yeQnAayzaHtJtI2U02Og4IoHuoPM8szsrNiDXWI+0WLKp3uxU+6T1M1qaq6axXUiog4BVGBO2OfHp18d2RlCWTnZHM0eyovWp9ZYGvrqWsqCd0kcskceWB4cpK/szrSpSnaFGmqPOuigoPU5yfUzpKRkuf+RlymnfjLV5pSpUK8UErZw9nsQ5wRrqwcDP5R48PjG0exCraDqtYHrHNa0Kk+pM9At0+OPhgSjcuMHoY89Tni6ZkccHueX7c/G6G99DYF0+n5rXSN1HHUnm3rMuqp7m3aa2sboik/1PWNXpdPeahqaarQCcdooODjzktdVdIxVWlY/4qBG/sUopuO5nt7ezPO9B7LbS1bA21/ha/FrefoJ3mzdBTs3RJpqM7q8Sx5sfEmW4Tg1GsnmVPZF8eJQ37EiwiTkKhCEIGkOrONLYoGWcbijzPCPqoroXdrUDqfE+ZMit/M11KDu1A2t8eS/eTPbXWVFliJvcBvMBmU3pRQndj5HdaKa2c8cDgOp6SI3vad3TKGHja3dHw6yWulUbfJL2fvbn6dIKKjvI3ngi2dq7L1fFdY3Tkk+flNrTWY7276DEy3UqRZWPfHh+4dJNXcGQMhyDOtZ6l5RVIi8e1M1brQBgYz5zM1Fjd0bhLcACv1jr7woLscKAMyupY5d+Dt4dB0jZdQ2/IyOPoRzYchq6nHy/uQMEX/HdV5pxH0lmE41l/C3iVqWscv2dgdF4ZdeJPjyjq7ybuycLvYPFGyOEbq6GsBeo+/8AqXOA46GRaZqxdTVUrBUV2JZcZPAGVqMouQu6dF6ESE5SgQhIdY5r0lhTvsNxP5HgP7mxVugbG6L8wXajmLXO7/EcB9z6yltXQLrtdp03yh7NixxngCPuZp1VimpKk7qKFHpIaSLNdqHBBFarWCPUn+xLQm4yc49CNJqmPot317N1CW1gBlHLHgR5SaQ6ik2br1kJcncb7HyMWi4XIeG66nddDzU/+8YklfyQy+iWQWMNMxtJxU3f8j1k0ZqKUvpau3gh5nOIY2r34B8bDarRqm7RTmpDhfM9fSTSls8006c1CxAVdgcsOPHn8sS4GB5EH4GblXypcGR4FhDB6GQW3lX7OpO0t8RnAXzY+Hw5yai26QzdEllqUpvOQB4eZ6CVtCN5i5OSqKp/kSWP9xCp7UCtxbqiONp7tQ8h4eQ8fGWaa1prCLk+JJOST4k+cs6hBrtibtkkSLCQHEmPftJbNt0aLcYCu3i2ebbvDh04zYkdmmotYtZTWzMMFiozj4yuKUYt+SFkm+B7rvIy5IyCMjwmfsjZjbO7YtcLO0xwAwBj7ybN2kPvF79OP1c3T4/uH1+MtI62IHRg6NxDA5Bm3KMWlwwpN32LKm0EZKzqaWKWIBvEAHKZ48PLmJbgQCCCMg8xEjLxdmtWV/wm9xfU6iwHo+6D8sRRotMDk0qx6t7x+sboSUrfTsctQd0Z8V5qflw9JZjSlJOrMSQw01EYNVZHTcEq06Wh9Rqt+mslXUAbvALujH3l2Vt9a9plSyjtqhgE8yp/6P0hCUmmkDSHfgtP4V7v8WI+8aug0q5/JBycneJOT6y1Ei+pL7N8UNrrSpd2tFReijEdCERuzQhFiQAIQhAAlazTMjm3SkI5OWQ9x/j0PmJZhGUmgqyGjULcShBrtXvVtzHn5jzEmkV9CXqN7IZeKupwynyMiW+zTnd1eN3OBeBhT/IfpP0jeKl/ky65FuHY6ym7ktn5L/2p+eR6y1I9RSL9O9RON4cD0PgfnG6W036ZLGGHIw46MOBHzg942C5JZga6qm/aVWstvFVPaCoEnvbvMjoM8Jr6t2wunqOLbuAI/Qvi3/vEyDX7I0+tSlGLVrSN1dzp0lcEljdydWJNOWyNA9YkFUKoVeAUACLOYoJCEIAEWJCABCEMwAIQhABYhAIIIBB4EHxhCAFXsbdKc6cGyjxpJ4r/ABP2MZTqaV1NhFgFVwL5bhuuvBgR4HGD85dmVtnY52lZU9dq1MvBsrnI6/GXxyjJ1Pb9EkmuC5pFNhfVWKQ9uN0HmqDkPv6y1GqN1FXJOABk8zFkpO2OlQsSEIoBCEIALCJCAH//2Q==" alt="Ilustração da marca Dogstar: cabeça de cachorro com boné, fornecida pelo criador" width="164" height="164" loading="eager" />';
+  hub.innerHTML='<div class="dog-u-head"><button type="button" class="dog-u-logo" data-universe-handle aria-expanded="false" aria-controls="dogUniverseOptions" aria-label="Abrir os três universos da Dogstar">'+brand+'</button><div><span class="eyebrow" style="color:#ffd400">TRÊS CAMINHOS · UMA MARCA</span><h2 id="dogUniverseTitle">DOGSTAR.<br>ALÉM DOS BONÉS.</h2><p>O portfólio que já existe e os universos que ainda estão sendo criados. Passe o mouse para conhecer; no celular, toque em uma aba.</p></div></div><nav class="dog-u-tabs" id="dogUniverseOptions" aria-label="Explorar universos Dogstar"><a class="dog-u-tab" data-universe="bones" href="#portfolio"><b>BONÉS</b><small>Peças atuais</small></a><a class="dog-u-tab" data-universe="capes" href="#projeto-2"><b>CAPES</b><small>Projeto 2</small></a><a class="dog-u-tab" data-universe="spoiler" href="#projeto-3"><b>SPOILER</b><small>Projeto 3</small></a></nav><div id="dogUniversePreview" class="dog-u-preview" aria-live="polite"></div>';
+  home.insertAdjacentElement('afterend',hub);preview('bones');
+ }
+ function ensureProject3(){var section=document.getElementById('projeto-2');if(!section||document.getElementById('projeto-3'))return;var x=document.createElement('section');x.id='projeto-3';x.innerHTML='<div><span class="eyebrow" style="color:#f6bddb">SPOILER / 03 · IDEIA FUTURA</span><h2>PRÓXIMA<br>CARTA?</h2><p>O criador citou um futuro <strong>Projeto 3: jogo de cartas.</strong> Não foram enviados personagens, cartas, regras ou data de lançamento. Esta apresentação é apenas uma prévia.</p><a href="#dogUniverse" style="color:#ffd400;font-weight:900">Explorar os universos ↗</a></div><div class="card-art" aria-hidden="true"><b>?</b></div>';section.insertAdjacentElement('afterend',x)}
+ /* On desktop the circular logo reveals the three destinations.
+ Keyboard focus and click work too; touch layouts always show the links. */
+document.addEventListener('click',function(e){var b=e.target.closest('[data-universe-handle]');if(!b)return;var root=document.getElementById('dogUniverse');if(!root)return;var isOpen=root.getAttribute('data-open')!=='true';root.setAttribute('data-open',String(isOpen));b.setAttribute('aria-expanded',String(isOpen))});
+document.addEventListener('mouseover',function(e){var root=e.target.closest('#dogUniverse');if(root){var b=root.querySelector('[data-universe-handle]');if(b)b.setAttribute('aria-expanded','true')}});
+document.addEventListener('mouseout',function(e){var root=e.target.closest('#dogUniverse');if(root&&!root.contains(e.relatedTarget)&&root.getAttribute('data-open')!=='true'){var b=root.querySelector('[data-universe-handle]');if(b)b.setAttribute('aria-expanded','false')}});
+function ensureModelFirst(){
+ document.querySelectorAll('.five-select').forEach(function(btn){
+  var i=Number(btn.dataset.index),work=['hipnotizante','rosario','persistencia','maldito','dino'][i];
+  if(!modelWorks[work])return;
+  var img=btn.querySelector('.five-img img');
+  if(img&&!img.dataset.modelFirst){
+   img.dataset.modelFirst='1';
+   img.src=img.src.replace('-bone.jpg','-modelo.jpg');
+   img.alt='Modelo apresentando o boné '+(btn.querySelector('h3')?.textContent||'');
+  }
+ });
+}
+function ensure(){ensureHub();ensureProject3();ensureModelFirst()}
+ var dlg=document.createElement('dialog');dlg.id='dogstarLightbox';dlg.className='dog-lightbox';dlg.setAttribute('aria-label','Fotografia ampliada');dlg.innerHTML='<div><img alt="" /><footer><p></p><button type="button" data-close-photo>Fechar ×</button></footer></div>';document.body.appendChild(dlg);
+ document.addEventListener('click',function(e){if(e.target.closest('[data-close-photo]')){dlg.close();return}var zoom=e.target.closest('[data-expand-photo]');if(zoom){var index=Number(zoom.dataset.expandPhoto),img=zoom.querySelector('img'),view=dlg.querySelector('img');if(!img||!Number.isInteger(index)||index<0||index>1)return;view.src=img.src;view.alt=img.alt;dlg.querySelector('p').textContent=img.alt;if(typeof dlg.showModal==='function')dlg.showModal();return}var more=e.target.closest('[data-see-monster]');if(more){e.preventDefault();var idx=Number(more.dataset.seeMonster);var tab=document.querySelector('.five-monster-tab[data-index="'+idx+'"]');if(tab){tab.click();document.getElementById('projeto-2')?.scrollIntoView({behavior:'smooth',block:'start'})}}});
+ dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
+ document.addEventListener('mouseover',function(e){var tab=e.target.closest('[data-universe]');if(tab)preview(tab.dataset.universe)});
+ document.addEventListener('focusin',function(e){var tab=e.target.closest('[data-universe]');if(tab)preview(tab.dataset.universe)});
+ document.addEventListener('click',function(e){var tab=e.target.closest('[data-universe]');if(tab)preview(tab.dataset.universe)});
+ var root=document.getElementById('app');if(root)new MutationObserver(ensure).observe(root,{childList:true,subtree:true});
+ ensure();
+})();
+</script></body></html>
