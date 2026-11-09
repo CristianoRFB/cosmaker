@@ -258,3 +258,18 @@ Após o limite temporário do navegador ser liberado, a seção foi testada nova
 **Arquivos e publicação:** `demos/dogstar-cap/index.html`, commit `34ba10ebe975167403f70b0ca68dcd8f6d67eb09` na branch `demo/dogstar-cap-conceito`; Worker existente `77-dogstar-cap-conceito` atualizado com revisão `34ba10ebe975`. **Não houve merge à main.** Ambos os scripts inline passaram em teste sintático JS antes do commit. Browser Rendering a 390 px confirmou HTML efetivamente renderizado com imagem principal Hipnotizante no modelo, foto pequena do boné, ampliação, link ao Horoz, cinco cartões, Projeto 2 e Projeto 3. Teste visual de screenshot e verificações completas dos demais viewports ainda não finalizados; CI em execução na primeira consulta após o commit.
 
 **Limites:** a peça Hipnotizante continua registrada como sorteada no anime.fest, sem disponibilidade à venda; nenhuma foto nova ou direitos de imagem foi inferido desta solicitação.
+
+
+## Correção do carrossel dos bonés conforme marcações de 09/11/2026
+
+**Referências do cliente:** captura do detalhe da peça Hipnotizante no computador, com faixa do Projeto 2 riscada de vermelho, e novo close do esboço com setas laterais para navegar entre imagens e indicadores na base da galeria.
+
+**Mudanças na branch `demo/dogstar-cap-conceito`:**
+- O painel principal de cada boné agora é um carrossel acessível de fotografias reais já cadastradas: botões **Foto anterior / Próxima foto**, paginação clicável indicando a foto ativa, indicador legível `FOTO n / total` e ampliação da imagem selecionada. Imagens são percorridas ciclicamente (loop). A fotografia do modelo aparece primeiro nos quatro itens que a possuem.
+- O **Maldito Verme**, com apenas uma foto fornecida, mostra um indicador único sem setas desnecessárias. Não foram duplicadas ou fabricadas fotos para simular o número de pontos desenhado.
+- Removida **apenas do painel de detalhe Bonés** a faixa **PROJETO 2 · VERSÃO MONSTRO**, marcada para exclusão na referência. A seção separada do Projeto 2, suas cinco criaturas, o Monster Cap, o Projeto 3, os três tipos de raridade e os links de navegação global permanecem.
+- Mantidas a foto menor do boné à direita, com ampliação, descrição da obra, nome/raridade e botão para descrever uma ideia. Layout responsivo para desktop e celular, controles com rótulos acessíveis, foco visível e suporte a movimento reduzido.
+
+**Evidências:** commit `976cff0f367fb2b7281e7970ebc0760f7a779ab6` no `demos/dogstar-cap/index.html`. O **Worker existente** `77-dogstar-cap-conceito` foi publicado com `x-demo-revision: 976cff0f367f`. Sintaxe dos dois scripts inline validada antes do commit. Browser Rendering a 390 px **confirmou renderização da loja** com ambas as setas, **dois indicadores** reais para o Hipnotizante, foto do modelo inicial, foto menor do boné, ausência do bloco riscado, cinco peças, Projeto 2 e Projeto 3 presentes; captura da seção revisada visualmente. O teste automatizado completo de clique nas setas/modal e demais breakpoints permanece recomendado; a CI do commit ainda estava em execução no primeiro check.
+
+**Não alterado:** branch `main`, backend, dados reais, pedidos, autenticação e fotos originais.
