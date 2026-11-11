@@ -678,6 +678,10 @@ html,body{max-width:100%;overflow-x:clip}
 @media(max-width:600px){.sp-intro-copy{padding:33px 20px}.sp-intro h2{font-size:clamp(73px,16.5vw,100px)}.sp-lead{font-size:13px}.sp-hero-art{min-height:290px}.sp-hero-art .sp-card{width:clamp(106px,27vw,165px)}.sp-season,.sp-classes{padding:28px 17px}.sp-section-head{grid-template-columns:1fr;gap:10px}.sp-section-head h3{font-size:clamp(52px,12vw,73px)}.sp-class-chips{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.sp-class-chip{padding:10px 8px;font-size:11px;gap:7px}.sp-class-chip b{height:30px;min-width:30px;font-size:18px}.sp-card-preview{grid-template-columns:1fr}.sp-card-preview-copy{padding:27px 20px}.sp-preview-grid{min-height:240px;padding:24px 7px}.sp-preview-grid .sp-card{width:clamp(83px,23vw,130px)}.sp-bottom{padding:18px 17px}}
 @media(max-width:365px){.sp-rarity{padding:15px 5px}.sp-rarity-copy>span{font-size:9px}.sp-card-preview-copy h4{font-size:44px}}
 
+
+/* Nome oficial informado em 11/11: Dual Monstera. */
+#projeto-3 .sp-intro h2{font-size:clamp(62px,7.4vw,118px);overflow-wrap:anywhere}
+@media(max-width:600px){#projeto-3 .sp-intro h2{font-size:clamp(59px,14vw,88px)}}
 </style></head>
 <body>
 <div class="banner">Conceito independente • não oficial • todos os pedidos são fictícios</div>
@@ -1010,7 +1014,7 @@ function spoilerEmblem(symbol){
 function spoilerCard(tier,extra){
  var names={tri:'T',diamond:'D',hexa:'H',star:'S'};
  return '<div class="sp-card sp-'+tier+(extra?' '+extra:'')+'" aria-label="Carta conceitual com símbolo de raridade">'+
- '<div class="sp-card-top"><span>MONSTER CAPS</span><span>00 / ?</span></div><div class="sp-card-inner"><span class="sp-card-placeholder">ARTE A REVELAR</span><span class="sp-card-glyph">'+spoilerEmblem(tier)+'</span></div>'+
+ '<div class="sp-card-top"><span>DUAL MONSTERA</span><span>00 / ?</span></div><div class="sp-card-inner"><span class="sp-card-placeholder">ARTE A REVELAR</span><span class="sp-card-glyph">'+spoilerEmblem(tier)+'</span></div>'+
  '<div class="sp-card-bottom"><span>SEASON 00</span><span>'+names[tier]+'</span></div></div>';
 }
 function ensureProject3(){
@@ -1026,8 +1030,8 @@ function ensureProject3(){
  ];
  x.innerHTML='<div class="sp-intro"><div class="sp-intro-copy">'+
  '<span class="sp-overline">UNIVERSO 03 / SPOILER · CONCEITO EM DESENVOLVIMENTO</span>'+
- '<h2 id="sp-title">MONSTER<br><em>CAPS.</em></h2>'+
- '<p class="sp-lead">Um futuro jogo de cartas inspirado nos Monster Caps. A proposta é organizar os personagens em temporadas, classes e raridades — começando pela <strong>Temporada 0</strong>.</p>'+
+ '<h2 id="sp-title">DUAL<br><em>MONSTERA.</em></h2>'+
+ '<p class="sp-lead">Dual Monstera é o nome definido pelo criador para o futuro jogo de cartas inspirado nos personagens dos Monster Caps. A proposta é organizar os personagens em temporadas, classes e raridades — começando pela <strong>Temporada 0</strong>.</p>'+
  '<div class="sp-intro-actions"><a href="#sp-season" class="sp-action">EXPLORAR A TEMPORADA 0 <span aria-hidden="true">↓</span></a><span>PRÉVIA CONCEITUAL · NÃO DISPONÍVEL PARA COMPRA</span></div>'+
  '</div><div class="sp-hero-art" aria-label="Três cartas conceituais sobre uma faixa preta: vermelha, rosa e roxa">'+
  '<div class="sp-ribbon" aria-hidden="true"></div>'+spoilerCard('tri','sp-fan-left')+spoilerCard('hexa','sp-fan-mid')+spoilerCard('diamond','sp-fan-right')+
