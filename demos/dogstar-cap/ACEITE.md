@@ -273,3 +273,16 @@ Após o limite temporário do navegador ser liberado, a seção foi testada nova
 **Evidências:** commit `976cff0f367fb2b7281e7970ebc0760f7a779ab6` no `demos/dogstar-cap/index.html`. O **Worker existente** `77-dogstar-cap-conceito` foi publicado com `x-demo-revision: 976cff0f367f`. Sintaxe dos dois scripts inline validada antes do commit. Browser Rendering a 390 px **confirmou renderização da loja** com ambas as setas, **dois indicadores** reais para o Hipnotizante, foto do modelo inicial, foto menor do boné, ausência do bloco riscado, cinco peças, Projeto 2 e Projeto 3 presentes; captura da seção revisada visualmente. O teste automatizado completo de clique nas setas/modal e demais breakpoints permanece recomendado; a CI do commit ainda estava em execução no primeiro check.
 
 **Não alterado:** branch `main`, backend, dados reais, pedidos, autenticação e fotos originais.
+
+
+## Spoiler Monster Caps / Temporada 0 — esboços de 11/11/2026
+
+**Referência:** três fotografias de desenhos enviados pelo responsável. A primeira apresenta o conceito da página Spoiler, ilustração de três cartas e intenção de criar um futuro jogo com Monster Caps organizado por temporadas (uma a cada ano, como proposta). A segunda descreve as quantidades associadas às raridades: triângulo vermelho = 10 cartas, losango roxo = 15 cartas, hexágono rosa = 20 cartas, estrela preta = 10 cartas. A terceira nomeia `Temporada 0` e seis classes: Tanque, DPS, Suporte, Guardião, Especialista, Curador.
+
+**Mudança:** seção `#projeto-3` reescrita como experiência editorial responsiva com título Monster Caps, cartas ilustrativas de três categorias, quatro cartões de raridade com valores exatamente como desenhados, seis classes e painel da Temporada 0. As cartas são modelos gráficos e **não** representam personagens/cartas oficiais. Não foram inventadas habilidades, regras, preços ou datas. A raridade de estrela preta não foi renomeada para um nome comercial não fornecido; é descrita literalmente pelo símbolo e cor. Os quatro números são informados como planejamento do esboço, sem apresentar pacotes à venda ou garantia de composição.
+
+**GitHub:** commit `1f5c9e707cf362643715b7a2e3838d7c134b8694` na branch `demo/dogstar-cap-conceito`, arquivo `demos/dogstar-cap/index.html`. **Cloudflare:** Worker `77-dogstar-cap-conceito` atualizado na mesma implantação, `x-demo-revision=1f5c9e707cf3`; a `main` não foi alterada. Scripts inline passaram na análise sintática JavaScript.
+
+**Validação:** Browser Rendering com JavaScript em viewport móvel de 390 px retornou seção de Spoiler, quatro raridades, seis classes, Temporada 0, seis cartas decorativas, preservando os cinco bonés e o Projeto 2. Screenshot de `#projeto-3` no celular foi conferido visualmente. Interação de desktop e os demais breakpoints ainda não têm evidência completa.
+
+**Próximos materiais esperados:** exemplos de cartas, confirmação do nome comercial da quarta raridade e esclarecimento se 10/15/20/10 representam composição por pacote, total de cartas ou outro critério.
