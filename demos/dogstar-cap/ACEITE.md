@@ -286,3 +286,9 @@ Após o limite temporário do navegador ser liberado, a seção foi testada nova
 **Validação:** Browser Rendering com JavaScript em viewport móvel de 390 px retornou seção de Spoiler, quatro raridades, seis classes, Temporada 0, seis cartas decorativas, preservando os cinco bonés e o Projeto 2. Screenshot de `#projeto-3` no celular foi conferido visualmente. Interação de desktop e os demais breakpoints ainda não têm evidência completa.
 
 **Próximos materiais esperados:** exemplos de cartas, confirmação do nome comercial da quarta raridade e esclarecimento se 10/15/20/10 representam composição por pacote, total de cartas ou outro critério.
+
+## Vista superior do boné no Studio — 15/11/2026
+
+Pedido do criador a partir de captura de WhatsApp: no personalizador, acrescentar visualização de cima do boné incluindo a aba; a visualização da parte de trás já existia. Implementado seletor de três vistas **Frente / Parte de trás / Cima e aba** com ilustração SVG própria da perspectiva superior, costuras, botão central e aba. A vista atual fica salva no rascunho local; alternar vistas mantém categoria Ultimate, cor, notas e peças complementares. A imagem é uma prévia conceitual, não um modelo 3D ou representação pronta para fabricação. Os componentes mobile dispõem de botões de 44 px no mínimo.
+
+Commit de código `d3562d97a303ed67308b09bf94baa7e9fd89b9ea` na branch `demo/dogstar-cap-conceito`. Worker `77-dogstar-cap-conceito` publicado com revisão `d3562d97a303`. Scripts JS do arquivo passaram validação sintática local; leitura de volta do Worker confirmou `function capTop`, o novo botão, manutenção da vista traseira e da categoria Ultimate. O CI do commit não tinha execução retornada na consulta e não foi alegado como aprovado; QA interativo em navegador para todos os tamanhos continua pendente.
