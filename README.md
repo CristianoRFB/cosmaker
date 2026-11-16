@@ -29,3 +29,7 @@ As suítes, scripts de documentação e limites desta versão estão em [docs/ve
 Autenticação, propostas, aprovação, criação de pedido, snapshots de medidas, produção, fotos, aprovação do cliente e painel de plataforma já fazem parte da base existente. CRM completo, integrações de cobrança, automação comercial e módulos ainda estruturais continuam fora do escopo entregue neste marco.
 
 O GLOBAL STANDARD v01 de planos/entitlements/gating comercial não foi implementado; é a próxima etapa após este core passar pelo readiness gate.
+
+## Prontidão para clientes reais
+
+O core possui onboarding transacional conservador, multi-tenancy por atelierId e fluxo de bonés (businessType=caps). Antes de cadastrar uma empresa contratada ou publicar uma vitrine, consulte [o checklist de readiness](docs/operations/REAL_CLIENT_READINESS.md) e o manifesto read-only em onboarding/candidates/. O relatório é gerado com npm run tenant:readiness -- --file=onboarding/candidates/dogstar-cap.json. A demo Dogstar não é o tenant real e não deve receber dados produtivos.
