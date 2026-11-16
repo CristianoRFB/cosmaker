@@ -16,6 +16,7 @@ jobs:
       - run: npx tsc --noEmit
       - run: npm test
       - run: npm run test:onboarding
+      - run: npm run test:readiness
       - run: npm run test:usability:preflight
       - run: npm run build
   usability:

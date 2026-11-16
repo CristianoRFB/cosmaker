@@ -1,6 +1,6 @@
 # Dogstar Cap — Preparação para tenant real e demo
 
-**Estado:** LEAD/CLIENTE EM PREPARAÇÃO, sem comprovação de conta real vinculada no Firebase, sem autorização de publicação ou migração de produção. Este documento não é anúncio de implantação concluída.
+**Estado:** LEAD INTERESSADO, NÃO CONTRATADO. Não há comprovação de conta real vinculada no Firebase, autorização de publicação ou migração de produção. Este documento não é anúncio de implantação concluída.
 
 ## Fatos do briefing fornecidos
 - Nome comercial informado: Dogstar Cap.
@@ -38,3 +38,7 @@ Nenhum contato privado, nome de responsável, CNPJ ou endereço foi salvo neste 
 `npm run test:onboarding`, `npm test`, `npm run test:rules`, `npm run test:commercial`, `npm run test:e2e`, `npm run lint`, `npx tsc --noEmit`, `npm run functions:build`, `npm run build`, `npm run docs:check`.
 
 Provas: screenshots reais somente se o runtime local for executado; mockups/visual do outro Project permanecem CONCEITUAIS.
+
+## Gate comercial/técnico (16/11/2026)
+
+O manifesto de segurança está em onboarding/candidates/dogstar-cap.json, com estado INTERESTED e checks bloqueados. O interesse demonstrado pelo responsável não constitui contrato, pagamento realizado ou aprovação de go-live. Use npm run tenant:readiness -- --file=onboarding/candidates/dogstar-cap.json e o procedimento em docs/operations/REAL_CLIENT_READINESS.md. Não grave dados pessoais nem condições financeiras nesta documentação pública. Nenhum tenant real foi provisionado.
