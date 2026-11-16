@@ -1,0 +1,14 @@
+# DESIGN — @cosplayatelier (prévia conceitual não oficial)
+- Origem do lead: print fornecido em 03/11/2026, perfil de cosmaker/figurino com agenda aberta em 2026; sem permissão para marca/fotografia.
+- Valor demonstrado: recepção de orçamento, quadro de produção e disponibilidade para gestão em três perspectivas.
+- Direção: editorial, artesanal, sóbria. Cores: canvas #f6f1e8, primary #172823, accent #a14433, ink #172823, border #d9d9cc.
+- Tipo: Georgia (display), UI system font (corpo), sem recursos tipográficos externos.
+- Layout: mobile-first via media queries <=740/360 e desktop 1260. Contraste e focus-visible; sem animação obrigatória em reduced-motion.
+- Mídia: SVG original criado para a demo, sem logotipo ou fotos do lead.
+- UX cliente: portfólio conceitual -> formulário de solicitação local -> código de rastreio.
+- UX ateliê: quadro por quatro etapas com avançar/voltar.
+- UX gestão: quantidade de pedidos de teste, disponibilidade de intake e reiniciar simulação.
+- Persistência: somente localStorage no navegador, sem sync entre dispositivos e sem autenticação.
+- Integrações não incluídas: WhatsApp real, pagamento, arquivos, backend, Firebase, estoque, emissão fiscal.
+- Conteúdo fictício: nomes, personagens, peças e todos os indicadores. Não é representação oficial de capacidades ou serviços do lead.
+- Publicação: Cloudflare Worker isolado, sem alteração em produção do Cosmaker OS.
