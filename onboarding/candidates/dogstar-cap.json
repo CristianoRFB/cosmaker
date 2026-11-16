@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "candidateSlug": "dogstar-cap",
+  "businessType": "caps",
+  "commercialStage": "INTERESTED",
+  "checks": {
+    "contractAccepted": false,
+    "scopeAccepted": false,
+    "ownerIdentityVerified": false,
+    "brandAndMediaRightsVerified": false,
+    "productionProjectAndCostsApproved": false,
+    "platformOperatorAuthorized": false,
+    "privacyAndRetentionApproved": false,
+    "tenantIsolationAndRolesTested": false,
+    "storageAndUploadsTested": false,
+    "abuseProtectionReviewed": false,
+    "backupAndRestoreTested": false,
+    "productionSmokeTested": false,
+    "clientAcceptanceRecorded": false,
+    "publicationExplicitlyAuthorized": false
+  }
+}
