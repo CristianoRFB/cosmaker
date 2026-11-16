@@ -1,6 +1,6 @@
 # Dogstar Cap — Preparação para tenant real e demo
 
-**Estado:** LEAD/CLIENTE EM PREPARAÇÃO, sem comprovação de conta real vinculada no Firebase, sem autorização de publicação ou migração de produção. Este documento não é anúncio de implantação concluída.
+**Estado:** LEAD INTERESSADO, NÃO CONTRATADO. Não há comprovação de conta real vinculada no Firebase, autorização de publicação ou migração de produção. Este documento não é anúncio de implantação concluída.
 
 ## Fatos do briefing fornecidos
 - Nome comercial informado: Dogstar Cap.
