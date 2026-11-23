@@ -378,7 +378,7 @@ render();
   out.id="rfb-qa-run";
   out.style.cssText="padding:32px;font-family:monospace;white-space:pre-wrap";
   out.textContent="RFB_QA_JSON "+JSON.stringify(q);
-  document.body.appendChild(out);
+  document.getElementById("app").prepend(out);
   try{localStorage.removeItem("77-vulcane-concept-v7-2026")}catch(e){}
 })();
 </script></body></html>
