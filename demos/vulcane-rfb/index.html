@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100e11">
+<meta name="description" content="Conceito independente de vitrine e gestão de encomendas para a Vulcane Cosmaker. Demonstração, sem pedidos reais.">
+<title>Vulcane • conceito de experiência e gestão</title>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#100e11;--surface:#19161a;--surface2:#242025;--line:#383038;--cream:#f1eae3;--sub:#bbb0ae;--red:#ed5b63;--redDark:#a63241;--mint:#bbd4c4;--radius:20px;--wide:1210px}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--cream);font:15px/1.6 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,p{margin-top:0}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.045em;line-height:1.06}
+h1{font-size:clamp(3.1rem,7vw,6.5rem)}
+h2{font-size:clamp(2.35rem,5vw,4.4rem)}
+h3{font-size:1.35rem}
+p{color:var(--sub)}
+:focus-visible{outline:3px solid #ffd59b;outline-offset:4px}
+.container{width:min(calc(100% - 48px),var(--wide));margin-inline:auto}
+header{position:sticky;top:0;z-index:100;background:rgba(16,14,17,.92);backdrop-filter:blur(18px);border-bottom:1px solid #322930}
+.nav{min-height:82px;display:flex;align-items:center;gap:22px;justify-content:space-between}
+.wordmark{font-family:"Space Grotesk",sans-serif;letter-spacing:-.065em;font-weight:700;font-size:1.67rem;color:var(--cream)}
+.wordmark span{color:var(--red)}
+.wordmark small{display:block;font-family:"DM Sans",sans-serif;font-size:.57rem;letter-spacing:.22em;font-weight:700;color:#bca9a4;line-height:1.1;margin-top:1px}
+.navlinks{display:flex;align-items:center;gap:23px;font-size:.87rem;font-weight:700}
+.navlinks a{color:#d6c9c4}
+.navlinks a:hover,.navlinks a[aria-current=page]{color:#fff}
+.tag{display:inline-flex;gap:8px;align-items:center;border:1px solid #5a3c41;color:#f7c4c4;border-radius:99px;padding:7px 12px;background:#2a1c21;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:11px;min-height:51px;padding:12px 20px;border:1px solid transparent;border-radius:9px;font-size:.9rem;font-weight:800;transition:transform .2s,background .2s,border-color .2s;white-space:normal;text-align:center}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{color:#200d12;background:var(--red)}
+.btn-primary:hover{background:#ff7980}
+.btn-secondary{color:#f7f0ec;border-color:#66535a;background:#272125}
+.btn-secondary:hover{background:#33282e}
+.btn-quiet{color:var(--cream);border:1px solid #4c4246;background:transparent}
+.btn-sm{min-height:39px;padding:8px 13px;font-size:.79rem}
+.hero{min-height:672px;padding:84px 0 75px;position:relative;overflow:hidden;background:radial-gradient(circle at 89% 25%,#54232a 0%,transparent 36%),linear-gradient(150deg,#141114,#0e0c0f)}
+.hero::after{content:"";position:absolute;inset:0;opacity:.22;pointer-events:none;background-image:radial-gradient(#c58f8f .55px,transparent .55px);background-size:6px 6px;mask-image:linear-gradient(90deg,#000,transparent 75%)}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.02fr .98fr;align-items:center;gap:40px}
+.hero h1{margin:25px 0;font-size:clamp(3.45rem,6.6vw,6rem)}
+.hero h1 em{color:var(--red);font-style:normal}
+.hero .lead{max-width:555px;font-size:1.13rem;color:#cec3c0;line-height:1.7}
+.actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}
+.micro{font-size:.72rem;color:#a79a98;margin-top:17px}
+.hero-art{position:relative;min-height:530px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:stretch}
+.hero-art .photo-main{grid-row:1/span 2;height:514px;object-position:center;filter:saturate(.8)}
+.hero-art .photo-second{height:291px;filter:saturate(.8)}
+.photo{width:100%;height:100%;object-fit:cover;border-radius:7px;border:1px solid #514044}
+.feature-chip{position:absolute;bottom:39px;right:10px;width:230px;background:#f2e9df;color:#291619;padding:15px 17px;border-radius:7px;box-shadow:0 18px 42px #0009;transform:rotate(-3deg);border:1px solid #fff5}
+.feature-chip strong{display:block;font-family:"Space Grotesk",sans-serif;font-size:1rem;line-height:1.22}
+.feature-chip small{color:#69494d;font-size:.72rem}
+.part{font-family:"Space Grotesk",sans-serif;font-size:1rem;font-weight:700;letter-spacing:.13em;color:#ffb0b6}
+.section{padding:103px 0;border-bottom:1px solid #282329}
+.section-head{max-width:760px;margin-bottom:38px}
+.section-head p{max-width:610px;font-size:1.08rem}
+.eyebrow{font-size:.76rem;letter-spacing:.17em;text-transform:uppercase;font-weight:800;color:var(--red);margin-bottom:12px}
+.soft{background:#171317}
+.light{background:#ece7df;color:#281f22}
+.light p{color:#62575b}
+.light .eyebrow{color:#9d3041}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.benefit{min-height:252px;border:1px solid #3d343a;border-radius:14px;background:#201a1f;padding:29px}
+.benefit .num{font-family:"Space Grotesk",sans-serif;font-size:3rem;line-height:1;margin-bottom:29px;color:#f8c4c0}
+.benefit h3{margin-bottom:11px}.benefit p{font-size:.91rem;margin-bottom:0}
+.photo-story{width:100%;min-height:370px;object-fit:cover;border-radius:12px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.callout{border-left:3px solid var(--red);padding-left:16px;color:#dfd1cc}
+.steps{counter-reset:step}
+.step{padding:23px 0;border-bottom:1px solid #c8bcb7;display:grid;grid-template-columns:54px 1fr;gap:15px}
+.step::before{counter-increment:step;content:counter(step,decimal-leading-zero);font-family:"Space Grotesk";font-size:1.7rem;color:#9d3041}
+.step h3{font-size:1.1rem;margin-bottom:6px}.step p{margin-bottom:0}
+.showcase{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+.preview{border:1px solid #554249;border-radius:15px;overflow:hidden;background:#171419;box-shadow:0 20px 50px #0005}
+.preview-top{display:flex;justify-content:space-between;gap:14px;padding:13px 18px;background:#2b232a;border-bottom:1px solid #473841;font-size:.72rem;color:#dbced1}
+.preview-top b{color:#f0d9d7}
+.preview-body{padding:27px;min-height:290px}
+.fake-card{display:grid;grid-template-columns:110px 1fr;gap:20px;align-items:center;background:#292128;border:1px solid #483943;border-radius:12px;padding:14px}
+.fake-card img{width:110px;height:135px;object-fit:cover;border-radius:8px}
+.fake-card h3{margin-bottom:7px}
+.fake-card small{color:#c7aaaa}
+.fake-bars{display:flex;gap:8px;margin-top:19px}
+.fake-bars span{display:block;height:9px;background:#634f59;border-radius:20px;flex:1}
+.fake-bars span:first-child{background:var(--red);flex:1.9}
+.preview-mini{padding:18px;background:#f4eee7;color:#292025;border-radius:12px}
+.preview-mini p{color:#68585c}
+.pill{display:inline-flex;align-items:center;border-radius:99px;padding:5px 10px;background:#392a32;color:#f6c1c4;font-size:.73rem;font-weight:800}
+.status{background:#214437;color:#b5e8cd}
+.table-wrap{width:100%;overflow-x:auto;border-radius:12px;border:1px solid #43363e}
+.compare{width:100%;border-collapse:collapse;min-width:590px;background:#1a161a}
+.compare th,.compare td{text-align:left;padding:16px 20px;border-bottom:1px solid #383039;vertical-align:middle}
+.compare th{background:#292127;font-size:.81rem;color:#f7d2d1}
+.compare td{font-size:.91rem}
+.compare tr:last-child td{border-bottom:none}
+.compare td:not(:first-child){text-align:center}
+.compare .yes{color:#bfe6cb;font-weight:800}
+.compare .no{color:#eab0b4;font-weight:800}
+.note{font-size:.78rem;color:#aaa0a0}
+.price-row{display:flex;align-items:center;justify-content:space-between;gap:30px;border-top:1px solid #4a363c;padding:32px 0;margin-top:34px}
+.price-row strong{font:700 clamp(1.5rem,3vw,2.3rem)/1.18 "Space Grotesk",sans-serif}
+.faq{display:grid;grid-template-columns:1fr 1.2fr;gap:50px}
+details{padding:18px 0;border-bottom:1px solid #4c4046}
+summary{font-weight:800;cursor:pointer;list-style-position:outside;font-size:1rem}
+details p{margin:10px 0 0}
+footer{padding:38px 0 45px}
+.footer-grid{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.footer-grid p{font-size:.76rem;margin:9px 0 0;max-width:690px}
+.inverted{background:#eee8e1;color:#291b20}
+.inverted p{color:#62555a}
+.page-hero{padding:64px 0 48px;border-bottom:1px solid #3c3238;background:radial-gradient(circle at 95% 30%,#3b1b23,transparent 40%)}
+.page-hero h1{font-size:clamp(2.8rem,5.5vw,4.9rem);margin:13px 0 12px}
+.page-hero p{max-width:680px}
+.surface{padding:52px 0 95px}
+.layout-client{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:28px;align-items:start}
+.layout-admin{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;align-items:start}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+.filter{padding:9px 15px;min-height:42px;border:1px solid #55474d;border-radius:99px;color:#d6c7c5;background:transparent;font-weight:700}
+.filter.active{background:var(--red);color:#260f15;border-color:var(--red)}
+.catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.product{padding:0;text-align:left;background:#1d181d;border:1px solid #423740;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.product:hover,.product.chosen{border-color:var(--red)}
+.product .cover{height:182px;position:relative;overflow:hidden}
+.product img{width:100%;height:100%;object-fit:cover;filter:saturate(.8)}
+.product .cover span{position:absolute;bottom:11px;left:12px;font-size:.68rem;background:#1c1018dd;padding:5px 9px;border-radius:99px;color:#fff}
+.product .detail{padding:18px;flex:1}
+.product h3{font-size:1.15rem;margin:0 0 6px}
+.product p{font-size:.81rem;margin:0 0 12px}
+.product .choose{font-size:.77rem;color:#ffb1b5;font-weight:800}
+.panel{background:#211a20;border:1px solid #493941;border-radius:13px;padding:27px}
+.panel h3{margin:0 0 11px}
+.panel-intro{font-size:.9rem}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:15px}
+.field label{font-size:.8rem;font-weight:800;color:#ecdad9}
+.field small{font-size:.7rem;color:#afa09f}
+.field input,.field textarea,.field select,.search{width:100%;min-height:46px;padding:12px 13px;color:#fff;border-radius:8px;border:1px solid #66525d;background:#130f13;outline:none}
+.field input:focus,.field textarea:focus,.field select:focus,.search:focus{border-color:var(--red);box-shadow:0 0 0 2px #ed5b632f}
+.field textarea{min-height:91px;resize:vertical}
+.field option{background:#211a20}
+.submit{width:100%}
+.result{border:1px solid #668a74;background:#1b2d24;border-radius:10px;padding:16px;margin-top:17px}
+.result b{color:#c9edd8}
+.result p{color:#c7ddd0;margin-bottom:11px}
+.lookup{margin-top:22px;padding-top:23px;border-top:1px solid #51434b}
+.lookup-row{display:flex;gap:8px}
+.lookup-row input{min-width:0;flex:1}
+.lookup-row button{flex:0 0 auto}
+.sidebar{background:#211b20;border:1px solid #493c43;border-radius:12px;padding:18px}
+.side-btn{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:left;gap:12px;padding:13px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--cream);margin:5px 0}
+.side-btn.selected{background:#43262e;border-color:#98505a}
+.side-btn small{font-size:.7rem;color:#d7a9b1}
+.side-btn strong{font-size:.88rem}
+.admin-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:20px}
+.kpi{border:1px solid #514049;border-radius:10px;background:#261e24;padding:18px}
+.kpi small{color:#bea8af;font-weight:700}
+.kpi strong{display:block;font:700 1.55rem "Space Grotesk";margin-top:4px}
+.admin-title{display:flex;justify-content:space-between;gap:14px;align-items:center}
+.label-flag{font-size:.69rem;color:#efbebf;font-weight:800;letter-spacing:.1em}
+.inline-check{display:flex;gap:9px;align-items:center;margin:4px 0 16px}
+.inline-check input{width:19px;height:19px;accent-color:#ea5a61}
+.requests{margin-top:26px}
+.request{border:1px solid #493b44;border-radius:11px;padding:16px;margin:9px 0;background:#1b171b}
+.request h4{margin:0 0 5px;font-size:.95rem}
+.request p{font-size:.8rem;margin:0 0 12px}
+.request select{min-width:180px;padding:9px;border-radius:7px;background:#110e12;border:1px solid #6a5960;color:#fff}
+.two-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.empty{border:1px dashed #65535b;border-radius:12px;padding:26px;text-align:center;color:#c2b2b6}
+.divider-title{font:700 1.4rem "Space Grotesk";margin-bottom:15px}
+.demo-banner{border:1px solid #684049;background:#3d232a;padding:10px 15px;text-align:center;font-size:.76rem;color:#ffd8d8}
+.inline-link{color:#f8adb2;text-decoration:underline;text-underline-offset:3px}
+.toast{position:fixed;z-index:300;bottom:25px;right:24px;max-width:min(420px,calc(100vw - 34px));padding:13px 18px;border:1px solid #b3d2b8;border-radius:9px;background:#24402f;box-shadow:0 15px 40px #0008;color:#fff;font-weight:700;font-size:.9rem;display:none}
+.toast.show{display:block}
+@media(max-width:980px){.hero-grid{grid-template-columns:1fr}.hero{padding:62px 0}.hero-art{min-height:380px;max-width:720px}.hero-art .photo-main{height:440px}.hero-art .photo-second{height:240px}.split,.showcase,.faq,.layout-client{grid-template-columns:1fr}.hero h1{max-width:740px}.layout-admin{grid-template-columns:230px 1fr}.grid3{grid-template-columns:1fr 1fr}.navlinks{gap:12px}}
+@media(max-width:680px){.container{width:min(calc(100% - 32px),var(--wide))}.nav{min-height:69px;gap:10px}.wordmark{font-size:1.36rem}.wordmark small{font-size:.47rem}.navlinks{gap:7px;font-size:.68rem}.navlinks .nav-hide{display:none}.navlinks a{padding:7px 4px}.navlinks .btn{font-size:.7rem;min-height:38px;padding:7px 9px}.hero{padding:53px 0 64px;min-height:auto}.hero h1{font-size:clamp(2.85rem,12vw,4.8rem);line-height:1.02}.hero .lead{font-size:1rem}.hero-art{min-height:295px;gap:7px}.hero-art .photo-main{height:328px}.hero-art .photo-second{height:189px}.feature-chip{bottom:10px;right:3px;width:185px;padding:12px}.feature-chip strong{font-size:.83rem}.section{padding:76px 0}.grid3,.grid2,.catalog,.layout-admin,.two-fields{grid-template-columns:1fr}.benefit{min-height:190px}.benefit .num{margin-bottom:17px}.actions{flex-direction:column}.actions .btn{width:100%}.photo-story{min-height:250px;max-height:335px}.split{gap:26px}.fake-card{grid-template-columns:90px 1fr;gap:12px}.fake-card img{width:90px;height:116px}.preview-body{padding:17px;min-height:auto}.price-row,.footer-grid{flex-direction:column;align-items:flex-start}.page-hero{padding:44px 0 29px}.page-hero h1{font-size:2.9rem}.surface{padding:25px 0 70px}.panel{padding:20px}.admin-cards{grid-template-columns:1fr}.sidebar{padding:12px}.side-btn{min-height:45px}.product .cover{height:215px}.lookup-row{flex-wrap:wrap}.lookup-row button{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+.hero .tag{font:700 clamp(1.03rem,2vw,1.34rem)/1.25 "Space Grotesk",sans-serif;text-transform:none;letter-spacing:-.025em;background:#4c262d;border:1px solid #ce6773;color:#ffe8df;padding:11px 17px;box-shadow:0 8px 28px #0004}.hero .tag::before{content:"✦";display:inline-block;color:#ffafb6;margin-right:9px}.btn-outline-danger{color:#ffc8c9;border:1px solid #88535e;background:transparent}.btn-outline-danger:hover{background:#4b2932}.admin-actionbar{display:flex;align-items:center;flex-wrap:wrap;gap:9px}@media(max-width:680px){.hero .tag{font-size:1rem;padding:9px 12px}.admin-actionbar>.btn{width:100%}}</style>
+</head>
+<body>
+<div class="demo-banner">PROTÓTIPO INDEPENDENTE • dados ilustrativos • nenhuma encomenda real é enviada</div>
+<div id="app"></div><div class="toast" role="status" aria-live="polite" id="toast"></div>
+<script>
+(function(){
+"use strict";
+var images={
+mask:"https://images.unsplash.com/photo-1767958392605-36e2054a5264?auto=format&fit=crop&w=950&q=84",
+event:"https://images.unsplash.com/photo-1772587001973-d55b50a73642?auto=format&fit=crop&w=900&q=84",
+workshop:"https://images.unsplash.com/photo-1759523146335-0069847ceb16?auto=format&fit=crop&w=960&q=82",
+cosplay:"https://images.unsplash.com/photo-1772535900460-670f74f3357c?auto=format&fit=crop&w=900&q=82",
+fantasy:"https://images.unsplash.com/photo-1785779555250-4dbefde5a148?auto=format&fit=crop&w=900&q=82"
+};
+var defaults=[
+{id:"P01",name:"Espada cenográfica",kind:"Armas e props",desc:"Peça de referência para propostas personalizadas de espada e acessórios de cena.",lead:"Prazo combinado após análise",active:true,image:images.event},
+{id:"P02",name:"Máscara temática",kind:"Máscaras",desc:"Conceito de máscara customizada inspirado em personagens e criaturas fantásticas.",lead:"Produção sob consulta",active:true,image:images.mask},
+{id:"P03",name:"Adereço de personagem",kind:"Acessórios",desc:"Detalhes, complementos e pequenos adereços para composição de figurinos.",lead:"Prazo definido na proposta",active:true,image:images.cosplay},
+{id:"P04",name:"Arma estilizada",kind:"Armas e props",desc:"Criação de itens de visual marcante, com medidas e acabamento a definir.",lead:"Produção sob consulta",active:true,image:images.fantasy}
+];
+var key="77-vulcane-concept-v7-2026";
+function fresh(){return {items:JSON.parse(JSON.stringify(defaults)),requests:[]}}
+function getData(){try{var d=JSON.parse(localStorage.getItem(key));if(d&&Array.isArray(d.items)&&Array.isArray(d.requests))return d}catch(e){}return fresh()}
+var data=getData(),picked="P01",filter="Todos",editing="P01",latest="",trackResult="";
+function save(){try{localStorage.setItem(key,JSON.stringify(data))}catch(e){notify("Seu navegador não permitiu salvar; os dados durarão até recarregar.")}}
+function esc(v){return String(v===undefined?"":v).replace(/[&<>"']/g,function(x){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[x]})}
+function validKind(s){return ["Armas e props","Máscaras","Acessórios"].indexOf(s)>=0?s:"Acessórios"}
+function byId(id){return data.items.find(function(x){return x.id===id})}
+function notify(msg){var el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(window.__toastTime);window.__toastTime=setTimeout(function(){el.classList.remove("show")},3100)}
+function nav(path){history.pushState({},"",path);render();window.scrollTo(0,0)}
+window.addEventListener("popstate",render);
+window.addEventListener("storage",function(){data=getData();render()});
+document.addEventListener("click",function(e){var target=e.target.closest("[data-nav]");if(target){e.preventDefault();nav(target.getAttribute("data-nav"))}});
+function header(active){return '<header><div class="container nav"><a class="wordmark" href="/" data-nav="/" aria-label="Vulcane, voltar ao início">VULCANE<span>.</span><small>CONCEITO DIGITAL NÃO OFICIAL</small></a><nav class="navlinks" aria-label="Navegação principal"><a class="nav-hide" href="/" data-nav="/" '+(active==="/"?'aria-current="page"':'')+'>A proposta</a><a href="/cliente" data-nav="/cliente" '+(active==="/cliente"?'aria-current="page"':'')+'>Cliente</a><a href="/gestao" data-nav="/gestao" class="btn btn-secondary btn-sm" '+(active==="/gestao"?'aria-current="page"':'')+'>Gestão demo ↗</a></nav></div></header>'}
+function footer(){return '<footer><div class="container footer-grid"><div><a class="wordmark" href="/" data-nav="/">VULCANE<span>.</span><small>ESTUDO DE PRODUTO • 77</small></a><p>Conceito independente e não oficial, criado para demonstrar possibilidades digitais. Não representa uma parceria ou o catálogo e condições reais da Vulcane. Nenhuma informação fica armazenada fora deste navegador.</p></div><div><p><b>Fotos ilustrativas</b> via Unsplash; não representam produtos nem trabalhos da Vulcane. As informações reais de catálogo e prazo dependem do próprio ateliê.</p><a class="inline-link" href="https://www.instagram.com/vulcanecosmaker_/" rel="noopener noreferrer" target="_blank">Instagram público da Vulcane ↗</a></div></div></footer>'}
+function home(){
+var first=data.items.find(function(x){return x.active})||data.items[0];
+return header("/")+
+'<main>'+
+'<section class="hero"><div class="container hero-grid"><div>'+
+'<span class="tag">Melhor pra você, e pro cliente</span>'+
+'<h1>O personagem é único.<br><em>O pedido também.</em></h1>'+
+'<p class="lead">Um espaço pensado para quem transforma referências em peças reais: catálogo por tipo de prop, briefing de encomenda e acompanhamento em um só lugar.</p>'+
+'<div class="actions"><a class="btn btn-primary" href="/cliente" data-nav="/cliente">Explorar como cliente <span aria-hidden="true">↗</span></a><a class="btn btn-secondary" href="/gestao" data-nav="/gestao">Explorar gestão demo <span aria-hidden="true">↗</span></a></div>'+
+'<p class="micro">Protótipo navegável. Sem cadastro, pagamento ou contato automático.</p></div>'+
+'<div class="hero-art" aria-label="Fotografias ilustrativas de cosplay e artesanato"><img class="photo photo-main" src="'+images.mask+'" alt="Cosplayer com máscara temática, fotografia ilustrativa" fetchpriority="high"><img class="photo photo-second" src="'+images.event+'" alt="Cosplayer com espada cenográfica em evento" loading="lazy"><div class="feature-chip"><small>DO RASCUNHO À ENCOMENDA</small><strong>Uma referência vira um briefing organizado.</strong></div></div>'+
+'</div></section>'+
+'<section class="section soft" id="valor"><div class="container"><div class="section-head"><div class="eyebrow">Ateliê em foco</div><h2>Menos mensagens perdidas.<br>Mais atenção à criação.</h2><p>A proposta nasce da realidade de um cosmaker: cada pedido traz personagem, medida, acabamento, referência e prazo diferentes.</p></div>'+
+'<div class="grid3"><article class="benefit"><div class="num">01 /</div><h3>Seu trabalho, com contexto</h3><p>Quem visita entende tipos de peças, vê referências ilustrativas e sabe o que informar antes de pedir orçamento.</p></article><article class="benefit"><div class="num">02 /</div><h3>Briefings mais completos</h3><p>Personagem, tipo de prop, detalhes e data desejada chegam estruturados em uma única solicitação demonstrativa.</p></article><article class="benefit"><div class="num">03 /</div><h3>Controle sem planilhas soltas</h3><p>Edite o catálogo e mude etapas de pedidos na gestão — e confira o efeito no lado do cliente.</p></article></div></div></section>'+
+'<section class="section light"><div class="container split"><img class="photo-story" src="'+images.workshop+'" alt="Pessoas produzindo artesanato em uma oficina, imagem ilustrativa" loading="lazy"><div><div class="eyebrow">Uma jornada do tamanho do ateliê</div><h2>Peça artesanal não cabe em carrinho genérico.</h2><p>O visitante não compra uma espada personalizada como compra uma camiseta pronta. Ele traz uma ideia, explica os detalhes e aguarda análise de viabilidade.</p><p class="callout">Por isso a experiência prioriza solicitar orçamento — não inventa preço fixo nem promete prazo sem avaliação do projeto.</p><a class="btn btn-primary" href="/cliente" data-nav="/cliente">Testar o briefing ↗</a></div></div></section>'+
+'<section class="section"><div class="container"><div class="section-head"><div class="eyebrow">Prova navegável</div><h2>Não é só uma apresentação.<br>É um fluxo para testar.</h2><p>Entre pelos dois ambientes e altere uma peça na gestão. A vitrine do cliente reflete a mudança neste navegador.</p></div><div class="showcase">'+
+'<div class="preview"><div class="preview-top"><span>◉ ÁREA DO CLIENTE</span><b>vitrine / briefing</b></div><div class="preview-body"><p class="eyebrow">Categoria de referência • '+esc(first.kind)+'</p><div class="fake-card"><img src="'+esc(first.image)+'" alt="Foto ilustrativa da categoria da peça"><div><span class="pill">'+(first.active?'Disponível para consulta':'Pausado')+'</span><h3 style="margin-top:9px">'+esc(first.name)+'</h3><small>'+esc(first.lead)+'</small></div></div><div class="fake-bars"><span></span><span></span><span></span></div><p class="note">Amostra que lê os mesmos dados da área de gestão.</p><a href="/cliente" data-nav="/cliente" class="btn btn-secondary btn-sm">Abrir a experiência ↗</a></div></div>'+
+'<div class="preview"><div class="preview-top"><span>▦ GESTÃO DO ATELIÊ</span><b>edição / acompanhamento</b></div><div class="preview-body"><div class="preview-mini"><div class="eyebrow">Peça selecionada</div><h3>'+esc(first.name)+'</h3><p>'+esc(first.desc)+'</p><span class="pill status">Sincronizado com a vitrine demo</span></div><p class="note">Editar descrição, visibilidade, categoria e prazo de uma peça não altera nenhum dado real da Vulcane.</p><a href="/gestao" data-nav="/gestao" class="btn btn-primary btn-sm">Abrir gestão demo ↗</a></div></div>'+
+'</div></div></section>'+
+'<section class="section light"><div class="container split"><div><div class="eyebrow">Passo a passo</div><h2>Da ideia à peça, sem adivinhação.</h2><p>Uma jornada ajustada ao trabalho sob encomenda — e sem presumir que toda solicitação já foi aceita.</p></div><div class="steps"><div class="step"><div><h3>Explorar as especialidades</h3><p>Armas cenográficas, máscaras e acessórios, apresentados como possibilidades.</p></div></div><div class="step"><div><h3>Descrever o personagem</h3><p>Cliente prepara um briefing com referências, tamanho e prazo desejado.</p></div></div><div class="step"><div><h3>Analisar e organizar</h3><p>A gestão demonstra estágios como recebido, em análise e produção.</p></div></div><div class="step"><div><h3>Acompanhar a evolução</h3><p>Uma referência da solicitação permite consultar o status dentro do protótipo.</p></div></div></div></div></section>'+
+'<section class="section" id="comparativos"><div class="container"><div class="section-head"><div class="eyebrow">Comparativo 01 • benefícios</div><h2>O que muda na rotina?</h2><p>Comparação ilustrativa entre uma conversa não estruturada e o fluxo da demonstração; não é diagnóstico confirmado da operação atual.</p></div>'+
+'<div class="table-wrap"><table class="compare"><thead><tr><th scope="col">Necessidade</th><th scope="col">Mensagem isolada</th><th scope="col">Com a demo</th></tr></thead><tbody>'+
+'<tr><td>Briefing com campos de personagem, peça e detalhes</td><td class="no">❌</td><td class="yes">✅</td></tr>'+
+'<tr><td>Catálogo organizado por categoria</td><td class="no">❌</td><td class="yes">✅</td></tr>'+
+'<tr><td>Consultar referência e etapa de uma solicitação</td><td class="no">❌</td><td class="yes">✅</td></tr>'+
+'<tr><td>Editar a apresentação sem reconstruir o site</td><td class="no">❌</td><td class="yes">✅</td></tr>'+
+'<tr><td>Pausar consultas de uma peça sem excluir seu cadastro</td><td class="no">❌ Sem controle neste cenário</td><td class="yes">✅ Visibilidade configurável</td></tr>'+
+'</tbody></table></div><p class="note">❌ = função não estruturada nesse cenário de comparação; não significa que o ateliê não realize essa tarefa hoje.</p></div></section>'+
+'<section class="section soft"><div class="container"><div class="section-head"><div class="eyebrow">Comparativo 02 • escopo</div><h2>O que é real nesta demonstração?</h2><p>O que aparece como demonstrado só funciona no navegador. Recursos sob orçamento dependem de proposta, dados autorizados e contratação futura.</p></div>'+
+'<div class="table-wrap"><table class="compare"><thead><tr><th scope="col">Escopo para o ateliê</th><th scope="col">Nesta demonstração</th><th scope="col">Em eventual contratação</th></tr></thead><tbody>'+
+'<tr><td>Catálogo visual e filtros de peças</td><td class="yes">✅ Funciona</td><td>✅ Escopo a definir</td></tr>'+
+'<tr><td>Cadastrar, editar, pausar e excluir peças</td><td class="yes">✅ Funciona</td><td>✅ Escopo a definir</td></tr>'+
+'<tr><td>Briefing e status por código</td><td class="yes">✅ Simulado</td><td>✅ Escopo a definir</td></tr>'+
+'<tr><td>Sincronização de pedidos entre dispositivos</td><td class="no">❌ Não incluído</td><td>◌ Sob orçamento</td></tr>'+
+'<tr><td>Login administrativo com proteção de dados reais</td><td class="no">❌ Não incluído</td><td>◌ Sob orçamento</td></tr>'+
+'<tr><td>WhatsApp, fotos oficiais e pagamentos</td><td class="no">❌ Não incluído</td><td>◌ Sob orçamento e autorização</td></tr>'+
+'</tbody></table></div>'+
+'<div class="price-row"><div><strong>Orçamentos começam em R$ 100 mensais.</strong><p class="note" style="max-width:760px;margin:11px 0 0">Valor inicial indicativo da oferta de desenvolvimento, não preço de produtos da Vulcane. Implantação, escopo, domínio, suporte e integrações dependem de avaliação e contratação. Não representa proposta fechada ou mensalidade já contratada.</p></div><a class="btn btn-primary" href="https://www.instagram.com/vulcanecosmaker_/" target="_blank" rel="noopener noreferrer">Conhecer o ateliê ↗</a></div>'+
+'</div></section>'+
+'<section class="section"><div class="container faq"><div><div class="eyebrow">Perguntas frequentes</div><h2>Uma demo, sem promessas irreais.</h2><p>Você explora tudo livremente e testa a ideia antes de qualquer decisão.</p></div><div>'+
+'<details><summary>Essa página pertence oficialmente à Vulcane?</summary><p>Não. É um estudo independente e conceitual, sem parceria anunciada, autorização de marca ou acesso aos sistemas do ateliê.</p></details>'+
+'<details><summary>Posso encomendar uma peça por aqui?</summary><p>Não nesta demonstração. O pedido fica somente no seu navegador; para um contato real, use o Instagram público da Vulcane.</p></details>'+
+'<details><summary>A gestão muda mesmo a vitrine?</summary><p>Sim. Edite descrição, nome, categoria, prazo ilustrativo ou visibilidade de uma peça; a alteração aparece na experiência cliente do mesmo navegador.</p></details>'+
+'<details><summary>Os exemplos são produtos e valores reais?</summary><p>Não. São categorias plausíveis inspiradas no perfil público e fotografias ilustrativas licenciadas. Prazo, disponibilidade e preço reais só podem ser confirmados pelo ateliê.</p></details>'+
+'<details><summary>O que seria necessário para colocar em produção?</summary><p>Autorizar conteúdo e identidade, definir o processo de orçamento, conta administrativa, armazenamento seguro, privacidade, domínio, integrações, custos e condições comerciais.</p></details>'+
+'</div></div></section>'+
+'<section class="section light" style="text-align:center"><div class="container"><div class="eyebrow">Explore os dois lados</div><h2>O trabalho aparece.<br>O processo acompanha.</h2><p>Uma vitrine para quem quer encomendar e uma gestão para quem precisa produzir.</p><div class="actions" style="justify-content:center"><a class="btn btn-primary" href="/cliente" data-nav="/cliente">Explorar como cliente ↗</a><a class="btn btn-secondary" href="/gestao" data-nav="/gestao">Explorar gestão demo ↗</a></div></div></section>'+
+'</main>'+footer();
+}
+function client(){
+var visible=data.items.filter(function(x){return x.active&&(filter==="Todos"||x.kind===filter)});
+var current=byId(picked);if(!current||!current.active){current=visible[0]||data.items.find(function(x){return x.active});if(current)picked=current.id}
+var cards=visible.map(function(x){return '<button class="product '+(picked===x.id?'chosen':'')+'" data-pick="'+esc(x.id)+'" aria-pressed="'+(picked===x.id)+'"><div class="cover"><img src="'+esc(x.image)+'" alt="Fotografia ilustrativa: '+esc(x.kind)+'" loading="lazy"><span>Foto ilustrativa</span></div><div class="detail"><h3>'+esc(x.name)+'</h3><p>'+esc(x.desc)+'</p><div class="choose">Selecionar para orçamento ↗</div></div></button>'}).join("");
+var filters=["Todos","Armas e props","Máscaras","Acessórios"].map(function(x){return '<button class="filter '+(x===filter?'active':'')+'" data-filter="'+esc(x)+'" aria-pressed="'+(x===filter)+'">'+esc(x)+'</button>'}).join("");
+return header("/cliente")+'<main><div class="page-hero"><div class="container"><span class="tag">Experiência do cliente • demo</span><h1>Sua ideia merece<br><span style="color:var(--red)">um briefing à altura.</span></h1><p>Escolha um tipo de peça, conte sobre o personagem e monte uma solicitação. Aqui, a jornada é simulada e não entra na fila real do ateliê.</p><a class="inline-link" href="/" data-nav="/">← Ver proposta comercial</a></div></div>'+
+'<div class="surface"><div class="container layout-client"><section aria-label="Catálogo demonstrativo"><h2 class="divider-title">01 — Escolha a inspiração</h2><p class="note">Categorias inspiradas nas publicações do perfil; imagens e descrições meramente ilustrativas.</p><div class="toolbar">'+filters+'</div><div class="catalog">'+(cards||'<div class="empty">Não há exemplos visíveis nesta categoria. Você pode alterar a disponibilidade na gestão demo.</div>')+'</div><div class="panel lookup"><h3>Acompanhe um pedido demo</h3><p class="panel-intro">Use o código recebido depois de criar uma simulação neste navegador.</p><form id="lookup-form"><div class="lookup-row"><input class="search" aria-label="Código de acompanhamento" id="lookup-code" required placeholder="Ex.: VX-12345" autocomplete="off"><button class="btn btn-secondary btn-sm" type="submit">Consultar</button></div></form><div id="lookup-result" aria-live="polite">'+trackResult+'</div></div></section>'+
+'<aside class="panel" id="brief"><div class="eyebrow">02 — Encomenda demonstrativa</div><h3>Conte como imagina sua peça.</h3><p class="panel-intro">Não é compra nem orçamento real; o formulário cria apenas um registro de teste.</p>'+
+'<form id="brief-form">'+
+'<div class="field"><label for="piece">Tipo de peça</label><select id="piece" name="piece" required>'+data.items.filter(function(x){return x.active}).map(function(x){return '<option value="'+esc(x.id)+'" '+(picked===x.id?'selected':'')+'>'+esc(x.name)+'</option>'}).join("")+'</select></div>'+
+'<div class="field"><label for="character">Personagem ou universo *</label><input id="character" name="character" maxlength="90" required placeholder="Ex.: personagem, jogo ou anime"></div>'+
+'<div class="field"><label for="details">Detalhes e referências *</label><textarea id="details" name="details" maxlength="700" required placeholder="Cores, tamanho aproximado, acabamento, referência visual..."></textarea><small>Inclua o que ajuda na análise do projeto; sem dados pessoais.</small></div>'+
+'<div class="field"><label for="when">Quando pretende usar?</label><select id="when" name="when"><option>Sem data definida</option><option>Em até 30 dias</option><option>De 1 a 3 meses</option><option>Mais de 3 meses</option></select></div>'+
+'<div class="field"><label for="size">Porte aproximado</label><select id="size" name="size"><option>Quero definir com o ateliê</option><option>Pequeno acessório</option><option>Médio</option><option>Grande / cenográfico</option></select></div>'+
+'<button class="btn btn-primary submit" type="submit" '+(!current?'disabled':'')+'>Gerar solicitação demo ↗</button></form>'+
+'<div id="created-result" aria-live="polite">'+(latest?createdHTML(latest):'')+'</div>'+
+'<div class="lookup"><p class="note">Para falar de uma encomenda de verdade, acesse o <a class="inline-link" href="https://www.instagram.com/vulcanecosmaker_/" target="_blank" rel="noopener noreferrer">Instagram oficial do ateliê ↗</a>. Este formulário não envia mensagens.</p></div></aside></div></div></main>'+footer();
+}
+function createdHTML(code){return '<div class="result"><b>Solicitação criada apenas nesta demo.</b><p>Referência: <strong>'+esc(code)+'</strong>. Abra a gestão demo para alterar a etapa e depois consulte este código no lado do cliente.</p><button class="btn btn-secondary btn-sm" type="button" id="copy-brief">Copiar resumo do briefing</button></div>'}
+function admin(){
+var activeCount=data.items.filter(function(x){return x.active}).length;var current=byId(editing)||data.items[0];if(!current)return header("/gestao")+"<main>Sem itens</main>";
+var menu=data.items.map(function(x){return '<button type="button" class="side-btn '+(editing===x.id?'selected':'')+'" data-edit="'+esc(x.id)+'" aria-pressed="'+(editing===x.id)+'"><span><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.kind)+'</small></span><span aria-hidden="true">›</span></button>'}).join("");
+var reqs=data.requests.length?data.requests.slice().reverse().map(function(r){return '<div class="request"><h4>'+esc(r.code)+' · '+esc(r.character)+'</h4><p>'+esc(r.pieceName)+' • '+esc(r.when)+' • '+esc(r.size)+'<br>'+esc(r.details)+'</p><div class="field" style="margin-bottom:0"><label for="status-'+esc(r.code)+'">Etapa demonstrativa</label><select data-status="'+esc(r.code)+'" id="status-'+esc(r.code)+'">'+["Recebido","Em análise","Proposta em preparação","Em produção","Concluído"].map(function(s){return '<option '+(r.status===s?'selected':'')+'>'+s+'</option>'}).join("")+'</select></div></div>'}).join(""):'<div class="empty"><strong>Nenhuma solicitação criada ainda.</strong><p>Experimente a área do cliente, gere um briefing e volte para ver o acompanhamento.</p><a class="btn btn-secondary btn-sm" href="/cliente" data-nav="/cliente">Criar um pedido teste ↗</a></div>';
+return header("/gestao")+'<main><div class="page-hero"><div class="container"><span class="tag">Painel de gestão • ambiente demonstrativo</span><h1>Organize as peças.<br><span style="color:var(--red)">Preserve o processo criativo.</span></h1><p>Edite uma peça fictícia da vitrine demonstrativa. Salve e veja a mesma alteração no ambiente do cliente deste navegador.</p><div class="actions"><a href="/cliente" data-nav="/cliente" class="btn btn-primary">Ver como cliente ↗</a><button type="button" class="btn btn-secondary" id="reset-data">Restaurar dados de exemplo</button></div></div></div>'+
+'<div class="surface"><div class="container"><div class="admin-cards"><div class="kpi"><small>Peças visíveis na vitrine</small><strong>'+activeCount+' / '+data.items.length+'</strong></div><div class="kpi"><small>Solicitações de teste</small><strong>'+data.requests.length+'</strong></div><div class="kpi"><small>Dados armazenados</small><strong>Somente neste navegador</strong></div></div>'+
+'<div class="layout-admin"><aside class="sidebar" aria-label="Peças do catálogo"><p class="label-flag">CATÁLOGO EDITÁVEL</p><button type="button" class="btn btn-secondary btn-sm" id="add-piece" style="width:100%;margin:10px 0">+ Cadastrar peça demo</button>'+menu+'<p class="note" style="margin:18px 7px 0">Selecionar uma peça abre a edição de nome, categoria, disponibilidade e texto exibido ao cliente.</p></aside><section>'+
+'<div class="panel"><div class="admin-title"><div><span class="eyebrow">Editar vitrine</span><h3>'+esc(current.name)+'</h3></div><span class="pill">ID '+esc(current.id)+'</span></div>'+
+'<form id="edit-form"><div class="field"><label for="edit-name">Nome exibido *</label><input id="edit-name" name="name" required maxlength="65" value="'+esc(current.name)+'"></div>'+
+'<div class="two-fields"><div class="field"><label for="edit-kind">Categoria</label><select id="edit-kind" name="kind">'+["Armas e props","Máscaras","Acessórios"].map(function(s){return '<option '+(current.kind===s?'selected':'')+'>'+s+'</option>'}).join("")+'</select></div>'+
+'<div class="field"><label for="edit-lead">Informação de prazo</label><input id="edit-lead" name="lead" maxlength="75" required value="'+esc(current.lead)+'"></div></div>'+
+'<div class="field"><label for="edit-desc">Descrição *</label><textarea id="edit-desc" name="desc" required maxlength="240">'+esc(current.desc)+'</textarea></div>'+
+'<label class="inline-check"><input type="checkbox" name="active" '+(current.active?'checked':'')+'> Disponível para consulta no catálogo</label>'+
+'<div class="admin-actionbar"><button class="btn btn-primary" type="submit">Salvar e atualizar a vitrine ↗</button><button class="btn btn-outline-danger" type="button" id="delete-piece">Excluir peça demo</button></div></form>'+
+'<p class="note" style="margin-top:18px">Foto ilustrativa de banco licenciado. Para um sistema contratado, as fotos reais dependeriam de autorização e envio do proprietário.</p>'+
+'</div><div class="requests"><div class="admin-title"><h3 class="divider-title">Solicitações de teste</h3><span class="pill">'+data.requests.length+' registro(s)</span></div><p>Atualize uma etapa e pesquise o código em Cliente → Acompanhar pedido. Nenhuma alteração é enviada ao ateliê.</p>'+reqs+'</div></section></div></div></div></main>'+footer();
+}
+function render(){var path=location.pathname.replace(/\/+$/,"")||"/";if(path!=="/cliente"&&path!=="/gestao")path="/";document.title=(path==="/cliente"?"Cliente":path==="/gestao"?"Gestão":"Proposta")+" • Vulcane | demo independente";document.getElementById("app").innerHTML=path==="/cliente"?client():path==="/gestao"?admin():home();bind(path)}
+function bind(path){
+if(path==="/cliente"){
+document.querySelectorAll("[data-filter]").forEach(function(el){el.addEventListener("click",function(){filter=this.getAttribute("data-filter");render()})});
+document.querySelectorAll("[data-pick]").forEach(function(el){el.addEventListener("click",function(){picked=this.getAttribute("data-pick");render();document.getElementById("brief").scrollIntoView({behavior:"smooth",block:"start"})})});
+var ps=document.getElementById("piece");if(ps)ps.addEventListener("change",function(){picked=this.value;document.querySelectorAll("[data-pick]").forEach(function(e){e.setAttribute("aria-pressed",String(e.getAttribute("data-pick")===picked))})});
+var form=document.getElementById("brief-form");form.addEventListener("submit",function(e){e.preventDefault();var d=new FormData(form),p=byId(d.get("piece"));if(!p||!p.active){notify("Escolha uma peça disponível.");return}if(String(d.get("character")).trim().length<2||String(d.get("details")).trim().length<12){notify("Informe personagem e pelo menos 12 caracteres de detalhes.");return}var code="VX-"+Math.random().toString(36).slice(2,8).toUpperCase();data.requests.push({code:code,pieceId:p.id,pieceName:p.name,character:String(d.get("character")).trim(),details:String(d.get("details")).trim(),when:String(d.get("when")),size:String(d.get("size")),status:"Recebido"});save();latest=code;document.getElementById("created-result").innerHTML=createdHTML(code);form.reset();document.getElementById("created-result").scrollIntoView({behavior:"smooth",block:"nearest"});bindCopy();notify("Solicitação simulada registrada no seu navegador.")});
+document.getElementById("lookup-form").addEventListener("submit",function(e){e.preventDefault();var code=document.getElementById("lookup-code").value.toUpperCase().trim();var r=data.requests.find(function(x){return x.code===code});trackResult=r?'<div class="result"><b>'+esc(r.code)+' · '+esc(r.status)+'</b><p>'+esc(r.character)+' · '+esc(r.pieceName)+'</p><small>Etapa demonstrativa, não acompanhamento de encomenda real.</small></div>':'<p class="note" style="margin-top:11px">Código não encontrado neste navegador. Crie primeiro uma solicitação de teste.</p>';document.getElementById("lookup-result").innerHTML=trackResult});
+bindCopy();
+}
+if(path==="/gestao"){
+document.getElementById("add-piece").addEventListener("click",function(){var id="PX-"+Math.random().toString(36).slice(2,8).toUpperCase();data.items.push({id:id,name:"Nova peça conceitual",kind:"Acessórios",desc:"Exemplo de peça artesanal. Edite esta descrição para a vitrine.",lead:"Prazo sob consulta",active:false,image:images.workshop});editing=id;save();render();notify("Peça criada em rascunho. Edite e marque disponível para mostrar na vitrine.")});
+document.getElementById("delete-piece").addEventListener("click",function(){if(data.items.length<=1){notify("Mantenha ao menos uma peça de exemplo.");return}var p=byId(editing);if(!p)return;if(confirm("Excluir a peça de demonstração "+p.name+"? Os pedidos anteriores serão preservados para consulta.")){data.items=data.items.filter(function(x){return x.id!==editing});editing=data.items[0].id;if(picked===p.id)picked=editing;save();render();notify("Peça de demonstração excluída.")}});
+document.querySelectorAll("[data-edit]").forEach(function(el){el.addEventListener("click",function(){editing=this.getAttribute("data-edit");render()})});
+document.getElementById("edit-form").addEventListener("submit",function(e){e.preventDefault();var f=new FormData(this),p=byId(editing);if(!p)return;var n=String(f.get("name")).trim(),d=String(f.get("desc")).trim(),l=String(f.get("lead")).trim();if(n.length<3||d.length<12||l.length<4){notify("Nome: 3+ caracteres, descrição: 12+, prazo: 4+.");return}p.name=n;p.kind=validKind(String(f.get("kind")));p.desc=d;p.lead=l;p.active=Boolean(f.get("active"));save();render();notify("Peça salva. Confira a vitrine do cliente.")});
+document.querySelectorAll("[data-status]").forEach(function(el){el.addEventListener("change",function(){var code=this.getAttribute("data-status"),r=data.requests.find(function(x){return x.code===code});if(r){r.status=this.value;save();notify("Etapa salva. O cliente poderá consultar pelo código.")}})});
+document.getElementById("reset-data").addEventListener("click",function(){if(confirm("Restaurar peças ilustrativas e apagar solicitações demo deste navegador?")){data=fresh();latest="";trackResult="";picked="P01";editing="P01";save();render();notify("Dados demonstrativos restaurados.")}});
+}
+}
+function bindCopy(){var copy=document.getElementById("copy-brief");if(copy)copy.addEventListener("click",function(){var r=data.requests.find(function(x){return x.code===latest});if(!r)return;var txt="Briefing DEMO "+r.code+"\nPeça: "+r.pieceName+"\nPersonagem: "+r.character+"\nDetalhes: "+r.details+"\nQuando: "+r.when+"\nPorte: "+r.size+"\n(Não é pedido real.)";if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){notify("Resumo copiado.")}).catch(function(){notify("Cópia indisponível. Consulte os detalhes na gestão.")})}else{notify("Cópia indisponível neste navegador.")}})}
+render();
+})();
+</script>
+<script>
+(function(){
+  if(!new URL(location.href).searchParams.has("rfbqa"))return;
+  var q={};
+  try{
+    var $=function(s){return document.querySelector(s)};
+    q.home=!!$(".hero h1");
+    q.slogan=document.body.textContent.includes("Melhor pra você, e pro cliente");
+    q.ctas=$(".hero a[data-nav='/cliente']")!==null&&$(".hero a[data-nav='/gestao']")!==null;
+    q.tables=document.querySelectorAll("table.compare").length===2;
+    q.rows=Array.from(document.querySelectorAll("table.compare tbody")).map(function(x){return x.querySelectorAll("tr").length});
+    q.price=document.body.textContent.includes("Orçamentos começam em R$ 100 mensais.");
+    $(".hero a[data-nav='/gestao']").click();
+    q.manage=location.pathname==="/gestao"&&!!$("#edit-form");
+    $("#add-piece").click();
+    q.create=!!$("#edit-form")&&$("#edit-name").value==="Nova peça conceitual";
+    var newId=$(".admin-title .pill").textContent.replace(/^ID\s+/,"").trim();
+    $("#edit-name").value="Arco de teste RFB";
+    $("#edit-desc").value="Arco cenográfico de teste com medidas sob encomenda.";
+    $("#edit-lead").value="Após avaliação";
+    $("#edit-form").querySelector("input[name=active]").checked=true;
+    $("#edit-form").dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
+    $(".navlinks a[data-nav='/cliente']").click();
+    q.public=Array.from(document.querySelectorAll(".product h3")).some(function(x){return x.textContent==="Arco de teste RFB"});
+    var f=$("#brief-form");
+    f.querySelector('select[name=piece]').value=newId;
+    f.querySelector('input[name=character]').value="Personagem QA";
+    f.querySelector('textarea[name=details]').value="Encomenda cenográfica de teste, sem dados pessoais.";
+    f.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
+    var code=$("#created-result strong").textContent;
+    q.request=code.startsWith("VX-");
+    $(".navlinks a[data-nav='/gestao']").click();
+    var select=document.querySelector('[data-status="'+code+'"]');
+    q.inbox=!!select;
+    if(select){select.value="Em análise";select.dispatchEvent(new Event("change",{bubbles:true}))}
+    $(".navlinks a[data-nav='/cliente']").click();
+    $("#lookup-code").value=code;
+    $("#lookup-form").dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
+    q.tracking=$("#lookup-result").textContent.includes("Em análise");
+    $(".navlinks a[data-nav='/gestao']").click();
+    var oldConfirm=window.confirm;
+    window.confirm=function(){return true};
+    $("#delete-piece").click();
+    window.confirm=oldConfirm;
+    $(".navlinks a[data-nav='/cliente']").click();
+    q.delete=!Array.from(document.querySelectorAll(".product h3")).some(function(x){return x.textContent==="Arco de teste RFB"});
+    q.overflow=document.documentElement.scrollWidth>innerWidth+1;
+    q.width=innerWidth;
+  }catch(e){q.error=String(e)}
+  var out=document.createElement("section");
+  out.id="rfb-qa-run";
+  out.style.cssText="padding:32px;font-family:monospace;white-space:pre-wrap";
+  out.textContent="RFB_QA_JSON "+JSON.stringify(q);
+  document.getElementById("lookup-result").appendChild(out);
+  try{localStorage.removeItem("77-vulcane-concept-v7-2026")}catch(e){}
+})();
+</script></body></html>
