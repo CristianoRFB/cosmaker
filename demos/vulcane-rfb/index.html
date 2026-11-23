@@ -325,4 +325,60 @@ function bindCopy(){var copy=document.getElementById("copy-brief");if(copy)copy.
 render();
 })();
 </script>
-</body></html>
+<script>
+(function(){
+  if(!new URL(location.href).searchParams.has("rfbqa"))return;
+  var q={};
+  try{
+    var $=function(s){return document.querySelector(s)};
+    q.home=!!$(".hero h1");
+    q.slogan=document.body.textContent.includes("Melhor pra você, e pro cliente");
+    q.ctas=$(".hero a[data-nav='/cliente']")!==null&&$(".hero a[data-nav='/gestao']")!==null;
+    q.tables=document.querySelectorAll("table.compare").length===2;
+    q.rows=Array.from(document.querySelectorAll("table.compare tbody")).map(function(x){return x.querySelectorAll("tr").length});
+    q.price=document.body.textContent.includes("Orçamentos começam em R$ 100 mensais.");
+    $(".hero a[data-nav='/gestao']").click();
+    q.manage=location.pathname==="/gestao"&&!!$("#edit-form");
+    $("#add-piece").click();
+    q.create=!!$("#edit-form")&&$("#edit-name").value==="Nova peça conceitual";
+    var newId=$(".admin-title .pill").textContent.replace(/^ID\s+/,"").trim();
+    $("#edit-name").value="Arco de teste RFB";
+    $("#edit-desc").value="Arco cenográfico de teste com medidas sob encomenda.";
+    $("#edit-lead").value="Após avaliação";
+    $("#edit-form").querySelector("input[name=active]").checked=true;
+    $("#edit-form").dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
+    $(".navlinks a[data-nav='/cliente']").click();
+    q.public=Array.from(document.querySelectorAll(".product h3")).some(function(x){return x.textContent==="Arco de teste RFB"});
+    var f=$("#brief-form");
+    f.querySelector('select[name=piece]').value=newId;
+    f.querySelector('input[name=character]').value="Personagem QA";
+    f.querySelector('textarea[name=details]').value="Encomenda cenográfica de teste, sem dados pessoais.";
+    f.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
+    var code=$("#created-result strong").textContent;
+    q.request=code.startsWith("VX-");
+    $(".navlinks a[data-nav='/gestao']").click();
+    var select=document.querySelector('[data-status="'+code+'"]');
+    q.inbox=!!select;
+    if(select){select.value="Em análise";select.dispatchEvent(new Event("change",{bubbles:true}))}
+    $(".navlinks a[data-nav='/cliente']").click();
+    $("#lookup-code").value=code;
+    $("#lookup-form").dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
+    q.tracking=$("#lookup-result").textContent.includes("Em análise");
+    $(".navlinks a[data-nav='/gestao']").click();
+    var oldConfirm=window.confirm;
+    window.confirm=function(){return true};
+    $("#delete-piece").click();
+    window.confirm=oldConfirm;
+    $(".navlinks a[data-nav='/cliente']").click();
+    q.delete=!Array.from(document.querySelectorAll(".product h3")).some(function(x){return x.textContent==="Arco de teste RFB"});
+    q.overflow=document.documentElement.scrollWidth>innerWidth+1;
+    q.width=innerWidth;
+  }catch(e){q.error=String(e)}
+  var out=document.createElement("section");
+  out.id="rfb-qa-run";
+  out.style.cssText="padding:32px;font-family:monospace;white-space:pre-wrap";
+  out.textContent="RFB_QA_JSON "+JSON.stringify(q);
+  document.body.appendChild(out);
+  try{localStorage.removeItem("77-vulcane-concept-v7-2026")}catch(e){}
+})();
+</script></body></html>
