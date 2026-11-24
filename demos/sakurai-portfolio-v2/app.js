@@ -72,3 +72,30 @@ filmVideo.addEventListener('play',syncFilmButton);filmVideo.addEventListener('pa
 if(reduceMotion){filmVideo.removeAttribute('autoplay');filmVideo.pause()}
 else if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>{for(const entry of entries){if(!entry.isIntersecting&& !filmVideo.paused){filmVideo.pause();}else if(entry.isIntersecting && filmVideo.muted){filmVideo.play().catch(()=>{});}syncFilmButton()}},{threshold:.35});obs.observe(filmVideo)}
 syncFilmButton();
+
+// RFB V5: Accessible global pause for continuous motion, persisted on this device.
+(function setupMotion() {
+  const toggle = document.getElementById('motion-toggle');
+  if (!toggle) return;
+  const key = 'sakurai_motion_paused_v1';
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let paused = reduced || safeRead(key) === '1';
+  function updateMotion() {
+    document.body.classList.toggle('motion-paused', paused);
+    toggle.setAttribute('aria-pressed', String(paused));
+    toggle.setAttribute('aria-label', paused ? 'Retomar animações contínuas' : 'Pausar animações contínuas');
+    toggle.querySelector('.motion-toggle-text').textContent = paused ? 'Retomar movimento' : 'Pausar movimento';
+    toggle.querySelector('.motion-toggle-symbol').textContent = paused ? '▶' : 'Ⅱ';
+  }
+  toggle.addEventListener('click', () => { paused = !paused; safeWrite(key, paused ? '1' : '0'); updateMotion(); });
+  updateMotion();
+  if ('IntersectionObserver' in window && !reduced) {
+    document.documentElement.classList.add('js-motion-enabled');
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) { entry.target.classList.add('is-in-view'); observer.unobserve(entry.target); }
+      }
+    }, { threshold: 0.06 });
+    document.querySelectorAll('[data-reveal]').forEach(element => observer.observe(element));
+  }
+})();

@@ -41,3 +41,13 @@ Subpasta `demos/sakurai-portfolio-v2/` no repositório `CristianoRFB/cosmaker` v
 - Vídeo real de 52,8 s incluído na seção **Vídeo do processo**: tenta reproduzir silenciosamente ao entrar na área visível, pausa ao sair, permite ativar o som e pausar pelos controles nativos; opção de reprodução dedicada e respeito a `prefers-reduced-motion`.
 - Créditos em legendas e ficha de referência: criação do cosplay — Sakurai; autoria fotográfica e da gravação — a confirmar; sem autoria falsa para imagem de terceiro.
 - Materiais encaminhados pelo usuário para esta demonstração. Antes de divulgar oficialmente, confirmar com a artista as pessoas responsáveis por fotos, vídeos e eventuais trilhas.
+
+
+## V5 — Movimento contínuo (pedido de 23/11/2026)
+- Faixa vertical de fotografias em loop na borda do hero, com segunda sequência duplicada e decorativa para evitar salto.
+- Carrossel horizontal infinito antes do contato, com oito imagens reais do acervo da demo, duplicadas para loop contínuo.
+- Links sociais Instagram, Linktree e e-mail com botões circulares giratórios, clicáveis e com nomes acessíveis.
+- Tipografia em ticker contínuo, hero com zoom sutil, acento giratório e brilho ambiente animado.
+- Controle **Pausar movimento** no ticker para desligar os efeitos continuamente animados; estado localStorage. `prefers-reduced-motion: reduce` desativa loops por padrão.
+- Sem alteração de imagens, vídeo, paleta personalizável, integrações ou orçamento.
+- Testar em 320, 390, 768, 1440px; hover/foco nos botões sociais; verificar pausa e modo reduzido.

@@ -30,3 +30,64 @@ html[data-theme="light"]{--bg:#FAF7F9;--surface:#FFFFFF;--surface-2:#F4ECF1;--te
 .library-credit p{font-size:11px;color:var(--muted);line-height:1.6}.photo-note a{font-weight:700}
 @media(max-width:920px){.film-stage{grid-template-columns:1fr}.film-aside{max-width:700px}}
 @media(max-width:700px){.film-stamp{font-size:8px;left:9px;top:9px}.film-aside h3{font-size:35px}.film-aside>.button{width:100%}}
+
+/* RFB V5 — CINEMATIC CONTINUOUS MOTION / transform-only, user pause, reduced-motion supported. */
+body{overflow-x:clip}
+.hero{isolation:isolate}
+.hero-copy{position:relative}
+.hero-copy::before{content:"";position:absolute;z-index:-1;width:min(390px,62vw);height:min(390px,62vw);top:10%;right:-13%;background:radial-gradient(circle,var(--brand-soft) 0%,transparent 64%);opacity:.72;filter:blur(42px);pointer-events:none;animation:ambient-breathe 13s ease-in-out infinite alternate}
+.wordmark-mark{display:inline-block;transform-origin:50% 45%;animation:slow-spin 18s linear infinite}
+.hero-photo>img{animation:cinema-zoom 27s ease-in-out infinite alternate;will-change:transform}
+.hero h1 em{display:inline-block;animation:headline-lift 8s ease-in-out infinite alternate}
+.eyebrow-rule{transform-origin:left;animation:line-pulse 3.5s ease-in-out infinite alternate}
+/* Image loop hugging the right edge of the hero photograph. */
+.edge-filmstrip{position:absolute;z-index:3;right:0;top:0;bottom:0;width:clamp(65px,7vw,100px);overflow:hidden;border-left:1px solid #ffffff5b;background:#100e16bd;box-shadow:-12px 0 24px #0006;pointer-events:none}
+.edge-filmstrip::before,.edge-filmstrip::after{content:"";position:absolute;z-index:2;left:0;right:0;height:30px;pointer-events:none}
+.edge-filmstrip::before{top:0;background:linear-gradient(#110d14,transparent)}.edge-filmstrip::after{bottom:0;background:linear-gradient(transparent,#110d14)}
+.edge-filmstrip-track{display:flex;flex-direction:column;width:100%;animation:edge-roll 23s linear infinite;will-change:transform}
+.edge-filmstrip-set{display:flex;flex-direction:column;flex:0 0 auto}
+.edge-filmstrip-set img{width:100%;height:clamp(70px,8vw,108px);object-fit:cover;display:block;border-bottom:2px solid #101015}
+@keyframes edge-roll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+/* A proper seamless repeated image loop drawn like the edge of an analog contact sheet. */
+.border-reel{position:relative;background:var(--surface);overflow:hidden;border-top:3px solid var(--brand);border-bottom:3px solid var(--brand);padding:19px 0 16px}
+.border-reel-top{padding:0 clamp(20px,5vw,82px) 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:10px;font-weight:800;letter-spacing:.19em;color:var(--soft-text)}
+.border-reel-top a{font-size:11px;color:var(--brand);min-height:34px;display:inline-flex;align-items:center}
+.border-reel-viewport{overflow:hidden;width:100%;user-select:none;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.border-reel-track{display:flex;width:max-content;animation:reel-scroll 54s linear infinite;will-change:transform}
+.border-reel-set{display:flex;gap:10px;flex:0 0 auto;padding-right:10px}
+.border-reel-frame{position:relative;width:clamp(125px,16vw,222px);height:clamp(150px,20vw,260px);background:#170e17;border:5px solid #0d0c0e;overflow:hidden;flex:0 0 auto}
+.border-reel-frame img{width:100%;height:100%;object-fit:cover;filter:saturate(.91) contrast(1.05)}
+.border-reel-frame span{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;font-size:9px;letter-spacing:.13em;font-weight:800;color:white;background:linear-gradient(0deg,#000b,transparent)}
+.border-reel-bottom{text-align:center;font-size:10px;letter-spacing:.24em;color:var(--muted);padding:17px 15px 0}
+@keyframes reel-scroll{to{transform:translateX(-50%)}}
+/* The social links themselves rotate, not merely a decorative frame. */
+.social-orbits{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:-22px 0 29px;position:relative;z-index:3}
+.social-orbits-label{font-size:9px;letter-spacing:.15em;color:var(--muted);font-weight:800;margin-right:3px}
+.social-orbit{position:relative;display:inline-grid;place-items:center;width:48px;height:48px;flex:0 0 48px;border-radius:50%;border:1px solid var(--brand);background:var(--surface);color:var(--brand);font-weight:800;box-shadow:0 0 0 2px var(--brand-faint),0 0 20px var(--brand-soft);transition:background .2s,box-shadow .2s,color .2s;animation:social-rotate 11s linear infinite}
+.social-orbit::before{content:"";position:absolute;inset:4px;border:1px dashed currentColor;border-radius:50%;opacity:.45}
+.social-orbit:nth-of-type(2){animation-duration:14s;animation-direction:reverse}.social-orbit:nth-of-type(3){animation-duration:17s}
+.social-orbit:hover,.social-orbit:focus-visible{animation-play-state:paused;background:var(--brand);color:var(--on-brand);box-shadow:0 0 0 4px var(--brand-soft)}
+.social-orbit .orbit-icon{font-size:16px;text-transform:uppercase;letter-spacing:-.04em}
+@keyframes social-rotate{to{transform:rotate(360deg)}}
+/* Looping typographic strip plus a visible pause toggle for WCAG 2.2.2. */
+.ticker{position:relative;gap:0}
+.ticker-window{flex:1;min-width:0;overflow:hidden}
+.ticker-track{display:flex;width:max-content;animation:reel-scroll 36s linear infinite;will-change:transform}
+.ticker-set{display:flex;align-items:center;gap:24px;padding:0 24px;white-space:nowrap;font-size:10px;font-weight:800;letter-spacing:.16em;min-height:62px}
+.ticker-set span{font-size:19px}
+.motion-toggle{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-width:167px;min-height:44px;padding:9px 13px;margin:5px 12px 5px 0;flex-shrink:0;border:1px solid currentColor;border-radius:25px;background:var(--on-brand);color:var(--brand);font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap}
+.motion-toggle:hover{background:var(--surface);color:var(--text)}
+.motion-toggle-symbol{font-size:15px}
+.motion-paused .ticker-track,.motion-paused .edge-filmstrip-track,.motion-paused .border-reel-track,.motion-paused .social-orbit,.motion-paused .hero-copy::before,.motion-paused .hero-photo>img,.motion-paused .hero h1 em,.motion-paused .eyebrow-rule,.motion-paused .wordmark-mark{animation-play-state:paused!important}
+@keyframes ambient-breathe{to{opacity:.35;transform:translate(-18px,23px) scale(1.25)}}
+@keyframes cinema-zoom{to{transform:scale(1.065) translateY(-.8%)}}
+@keyframes headline-lift{to{transform:translateY(-5px)}}
+@keyframes line-pulse{to{transform:scaleX(1.7)}}
+@keyframes slow-spin{to{transform:rotate(360deg)}}
+/* Reveal only as content enters viewport; progressive enhancement. */
+.js-motion-enabled [data-reveal]{opacity:1}
+@media(min-width:701px){.js-motion-enabled [data-reveal]:not(.is-in-view){opacity:.92;transform:translateY(18px)}.js-motion-enabled [data-reveal].is-in-view{opacity:1;transform:translateY(0);transition:opacity .6s ease-out,transform .6s ease-out}}
+@media(max-width:700px){.social-orbits{margin:-10px 0 24px}.social-orbits-label{width:100%}.edge-filmstrip{width:59px}.edge-filmstrip-set img{height:67px}.ticker-set{min-height:50px;font-size:9px;gap:16px;padding:0 14px}.ticker-set span{font-size:14px}.motion-toggle{min-width:44px;width:44px;padding:0;margin:3px 7px 3px 0}.motion-toggle-text{position:absolute!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;width:1px!important;height:1px!important;overflow:hidden!important;white-space:nowrap!important}.border-reel-top{font-size:9px}.border-reel-bottom{font-size:8px;letter-spacing:.11em}}
+@media(prefers-reduced-motion:reduce){.edge-filmstrip-track,.border-reel-track,.ticker-track,.social-orbit,.hero-photo>img,.hero h1 em,.eyebrow-rule,.wordmark-mark,.hero-copy::before{animation:none!important;transform:none!important}.js-motion-enabled [data-reveal]:not(.is-in-view){opacity:1!important;transform:none!important}.motion-toggle{display:none!important}}
+@media(max-width:380px){.hero h1{font-size:40px}}
+html,body{max-width:100%;overflow-x:clip}
