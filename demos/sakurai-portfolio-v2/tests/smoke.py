@@ -22,7 +22,7 @@ try:
             page.on('pageerror',lambda e:errors.append(str(e)))
             page.set_content(html,wait_until='load')
             page.wait_for_timeout(250)
-            assert page.locator('.photo-card').count()==12,(width,page.locator('.photo-card').count())
+            assert page.locator('.photo-card').count()==13,(width,page.locator('.photo-card').count())
             bad=page.evaluate('document.documentElement.scrollWidth > window.innerWidth + 2')
             assert not bad,f'Horizontal overflow at {width}'
             assert not errors,(width,errors)
@@ -30,6 +30,11 @@ try:
             assert page.locator('.hero-photo img').evaluate('el=>el.complete&&el.naturalWidth>0'),f'hero not loaded {width}'
             if width in (390,1440):
                 page.screenshot(path=str(ROOT/'tests'/f'home-{width}.png'),full_page=True)
+            assert page.locator('#film-video').count()==1
+            assert page.locator('#film-video').get_attribute('src')=='./images/processo-franco.mp4'
+            assert page.locator('#film-video').get_attribute('muted')==''
+            assert page.locator('#film-video').get_attribute('controls')==''
+            assert page.locator('.media-credit').count()==1
             # interactive filter and dialog
             page.get_by_role('button',name='Bastidores',exact=True).click()
             assert page.locator('.photo-card').count()==3
@@ -37,7 +42,7 @@ try:
             assert page.locator('#gallery-dialog').evaluate('(el)=>el.open')
             page.get_by_role('button',name='Fechar detalhes').click()
             assert not page.locator('#gallery-dialog').evaluate('(el)=>el.open')
-            page.get_by_role('button',name='Tudo 12').click()
+            page.get_by_role('button',name='Tudo 13').click()
             page.get_by_role('button',name='Ver formato de tutorial').first.click()
             assert page.locator('#article-dialog').evaluate('(el)=>el.open')
             page.keyboard.press('Escape')

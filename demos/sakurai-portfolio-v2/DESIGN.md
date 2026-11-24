@@ -21,3 +21,9 @@ Artista (simulação local): clicar Paleta → ajustar RGB, HEX ou seletor → v
 - Paleta + RGB + HEX validação de entrada; reset e modo independentes; persistência local. Erro de HEX mostra mensagem e mantém cor válida.
 - Imagens 660×660 WebP tratadas conservadoramente; versões originais devem substituir antes de produção.
 - Rotas estáticas sem login; QA local de 7 larguras, interações, integridade WebP e revisão visual em claro/escuro.
+
+## V4 — mídia real e créditos
+- Novo retrato fornecido (865×1536 de origem) exibido no hero e no arquivo; cartão usa miniatura WebP 550×976 e modal serve WebP 865×1536. Não se aplica upscale artificial.
+- Vídeo fornecido (52,82 segundos, 1276×720 H.264/AAC) em seção de processo, transcodificado para 960×542 H.264/AAC, faststart, 3,3 MB; autoplay silencioso, controles para áudio, pausa e reprodução explícita. No modo de movimento reduzido não inicia automaticamente.
+- Autoria separada: cosplay e criação atribuídos a @sakurai_cosmaker; foto, gravação e edição permanecem com créditos a confirmar. A demo não atribui propriedade de fotografia a quem não foi identificado.
+- Mídia fica na demo isolada, sem enviar a terceiros ou alterar o produto canônico; não coletar dados.

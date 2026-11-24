@@ -35,3 +35,9 @@ Subpasta `demos/sakurai-portfolio-v2/` no repositório `CristianoRFB/cosmaker` v
 | ![Mobile dark](docs/screenshots/mobile-dark.webp) | ![Mobile light](docs/screenshots/mobile-light.webp) | ![RGB](docs/screenshots/palette.webp) |
 
 **Prévia Cloudflare:** https://77-sakurai-portfolio-v2.on7.workers.dev/ (Worker atualizado pela API; validação HTTP externa por ferramenta ainda pendente).
+
+## Atualização V4 · vídeo, imagem de origem e créditos
+- Foto enviada em alta resolução incluída no hero e na galeria (WebP original + miniatura responsiva).
+- Vídeo real de 52,8 s incluído na seção **Vídeo do processo**: tenta reproduzir silenciosamente ao entrar na área visível, pausa ao sair, permite ativar o som e pausar pelos controles nativos; opção de reprodução dedicada e respeito a `prefers-reduced-motion`.
+- Créditos em legendas e ficha de referência: criação do cosplay — Sakurai; autoria fotográfica e da gravação — a confirmar; sem autoria falsa para imagem de terceiro.
+- Materiais encaminhados pelo usuário para esta demonstração. Antes de divulgar oficialmente, confirmar com a artista as pessoas responsáveis por fotos, vídeos e eventuais trilhas.
