@@ -25,3 +25,13 @@ Arquivos estáticos, sem Firebase ou cobrança: `python -m http.server 8080`. Ex
 ## Isolamento / publicação
 
 Subpasta `demos/sakurai-portfolio-v2/` no repositório `CristianoRFB/cosmaker` via PR isolada. Cloudflare Worker demo isolado; não altera `main`, tenant, credenciais, banco ou a demo V1 de acompanhamento. RFB: checkpoint em `docs/rfb/`, QA produto e visual antes do handoff. Apresentação comercial, custo e contrato são outra conversa.
+
+## Telas da demonstração
+
+![Portfólio desktop](docs/screenshots/desktop-dark.webp)
+
+| Mobile escuro | Mobile claro | Editor RGB |
+|:--:|:--:|:--:|
+| ![Mobile dark](docs/screenshots/mobile-dark.webp) | ![Mobile light](docs/screenshots/mobile-light.webp) | ![RGB](docs/screenshots/palette.webp) |
+
+**Prévia Cloudflare:** https://77-sakurai-portfolio-v2.on7.workers.dev/ (Worker atualizado pela API; validação HTTP externa por ferramenta ainda pendente).
