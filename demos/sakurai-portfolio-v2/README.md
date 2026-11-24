@@ -1,19 +1,27 @@
-# Sakurai — portfólio editorial (DEMO independente)
+# Sakurai — portfólio editorial interativo · RFB Demo V3
 
-Proposta de portfólio artístico **não oficial** para a cosplayer e cosmaker @sakurai_cosmaker, desenvolvida para o projeto 77.
+Demonstração **não oficial** e sem orçamento/encomendas, produzida com base nos prints de Instagram apresentados pelo usuário e no feedback direto da artista. Não equivale a contrato, autorização para uso comercial da marca, nem produto oficial.
 
-## Escopo
-- Página pública de projeto artístico com galeria filtrável, 12 registros, detalhes em diálogo e links de Instagram, Linktree e e-mail.
-- **Não** há recebimento de encomendas, orçamento, área de pagamento, login ou banco de dados.
-- Base estática HTML/CSS/JS, sem dependências de runtime e sem tocar no Cosmaker OS real.
-- A agenda de encomendas está fechada; a artista informou intenção de encerrá-las definitivamente.
+## O que fazer na demo
 
-## Imagens
-Os recortes `images/*.webp` foram extraídos **dos prints enviados pelo usuário** na conversa, não baixados de redes sociais nem apresentados como arquivos originais. Precisam ser substituídos por fotografias em alta resolução fornecidas/autorizadas pela artista antes de se declarar portfólio oficial ou produto final. A imagem `caitlyn-arte.webp` é apenas referência visual repostada e **não é atribuída** como arte da Sakurai. Nenhuma biografia ou feito não verificado foi inventado.
+1. Abra o site, explore as duas coleções concluídas: **Franco (Hexatombe)** e **Caitlyn (Arcane)**.
+2. Filtre o arquivo de 12 imagens, abra detalhes e navegue pelas fotografias.
+3. Veja os cartões de projetos **futuros** Coco (Witch Hat Atelier) e Gwayne (A Vigília). Não há alegação de produção iniciada.
+4. Explore modelos de **diário de produção**, mini tutoriais, biblioteca de referências com créditos, moldes, buildbooks e ideias de merch. Conteúdos ainda não enviados são explicitamente ilustrativos, sem download, venda nem instruções inventadas.
+5. Clique **Paleta**: altere RGB com controles vermelho/verde/azul, campo hexadecimal ou seletor; as cores secundárias mudam com a primária. Clique **Restaurar rosa** para `#E86A9F`. O modo claro/escuro é independente. Personalização permanece no `localStorage` deste navegador e não é publicada no site de terceiros.
+6. **Copiar paleta** gera o resumo. **Enviar guia de marca ao desenvolvedor** abre o aplicativo de e-mail (a artista pode anexar arquivos e referências).
 
-## Execução e testes
-Abra `index.html` ou sirva a pasta com `python -m http.server 8080`.
-Teste navegação por âncoras, filtros, abertura/fechamento de diálogo (Esc, backdrop), links externos, 320/360/390/430/768/1024/1440 px e foco por teclado.
+## Qualidade das imagens
 
-## Arquitetura / RFB
-Arte editorial em preto, pêssego queimado e off-white; hierarquia intencional, experiência mobile-first, objetivo único de **apresentar os trabalhos**. Deploy isolado em Worker estático recomendado, e mudanças na vertical somente por PR. Landing comercial do desenvolvedor não deve confundir-se com oferta da artista.
+- As imagens WebP nesta V3 têm ampliação conservadora **660×660** e tratamento de ruído/nitidez a partir de prints do usuário. Na V2 publicada os mesmos arquivos ocupavam 5–20 KB cada; estes WebP melhorados ocupam cerca de 35–127 KB cada. A fonte de 222px **não permite recuperar detalhes fotográficos originais**.
+- Não usar estes recortes como versão final de portfólio oficial. Solicitar originais de Sakurai com consentimento explícito e registro de proveniência.
+- A imagem de referência Caitlyn é repostada e não atribuída como desenho autoral.
+- Foto de terceiros em encontro/evento está apenas na prévia baseada nos prints; revisar autorizações antes de produção.
+
+## Rodar e validar
+
+Arquivos estáticos, sem Firebase ou cobrança: `python -m http.server 8080`. Executar `node --check app.js` e `python tests/smoke.py` (Chromium/Playwright). Script de teste usa `set_content` e imagens embutidas porque a sandbox bloqueia acesso de browser à rede. Para persistência, simula localStorage entre instâncias de página. A verificação de URL pública deve ser separada.
+
+## Isolamento / publicação
+
+Subpasta `demos/sakurai-portfolio-v2/` no repositório `CristianoRFB/cosmaker` via PR isolada. Cloudflare Worker demo isolado; não altera `main`, tenant, credenciais, banco ou a demo V1 de acompanhamento. RFB: checkpoint em `docs/rfb/`, QA produto e visual antes do handoff. Apresentação comercial, custo e contrato são outra conversa.

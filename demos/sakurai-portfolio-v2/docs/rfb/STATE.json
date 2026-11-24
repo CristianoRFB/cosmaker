@@ -1,0 +1,13 @@
+{
+  "project":"sakurai-portfolio-demo",
+  "version":"v3-rgb-journal-library",
+  "method":"rfb:demo:resume",
+  "lead":"Sakurai / @sakurai_cosmaker",
+  "scope":["portfolio","journal-demo","references","future-projects","buildbooks-demo","palette-rgb","dark-light"],
+  "excluded":["commissions","quotations","orders","payments","live-cms"],
+  "media":"660x660 webp screenshot-upscaled, originals pending",
+  "local_qa":"7 viewport flows pass via isolated set_content; real browser storage mocked",
+  "github":"pending sync on existing draft PR #35",
+  "cloudflare":"pending version update and live verification",
+  "next":["sync GitHub","deploy isolated Worker","verify live URL"]
+}
