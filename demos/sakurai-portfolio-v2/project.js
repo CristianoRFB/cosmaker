@@ -16,3 +16,20 @@
   function apply(){if(!valid)return;const dark=root.dataset.theme==='dark';const bg=dark?'#151219':'#FAF7F9';const values={'--brand':color,'--brand-deep':mix(color,'#130A18',dark?.23:.18),'--brand-soft':mix(color,bg,dark?.81:.87),'--brand-faint':mix(color,bg,dark?.92:.94),'--brand-lift':mix(color,'#FFFFFF',.34),'--on-brand':ratio(color,'#140F16')>=ratio(color,'#FFFFFF')?'#140F16':'#FFFFFF'};for(const [k,v] of Object.entries(values))root.style.setProperty(k,v)}
   apply();label();document.getElementById('project-year').textContent=new Date().getFullYear();
 })();
+// RFB V7: mesmo fallback de fotografia nas páginas individuais.
+(() => {
+  const mirror='https://raw.githubusercontent.com/CristianoRFB/cosmaker/82dc149f4695099f62a0ec44673eafa9428c5d7e/demos/sakurai-portfolio-v2/images/';
+  window.addEventListener('error',event => {
+    const img=event.target;
+    if (!(img instanceof HTMLImageElement)) return;
+    const current=img.getAttribute('src')||'';
+    if(!img.dataset.rfbMirrorTried && /^\.?\.?\/images\/[a-z0-9-]+\.(webp|jpg)$/i.test(current)){
+      img.dataset.rfbMirrorTried='1';
+      img.src=mirror+current.split('/').pop();
+    }else if(img.dataset.rfbMirrorTried==='1' && !img.dataset.rfbFailed){
+      img.dataset.rfbFailed='1';
+      img.style.opacity='0';
+      img.closest('.project-photo, .project-lead-visual, .project-related-link')?.classList.add('image-unavailable');
+    }
+  },true);
+})();
