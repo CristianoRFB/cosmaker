@@ -27,3 +27,9 @@ Artista (simulação local): clicar Paleta → ajustar RGB, HEX ou seletor → v
 - Vídeo fornecido (52,82 segundos, 1276×720 H.264/AAC) em seção de processo, transcodificado para 960×542 H.264/AAC, faststart, 3,3 MB; autoplay silencioso, controles para áudio, pausa e reprodução explícita. No modo de movimento reduzido não inicia automaticamente.
 - Autoria separada: cosplay e criação atribuídos a @sakurai_cosmaker; foto, gravação e edição permanecem com créditos a confirmar. A demo não atribui propriedade de fotografia a quem não foi identificado.
 - Mídia fica na demo isolada, sem enviar a terceiros ou alterar o produto canônico; não coletar dados.
+
+## V6 — Interface por personagem
+- Jornada solicitada: moldura com foto e nome → clique/toque/Enter no cartão → página do projeto → fotos e processo → voltar ou ir para outro personagem.
+- Franco/Caitlyn são concluídos; projetos futuros sem imagens originais permanecem como ideias.
+- Cartão link com foco visível, alvo amplo, contraste e comportamento reduzido conforme mídia de acessibilidade.
+- Imagens já fornecidas e créditos em estado pendente por autor quando necessário. Não se atribui autoria de fotografia nem de arte de referência sem confirmação.

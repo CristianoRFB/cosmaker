@@ -51,3 +51,10 @@ Subpasta `demos/sakurai-portfolio-v2/` no repositório `CristianoRFB/cosmaker` v
 - Controle **Pausar movimento** no ticker para desligar os efeitos continuamente animados; estado localStorage. `prefers-reduced-motion: reduce` desativa loops por padrão.
 - Sem alteração de imagens, vídeo, paleta personalizável, integrações ou orçamento.
 - Testar em 320, 390, 768, 1440px; hover/foco nos botões sociais; verificar pausa e modo reduzido.
+
+## V6 — Molduras por personagem · feedback da Sakurai (25/11/2026)
+- Foto de destaque e nome do personagem aparecem em uma moldura editorial, inteiramente clicável.
+- Franco e Caitlyn têm páginas próprias e URLs compartilháveis (/projetos/franco e /projetos/caitlyn).
+- Franco exibe galeria e vídeo já enviado; Caitlyn mostra registros e referências sem inventar autoria.
+- Paleta RGB, rosa original, modo claro/escuro e demais funcionalidades da V5 preservados. Páginas internas herdam as escolhas do navegador.
+- QA local: 320, 390, 768 e 1440 px; DOM, links, imagens, responsividade, alternância de tema, zero erros de JS. Validar URLs publicadas separadamente.

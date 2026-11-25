@@ -54,6 +54,7 @@ $$('dialog').forEach(dialog=>dialog.addEventListener('click',e=>{if(e.target===d
 $('#menu-toggle').addEventListener('click',()=>{const open=$('#primary-nav').classList.toggle('expanded');$('#menu-toggle').setAttribute('aria-expanded',String(open));$('#menu-toggle').textContent=open?'×':'☰'});
 $$('.main-nav a').forEach(a=>a.addEventListener('click',()=>{$('#primary-nav').classList.remove('expanded');$('#menu-toggle').setAttribute('aria-expanded','false');$('#menu-toggle').textContent='☰'}));
 $('#open-palette').addEventListener('click',()=>$('#palette-dialog').showModal());
+if (new URLSearchParams(location.search).get('paleta') === '1') { $('#palette-dialog').showModal(); }
 $('#theme-toggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 $('#palette-theme-toggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 $('#main-color').addEventListener('input',e=>setBrand(e.target.value));
