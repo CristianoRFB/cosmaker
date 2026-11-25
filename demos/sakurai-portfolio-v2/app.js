@@ -9,7 +9,7 @@ const works=[
  {title:'Franco — Ao vivo',type:'cosplay',image:'franco-palco',tag:'Franco / palco',project:'franco',description:'Um dos registros do projeto Franco, de Hexatombe, em apresentação.'},
  {title:'Franco — Retrato',type:'cosplay',image:'franco-preto-branco',tag:'Franco / retrato',project:'franco',description:'Retrato em preto e branco que destaca caracterização e figurino.'},
  {title:'Encontro de cosplayers',type:'cosplay',image:'encontro-cosplay',tag:'Encontro / evento',project:null,description:'Registro coletivo do perfil. Personagens e autoria da fotografia ainda não confirmados; não é apresentado como cosplay de Caitlyn da Sakurai.'},
- {title:'Referência de Caitlyn',type:'detalhes',image:'caitlyn-arte',tag:'Referência visual',project:'caitlyn',description:'Referência visual vista no perfil. Esta imagem não é creditada como desenho autoral da Sakurai.'},
+ {title:'Caitlyn — referência de personagem',type:'detalhes',image:'caitlyn-personagem',tag:'Arte de referência / Arcane',project:'caitlyn',description:'Ilustração da personagem, não fotografia do cosplay da Sakurai.',credit:'Referência de personagem enviada para a demonstração. Autor original da ilustração a confirmar; não atribuir a Sakurai.'},
  {title:'Criação em andamento',type:'bastidores',image:'bastidores',tag:'Processo / bastidores',project:'franco',description:'Um momento espontâneo do cotidiano, parte do material compartilhado no perfil.'},
  {title:'Franco — Performance',type:'cosplay',image:'franco-show',tag:'Franco / apresentação',project:'franco',description:'Registro em cena com o cosplay de Franco.'},
  {title:'Franco — Ensaio',type:'cosplay',image:'franco-ensaio',tag:'Franco / ensaio',project:'franco',description:'Fotografia de ensaio e caracterização de Franco.'},

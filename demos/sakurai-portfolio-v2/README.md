@@ -65,3 +65,10 @@ Subpasta `demos/sakurai-portfolio-v2/` no repositório `CristianoRFB/cosmaker` v
 - Artes dos personagens apenas em seção de referências com origem/autoria a confirmar.
 - Foto coletiva do feed rotulada como encontro, sem identificar indevidamente um cosplay como Caitlyn.
 - Links dos dois projetos, animações e paleta preservados. Proposta sem encomendas.
+
+## Revisão de identidade visual e atribuição (V9 — 25/11/2026)
+- A home usa **fotografia real da Sakurai como Franco**. A moldura de Caitlyn exibe ilustração de referência, com aviso visível de que **não é a cosplayer**.
+- A página de Caitlyn abre com a referência da personagem identificada e mantém reservado o espaço para fotografias originais da artista.
+- A ilustração de Caitlyn recebida em 25/11 é usada apenas como inspiração, sem confundir arte de terceiros com fotografia ou criação da Sakurai.
+- A fotografia de acessórios de outro personagem foi removida da galeria Franco.
+- Carrosséis, vídeo, personalizador RGB, tema claro/escuro e páginas individuais preservados. Publicação sempre isolada em PR de demonstração.

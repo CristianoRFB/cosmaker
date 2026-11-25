@@ -196,3 +196,12 @@ html,body{max-width:100%;overflow-x:clip}
 .reference-gallery-placeholder h3{font-size:clamp(28px,3.8vw,45px)}
 @media(max-width:700px){.work-section .character-frame{min-height:192px}.character-frame-awaiting .character-preview{padding:12px 9px}.character-frame-awaiting .preview-top,.character-frame-awaiting .preview-bottom{font-size:7px;letter-spacing:.06em}.character-frame-awaiting .preview-symbol{font-size:145px}.reference-section,.reference-gallery{grid-template-columns:1fr}.reference-section{padding-top:0}.reference-picture{margin:auto}.project-page .project-related-link .related-letter{width:80px;height:80px;font-size:56px}.reference-gallery-placeholder{min-height:320px}}
 @media(max-width:359px){.character-frame-awaiting .preview-symbol{font-size:110px}}
+
+/* RFB V9: representação visual fiel, nunca confundir desenho de personagem com cosplay da artista. */
+.character-frame-awaiting .character-preview-image{padding:0!important;background:#171627!important;display:block;isolation:isolate}
+.character-frame-awaiting .character-preview-image::after{inset:0;background:linear-gradient(180deg,transparent 48%,#090b16d9);border:0}
+.character-frame-awaiting .character-preview-image img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 17%;filter:saturate(.95);z-index:0}
+.reference-preview-badge{position:absolute;bottom:10px;left:8px;right:8px;z-index:3;padding:7px 8px;background:#12121bd9;color:#fff;font-size:8px;font-weight:800;letter-spacing:.055em;line-height:1.35;border:1px solid #ffffff70;border-radius:4px;text-align:center}
+.project-page .project-lead-visual.caitlyn-concept>img{width:100%;height:100%;inset:0;position:absolute;object-fit:cover;object-position:center 17%;filter:saturate(.91)}
+.project-page .project-lead-visual.caitlyn-concept .reference-hero-stamp{position:absolute;top:24px;left:24px;z-index:3;max-width:calc(100% - 48px);padding:10px 12px;background:#12111be0;color:#fff;font-weight:800;font-size:10px;letter-spacing:.08em;line-height:1.5;border:1px solid #fff5}
+@media(max-width:520px){.reference-preview-badge{font-size:7px;padding:6px 5px}.project-page .project-lead-visual.caitlyn-concept .reference-hero-stamp{font-size:9px;left:16px;top:16px}}
