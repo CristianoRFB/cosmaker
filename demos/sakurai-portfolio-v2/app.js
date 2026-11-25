@@ -51,8 +51,56 @@ $('#dialog-next').addEventListener('click',()=>{if(activeIndex<activeList.length
 $$('[data-article]').forEach(b=>b.addEventListener('click',()=>{const a=sampleArticles[b.dataset.article];$('#article-dialog-title').textContent=a.title;$('#article-dialog-description').textContent=a.text;$('#article-dialog-img').src=`./images/${a.image}.webp`;$('#article-dialog-img').alt=a.title;$('#article-dialog').showModal()}));
 $$('[data-dialog-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 $$('dialog').forEach(dialog=>dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()}));
-$('#menu-toggle').addEventListener('click',()=>{const open=$('#primary-nav').classList.toggle('expanded');$('#menu-toggle').setAttribute('aria-expanded',String(open));$('#menu-toggle').textContent=open?'×':'☰'});
-$$('.main-nav a').forEach(a=>a.addEventListener('click',()=>{$('#primary-nav').classList.remove('expanded');$('#menu-toggle').setAttribute('aria-expanded','false');$('#menu-toggle').textContent='☰'}));
+// RFB V10 — mobile drawer: focus, backdrop, keyboard and scroll containment.
+(() => {
+  const nav = document.getElementById('primary-nav');
+  const openButton = document.getElementById('menu-toggle');
+  const closeButton = document.getElementById('menu-close');
+  const backdrop = document.getElementById('nav-backdrop');
+  const compact = window.matchMedia('(max-width: 920px)');
+  let opened = false;
+  const interactive = () => [...nav.querySelectorAll('a[href],button:not([disabled])')].filter(el => el.getClientRects().length);
+  const syncNav = () => {
+    const drawer = compact.matches;
+    nav.inert = drawer && !opened;
+    if (drawer) nav.setAttribute('aria-hidden', String(!opened));
+    else nav.removeAttribute('aria-hidden');
+    openButton.setAttribute('aria-expanded', String(opened && drawer));
+    openButton.setAttribute('aria-label', opened && drawer ? 'Menu lateral aberto' : 'Abrir menu lateral');
+    document.body.classList.toggle('drawer-open', opened && drawer);
+    nav.classList.toggle('expanded', opened && drawer);
+    backdrop.classList.toggle('visible', opened && drawer);
+  };
+  function showDrawer() {
+    if (!compact.matches || opened) return;
+    opened = true;
+    syncNav();
+    closeButton.focus({preventScroll: true});
+  }
+  function hideDrawer(restore = true) {
+    if (!opened) return;
+    opened = false;
+    if (restore) openButton.focus({preventScroll:true});
+    else if (nav.contains(document.activeElement)) document.activeElement.blur();
+    syncNav();
+  }
+  openButton.addEventListener('click', () => opened ? hideDrawer() : showDrawer());
+  closeButton.addEventListener('click', () => hideDrawer());
+  backdrop.addEventListener('click', () => hideDrawer());
+  nav.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => hideDrawer(false)));
+  document.addEventListener('keydown', event => {
+    if (!opened || !compact.matches) return;
+    if (event.key === 'Escape') { event.preventDefault(); hideDrawer(); return; }
+    if (event.key !== 'Tab') return;
+    const focusable = interactive();
+    if (!focusable.length) { event.preventDefault(); return; }
+    const first = focusable[0], last = focusable[focusable.length-1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+  compact.addEventListener('change', () => { opened = false; syncNav(); });
+  syncNav();
+})();
 $('#open-palette').addEventListener('click',()=>$('#palette-dialog').showModal());
 if (new URLSearchParams(location.search).get('paleta') === '1') { $('#palette-dialog').showModal(); }
 $('#theme-toggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));

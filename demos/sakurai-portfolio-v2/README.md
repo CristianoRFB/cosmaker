@@ -80,3 +80,9 @@ A página `projetos/caitlyn.html` agora é um **buildbook demonstrativo preenchi
 **Proveniência obrigatória:** a Sakurai informou ter concluído Caitlyn, mas não confirmou tecido, material, técnica, fornecedor, autoria de foto ou cronologia. Todos os itens e notas acima são exemplos inventados para avaliar o UX. A imagem é arte de referência do personagem, não fotografia da artista. A peça longa é apenas um prop de fantasia sem mecanismo ou munição. Quando a artista fornecer os dados reais, substituir o conteúdo fictício com aprovação.
 
 **QA:** `node --check caitlyn-demo.js` e `python tests/test_caitlyn_v9.py` (Playwright); teste manual na URL publicada. Visões mobile e desktop; verificar tema, filtros, busca, clique nos pontos, modal, capítulos, impressora e imagens. A homepage continua em `/` e Franco em `/projetos/franco`.
+
+## V10 — Navegação lateral mobile
+- Em telas de até 920 px, menu abre pela direita (`max-width:360px`, `86vw`) com fundo escurecido, sem empurrar o hero.
+- Fecha por X, toque fora, Escape ou escolha de seção; foco e bloqueio de rolagem gerenciados enquanto está aberto.
+- Redução de movimento respeitada; navegação horizontal de desktop preservada.
+- QA local de 320, 360, 390, 768, 921, 1440 px: teste de scroll, foco, links e ausência de erros.
