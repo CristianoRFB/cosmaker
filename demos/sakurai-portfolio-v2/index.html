@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=7">
-  <script src="./app.js?v=7" defer></script>
+  <link rel="stylesheet" href="./style.css?v=8">
+  <script src="./app.js?v=8" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#projetos">Pular para o portfólio</a>
@@ -52,18 +52,18 @@
     <section class="section work-section" data-reveal id="projetos" aria-labelledby="work-title">
       <div class="section-heading"><div><span class="section-index">01 / PORTFÓLIO</span><h2 id="work-title">Trabalhos que<br><em>ganharam vida.</em></h2></div><p>Franco de Hexatombe e Caitlyn de Arcane são projetos concluídos que a Sakurai deseja apresentar. A galeria reúne registros do perfil fornecido.</p></div>
       <div class="feature-projects" aria-label="Projetos por personagem">
-        <a class="feature-project feature-franco character-frame" href="./projetos/franco" aria-label="Abrir a página do projeto Franco, de Hexatombe">
-          <img src="./images/franco-personagem.webp" alt="Ilustração de referência do personagem Franco, com cabelos ruivos e acessórios. Autoria da ilustração a confirmar." loading="eager" decoding="async">
+        <a class="feature-project feature-franco character-frame" href="./projetos/franco" aria-label="Abrir o projeto Franco: fotos reais e processo">
+          <img src="./images/franco-cosplay-original.webp" alt="Sakurai caracterizada como Franco no palco, com guitarra" width="865" height="1536" fetchpriority="high" decoding="async">
           <span class="character-frame-index" aria-hidden="true">01 / 02</span>
-          <div class="feature-project-info"><span class="mini-label">COSPLAY FINALIZADO · HEXATOMBE</span><h3>Franco</h3><p class="character-frame-description">Fotografias, figurino, créditos e vídeo de bastidores do personagem.</p><span class="character-frame-action">Ver fotos, vídeo e processo <span aria-hidden="true">↗</span></span></div>
+          <div class="feature-project-info"><span class="mini-label">COSPLAY REAL · HEXATOMBE</span><h3>Franco</h3><p class="character-frame-description">Fotografias da Sakurai, detalhes do figurino, processo e vídeo de bastidores.</p><span class="character-frame-action">Ver fotos e bastidores <span aria-hidden="true">↗</span></span></div>
         </a>
-        <a class="feature-project feature-caitlyn character-frame" href="./projetos/caitlyn" aria-label="Abrir a página do projeto Caitlyn, de Arcane">
-          <img src="./images/caitlyn-personagem.webp" alt="Ilustração de referência da personagem Caitlyn, com uniforme azul. Autoria da ilustração a confirmar." loading="eager" decoding="async">
+        <a class="feature-project feature-caitlyn character-frame character-frame-awaiting" href="./projetos/caitlyn" aria-label="Abrir projeto Caitlyn: referências disponíveis e fotografias aguardando envio">
+          <div class="character-preview" aria-hidden="true"><span class="preview-top">ARCANE / 02</span><span class="preview-symbol">C</span><span class="preview-bottom">ACERVO EM CURADORIA</span></div>
           <span class="character-frame-index" aria-hidden="true">02 / 02</span>
-          <div class="feature-project-info"><span class="mini-label">COSPLAY FINALIZADO · ARCANE</span><h3>Caitlyn</h3><p class="character-frame-description">Registros disponíveis do cosplay e espaço para fotos e referências.</p><span class="character-frame-action">Ver registro e referências <span aria-hidden="true">↗</span></span></div>
+          <div class="feature-project-info"><span class="mini-label">PROJETO CONCLUÍDO · ARCANE</span><h3>Caitlyn</h3><p class="character-frame-description">Área reservada ao cosplay da Sakurai. Fotografias originais ainda não disponíveis nesta prévia.</p><span class="character-frame-action">Ver projeto e referências <span aria-hidden="true">↗</span></span></div>
         </a>
       </div>
-      <p class="character-reference-credit">Artes dos personagens enviadas como referência visual para as molduras. Autoria das ilustrações a confirmar; fotografias dos cosplays disponíveis nos projetos.</p>
+      <p class="character-reference-credit">Fotos reais da artista aparecem em Franco. Caitlyn está documentada como projeto concluído, mas sem fotografias verificadas nesta demo; as imagens do personagem são apresentadas apenas como referência, com créditos pendentes.</p>
       <div class="section-subheading"><h3>Arquivo visual</h3><p>Palco, maquiagem, construção e encontros.</p></div>
       <div class="filter-list" role="group" aria-label="Filtrar fotografias"><button class="filter-chip active" data-filter="todos" aria-pressed="true">Tudo <span id="photo-count">13</span></button><button class="filter-chip" data-filter="cosplay" aria-pressed="false">Cosplay</button><button class="filter-chip" data-filter="bastidores" aria-pressed="false">Bastidores</button><button class="filter-chip" data-filter="detalhes" aria-pressed="false">Detalhes & referências</button></div>
       <div class="photo-grid" id="photo-grid" aria-live="polite"></div>

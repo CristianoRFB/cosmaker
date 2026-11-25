@@ -58,3 +58,10 @@ Subpasta `demos/sakurai-portfolio-v2/` no repositório `CristianoRFB/cosmaker` v
 - Franco exibe galeria e vídeo já enviado; Caitlyn mostra registros e referências sem inventar autoria.
 - Paleta RGB, rosa original, modo claro/escuro e demais funcionalidades da V5 preservados. Páginas internas herdam as escolhas do navegador.
 - QA local: 320, 390, 768 e 1440 px; DOM, links, imagens, responsividade, alternância de tema, zero erros de JS. Validar URLs publicadas separadamente.
+
+## V8 — integridade visual e origem de mídia
+- Franco: fotografia real enviada pelo usuário como destaque de portfólio.
+- Caitlyn: projeto concluído informado pela artista, fotografias próprias ainda não fornecidas. Card editorial sem atribuir fotos de terceiros à Sakurai.
+- Artes dos personagens apenas em seção de referências com origem/autoria a confirmar.
+- Foto coletiva do feed rotulada como encontro, sem identificar indevidamente um cosplay como Caitlyn.
+- Links dos dois projetos, animações e paleta preservados. Proposta sem encomendas.

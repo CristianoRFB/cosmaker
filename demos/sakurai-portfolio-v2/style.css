@@ -165,3 +165,34 @@ html,body{max-width:100%;overflow-x:clip}
 @media(max-width:700px){.work-section .feature-projects{gap:13px}.work-section .character-frame{grid-template-columns:clamp(112px,34vw,180px) minmax(0,1fr);height:190px!important;min-height:190px}.work-section .character-frame .feature-project-info{padding:15px 14px}.work-section .character-frame .feature-project-info h3{font-size:clamp(27px,7vw,40px);margin:6px 0}.work-section .character-frame .character-frame-description{font-size:11px;line-height:1.45;margin:0 0 8px}.work-section .character-frame .character-frame-action{font-size:11px;min-height:30px}.work-section .character-frame .feature-project-info .mini-label{font-size:8px;letter-spacing:.07em}}
 @media(max-width:359px){.work-section .character-frame{grid-template-columns:106px minmax(0,1fr)}.work-section .character-frame .feature-project-info{padding:10px}.work-section .character-frame .feature-project-info h3{font-size:25px}.work-section .character-frame .character-frame-description{font-size:10px}.work-section .character-frame .character-frame-action{font-size:10px}}
 .image-unavailable{background:repeating-linear-gradient(135deg,var(--surface),var(--surface) 22px,var(--surface-2) 22px,var(--surface-2) 44px)}
+
+/* RFB V8: validated real cosplay as hero; copyrighted character art separated and credited. */
+.work-section .feature-projects{gap:18px}
+.work-section .character-frame{border-radius:22px;min-height:236px}
+.work-section .character-frame>img{object-position:center 38%;filter:none}
+.character-frame-awaiting .character-preview{position:relative;min-width:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:18px 18px 13px;overflow:hidden;color:#e7d9ed;background:radial-gradient(circle at 75% 35%,#39446a 0%,transparent 45%),linear-gradient(145deg,#18203b,#151122 72%)}
+.character-frame-awaiting .character-preview:after{content:'';position:absolute;inset:18px;border:1px solid #bbc0d535;pointer-events:none}
+.character-frame-awaiting .preview-top,.character-frame-awaiting .preview-bottom{position:relative;z-index:1;font-size:9px;font-weight:800;letter-spacing:.16em;line-height:1.6}
+.character-frame-awaiting .preview-symbol{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(130px,16vw,220px);font-weight:700;line-height:1;color:#efe3ff26;font-family:Georgia,serif}
+.character-reference-credit{margin-top:17px;font-size:11px;line-height:1.75;color:var(--muted);max-width:940px}
+.reference-section{display:grid;grid-template-columns:minmax(220px,.65fr) 1fr;align-items:center;gap:clamp(24px,7vw,110px);max-width:1300px;margin:0 auto;padding:20px clamp(22px,6vw,80px) 94px}
+.reference-picture{position:relative;overflow:hidden;background:var(--surface-2);border:1px solid var(--stroke);border-radius:14px;max-width:430px;max-height:470px}
+.reference-picture img{width:100%;height:100%;max-height:470px;object-fit:contain}
+.reference-stamp{position:absolute;top:15px;left:15px;right:15px;width:fit-content;padding:10px 11px;background:#160e18ed;color:white;font-size:10px;font-weight:800;line-height:1.4;letter-spacing:.09em}
+.reference-copy h2,.reference-gallery-placeholder h3{font-family:var(--font-title);letter-spacing:-.045em;font-size:clamp(35px,5vw,64px);line-height:1.08;margin:14px 0 20px}
+.reference-copy p,.reference-gallery-placeholder p{font-size:14px;line-height:1.9;color:var(--soft-text);max-width:580px}
+.reference-copy .reference-disclosure{font-size:12px;color:var(--muted);border-left:2px solid var(--brand);padding-left:15px;margin-top:22px}
+.project-page .project-related-link .related-letter{flex:none;display:grid;place-items:center;width:125px;height:125px;font:700 85px Georgia,serif;color:#acb5e5;background:linear-gradient(145deg,#1b2645,#181326)}
+.project-lead-visual.caitlyn-concept{background:radial-gradient(ellipse at 60% 45%,#31436a66,transparent 70%),linear-gradient(140deg,#14152a,#25213a)}
+.caitlyn-lead-art{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;color:#ece6ff;text-transform:uppercase;letter-spacing:.15em}
+.caitlyn-lead-art strong{font:700 clamp(250px,38vw,620px)/1 Georgia,serif;color:#aab5e627;letter-spacing:-.1em}
+.caitlyn-lead-art>span,.caitlyn-lead-art>small{font-size:12px;font-weight:800;z-index:1}
+.reference-gallery{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:stretch;margin-top:40px}
+.reference-gallery-image{margin:0;min-width:0;background:var(--surface);border:1px solid var(--stroke)}
+.reference-gallery-image img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#171627}
+.reference-gallery-image figcaption{padding:16px 20px;color:var(--muted);font-size:10px;line-height:1.6;letter-spacing:.09em}
+.reference-gallery-placeholder{min-height:420px;background:var(--surface);border:1px dashed var(--brand);padding:clamp(25px,4vw,45px);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.reference-gallery-placeholder .placeholder-star{font-size:55px;color:var(--brand);position:absolute;top:18px;right:28px;opacity:.5}
+.reference-gallery-placeholder h3{font-size:clamp(28px,3.8vw,45px)}
+@media(max-width:700px){.work-section .character-frame{min-height:192px}.character-frame-awaiting .character-preview{padding:12px 9px}.character-frame-awaiting .preview-top,.character-frame-awaiting .preview-bottom{font-size:7px;letter-spacing:.06em}.character-frame-awaiting .preview-symbol{font-size:145px}.reference-section,.reference-gallery{grid-template-columns:1fr}.reference-section{padding-top:0}.reference-picture{margin:auto}.project-page .project-related-link .related-letter{width:80px;height:80px;font-size:56px}.reference-gallery-placeholder{min-height:320px}}
+@media(max-width:359px){.character-frame-awaiting .preview-symbol{font-size:110px}}
