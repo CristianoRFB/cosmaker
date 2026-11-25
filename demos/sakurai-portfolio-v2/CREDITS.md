@@ -12,3 +12,7 @@ Esta é uma **demonstração independente**, não o site oficial. Materiais enca
 Não reproduzir ou atribuir trabalhos de terceiros como criação da artista sem crédito e permissão. O vídeo está otimizado em H.264/AAC, autoplay começa **mudo**; controles permitem ativar som. Verificar trilha sonora antes de site oficial.
 ## Revisão V8
 O único retrato com origem em alta resolução confirmado nesta conversa é o cosplay Franco de Sakurai, não fotografias de Caitlyn. A foto coletiva em que Sakurai aparece com outro cosplayer não é apresentada como Caitlyn da artista. Os arquivos `franco-personagem.webp` e `caitlyn-personagem.webp` são artes de referência de autor não identificado, sem reivindicar autoria ou licença para divulgação oficial. Solicitar fotos e créditos originais para publicação contratada.
+
+## V9 — origem dos detalhes de Caitlyn
+
+A imagem `caitlyn-personagem.webp` é referência de personagem já existente no repositório, derivada de imagem encaminhada no chat. Autoria, licença e autorização de reprodução não comprovadas. O módulo V9 contém **14 fichas e cinco capítulos inventados** para demonstração; nenhuma ficha corresponde a declaração da Sakurai sobre tecidos, arma/prop, processos ou aparência de sua produção real. O desenho SVG de rifle cenográfico é ilustração técnica não operacional, sem mecanismos. As imagens reais de Caitlyn continuam pendentes.

@@ -33,3 +33,11 @@ Artista (simulação local): clicar Paleta → ajustar RGB, HEX ou seletor → v
 - Franco/Caitlyn são concluídos; projetos futuros sem imagens originais permanecem como ideias.
 - Cartão link com foco visível, alvo amplo, contraste e comportamento reduzido conforme mídia de acessibilidade.
 - Imagens já fornecidas e créditos em estado pendente por autor quando necessário. Não se atribui autoria de fotografia nem de arte de referência sem confirmação.
+
+## V9 — Caitlyn, buildbook de exemplo
+
+**Jornada:** cartão Caitlyn → ficha com referência rotulada → explorar materiais pelo visual → inventário pesquisável → prop 100% cenográfico → capítulos narrativos de processo → impressora → voltar ao portfólio.
+
+**Direção:** editorial de produção com tons azul-noite/dourado aplicados à ilustração de referência, preservando a paleta global configurável. Layout 2 colunas no desktop e 1 coluna no mobile; controles touch de ao menos 34 px nos hotspots e 44 px nos filtros; animação secundária respeita movimento reduzido. Sem números, datas ou métodos apresentados como evidência real. Sem arma funcional, sem técnicas de construção de arma real.
+
+**Critérios de aceite:** 14 cartões coerentes, busca e filtro sem resultados, modal por peça, hotspot ativo, teclado nas etapas, navegação interna, sem scroll horizontal em 320/390/768/1440; teste em tema escuro/claro, sem erros JS. Diferenciar visualmente exemplo de acervo real.

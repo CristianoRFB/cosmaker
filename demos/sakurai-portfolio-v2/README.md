@@ -72,3 +72,11 @@ Subpasta `demos/sakurai-portfolio-v2/` no repositório `CristianoRFB/cosmaker` v
 - A ilustração de Caitlyn recebida em 25/11 é usada apenas como inspiração, sem confundir arte de terceiros com fotografia ou criação da Sakurai.
 - A fotografia de acessórios de outro personagem foi removida da galeria Franco.
 - Carrosséis, vídeo, personalizador RGB, tema claro/escuro e páginas individuais preservados. Publicação sempre isolada em PR de demonstração.
+
+## V9 — módulo de exemplo completo de Caitlyn (25/11/2026)
+
+A página `projetos/caitlyn.html` agora é um **buildbook demonstrativo preenchido**: visual de referência da personagem, mapa interativo com cinco pontos selecionáveis, inventário de 14 itens (4 categorias), busca, filtros, fichas modais por peça, ilustração de réplica **cenográfica não funcional**, cinco capítulos fictícios de processo e impressão da ficha. Não há encomendas, preços, cobrança, cadastro ou coleta de dados.
+
+**Proveniência obrigatória:** a Sakurai informou ter concluído Caitlyn, mas não confirmou tecido, material, técnica, fornecedor, autoria de foto ou cronologia. Todos os itens e notas acima são exemplos inventados para avaliar o UX. A imagem é arte de referência do personagem, não fotografia da artista. A peça longa é apenas um prop de fantasia sem mecanismo ou munição. Quando a artista fornecer os dados reais, substituir o conteúdo fictício com aprovação.
+
+**QA:** `node --check caitlyn-demo.js` e `python tests/test_caitlyn_v9.py` (Playwright); teste manual na URL publicada. Visões mobile e desktop; verificar tema, filtros, busca, clique nos pontos, modal, capítulos, impressora e imagens. A homepage continua em `/` e Franco em `/projetos/franco`.
