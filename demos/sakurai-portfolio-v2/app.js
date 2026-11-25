@@ -100,3 +100,21 @@ syncFilmButton();
     document.querySelectorAll('[data-reveal]').forEach(element => observer.observe(element));
   }
 })();
+
+// RFB V7: fallback quando o proxy não consegue servir a imagem; usa o mesmo acervo versionado.
+(() => {
+  const mirror='https://raw.githubusercontent.com/CristianoRFB/cosmaker/82dc149f4695099f62a0ec44673eafa9428c5d7e/demos/sakurai-portfolio-v2/images/';
+  window.addEventListener('error',event => {
+    const photo=event.target;
+    if (!(photo instanceof HTMLImageElement)) return;
+    const current=photo.getAttribute('src')||'';
+    if (!photo.dataset.rfbMirrorTried && /^\.?\.?\/images\/[a-z0-9-]+\.(webp|jpg)$/i.test(current)) {
+      photo.dataset.rfbMirrorTried='1';
+      photo.src=mirror+current.split('/').pop();
+    } else if (photo.dataset.rfbMirrorTried==='1' && !photo.dataset.rfbFailed) {
+      photo.dataset.rfbFailed='1';
+      photo.style.opacity='0';
+      photo.closest('.photo-image, .feature-project, .project-photo, .journal-image, .hero-photo')?.classList.add('image-unavailable');
+    }
+  }, true);
+})();
