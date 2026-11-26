@@ -1,0 +1,169 @@
+'use strict';
+const DEFAULT_PINK = '#E86A9F';
+const COLOR_KEY='sakurai-rfb-palette-v3';
+const MODE_KEY='sakurai-rfb-mode-v3';
+const $ = (selector,root=document)=>root.querySelector(selector);
+const $$ = (selector,root=document)=>Array.from(root.querySelectorAll(selector));
+const works=[
+ {title:'Franco — Foto em destaque',type:'cosplay',image:'franco-cosplay-original',tag:'Franco / foto enviada',project:'franco',description:'Fotografia em resolução maior enviada para a prévia. Cosplay: Sakurai. Fotografia: autoria não informada; crédito a confirmar.',credit:'Cosplay: Sakurai (@sakurai_cosmaker). Fotografia: autoria não informada — crédito a confirmar.',thumbnail:'franco-cosplay-thumb'},
+ {title:'Franco — Ao vivo',type:'cosplay',image:'franco-palco',tag:'Franco / palco',project:'franco',description:'Um dos registros do projeto Franco, de Hexatombe, em apresentação.'},
+ {title:'Franco — Retrato',type:'cosplay',image:'franco-preto-branco',tag:'Franco / retrato',project:'franco',description:'Retrato em preto e branco que destaca caracterização e figurino.'},
+ {title:'Encontro de cosplayers',type:'cosplay',image:'encontro-cosplay',tag:'Encontro / evento',project:null,description:'Registro coletivo do perfil. Personagens e autoria da fotografia ainda não confirmados; não é apresentado como cosplay de Caitlyn da Sakurai.'},
+ {title:'Caitlyn — referência de personagem',type:'detalhes',image:'caitlyn-personagem',tag:'Arte de referência / Arcane',project:'caitlyn',description:'Ilustração da personagem, não fotografia do cosplay da Sakurai.',credit:'Referência de personagem enviada para a demonstração. Autor original da ilustração a confirmar; não atribuir a Sakurai.'},
+ {title:'Criação em andamento',type:'bastidores',image:'bastidores',tag:'Processo / bastidores',project:'franco',description:'Um momento espontâneo do cotidiano, parte do material compartilhado no perfil.'},
+ {title:'Franco — Performance',type:'cosplay',image:'franco-show',tag:'Franco / apresentação',project:'franco',description:'Registro em cena com o cosplay de Franco.'},
+ {title:'Franco — Ensaio',type:'cosplay',image:'franco-ensaio',tag:'Franco / ensaio',project:'franco',description:'Fotografia de ensaio e caracterização de Franco.'},
+ {title:'Maquiagem Franco',type:'bastidores',image:'maquiagem',tag:'Maquiagem / registro',project:'franco',description:'Publicação sobre maquiagem. A área de tutoriais poderá reunir etapas descritas pela artista.'},
+ {title:'Franco — Entrevista',type:'detalhes',image:'entrevista',tag:'Franco / publicação',project:'franco',description:'Registro editorial do perfil relacionado a Franco.'},
+ {title:'Detalhes e acessórios',type:'detalhes',image:'acessorios',tag:'Acessórios / detalhes',project:'franco',description:'Publicação do perfil destacando acessórios.'},
+ {title:'Bastidores em vídeo',type:'bastidores',image:'video-bastidores',tag:'Vídeo / registro',project:null,description:'Captura de um vídeo curto dos bastidores do perfil.'},
+ {title:'Em comunidade',type:'cosplay',image:'palco-coletivo',tag:'Cosplay / encontro',project:'franco',description:'Registro em evento compartilhado com outros participantes.'}
+];
+const sampleArticles={
+ makeup:{title:'Da referência à maquiagem',image:'maquiagem',text:'Exemplo de como a Sakurai poderá apresentar fotografias, ferramentas, preparação e escolhas de maquiagem do personagem. Os textos técnicos serão escritos e aprovados por ela.'},
+ props:{title:'Detalhes que contam história',image:'acessorios',text:'Aqui caberiam fotos de peças, moldes autorais, materiais e etapas de acabamento, com referências creditadas conforme a artista escolher publicar.'},
+ progress:{title:'Notas do processo',image:'bastidores',text:'Um formato de diário curto: uma foto, a etapa do dia, uma descoberta e o que vem depois. Nenhuma data ou progresso real foi inventado.'}
+};
+let activeFilter='todos', activeList=works.map((_,i)=>i), activeIndex=0, currentColor=DEFAULT_PINK;
+let toastTimer;
+function safeRead(key){try{return localStorage.getItem(key)}catch{return null}}
+function safeWrite(key,value){try{localStorage.setItem(key,value)}catch{}}
+function hexToRgb(hex){const m=/^#([\da-f]{6})$/i.exec(hex);return m?{r:parseInt(m[1].slice(0,2),16),g:parseInt(m[1].slice(2,4),16),b:parseInt(m[1].slice(4,6),16)}:null}
+function rgbToHex({r,g,b}){return '#'+[r,g,b].map(n=>Math.min(255,Math.max(0,Math.round(n))).toString(16).padStart(2,'0')).join('').toUpperCase()}
+function mix(hex1,hex2,t){const a=hexToRgb(hex1),b=hexToRgb(hex2);return rgbToHex({r:a.r*(1-t)+b.r*t,g:a.g*(1-t)+b.g*t,b:a.b*(1-t)+b.b*t})}
+function lum(rgb){const f=v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(rgb.r)+.7152*f(rgb.g)+.0722*f(rgb.b)}
+function contrast(a,b){const aa=lum(hexToRgb(a)),bb=lum(hexToRgb(b));return (Math.max(aa,bb)+.05)/(Math.min(aa,bb)+.05)}
+function derived(hex){const dark=String(document.documentElement.dataset.theme)==='dark';const bg=dark?'#151219':'#FAF7F9';return {base:hex,deep:mix(hex,'#130A18',dark?.23:.18),soft:mix(hex,bg,dark?.81:.87),faint:mix(hex,bg,dark?.92:.94),lift:mix(hex,'#FFFFFF',.34),onBrand:contrast(hex,'#140F16')>=contrast(hex,'#FFFFFF')?'#140F16':'#FFFFFF'}}
+function updatePreview(){const vals=derived(currentColor);const root=document.documentElement;root.style.setProperty('--brand',vals.base);root.style.setProperty('--brand-deep',vals.deep);root.style.setProperty('--brand-soft',vals.soft);root.style.setProperty('--brand-faint',vals.faint);root.style.setProperty('--brand-lift',vals.lift);root.style.setProperty('--on-brand',vals.onBrand);$('#main-color').value=currentColor;$('#hex-color').value=currentColor;const r=hexToRgb(currentColor);[['red',r.r],['green',r.g],['blue',r.b]].forEach(([c,n])=>{$('#channel-'+c).value=n;$('#'+c+'-value').textContent=n;});const colors=[['Principal',vals.base],['Profunda',vals.deep],['Suave',vals.soft],['Realce',vals.lift]];$('#derived-swatches').innerHTML=colors.map(([name,color])=>`<span class="swatch" title="${name}: ${color}"><i></i><small>${name}<br>${color}</small></span>`).join('');$$('.swatch i').forEach((node,i)=>{node.style.backgroundColor=colors[i][1]});$('#hex-validation').textContent='';}
+function setBrand(value){const hex=rgbToHex(hexToRgb(value));currentColor=hex;safeWrite(COLOR_KEY,hex);updatePreview();}
+function setTheme(mode){const next=mode==='light'?'light':'dark';document.documentElement.dataset.theme=next;safeWrite(MODE_KEY,next);$('#theme-icon').textContent=next==='dark'?'☼':'☾';$('#theme-toggle').setAttribute('aria-label',next==='dark'?'Ativar modo claro':'Ativar modo escuro');$('#palette-theme-toggle').textContent=next==='dark'?'Ativar modo claro':'Ativar modo escuro';$('#palette-preview-mode').textContent=next==='dark'?'Tema escuro':'Tema claro';document.querySelector('meta[name="theme-color"]').content=next==='dark'?'#151219':'#faf7f9';updatePreview()}
+function showToast(text){const toast=$('#toast');toast.textContent=text;toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('visible'),3000)}
+function renderGrid(){activeList=works.map((w,i)=>i).filter(i=>activeFilter==='todos'||works[i].type===activeFilter);$('#photo-count').textContent=works.length;$('#photo-grid').innerHTML=activeList.map((i,order)=>{const w=works[i];return `<button type="button" class="photo-card" data-photo="${i}" aria-label="Ver ${w.title}"><span class="photo-image"><img src="./images/${w.thumbnail||w.image}.webp" loading="lazy" alt="${w.tag}"></span><span class="photo-card-caption"><span><small>${String(order+1).padStart(2,'0')} / ${w.tag}</small><strong>${w.title}</strong></span><span aria-hidden="true">↗</span></span></button>`}).join('')}
+function showGallery(index){activeIndex=activeList.includes(index)?activeList.indexOf(index):0;paintGallery();$('#gallery-dialog').showModal()}
+function paintGallery(){const item=works[activeList[activeIndex]];$('#gallery-dialog-photo').src=`./images/${item.image}.webp`;$('#gallery-dialog-photo').alt=item.tag;$('#gallery-dialog-title').textContent=item.title;$('#gallery-dialog-description').textContent=item.description;$('#gallery-dialog-label').textContent=item.tag.toUpperCase();$('#gallery-dialog-credit').textContent=item.credit||'Cosplay: Sakurai (@sakurai_cosmaker). Fotografia/arte de referência: atribuição específica a confirmar.';$('#dialog-prev').disabled=activeIndex===0;$('#dialog-next').disabled=activeIndex===activeList.length-1}
+function openProject(project){activeFilter='todos';paintFilters();renderGrid();const i=works.findIndex(w=>w.project===project&&w.type==='cosplay');showGallery(Math.max(0,i))}
+function paintFilters(){$$('.filter-chip').forEach(b=>{const active=b.dataset.filter===activeFilter;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))})}
+$$('.filter-chip').forEach(b=>b.addEventListener('click',()=>{activeFilter=b.dataset.filter;paintFilters();renderGrid()}));
+$('#photo-grid').addEventListener('click',e=>{const b=e.target.closest('[data-photo]');if(b)showGallery(Number(b.dataset.photo))});
+$$('[data-project]').forEach(b=>b.addEventListener('click',()=>openProject(b.dataset.project)));
+$('#dialog-prev').addEventListener('click',()=>{if(activeIndex>0){activeIndex--;paintGallery()}});
+$('#dialog-next').addEventListener('click',()=>{if(activeIndex<activeList.length-1){activeIndex++;paintGallery()}});
+$$('[data-article]').forEach(b=>b.addEventListener('click',()=>{const a=sampleArticles[b.dataset.article];$('#article-dialog-title').textContent=a.title;$('#article-dialog-description').textContent=a.text;$('#article-dialog-img').src=`./images/${a.image}.webp`;$('#article-dialog-img').alt=a.title;$('#article-dialog').showModal()}));
+$$('[data-resource]').forEach(button=>button.addEventListener('click',()=>{const dialog=document.getElementById('resource-'+button.dataset.resource);if(dialog && !dialog.open)dialog.showModal()}));
+$$('[data-dialog-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
+$$('dialog').forEach(dialog=>dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()}));
+// RFB V10 — mobile drawer: focus, backdrop, keyboard and scroll containment.
+(() => {
+  const nav = document.getElementById('primary-nav');
+  const openButton = document.getElementById('menu-toggle');
+  const closeButton = document.getElementById('menu-close');
+  const backdrop = document.getElementById('nav-backdrop');
+  const compact = window.matchMedia('(max-width: 920px)');
+  let opened = false;
+  const interactive = () => [...nav.querySelectorAll('a[href],button:not([disabled])')].filter(el => el.getClientRects().length);
+  const syncNav = () => {
+    const drawer = compact.matches;
+    nav.inert = drawer && !opened;
+    if (drawer) nav.setAttribute('aria-hidden', String(!opened));
+    else nav.removeAttribute('aria-hidden');
+    openButton.setAttribute('aria-expanded', String(opened && drawer));
+    openButton.setAttribute('aria-label', opened && drawer ? 'Menu lateral aberto' : 'Abrir menu lateral');
+    document.body.classList.toggle('drawer-open', opened && drawer);
+    nav.classList.toggle('expanded', opened && drawer);
+    backdrop.classList.toggle('visible', opened && drawer);
+  };
+  function showDrawer() {
+    if (!compact.matches || opened) return;
+    opened = true;
+    syncNav();
+    closeButton.focus({preventScroll: true});
+  }
+  function hideDrawer(restore = true) {
+    if (!opened) return;
+    opened = false;
+    if (restore) openButton.focus({preventScroll:true});
+    else if (nav.contains(document.activeElement)) document.activeElement.blur();
+    syncNav();
+  }
+  openButton.addEventListener('click', () => opened ? hideDrawer() : showDrawer());
+  closeButton.addEventListener('click', () => hideDrawer());
+  backdrop.addEventListener('click', () => hideDrawer());
+  nav.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => hideDrawer(false)));
+  document.addEventListener('keydown', event => {
+    if (!opened || !compact.matches) return;
+    if (event.key === 'Escape') { event.preventDefault(); hideDrawer(); return; }
+    if (event.key !== 'Tab') return;
+    const focusable = interactive();
+    if (!focusable.length) { event.preventDefault(); return; }
+    const first = focusable[0], last = focusable[focusable.length-1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+  compact.addEventListener('change', () => { opened = false; syncNav(); });
+  syncNav();
+})();
+$('#open-palette').addEventListener('click',()=>$('#palette-dialog').showModal());
+if (new URLSearchParams(location.search).get('paleta') === '1') { $('#palette-dialog').showModal(); }
+$('#theme-toggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+$('#palette-theme-toggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+$('#main-color').addEventListener('input',e=>setBrand(e.target.value));
+$('#hex-color').addEventListener('input',e=>{const raw=e.target.value.trim();if(hexToRgb(raw))setBrand(raw.toUpperCase());else $('#hex-validation').textContent='Use #RRGGBB'});
+['red','green','blue'].forEach(c=>$('#channel-'+c).addEventListener('input',()=>setBrand(rgbToHex({r:Number($('#channel-red').value),g:Number($('#channel-green').value),b:Number($('#channel-blue').value)}))));
+$('#reset-palette').addEventListener('click',()=>{setBrand(DEFAULT_PINK);showToast('Rosa original restaurado')});
+$('#copy-palette').addEventListener('click',async()=>{const d=derived(currentColor);const message=`Paleta Sakurai (prévia)\nPrincipal: ${d.base}\nProfunda: ${d.deep}\nSuave: ${d.soft}\nRealce: ${d.lift}\nTema: ${document.documentElement.dataset.theme}`;try{await navigator.clipboard.writeText(message);showToast('Paleta copiada!')}catch{showToast('Selecione os códigos exibidos para copiar.')}});
+const saved=safeRead(COLOR_KEY);currentColor=hexToRgb(saved||'')?saved:DEFAULT_PINK;setTheme(safeRead(MODE_KEY)==='light'?'light':'dark');renderGrid();$('#year').textContent=new Date().getFullYear();
+
+// vídeo real encaminhado à demo: sem bloqueio de leitura para quem prefere reduzir movimento
+const filmVideo=$('#film-video'),filmButton=$('#film-play');
+const reduceMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+function syncFilmButton(){filmButton.textContent=filmVideo.paused?'Reproduzir vídeo':'Pausar vídeo';filmButton.setAttribute('aria-label',filmVideo.paused?'Reproduzir vídeo de bastidores':'Pausar vídeo de bastidores')}
+filmButton.addEventListener('click',()=>{if(filmVideo.paused){filmVideo.play().catch(()=>showToast('Use os controles do vídeo para reproduzir.'))}else filmVideo.pause();syncFilmButton()});
+filmVideo.addEventListener('play',syncFilmButton);filmVideo.addEventListener('pause',syncFilmButton);
+if(reduceMotion){filmVideo.removeAttribute('autoplay');filmVideo.pause()}
+else if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>{for(const entry of entries){if(!entry.isIntersecting&& !filmVideo.paused){filmVideo.pause();}else if(entry.isIntersecting && filmVideo.muted){filmVideo.play().catch(()=>{});}syncFilmButton()}},{threshold:.35});obs.observe(filmVideo)}
+syncFilmButton();
+
+// RFB V5: Accessible global pause for continuous motion, persisted on this device.
+(function setupMotion() {
+  const toggle = document.getElementById('motion-toggle');
+  if (!toggle) return;
+  const key = 'sakurai_motion_paused_v1';
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let paused = reduced || safeRead(key) === '1';
+  function updateMotion() {
+    document.body.classList.toggle('motion-paused', paused);
+    toggle.setAttribute('aria-pressed', String(paused));
+    toggle.setAttribute('aria-label', paused ? 'Retomar animações contínuas' : 'Pausar animações contínuas');
+    toggle.querySelector('.motion-toggle-text').textContent = paused ? 'Retomar movimento' : 'Pausar movimento';
+    toggle.querySelector('.motion-toggle-symbol').textContent = paused ? '▶' : 'Ⅱ';
+  }
+  toggle.addEventListener('click', () => { paused = !paused; safeWrite(key, paused ? '1' : '0'); updateMotion(); });
+  updateMotion();
+  if ('IntersectionObserver' in window && !reduced) {
+    document.documentElement.classList.add('js-motion-enabled');
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) { entry.target.classList.add('is-in-view'); observer.unobserve(entry.target); }
+      }
+    }, { threshold: 0.06 });
+    document.querySelectorAll('[data-reveal]').forEach(element => observer.observe(element));
+  }
+})();
+
+// RFB V7: fallback quando o proxy não consegue servir a imagem; usa o mesmo acervo versionado.
+(() => {
+  const mirror='https://raw.githubusercontent.com/CristianoRFB/cosmaker/82dc149f4695099f62a0ec44673eafa9428c5d7e/demos/sakurai-portfolio-v2/images/';
+  window.addEventListener('error',event => {
+    const photo=event.target;
+    if (!(photo instanceof HTMLImageElement)) return;
+    const current=photo.getAttribute('src')||'';
+    if (!photo.dataset.rfbMirrorTried && /^\.?\.?\/images\/[a-z0-9-]+\.(webp|jpg)$/i.test(current)) {
+      photo.dataset.rfbMirrorTried='1';
+      photo.src=mirror+current.split('/').pop();
+    } else if (photo.dataset.rfbMirrorTried==='1' && !photo.dataset.rfbFailed) {
+      photo.dataset.rfbFailed='1';
+      photo.style.opacity='0';
+      photo.closest('.photo-image, .feature-project, .project-photo, .journal-image, .hero-photo')?.classList.add('image-unavailable');
+    }
+  }, true);
+})();

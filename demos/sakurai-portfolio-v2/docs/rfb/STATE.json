@@ -1,0 +1,34 @@
+{
+  "project": "sakurai-portfolio-demo",
+  "version": "v4-media-credit-film",
+  "method": "rfb:demo:resume",
+  "lead": "Sakurai / @sakurai_cosmaker",
+  "scope": [
+    "portfolio",
+    "journal-demo",
+    "references",
+    "future-projects",
+    "buildbooks-demo",
+    "palette-rgb",
+    "dark-light",
+    "hero-high-resolution-photo",
+    "real-muted-autoplay-video",
+    "explicit-asset-credits"
+  ],
+  "excluded": [
+    "commissions",
+    "quotations",
+    "orders",
+    "payments",
+    "live-cms"
+  ],
+  "media": "865x1536 source photo, video 960x542 H264 optimized 3.3MB; other 660x660 snapshot-derived",
+  "local_qa": "7 viewport flows pass via isolated set_content; real browser storage mocked",
+  "github": "PR #35; implementation commit 97e2c7616f8033277bad52699676e8c8d3add534; main preservada",
+  "cloudflare": "Worker 77-sakurai-portfolio-v2 deployed via Cloudflare API; URL HTTP not reachable with available browser verifier",
+  "next": [
+    "confirm authorship/rights for photo, video and background music",
+    "verify public video loading/streaming on deployed URL"
+  ],
+  "ci": "one GitHub workflow success, another in progress at latest poll"
+}
