@@ -233,3 +233,39 @@ html,body{max-width:100%;overflow-x:clip}
   .site-header .drawer-footer a:hover{color:var(--brand)}
 }
 @media (prefers-reduced-motion:reduce){.nav-backdrop,.site-header .main-nav{transition:none!important}}
+
+
+/* RFB V11: interaction and PC access to library and collection */
+.library-items .library-entry{width:100%;display:grid;grid-template-columns:58px minmax(0,1fr) 24px;gap:14px;align-items:center;padding:28px 0;background:transparent;color:inherit;border:0;border-bottom:1px solid currentColor;text-align:left;min-height:102px;cursor:pointer}
+.library-entry-copy{min-width:0}.library-entry-copy strong{display:block;font-family:var(--font-title);font-size:25px;line-height:1.25;letter-spacing:-.03em;margin-bottom:8px}
+.library-entry-copy>span{display:block;font-size:12px;line-height:1.75;max-width:410px;opacity:.78}
+.library-entry .library-arrow{color:var(--brand);font-size:24px;transition:transform .2s}
+.library-entry:hover .library-arrow{transform:translate(4px,-3px)}
+.library-entry:hover .library-entry-copy strong,.library-entry:focus-visible .library-entry-copy strong{color:var(--brand)}
+.library-entry:focus-visible,.collection-card[data-resource]:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+.collection-card[data-resource]{cursor:pointer;text-align:left;color:var(--text);font:inherit;border-radius:15px;transition:transform .2s,border-color .2s}
+.collection-card[data-resource]:hover{transform:translateY(-3px);border-color:var(--brand)}
+.collection-heading{font-family:var(--font-title);font-size:32px;letter-spacing:-.04em;font-weight:700;display:block;margin:13px 0}
+.collection-description{font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:auto}
+.resource-dialog{width:min(1050px,calc(100vw - 30px));max-width:100%;max-height:88dvh;padding:0;overflow-y:auto;border-radius:20px;background:var(--bg);color:var(--text);border:1px solid var(--stroke);box-shadow:0 25px 90px #0008}
+.resource-dialog::backdrop{background:#080509c9;backdrop-filter:blur(3px)}
+.resource-dialog .dialog-close{position:sticky;float:right;top:12px;right:13px;z-index:3;margin:12px 13px -45px 0}
+.resource-dialog-head{padding:45px clamp(22px,5vw,55px) 15px}
+.resource-dialog-head h2{font-family:var(--font-title);font-size:clamp(36px,5vw,60px);line-height:1.1;letter-spacing:-.05em;margin:14px 0 18px}
+.resource-dialog-head>p{font-size:14px;line-height:1.8;color:var(--muted);max-width:770px}
+.resource-notice{display:inline-block;color:var(--brand);border:1px solid var(--brand);border-radius:8px;padding:9px 12px;font-size:10px;line-height:1.55;letter-spacing:.06em;margin:7px 0}
+.resource-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding:23px clamp(22px,5vw,55px)}
+.resource-card{display:flex;flex-direction:column;min-width:0;border:1px solid var(--stroke);border-radius:13px;background:var(--surface);overflow:hidden}
+.resource-card>img{height:175px;width:100%;object-fit:cover;background:var(--surface-2)}
+.resource-copy{padding:22px;display:flex;flex-direction:column;align-items:flex-start;flex:1}
+.resource-copy h3{font-family:var(--font-title);font-size:24px;letter-spacing:-.035em;line-height:1.2;margin:9px 0}
+.resource-copy>p{color:var(--muted);font-size:13px;line-height:1.75}
+.resource-copy details{width:100%;margin:10px 0 20px;border-top:1px solid var(--stroke);border-bottom:1px solid var(--stroke)}
+.resource-copy summary{padding:13px 0;cursor:pointer;font-size:12px;font-weight:700;color:var(--text)}
+.resource-copy summary:hover,.resource-copy summary:focus-visible{color:var(--brand)}
+.resource-copy details>p{font-size:12px;line-height:1.75;color:var(--muted)}
+.resource-action{display:inline-flex;gap:10px;align-items:center;margin-top:auto;padding:9px 0;border-bottom:1px solid var(--brand);font-size:12px;font-weight:800;color:var(--text)}
+.resource-action:hover,.resource-action:focus-visible{color:var(--brand)}
+.resource-footnote{color:var(--muted);font-size:11px;line-height:1.75;padding:0 clamp(22px,5vw,55px) 30px;margin:0}
+@media(max-width:700px){.library-items .library-entry{grid-template-columns:36px minmax(0,1fr) 20px;gap:10px;padding:22px 0;min-height:94px}.library-entry-copy strong{font-size:21px}.library-entry-copy>span{font-size:11px}.resource-grid{grid-template-columns:1fr}.resource-dialog-head{padding-top:48px}.resource-card>img{height:165px}.resource-dialog .dialog-close{right:4px;top:4px}}
+@media(prefers-reduced-motion:reduce){.library-entry .library-arrow,.collection-card[data-resource]{transition:none!important}}

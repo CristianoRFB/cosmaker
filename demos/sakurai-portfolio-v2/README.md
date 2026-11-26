@@ -86,3 +86,6 @@ A página `projetos/caitlyn.html` agora é um **buildbook demonstrativo preenchi
 - Fecha por X, toque fora, Escape ou escolha de seção; foco e bloqueio de rolagem gerenciados enquanto está aberto.
 - Redução de movimento respeitada; navegação horizontal de desktop preservada.
 - QA local de 320, 360, 390, 768, 921, 1440 px: teste de scroll, foco, links e ausência de erros.
+
+## V11 — Biblioteca e coleção clicáveis
+As seis áreas (Referências, Moldes, Tutoriais, Buildbooks, Photocards e Pôsteres) agora usam botões semânticos, abrem janelas de conteúdo demonstrativo e possuem fichas expansíveis e links internos funcionais. Materiais não fornecidos permanecem identificados como ficção. QA exigido no desktop e mobile.
