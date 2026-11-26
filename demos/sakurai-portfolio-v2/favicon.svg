@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Flor de cerejeira">
+<defs><linearGradient id="petal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe3ec"/><stop offset="1" stop-color="#e86a9f"/></linearGradient></defs>
+<rect width="64" height="64" rx="15" fill="#261522"/>
+<g transform="translate(32 32)">
+<g fill="url(#petal)" stroke="#f9d6e3" stroke-width=".7">
+<path id="p" d="M0-5 C-9-12-13-20-7-25 C-2-29 0-23 0-23 C0-23 2-29 7-25 C13-20 9-12 0-5Z"/>
+<use href="#p" transform="rotate(72)"/><use href="#p" transform="rotate(144)"/><use href="#p" transform="rotate(216)"/><use href="#p" transform="rotate(288)"/>
+</g>
+<circle r="5" fill="#f9c863"/>
+<g stroke="#a43a6b" stroke-width="1.4" stroke-linecap="round">
+<path d="M0-3V-13M3-1L13-4M2 3L8 12M-2 3L-8 12M-3-1L-13-4"/>
+</g>
+<g fill="#f9c863"><circle cx="0" cy="-13" r="1.8"/><circle cx="13" cy="-4" r="1.8"/><circle cx="8" cy="12" r="1.8"/><circle cx="-8" cy="12" r="1.8"/><circle cx="-13" cy="-4" r="1.8"/></g>
+</g>
+</svg>

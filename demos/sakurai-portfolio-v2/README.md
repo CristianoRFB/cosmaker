@@ -89,3 +89,7 @@ A página `projetos/caitlyn.html` agora é um **buildbook demonstrativo preenchi
 
 ## V11 — Biblioteca e coleção clicáveis
 As seis áreas (Referências, Moldes, Tutoriais, Buildbooks, Photocards e Pôsteres) agora usam botões semânticos, abrem janelas de conteúdo demonstrativo e possuem fichas expansíveis e links internos funcionais. Materiais não fornecidos permanecem identificados como ficção. QA exigido no desktop e mobile.
+
+## Favicon SVG — cerejeira
+- `favicon.svg`: ícone vetorial de flor de cerejeira para a aba do navegador, fundo escuro e pétalas rosadas, desenhado no próprio projeto.
+- Referenciado em home, Franco e Caitlyn. Servido pelo Worker com MIME `image/svg+xml` e cache versionado.
