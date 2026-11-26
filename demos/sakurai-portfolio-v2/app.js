@@ -49,8 +49,8 @@ $$('[data-project]').forEach(b=>b.addEventListener('click',()=>openProject(b.dat
 $('#dialog-prev').addEventListener('click',()=>{if(activeIndex>0){activeIndex--;paintGallery()}});
 $('#dialog-next').addEventListener('click',()=>{if(activeIndex<activeList.length-1){activeIndex++;paintGallery()}});
 $$('[data-article]').forEach(b=>b.addEventListener('click',()=>{const a=sampleArticles[b.dataset.article];$('#article-dialog-title').textContent=a.title;$('#article-dialog-description').textContent=a.text;$('#article-dialog-img').src=`./images/${a.image}.webp`;$('#article-dialog-img').alt=a.title;$('#article-dialog').showModal()}));
-$('[data-resource]').forEach(button=>button.addEventListener('click',()=>{const dialog=document.getElementById('resource-'+button.dataset.resource);if(dialog && !dialog.open)dialog.showModal()}));
-$('[data-dialog-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
+$$('[data-resource]').forEach(button=>button.addEventListener('click',()=>{const dialog=document.getElementById('resource-'+button.dataset.resource);if(dialog && !dialog.open)dialog.showModal()}));
+$$('[data-dialog-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 $$('dialog').forEach(dialog=>dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()}));
 // RFB V10 — mobile drawer: focus, backdrop, keyboard and scroll containment.
 (() => {
