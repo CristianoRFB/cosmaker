@@ -121,11 +121,15 @@ try {
   await gate('fallback-adversarial',async()=>{
     const ctx=await browser.newContext({viewport:{width:390,height:844}});
     const page=await ctx.newPage();
+    const imgRequests=[];
+    page.on('requestfailed',req=>{if(req.url().includes('caitlyn-personagem.webp'))imgRequests.push({url:req.url(),error:req.failure()?.errorText});});
+    page.on('response',res=>{if(res.url().includes('caitlyn-personagem.webp'))imgRequests.push({url:res.url(),status:res.status()});});
     await page.route('**/images/caitlyn-personagem.webp',route=>route.request().url().startsWith(url) ? route.abort() : route.continue());
     await page.goto(url+'projetos/caitlyn',{waitUntil:'domcontentloaded'});
     const img=page.locator('.ck-hero-visual img');
     await img.waitFor({state:'visible'});
-    await page.waitForFunction(()=>{const i=document.querySelector('.ck-hero-visual img');return i&&i.naturalWidth>0},null,{timeout:12000});
+    try{await page.waitForFunction(()=>{const i=document.querySelector('.ck-hero-visual img');return i&&i.naturalWidth>0},null,{timeout:12000});}
+    catch(error){const state=await img.evaluate(el=>({src:el.src,complete:el.complete,naturalWidth:el.naturalWidth,mirrorTried:el.dataset.rfbMirrorTried,failed:el.dataset.rfbFailed}));throw new Error(JSON.stringify({state,imgRequests,message:String(error)}));}
     const src=await img.getAttribute('src');
     assert(src.includes('b81653482c26fb0ea81817940cbc7c06db9ff1f6'),'Fallback not pinned to V13');
     await ctx.close();

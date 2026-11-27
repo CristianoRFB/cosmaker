@@ -32,4 +32,16 @@
       img.closest('.project-photo, .project-lead-visual, .project-related-link')?.classList.add('image-unavailable');
     }
   },true);
+
+  // E01: captura falhas de imagens que ocorreram antes de registrar o listener em JS deferido.
+  function replayMissedImageErrors() {
+    document.querySelectorAll('img[src]').forEach(img=>{
+      if(img.complete && img.naturalWidth===0 && !img.dataset.rfbFailed)
+        img.dispatchEvent(new Event('error'));
+    });
+  }
+  if(document.readyState==='loading')
+    document.addEventListener('DOMContentLoaded',replayMissedImageErrors,{once:true});
+  else replayMissedImageErrors();
+  window.addEventListener('load',replayMissedImageErrors,{once:true});
 })();
