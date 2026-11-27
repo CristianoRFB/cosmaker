@@ -3,7 +3,7 @@
   "project": "Sakurai — portfólio editorial",
   "mode": "DEMO",
   "version": "V14",
-  "status": "STAGING_PREVIEW_UNVERIFIED",
+  "status": "STAGING_PUBLISHED_QA_PENDING",
   "method": {
     "repository": "CristianoRFB/rfb-method-gpt",
     "branch": "main",
@@ -18,30 +18,41 @@
     "existingWorkBranch": "demo/sakurai-portfolio-editorial-v2",
     "existingPullRequest": 35,
     "publicWorker": "77-sakurai-portfolio-v2",
-    "status": "PRESERVE_NO_MUTATION"
+    "status": "PRESERVED_CONFIRMED_HTTP",
+    "url": "https://77-sakurai-portfolio-v2.on7.workers.dev/"
   },
   "candidate": {
     "branch": "develop/sakurai-portfolio-v14-rfb",
     "worker": "77-sakurai-portfolio-v14-staging",
     "promotionApproval": "REQUIRED",
-    "deployment": "PENDING",
-    "commit": "PENDING"
+    "deployment": "HTTP_VERIFIED",
+    "commit": "23d03142c6da1cf0862aba1831418c9775600333",
+    "url": "https://77-sakurai-portfolio-v14-staging.on7.workers.dev/",
+    "pr": 37,
+    "checks": {
+      "http": "PASS",
+      "health": "PASS",
+      "checkedImages": 5,
+      "visualBrowser": "NOT_RUN",
+      "multiViewport": "NOT_RUN",
+      "ci": "NOT_RUN"
+    }
   },
   "requirements": [
     {
       "id": "R-01",
       "criterion": "V13 e Worker atual mantidos sem mudanças",
-      "status": "GITHUB_BRANCH_CREATED"
+      "status": "PASS_HTTP"
     },
     {
       "id": "R-02",
       "criterion": "V14 com branch própria, checkpoint e notas de design",
-      "status": "IN_PROGRESS"
+      "status": "PASS_GITHUB"
     },
     {
       "id": "R-03",
       "criterion": "Worker V14 separado com URL própria verificada",
-      "status": "NOT_RUN"
+      "status": "PASS_HTTP"
     },
     {
       "id": "R-04",
@@ -182,6 +193,6 @@
     "visualSelfCorrection": "NOT_RUN"
   },
   "rollback": "Use archive/sakurai-portfolio-v13-20261127 (SHA b8165348); do not touch public worker.",
-  "nextAction": "Publish separate staging Worker and verify response, then run desktop/mobile QA before design EVOLVE.",
+  "nextAction": "Executar Triple Verification e VSC reais no Worker V14 (desktop e mobile) antes de qualquer homologação comercial; não alterar a V13.",
   "notes": "Não é o site oficial da artista. Conteúdo factual e fictício já rotulado. Nenhum merge ou overwrite de produção."
 }
