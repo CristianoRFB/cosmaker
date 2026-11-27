@@ -36,6 +36,9 @@ jobs:
       - run: npm run functions:build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:usability
+      - name: Sakurai V14 browser QA (existing Chromium job)
+        if: github.head_ref == 'develop/sakurai-portfolio-v14-rfb' || github.ref_name == 'develop/sakurai-portfolio-v14-rfb'
+        run: node demos/sakurai-portfolio-v2/tests/qa-evolve01.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
