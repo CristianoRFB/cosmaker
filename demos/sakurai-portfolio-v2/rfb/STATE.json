@@ -193,6 +193,16 @@
     "visualSelfCorrection": "NOT_RUN"
   },
   "rollback": "Use archive/sakurai-portfolio-v13-20261127 (SHA b8165348); do not touch public worker.",
-  "nextAction": "Executar Triple Verification e VSC reais no Worker V14 (desktop e mobile) antes de qualquer homologação comercial; não alterar a V13.",
-  "notes": "Não é o site oficial da artista. Conteúdo factual e fictício já rotulado. Nenhum merge ou overwrite de produção."
+  "nextAction": "Verificar CI e executar EVOLVE 01 (baseline, confiabilidade, QA) na V14 somente, sem alterar Worker V13.",
+  "notes": "Não é o site oficial da artista. Conteúdo factual e fictício já rotulado. Nenhum merge ou overwrite de produção.",
+  "evolve": {
+    "roadmap": "demos/sakurai-portfolio-v2/rfb/EVOLVE-ROADMAP.md",
+    "methodCommit": "5f73ee2b48507234431706e4c6313773bae72a5a",
+    "planned": 12,
+    "current": "EVOLVE 01",
+    "status": "PLANNED_NOT_EXECUTED",
+    "lastPlanningHead": "a9e146c81df3d5d22a458da7e83a47236b0a4c7b",
+    "baselineV13": "b81653482c26fb0ea81817940cbc7c06db9ff1f6",
+    "notes": "Solicitação de replanejamento, sem alteração de UI ou deploy neste turno. QA de browser/TV/VSC pendente."
+  }
 }
