@@ -121,7 +121,7 @@ try {
   await gate('fallback-adversarial',async()=>{
     const ctx=await browser.newContext({viewport:{width:390,height:844}});
     const page=await ctx.newPage();
-    await page.route('**/images/caitlyn-personagem.webp',route=>route.abort());
+    await page.route('**/images/caitlyn-personagem.webp',route=>route.request().url().startsWith(url) ? route.abort() : route.continue());
     await page.goto(url+'projetos/caitlyn',{waitUntil:'domcontentloaded'});
     const img=page.locator('.ck-hero-visual img');
     await img.waitFor({state:'visible'});
