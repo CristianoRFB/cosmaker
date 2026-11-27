@@ -18,7 +18,7 @@
 })();
 // RFB V7: mesmo fallback de fotografia nas páginas individuais.
 (() => {
-  const mirror='https://raw.githubusercontent.com/CristianoRFB/cosmaker/82dc149f4695099f62a0ec44673eafa9428c5d7e/demos/sakurai-portfolio-v2/images/';
+  const mirror='https://raw.githubusercontent.com/CristianoRFB/cosmaker/b81653482c26fb0ea81817940cbc7c06db9ff1f6/demos/sakurai-portfolio-v2/images/';
   window.addEventListener('error',event => {
     const img=event.target;
     if (!(img instanceof HTMLImageElement)) return;
