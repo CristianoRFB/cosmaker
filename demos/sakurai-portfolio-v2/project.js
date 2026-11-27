@@ -18,7 +18,7 @@
 })();
 // RFB V7: mesmo fallback de fotografia nas páginas individuais.
 (() => {
-  const mirror='https://raw.githubusercontent.com/CristianoRFB/cosmaker/82dc149f4695099f62a0ec44673eafa9428c5d7e/demos/sakurai-portfolio-v2/images/';
+  const mirror='https://raw.githubusercontent.com/CristianoRFB/cosmaker/b81653482c26fb0ea81817940cbc7c06db9ff1f6/demos/sakurai-portfolio-v2/images/';
   window.addEventListener('error',event => {
     const img=event.target;
     if (!(img instanceof HTMLImageElement)) return;
@@ -32,4 +32,16 @@
       img.closest('.project-photo, .project-lead-visual, .project-related-link')?.classList.add('image-unavailable');
     }
   },true);
+
+  // E01: captura falhas de imagens que ocorreram antes de registrar o listener em JS deferido.
+  function replayMissedImageErrors() {
+    document.querySelectorAll('img[src]').forEach(img=>{
+      if(img.complete && img.naturalWidth===0 && !img.dataset.rfbFailed)
+        img.dispatchEvent(new Event('error'));
+    });
+  }
+  if(document.readyState==='loading')
+    document.addEventListener('DOMContentLoaded',replayMissedImageErrors,{once:true});
+  else replayMissedImageErrors();
+  window.addEventListener('load',replayMissedImageErrors,{once:true});
 })();

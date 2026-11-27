@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "project": "Sakurai — portfólio editorial",
+  "mode": "DEMO",
+  "version": "V14",
+  "status": "STAGING_PUBLISHED_QA_PENDING",
+  "method": {
+    "repository": "CristianoRFB/rfb-method-gpt",
+    "branch": "main",
+    "commit": "5f73ee2b48507234431706e4c6313773bae72a5a",
+    "readPrimary": true,
+    "gateCLI": "NOT_RUN"
+  },
+  "repository": "CristianoRFB/cosmaker",
+  "preservation": {
+    "baselineSha": "b81653482c26fb0ea81817940cbc7c06db9ff1f6",
+    "baselineBranch": "archive/sakurai-portfolio-v13-20261127",
+    "existingWorkBranch": "demo/sakurai-portfolio-editorial-v2",
+    "existingPullRequest": 35,
+    "publicWorker": "77-sakurai-portfolio-v2",
+    "status": "PRESERVED_CONFIRMED_HTTP",
+    "url": "https://77-sakurai-portfolio-v2.on7.workers.dev/"
+  },
+  "candidate": {
+    "branch": "develop/sakurai-portfolio-v14-rfb",
+    "worker": "77-sakurai-portfolio-v14-staging",
+    "promotionApproval": "REQUIRED",
+    "deployment": "HTTP_VERIFIED",
+    "commit": "23d03142c6da1cf0862aba1831418c9775600333",
+    "url": "https://77-sakurai-portfolio-v14-staging.on7.workers.dev/",
+    "pr": 37,
+    "checks": {
+      "http": "PASS",
+      "health": "PASS",
+      "checkedImages": 5,
+      "visualBrowser": "NOT_RUN",
+      "multiViewport": "NOT_RUN",
+      "ci": "NOT_RUN"
+    }
+  },
+  "requirements": [
+    {
+      "id": "R-01",
+      "criterion": "V13 e Worker atual mantidos sem mudanças",
+      "status": "PASS_HTTP"
+    },
+    {
+      "id": "R-02",
+      "criterion": "V14 com branch própria, checkpoint e notas de design",
+      "status": "PASS_GITHUB"
+    },
+    {
+      "id": "R-03",
+      "criterion": "Worker V14 separado com URL própria verificada",
+      "status": "PASS_HTTP"
+    },
+    {
+      "id": "R-04",
+      "criterion": "PC/móvel, imagens, galerias, drawer, vídeo, paleta e créditos sem regressão",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "R-05",
+      "criterion": "não misturar imagens ilustrativas com fotos do trabalho real",
+      "status": "INHERITED_UNVERIFIED"
+    }
+  ],
+  "lifecycle": {
+    "productClass": "DEMO/PROTOTYPE",
+    "targetLevel": "L02",
+    "level15": "CONTINUOUS",
+    "areas": [
+      {
+        "id": "A01",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A02",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A03",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A04",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A05",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A06",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A07",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A08",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A09",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A10",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A11",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A12",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      },
+      {
+        "id": "A13",
+        "status": "INVENTORIED_EVIDENCE_PENDING"
+      }
+    ],
+    "levels": [
+      {
+        "id": "L01",
+        "status": "PARTIAL"
+      },
+      {
+        "id": "L02",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L03",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L04",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L05",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L06",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L07",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L08",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L09",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L10",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L11",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L12",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L13",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L14",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "L15",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "tripleVerification": {
+    "functional": "NOT_RUN",
+    "adversarial": "NOT_RUN",
+    "regression": "NOT_RUN",
+    "visualSelfCorrection": "NOT_RUN"
+  },
+  "rollback": "Use archive/sakurai-portfolio-v13-20261127 (SHA b8165348); do not touch public worker.",
+  "nextAction": "Verificar CI e executar EVOLVE 01 (baseline, confiabilidade, QA) na V14 somente, sem alterar Worker V13.",
+  "notes": "Não é o site oficial da artista. Conteúdo factual e fictício já rotulado. Nenhum merge ou overwrite de produção.",
+  "evolve": {
+    "roadmap": "demos/sakurai-portfolio-v2/rfb/EVOLVE-ROADMAP.md",
+    "methodCommit": "5f73ee2b48507234431706e4c6313773bae72a5a",
+    "planned": 12,
+    "current": "EVOLVE 01",
+    "status": "PLANNED_NOT_EXECUTED",
+    "lastPlanningHead": "a9e146c81df3d5d22a458da7e83a47236b0a4c7b",
+    "baselineV13": "b81653482c26fb0ea81817940cbc7c06db9ff1f6",
+    "notes": "Solicitação de replanejamento, sem alteração de UI ou deploy neste turno. QA de browser/TV/VSC pendente."
+  }
+}
